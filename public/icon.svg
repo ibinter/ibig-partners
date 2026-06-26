@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#0b5fff"/>
+  <!-- Lettre I -->
+  <rect x="80" y="120" width="72" height="272" rx="12" fill="#ffffff"/>
+  <!-- Lettre B -->
+  <rect x="184" y="120" width="60" height="272" rx="12" fill="#ffffff"/>
+  <path d="M244 120 h80 a64 64 0 0 1 0 128 h-80z" fill="#ffffff"/>
+  <path d="M244 248 h88 a72 72 0 0 1 0 144 h-88z" fill="#ffffff"/>
+  <!-- Réseau / points reliés -->
+  <circle cx="392" cy="160" r="28" fill="#e69a14"/>
+  <circle cx="440" cy="280" r="20" fill="#e69a14" opacity="0.7"/>
+  <circle cx="360" cy="340" r="20" fill="#e69a14" opacity="0.7"/>
+  <line x1="392" y1="160" x2="440" y2="280" stroke="#e69a14" stroke-width="6" opacity="0.5"/>
+  <line x1="440" y1="280" x2="360" y2="340" stroke="#e69a14" stroke-width="6" opacity="0.5"/>
+  <line x1="392" y1="160" x2="360" y2="340" stroke="#e69a14" stroke-width="4" opacity="0.3"/>
+</svg>

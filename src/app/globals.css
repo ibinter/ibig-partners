@@ -1,26 +1,52 @@
 @import "tailwindcss";
 
+@theme {
+  --color-brand-50: #eef4ff;
+  --color-brand-100: #d9e6ff;
+  --color-brand-200: #bcd3ff;
+  --color-brand-300: #8eb6ff;
+  --color-brand-400: #588dff;
+  --color-brand-500: #0b5fff;
+  --color-brand-600: #0b4fe0;
+  --color-brand-700: #0d3fb4;
+  --color-brand-800: #11378f;
+  --color-brand-900: #133173;
+  --color-gold-400: #f5b73d;
+  --color-gold-500: #e69a14;
+
+  --color-ink: #0f1729;
+  --color-muted: #5b6577;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #f6f8fc;
+  --foreground: #0f1729;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, Arial, sans-serif;
+}
+
+/* Utilitaires reutilisables */
+.card {
+  background: #fff;
+  border: 1px solid #e6ebf3;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(15, 23, 41, 0.04);
+}
+
+/* Gradients — contourne les limites Tailwind v4 avec les CSS vars */
+.gradient-hero {
+  background: linear-gradient(135deg, #0c2d7a 0%, #0d3fb4 45%, #0b4fe0 100%);
+}
+.gradient-dark-section {
+  background: linear-gradient(135deg, #0c1e5c 0%, #0d3fb4 40%, #2b2d8e 100%);
+}
+.gradient-cta {
+  background: linear-gradient(135deg, #0d3fb4 0%, #0b4fe0 50%, #3730a3 100%);
+}
+.gradient-simulateur {
+  background: linear-gradient(135deg, #0c1e5c 0%, #0d3fb4 35%, #1e1b8a 100%);
 }
