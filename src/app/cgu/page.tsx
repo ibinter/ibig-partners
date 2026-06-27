@@ -21,7 +21,7 @@ export default function CguPage() {
           <section>
             <h2 className="text-lg font-bold text-ink">1. Présentation du programme</h2>
             <p className="mt-3">
-              IBIG PARTNERS est le programme officiel d'affiliation multi-niveaux d'<strong>INTERMARK BUSINESS INTERNATIONAL GROUP SARL</strong>
+              IBIG PARTNERS est le programme officiel d'affiliation multi-niveaux d'<strong><a href="https://intermark-business.com/" target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline">INTERMARK BUSINESS INTERNATIONAL GROUP SARL</a></strong>
               (IBIG SARL), société à responsabilité limitée enregistrée en Côte d'Ivoire,
               dont le siège social est situé à Cocody Riviera Palmeraie, Abidjan.
             </p>

@@ -14,7 +14,7 @@ export default function CgvPage() {
         <Link href="/" className="text-sm text-brand-600 hover:underline">← Retour à l'accueil</Link>
 
         <h1 className="mt-6 text-3xl font-extrabold text-ink">Conditions Générales de Vente</h1>
-        <p className="mt-2 text-sm text-muted">Dernière mise à jour : juin 2026 — INTERMARK BUSINESS INTERNATIONAL GROUP SARL (IBIG SARL), Abidjan, Côte d&apos;Ivoire</p>
+        <p className="mt-2 text-sm text-muted">Dernière mise à jour : juin 2026 — <a href="https://intermark-business.com/" target="_blank" rel="noopener noreferrer" className="hover:text-brand-600 hover:underline">INTERMARK BUSINESS INTERNATIONAL GROUP SARL</a> (IBIG SARL), Abidjan, Côte d&apos;Ivoire</p>
 
         <div className="mt-10 space-y-10 text-sm leading-relaxed text-slate-700">
 
@@ -22,7 +22,7 @@ export default function CgvPage() {
             <h2 className="text-lg font-bold text-ink">1. Objet</h2>
             <p className="mt-3">
               Les présentes Conditions Générales de Vente (CGV) régissent les relations commerciales entre
-              <strong> INTERMARK BUSINESS INTERNATIONAL GROUP SARL</strong> (ci-après « IBIG SARL »),
+              <strong><a href="https://intermark-business.com/" target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline"> INTERMARK BUSINESS INTERNATIONAL GROUP SARL</a></strong> (ci-après « IBIG SARL »),
               société enregistrée en Côte d&apos;Ivoire, dont le siège est à Cocody Riviera Palmeraie, Abidjan,
               et toute personne physique ou morale (le « Client ») acquérant un produit ou service via la
               plateforme IBIG PARTNERS ou via un Partenaire affilié.
@@ -140,7 +140,7 @@ export default function CgvPage() {
               <li>Email : <a href="mailto:contact@ibigpartners.com" className="text-brand-600 hover:underline">contact@ibigpartners.com</a></li>
               <li>Support : <a href="mailto:support@ibigpartners.com" className="text-brand-600 hover:underline">support@ibigpartners.com</a></li>
               <li>Téléphone : <a href="tel:+2252722276014" className="text-brand-600 hover:underline">+225 27 22 27 60 14</a></li>
-              <li>Adresse : INTERMARK BUSINESS INTERNATIONAL GROUP SARL, Cocody Riviera Palmeraie, Abidjan, Côte d&apos;Ivoire</li>
+              <li>Adresse : <a href="https://intermark-business.com/" target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline">INTERMARK BUSINESS INTERNATIONAL GROUP SARL</a>, Cocody Riviera Palmeraie, Abidjan, Côte d&apos;Ivoire</li>
             </ul>
           </section>
 

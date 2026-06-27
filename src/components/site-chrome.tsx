@@ -141,7 +141,7 @@ export function SiteFooter() {
             <div>
               <p className="text-sm font-bold text-white">Groupe IBIG</p>
               <div className="mt-3 space-y-2 text-sm text-slate-400">
-                <p className="font-semibold text-slate-300">INTERMARK BUSINESS INTERNATIONAL GROUP SARL</p>
+                <a href="https://intermark-business.com/" target="_blank" rel="noopener noreferrer" className="font-semibold text-slate-300 hover:text-brand-400 transition-colors">INTERMARK BUSINESS INTERNATIONAL GROUP SARL</a>
                 <p>Cocody Riviera Palmeraie<br />Abidjan, Côte d&apos;Ivoire</p>
                 <p>
                   <a href="https://intermark-business.com/" target="_blank" rel="noopener noreferrer" className="hover:text-brand-400 transition-colors">
@@ -221,7 +221,7 @@ export function SiteFooter() {
 
           <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-slate-800 pt-6 text-xs text-slate-500">
             <p>© 2026 IBIG PARTNERS. Tous droits réservés.</p>
-            <p>INTERMARK BUSINESS INTERNATIONAL GROUP SARL</p>
+            <a href="https://intermark-business.com/" target="_blank" rel="noopener noreferrer" className="hover:text-brand-400 transition-colors">INTERMARK BUSINESS INTERNATIONAL GROUP SARL</a>
             <p>
               Développé par{" "}
               <a href="https://ibigsoft.com/" target="_blank" rel="noopener noreferrer" className="hover:text-brand-400 transition-colors">

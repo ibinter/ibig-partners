@@ -14,14 +14,14 @@ export default function ConfidentialitePage() {
         <Link href="/" className="text-sm text-brand-600 hover:underline">← Retour à l'accueil</Link>
 
         <h1 className="mt-6 text-3xl font-extrabold text-ink">Politique de confidentialité</h1>
-        <p className="mt-2 text-sm text-muted">Dernière mise à jour : juin 2026 — INTERMARK BUSINESS INTERNATIONAL GROUP SARL (IBIG SARL), Abidjan, Côte d&apos;Ivoire</p>
+        <p className="mt-2 text-sm text-muted">Dernière mise à jour : juin 2026 — <a href="https://intermark-business.com/" target="_blank" rel="noopener noreferrer" className="hover:text-brand-600 hover:underline">INTERMARK BUSINESS INTERNATIONAL GROUP SARL</a> (IBIG SARL), Abidjan, Côte d&apos;Ivoire</p>
 
         <div className="mt-10 space-y-10 text-sm leading-relaxed text-slate-700">
 
           <section>
             <h2 className="text-lg font-bold text-ink">1. Données collectées</h2>
             <p className="mt-3">
-              Dans le cadre du programme IBIG PARTNERS, <strong>INTERMARK BUSINESS INTERNATIONAL GROUP SARL</strong>
+              Dans le cadre du programme IBIG PARTNERS, <strong><a href="https://intermark-business.com/" target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline">INTERMARK BUSINESS INTERNATIONAL GROUP SARL</a></strong>
               (IBIG SARL) collecte les données personnelles suivantes :
             </p>
             <ul className="mt-2 list-disc space-y-1 pl-5">
@@ -99,7 +99,7 @@ export default function ConfidentialitePage() {
             </p>
             <ul className="mt-3 space-y-1">
               <li>Email : <a href="mailto:contact@ibigpartners.com" className="text-brand-600 hover:underline">contact@ibigpartners.com</a></li>
-              <li>Adresse : INTERMARK BUSINESS INTERNATIONAL GROUP SARL, Cocody Riviera Palmeraie, Abidjan, Côte d&apos;Ivoire</li>
+              <li>Adresse : <a href="https://intermark-business.com/" target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline">INTERMARK BUSINESS INTERNATIONAL GROUP SARL</a>, Cocody Riviera Palmeraie, Abidjan, Côte d&apos;Ivoire</li>
             </ul>
           </section>
 
