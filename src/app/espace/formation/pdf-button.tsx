@@ -127,7 +127,7 @@ function buildPdfHtml(): string {
 <tr><td>Location</td><td>25%*</td><td>12,5%*</td><td>—</td></tr>
 </tbody>
 </table>
-<p class="note">* % de la commission de l'agence vendeur.</p>
+<p class="note">* % de la commission d'agence IBIG IMMO TRUST — PAS sur le prix de vente du bien. Ex: bien à 50M, commission agence 1M → vous = 250 000 FCFA.</p>
 
 <h3>🏢 Gérance d'immeuble</h3>
 <table>

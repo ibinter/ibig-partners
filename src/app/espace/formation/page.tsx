@@ -68,7 +68,7 @@ const PRODUCT_RATES = [
       { label: "Vente", n1: "25%*", n2: "12,5%*", n3: "—" },
       { label: "Location", n1: "25%*", n2: "12,5%*", n3: "—" },
     ],
-    note: "* % de la commission agence vendeur. Pas de niveau 3.",
+    note: "⚠️ Les taux s'appliquent sur la COMMISSION de l'agence IBIG IMMO TRUST, PAS sur le prix de vente du bien. Ex : bien à 50 M FCFA, commission agence = 1 M FCFA → vous touchez 25% = 250 000 FCFA.",
   },
   {
     category: "Immobilier — Gérance d'immeuble",
@@ -139,6 +139,18 @@ const EXAMPLES = [
     ],
     recurring: false,
     note: "Pas de niveau 3 pour les prestations sur mesure.",
+  },
+  {
+    title: "Immobilier — Vente d'un bien à 50 000 000 FCFA",
+    color: "teal",
+    icon: "🏠",
+    type: "Commission agence IBIG IMMO TRUST",
+    lines: [
+      { who: "Vous apportez l'acheteur (N1)", mois1: 250000, mois2: 0, mois3: 0, mois4: 0, total: 250000 },
+      { who: "Votre filleul apporte (N2)", mois1: 125000, mois2: 0, mois3: 0, mois4: 0, total: 125000 },
+    ],
+    recurring: false,
+    note: "⚠️ Les taux s'appliquent sur la commission de l'agence IBIG IMMO TRUST (ex: 2% du prix = 1 000 000 FCFA de commission agence → vous touchez 25% = 250 000 FCFA). PAS sur le prix de vente du bien. Pas de niveau 3.",
   },
 ];
 
