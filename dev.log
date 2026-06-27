@@ -1071,3 +1071,38 @@ https://react.dev/link/hydration-mismatch
 ✓ Compiled in 1036ms
 ✓ Compiled in 890ms
 ✓ Compiled in 597ms
+✓ Compiled in 1041ms
+✓ Compiled in 630ms
+✓ Compiled in 448ms
+✓ Compiled in 169ms
+⨯ ./Downloads/Compressed/IBIG PARTNERS/ibig-partners/src/app/espace/liens/page.tsx:7:1
+Module not found: Can't resolve './qr-card'
+  [90m 5 |[0m [36mimport[0m { [33mCOOKIE_TRACKING_DAYS[0m } [36mfrom[0m [32m"@/lib/constants"[0m;
+  [90m 6 |[0m [36mimport[0m [33mCopyButton[0m [36mfrom[0m [32m"./copy-button"[0m;
+[31m[1m>[0m [90m 7 |[0m [36mimport[0m [33mQrCard[0m [36mfrom[0m [32m"./qr-card"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m 8 |[0m
+  [90m 9 |[0m [36mexport[0m [36mconst[0m dynamic = [32m"force-dynamic"[0m;
+  [90m10 |[0m
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+⨯ ./Downloads/Compressed/IBIG PARTNERS/ibig-partners/src/app/espace/liens/page.tsx:7:1
+Module not found: Can't resolve './qr-card'
+  [90m 5 |[0m [36mimport[0m { [33mCOOKIE_TRACKING_DAYS[0m } [36mfrom[0m [32m"@/lib/constants"[0m;
+  [90m 6 |[0m [36mimport[0m [33mCopyButton[0m [36mfrom[0m [32m"./copy-button"[0m;
+[31m[1m>[0m [90m 7 |[0m [36mimport[0m [33mQrCard[0m [36mfrom[0m [32m"./qr-card"[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m 8 |[0m
+  [90m 9 |[0m [36mexport[0m [36mconst[0m dynamic = [32m"force-dynamic"[0m;
+  [90m10 |[0m
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+✓ Compiled in 11s

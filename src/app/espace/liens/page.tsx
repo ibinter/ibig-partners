@@ -75,11 +75,11 @@ export default async function LiensPage() {
                   <div className="rounded-xl bg-slate-50 border border-slate-100 px-3 py-2.5 font-mono text-xs text-slate-500 break-all leading-relaxed">
                     {url}
                   </div>
-                  <div className="mt-3 flex gap-2 flex-wrap">
+                  <div className="mt-3">
                     <CopyButton text={url} />
-                    <QrCard url={url} slug={link.product.slug} />
                   </div>
                 </div>
+                <QrCard url={url} slug={link.product.slug} />
               </div>
             </div>
           ))}
