@@ -14,15 +14,15 @@ export default function CguPage() {
         <Link href="/" className="text-sm text-brand-600 hover:underline">← Retour à l'accueil</Link>
 
         <h1 className="mt-6 text-3xl font-extrabold text-ink">Conditions Générales d'Utilisation</h1>
-        <p className="mt-2 text-sm text-muted">Dernière mise à jour : juin 2025 — IBIG SARL, Abidjan, Côte d'Ivoire</p>
+        <p className="mt-2 text-sm text-muted">Dernière mise à jour : juin 2026 — IBIG SARL, Abidjan, Côte d'Ivoire</p>
 
         <div className="mt-10 space-y-10 text-sm leading-relaxed text-slate-700">
 
           <section>
             <h2 className="text-lg font-bold text-ink">1. Présentation du programme</h2>
             <p className="mt-3">
-              IBIG PARTNERS est le programme officiel d'affiliation multi-niveaux du Groupe <strong>IBIG SARL</strong>
-              (Intermark Business International), société à responsabilité limitée enregistrée en Côte d'Ivoire,
+              IBIG PARTNERS est le programme officiel d'affiliation multi-niveaux d'<strong>INTERMARK BUSINESS INTERNATIONAL GROUP SARL</strong>
+              (IBIG SARL), société à responsabilité limitée enregistrée en Côte d'Ivoire,
               dont le siège social est situé à Cocody Riviera Palmeraie, Abidjan.
             </p>
             <p className="mt-3">
@@ -113,8 +113,8 @@ export default function CguPage() {
             <p className="mt-3">
               Conformément aux lois ivoiriennes et aux standards internationaux (RGPD), vous disposez d'un
               droit d'accès, de rectification et de suppression de vos données en contactant :
-              <a href="mailto:contact@ibigsoft.com" className="ml-1 text-brand-600 hover:underline">
-                contact@ibigsoft.com
+              <a href="mailto:contact@ibigpartners.com" className="ml-1 text-brand-600 hover:underline">
+                contact@ibigpartners.com
               </a>.
             </p>
           </section>

@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 
 const HERO_SLIDES: HeroSlide[] = [
   {
-    eyebrow: "Groupe IBIG SARL",
+    eyebrow: "IBIG SARL — Intermark Business International Group",
     titleLead: "Une seule plateforme,",
     titleHighlight: "tout l'écosystème IBIG",
     desc: "IBIG PARTNERS réunit l'ensemble des produits et services du groupe IBIG SARL dans un programme d'affiliation unique. Un compte, des dizaines d'opportunités, des revenus à la clé.",
@@ -251,7 +251,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-6xl px-4">
           <ScrollReveal animation="fade-up">
             <div className="text-center">
-              <SectionEyebrow className="bg-violet-50 text-violet-600">Le groupe IBIG SARL</SectionEyebrow>
+              <SectionEyebrow className="bg-violet-50 text-violet-600">INTERMARK BUSINESS INTERNATIONAL GROUP SARL</SectionEyebrow>
               <h2 className="mt-4 text-3xl font-extrabold text-ink sm:text-4xl">
                 {branches.length || "8"} branches à promouvoir
               </h2>
@@ -265,27 +265,45 @@ export default async function HomePage() {
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {branches.map((b, i) => {
               const accent = BRANCH_ACCENTS[i % BRANCH_ACCENTS.length];
-              return (
-                <ScrollReveal key={b.id} animation="scale-in" delay={i * 70}>
-                  <div className="card-premium group flex h-full flex-col overflow-hidden p-0">
-                    <div className={`h-1.5 w-full bg-gradient-to-r ${accent.bar}`} />
-                    <div className="flex flex-1 flex-col p-6">
-                      <div className={`inline-flex h-11 w-11 items-center justify-center rounded-xl ${accent.chip}`}>
-                        <Icon name="building" className="h-5 w-5" />
-                      </div>
-                      <h3 className="mt-4 text-lg font-extrabold text-ink">{b.name}</h3>
-                      <p className="label-caps mt-1 text-slate-400">{b.tagline}</p>
-                      <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-600">{b.description}</p>
-                      <div className="mt-4 space-y-1.5 border-t border-slate-100 pt-3 text-xs text-muted">
-                        {b.offerType && (
-                          <p><span className="font-semibold text-slate-700">Offre :</span> {b.offerType}</p>
-                        )}
-                        {b.commissionModel && (
-                          <p><span className="font-semibold text-slate-700">Commission :</span> {b.commissionModel}</p>
-                        )}
-                      </div>
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const branchWebsite: string | undefined = (b as any).website;
+              const cardContent = (
+                <div className="card-premium group flex h-full flex-col overflow-hidden p-0">
+                  <div className={`h-1.5 w-full bg-gradient-to-r ${accent.bar}`} />
+                  <div className="flex flex-1 flex-col p-6">
+                    <div className={`inline-flex h-11 w-11 items-center justify-center rounded-xl ${accent.chip}`}>
+                      <Icon name="building" className="h-5 w-5" />
+                    </div>
+                    <h3 className="mt-4 text-lg font-extrabold text-ink">{b.name}</h3>
+                    <p className="label-caps mt-1 text-slate-400">{b.tagline}</p>
+                    <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-600">{b.description}</p>
+                    <div className="mt-4 space-y-1.5 border-t border-slate-100 pt-3 text-xs text-muted">
+                      {b.offerType && (
+                        <p><span className="font-semibold text-slate-700">Offre :</span> {b.offerType}</p>
+                      )}
+                      {b.commissionModel && (
+                        <p><span className="font-semibold text-slate-700">Commission :</span> {b.commissionModel}</p>
+                      )}
+                      {branchWebsite && (
+                        <p className="mt-2">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-600">
+                            ↗ Voir le site
+                          </span>
+                        </p>
+                      )}
                     </div>
                   </div>
+                </div>
+              );
+              return (
+                <ScrollReveal key={b.id} animation="scale-in" delay={i * 70}>
+                  {branchWebsite ? (
+                    <a href={branchWebsite} target="_blank" rel="noopener noreferrer" className="block h-full">
+                      {cardContent}
+                    </a>
+                  ) : (
+                    <div className="h-full">{cardContent}</div>
+                  )}
                 </ScrollReveal>
               );
             })}
