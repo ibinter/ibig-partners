@@ -22,31 +22,95 @@ model User {
   phone        String
   passwordHash String
   role         String  @default("PARTNER") // PARTNER | ADMIN | SUPERADMIN
-  status       String  @default("STARTER") // STARTER | SILVER | GOLD | MASTER
+  status       String  @default("STARTER") // STARTER | SILVER | GOLD | MASTER | ELITE
   active       Boolean @default(true)
   approved     Boolean @default(false) // validation manuelle des inscriptions
-  payoutMethod String  @default("ORANGE_MONEY") // ORANGE_MONEY | WAVE | MTN_MOMO | BANK
-  payoutDetail String? // numero mobile money ou IBAN
-  city         String?
+
+  // KYC — verification du compte
+  partnerType        String  @default("INDIVIDUAL") // INDIVIDUAL | COMPANY
+  verificationStatus String  @default("NONE")       // NONE | SUBMITTED | VERIFIED | REJECTED
+
+  // Paiement
+  payoutMethod  String  @default("ORANGE_MONEY") // ORANGE_MONEY | WAVE | MTN_MOMO | BANK | PAYPAL | WESTERN_UNION
+  payoutDetail  String? // numero mobile money ou IBAN
+  minPayout     Int     @default(5000) // seuil declenchement paiement en FCFA
+  city          String?
 
   // Parrainage : structure du reseau multi-niveaux
   sponsorId String?
   sponsor   User?   @relation("Referral", fields: [sponsorId], references: [id])
   referrals User[]  @relation("Referral")
 
-  links         AffiliateLink[]
-  sales         Sale[]
-  commissions   Commission[]
-  payouts       Payout[]
-  opportunities Opportunity[]
-  prospects     Prospect[]
-  notifications Notification[]
-  tickets       Ticket[]
-  ticketMessages TicketMessage[] @relation("TicketAuthor")
-  auditLogs     AuditLog[]
-  otpCode       OtpCode?
+  links            AffiliateLink[]
+  sales            Sale[]
+  commissions      Commission[]
+  payouts          Payout[]
+  opportunities    Opportunity[]
+  prospects        Prospect[]
+  notifications    Notification[]
+  tickets          Ticket[]
+  ticketMessages   TicketMessage[]    @relation("TicketAuthor")
+  auditLogs        AuditLog[]
+  otpCode          OtpCode?
+  verification     VerificationRequest?
 
   createdAt DateTime @default(now())
+}
+
+// KYC — dossier de verification identite / entreprise
+model VerificationRequest {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+  type   String // INDIVIDUAL | COMPANY
+  status String @default("PENDING") // PENDING | APPROVED | REJECTED
+
+  reviewedAt  DateTime?
+  reviewedBy  String?   // id de l'admin
+  reviewNote  String?   // motif de rejet ou commentaire
+
+  // ─── Particulier ───────────────────────────────────────────
+  fullName      String? // nom et prenoms etat civil
+  idType        String? // CIN | PASSEPORT | PERMIS | AUTRE
+  idNumber      String?
+  cvText        String? // CV en texte libre
+  country       String?
+  city          String?
+  profession    String?
+  whatsapp      String?
+  secondPhone   String?
+  contact1Name  String?
+  contact1Phone String?
+  contact2Name  String?
+  contact2Phone String?
+
+  // ─── Entreprise ────────────────────────────────────────────
+  companyName     String?
+  rccm            String? // registre de commerce
+  nif             String?
+  compteContrib   String? // compte contribuable
+  legalRep        String? // representant legal
+  legalRepTitle   String? // DG | Gérant | PDG …
+  companyCountry  String?
+  companyCity     String?
+  companyAddress  String?
+  companyEmail    String?
+  companyWhatsapp String?
+  companyPhone2   String?
+
+  // ─── Coordonnees bancaires / paiement ──────────────────────
+  payoutMethod    String? // methode preferee
+  mobileMoneyNum  String? // Orange Money / Wave / MTN MoMo
+  paypalEmail     String?
+  rib             String?
+  bankName        String?
+  bankCountry     String?
+  swift           String?
+  iban            String?
+  westernUnionName String?
+
+  submittedAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Branch {
@@ -144,15 +208,19 @@ model Commission {
 }
 
 model Payout {
-  id        String    @id @default(cuid())
-  userId    String
-  user      User      @relation(fields: [userId], references: [id])
-  amount    Int
-  method    String
-  status    String    @default("PENDING") // PENDING | PAID
-  reference String?
-  createdAt DateTime  @default(now())
-  paidAt    DateTime?
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  amount        Int
+  method        String
+  status        String    @default("PENDING") // PENDING | PROCESSING | PAID
+  reference     String?
+  receiptNumber String?   // numero de recu ex: IBIG-PAY-2024-0001
+  fees          Int       @default(0) // frais deduits (international)
+  netAmount     Int?      // amount - fees
+  scheduledDate DateTime? // date prevue de paiement
+  createdAt     DateTime  @default(now())
+  paidAt        DateTime?
 
   commissions Commission[]
 }
