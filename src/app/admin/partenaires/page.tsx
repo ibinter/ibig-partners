@@ -17,7 +17,6 @@ export default async function PartenairesPage() {
     },
   });
 
-  // commissions versées par partenaire (pour info)
   const paidByUser = await prisma.commission.groupBy({
     by: ["userId"],
     where: { status: "PAID" },
@@ -36,39 +35,46 @@ export default async function PartenairesPage() {
 
       <Card className="p-0">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase text-muted">
+          <table>
+            <thead>
               <tr>
-                <th className="px-5 py-2">Partenaire</th>
-                <th className="px-3 py-2">Code</th>
-                <th className="px-3 py-2">Parrain</th>
-                <th className="px-3 py-2">Statut</th>
-                <th className="px-3 py-2">Ventes</th>
-                <th className="px-3 py-2">Filleuls</th>
-                <th className="px-3 py-2">Versé</th>
-                <th className="px-3 py-2">État</th>
-                <th className="px-3 py-2">Actions</th>
+                <th>Partenaire</th>
+                <th>Code</th>
+                <th>Parrain</th>
+                <th>Statut</th>
+                <th>Ventes</th>
+                <th>Filleuls</th>
+                <th>Versé</th>
+                <th>État</th>
+                <th>Inscrit le</th>
+                <th>Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody>
               {partners.map((p) => (
-                <tr key={p.id} className={!p.approved && p.role === "PARTNER" ? "bg-amber-50/40" : ""}>
-                  <td className="px-5 py-2">
+                <tr key={p.id} className={!p.approved && p.role === "PARTNER" ? "bg-amber-50/50" : ""}>
+                  <td>
                     <p className="font-medium text-ink">{p.firstName} {p.lastName}</p>
-                    <p className="text-xs text-muted">{p.email} · inscrit le {formatDate(p.createdAt)}</p>
-                    {p.role !== "PARTNER" && <Badge tone="blue">{p.role}</Badge>}
+                    <p className="text-xs text-muted">{p.email}</p>
+                    {p.role !== "PARTNER" && (
+                      <Badge tone="purple">{p.role}</Badge>
+                    )}
                   </td>
-                  <td className="px-3 py-2 font-mono text-xs">{p.code}</td>
-                  <td className="px-3 py-2 font-mono text-xs text-muted">{p.sponsor?.code ?? "—"}</td>
-                  <td className="px-3 py-2">
+                  <td>
+                    <span className="font-mono text-xs text-muted">{p.code}</span>
+                  </td>
+                  <td>
+                    <span className="font-mono text-xs text-muted">{p.sponsor?.code ?? "—"}</span>
+                  </td>
+                  <td>
                     <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_COLORS[p.status]?.badge ?? "bg-slate-100 text-slate-700"}`}>
                       {STATUS_LABELS[p.status] ?? p.status}
                     </span>
                   </td>
-                  <td className="px-3 py-2">{p._count.sales}</td>
-                  <td className="px-3 py-2">{p._count.referrals}</td>
-                  <td className="px-3 py-2">{fcfa(paidOf(p.id))}</td>
-                  <td className="px-3 py-2">
+                  <td className="text-center font-medium">{p._count.sales}</td>
+                  <td className="text-center">{p._count.referrals}</td>
+                  <td className="font-semibold text-ink">{fcfa(paidOf(p.id))}</td>
+                  <td>
                     {!p.approved ? (
                       <Badge tone="amber">En validation</Badge>
                     ) : p.active ? (
@@ -77,32 +83,44 @@ export default async function PartenairesPage() {
                       <Badge tone="red">Suspendu</Badge>
                     )}
                   </td>
-                  <td className="px-3 py-2">
-                    <div className="flex flex-wrap justify-end gap-1">
+                  <td className="text-xs text-muted">{formatDate(p.createdAt)}</td>
+                  <td>
+                    <div className="flex items-center gap-1.5">
                       {!p.approved && (
                         <form action={approvePartner}>
                           <input type="hidden" name="id" value={p.id} />
-                          <Button type="submit" variant="secondary">Valider</Button>
+                          <Button type="submit" variant="success" size="sm">Valider</Button>
                         </form>
                       )}
                       {p.approved && (
                         <form action={setPartnerActive}>
                           <input type="hidden" name="id" value={p.id} />
                           <input type="hidden" name="active" value={(!p.active).toString()} />
-                          <Button type="submit" variant="ghost">{p.active ? "Suspendre" : "Réactiver"}</Button>
+                          <Button type="submit" variant={p.active ? "danger" : "secondary"} size="sm">
+                            {p.active ? "Suspendre" : "Réactiver"}
+                          </Button>
                         </form>
                       )}
                       {admin.role === "SUPERADMIN" && p.id !== admin.id && (
                         <form action={setPartnerRole}>
                           <input type="hidden" name="id" value={p.id} />
                           <input type="hidden" name="role" value={p.role === "ADMIN" ? "PARTNER" : "ADMIN"} />
-                          <Button type="submit" variant="ghost">{p.role === "ADMIN" ? "Retirer admin" : "Promouvoir admin"}</Button>
+                          <Button type="submit" variant="ghost" size="sm">
+                            {p.role === "ADMIN" ? "Retirer admin" : "Promouvoir"}
+                          </Button>
                         </form>
                       )}
                     </div>
                   </td>
                 </tr>
               ))}
+              {partners.length === 0 && (
+                <tr>
+                  <td colSpan={10} className="py-12 text-center text-muted text-sm">
+                    Aucun partenaire inscrit.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

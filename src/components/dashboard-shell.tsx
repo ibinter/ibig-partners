@@ -94,7 +94,7 @@ export function DashboardShell({
   const initials = (user.firstName[0] ?? "") + (user.lastName[0] ?? "");
 
   return (
-    <div className="flex min-h-screen bg-[#f4f6fb]">
+    <div className="flex min-h-screen bg-[#f2f5fb]">
 
       {/* ── Sidebar desktop ── */}
       <aside className={`hidden md:flex w-64 shrink-0 flex-col sticky top-0 h-screen overflow-hidden print:hidden ${
@@ -252,7 +252,7 @@ export function DashboardShell({
           </div>
         </header>
 
-        <main className="dash-surface flex-1 px-4 py-6 md:px-8 md:py-8 animate-fade-in">
+        <main className="dash-surface flex-1 px-4 py-7 md:px-8 md:py-9 animate-fade-in">
           {children}
         </main>
       </div>

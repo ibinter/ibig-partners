@@ -208,57 +208,96 @@ strong, b {
   animation-play-state: paused;
 }
 
-/* ===================== SURFACE DASHBOARD (admin + espace) ===================== */
-/* Style unifié, opiniâtre, pour tous les tableaux et champs des espaces internes.
-   Non-layered : prend le pas sur les utilitaires Tailwind pour garantir la cohérence. */
+/* ===================== ADMIN DESIGN SYSTEM ===================== */
 
-/* Tableaux de données */
+/* ── Fond de l'espace admin / partenaire ── */
+.dash-surface {
+  /* fond légèrement bleuté, plus professionnel que gris neutre */
+  background: #f2f5fb;
+}
+
+/* ── admin-card : surface de données propre, sans hover-lift ── */
+.admin-card {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #e4e9f2;
+  border-radius: 14px;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 41, 0.03),
+    0 4px 16px -8px rgba(15, 23, 41, 0.08);
+  overflow: hidden;
+}
+
+/* ── admin-input : champ de formulaire standardisé ── */
+.admin-input,
+.dash-surface :is(
+  select, textarea,
+  input[type="text"], input[type="number"], input[type="email"],
+  input[type="tel"], input[type="url"], input[type="password"],
+  input[type="search"], input[type="date"]
+) {
+  display: block;
+  width: 100%;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid #dde3ee;
+  border-radius: 0.6rem;
+  background: #fff;
+  color: #1e293b;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  appearance: none;
+}
+.admin-input:focus,
+.dash-surface :is(
+  select, textarea,
+  input[type="text"], input[type="number"], input[type="email"],
+  input[type="tel"], input[type="url"], input[type="password"],
+  input[type="search"], input[type="date"]
+):focus {
+  outline: none;
+  border-color: #0b5fff;
+  box-shadow: 0 0 0 3px rgba(11, 95, 255, 0.1);
+}
+
+/* ── Tableaux de données — style propre unifié ── */
 .dash-surface table {
   width: 100%;
   border-collapse: collapse;
 }
+
+/* En-têtes : fond très léger, typographie micro-caps, séparateur net */
+.dash-surface thead {
+  border-bottom: 1px solid #eaeff8;
+}
 .dash-surface thead th {
-  padding: 0.85rem 1rem;
+  padding: 0.75rem 1rem;
   text-align: left;
   font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: #8a94a6;
-  background: #f9fafc;
-  border-bottom: 1px solid #eef1f7;
+  color: #8a96ad;
+  background: #f8fafd;
   white-space: nowrap;
 }
-.dash-surface tbody td {
-  padding: 0.85rem 1rem;
-  border-bottom: 1px solid #f2f5fa;
-  color: #334155;
-  vertical-align: middle;
-}
-.dash-surface thead th:first-child,
-.dash-surface tbody td:first-child { padding-left: 1.25rem; }
-.dash-surface thead th:last-child,
-.dash-surface tbody td:last-child { padding-right: 1.25rem; }
-.dash-surface tbody tr { transition: background-color 0.15s ease; }
-.dash-surface tbody tr:hover { background: #f7fbff; }
-.dash-surface tbody tr:last-child td { border-bottom: 0; }
+.dash-surface thead th:first-child { padding-left: 1.5rem; }
+.dash-surface thead th:last-child  { padding-right: 1.5rem; }
 
-/* Champs de formulaire — bordure, rayon et focus homogènes */
-.dash-surface :is(select, textarea,
-  input[type="text"], input[type="number"], input[type="email"],
-  input[type="tel"], input[type="url"], input[type="password"], input[type="search"], input[type="date"]) {
-  border: 1px solid #e3e8f0;
-  border-radius: 0.7rem;
-  background-color: #fff;
-  color: #1e293b;
+/* Lignes : padding confortable, séparateur très léger, hover bleuté */
+.dash-surface tbody td {
+  padding: 0.875rem 1rem;
+  color: #1e2d45;
+  font-size: 0.875rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #f0f4fb;
 }
-.dash-surface :is(select, textarea,
-  input[type="text"], input[type="number"], input[type="email"],
-  input[type="tel"], input[type="url"], input[type="password"], input[type="search"], input[type="date"]):focus {
-  outline: none;
-  border-color: #0b5fff;
-  box-shadow: 0 0 0 3px rgba(11, 95, 255, 0.12);
-}
+.dash-surface tbody td:first-child { padding-left: 1.5rem; }
+.dash-surface tbody td:last-child  { padding-right: 1.5rem; }
+.dash-surface tbody tr { transition: background 0.12s ease; }
+.dash-surface tbody tr:last-child td { border-bottom: 0; }
+.dash-surface tbody tr:nth-child(even) { background: #fafbfd; }
+.dash-surface tbody tr:hover           { background: #f0f5ff; }
 
 /* ===================== HERO SLIDER ===================== */
 @keyframes hero-kenburns {

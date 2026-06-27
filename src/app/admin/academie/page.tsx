@@ -74,7 +74,7 @@ export default async function AcademieAdminPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatCard label="Total"     value={total}     accent="blue"  icon="🎓" />
+        <StatCard label="Total"     value={total}     accent="brand" icon="🎓" />
         <StatCard label="Publiés"   value={published} accent="green" icon="✅" />
         <StatCard label="Vidéos"    value={videos}    accent="gold"  icon="🎬" />
         <StatCard label="Guides"    value={guides}    accent="slate" icon="📄" />
