@@ -39,7 +39,8 @@ export async function GET(
         });
       }
       if (product.siteUrl) {
-        destination = `https://${product.siteUrl}/?ref=${encodeURIComponent(refCode)}`;
+        const base = product.siteUrl.startsWith("http") ? product.siteUrl : `https://${product.siteUrl}`;
+        destination = `${base.replace(/\/$/, "")}/?ref=${encodeURIComponent(refCode)}`;
       } else {
         destination = `/rejoindre?ref=${encodeURIComponent(refCode)}&product=${encodeURIComponent(product.name)}`;
       }
