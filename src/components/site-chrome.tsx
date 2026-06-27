@@ -14,8 +14,43 @@ export function Logo({ light = false }: { light?: boolean }) {
   );
 }
 
+const MARQUEE_ITEMS = [
+  "Bienvenue sur IBIG PARTNERS — votre plateforme d'opportunités économiques en Afrique",
+  "Un seul compte, tous les produits du groupe IBIG SARL",
+  "Des commissions transparentes sur 3 niveaux",
+  "Inscription 100% gratuite, sans investissement",
+  "Construisez un revenu durable et bâtissez votre équipe",
+];
+
+function MarqueeBanner() {
+  // Deux copies identiques pour une boucle continue sans coupure.
+  const sequence = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
+  return (
+    <div className="relative z-40 flex items-stretch bg-gradient-to-r from-brand-800 via-brand-700 to-brand-600 text-white">
+      <div className="marquee-mask flex-1 overflow-hidden py-2">
+        <div className="marquee-track">
+          {sequence.map((item, i) => (
+            <span key={i} className="mx-6 inline-flex items-center gap-3 text-xs font-medium tracking-wide text-brand-50">
+              <span className="text-gold-400">◆</span>
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
+      <Link
+        href="/rejoindre"
+        className="hidden shrink-0 items-center gap-1.5 self-stretch bg-gold-400 px-5 text-xs font-bold uppercase tracking-wide text-brand-900 transition-colors hover:bg-gold-500 sm:flex"
+      >
+        Devenir Partenaire →
+      </Link>
+    </div>
+  );
+}
+
 export function SiteHeader() {
   return (
+    <>
+    <MarqueeBanner />
     <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
       <div className="relative mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <Logo />
@@ -27,6 +62,7 @@ export function SiteHeader() {
           <a href="/#statuts" className="hover:text-brand-600 transition-colors">Statuts</a>
           <a href="/#espace" className="hover:text-brand-600 transition-colors">Espace partenaire</a>
           <a href="/#faq" className="hover:text-brand-600 transition-colors">FAQ</a>
+          <Link href="/partenaires" className="hover:text-brand-600 transition-colors">Nos partenaires</Link>
         </nav>
 
         <div className="flex items-center gap-2">
@@ -47,6 +83,7 @@ export function SiteHeader() {
         </div>
       </div>
     </header>
+    </>
   );
 }
 
@@ -93,6 +130,7 @@ export function SiteFooter() {
               <li><a href="/#commissions" className="hover:text-brand-600 transition-colors">Grille de commissions</a></li>
               <li><a href="/#statuts" className="hover:text-brand-600 transition-colors">Niveaux de statut</a></li>
               <li><a href="/#faq" className="hover:text-brand-600 transition-colors">Questions fréquentes</a></li>
+              <li><Link href="/partenaires" className="hover:text-brand-600 transition-colors">Nos partenaires</Link></li>
             </ul>
           </div>
 

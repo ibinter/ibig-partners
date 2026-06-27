@@ -36,7 +36,7 @@ export default async function ProduitsPage() {
         const colors = BRANCH_COLORS[idx % 5];
         const activeCount = b.products.filter(p => activeProductIds.has(p.id)).length;
         return (
-          <div key={b.id} className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+          <div key={b.id} className="card-premium overflow-hidden">
             {/* En-tête colorée */}
             <div className={`${colors.bg} px-5 py-3 flex items-center justify-between`}>
               <div>

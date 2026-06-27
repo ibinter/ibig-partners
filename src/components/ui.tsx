@@ -9,7 +9,7 @@ export function Card({
   className?: string;
 }) {
   return (
-    <div className={`bg-white border border-slate-100 rounded-2xl shadow-sm ${className}`}>
+    <div className={`card-premium ${className}`}>
       {children}
     </div>
   );
@@ -223,14 +223,16 @@ export function Field({
   defaultValue,
   placeholder,
   children,
+  htmlFor,
 }: {
   label: string;
-  name: string;
+  name?: string;
   type?: string;
   required?: boolean;
   defaultValue?: string | number;
   placeholder?: string;
   children?: ReactNode;
+  htmlFor?: string;
 }) {
   return (
     <label className="block">

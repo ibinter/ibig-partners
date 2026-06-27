@@ -34,7 +34,7 @@ export default async function RecuPage({ params }: { params: Promise<{ id: strin
       </div>
 
       {/* Reçu */}
-      <div id="receipt" className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+      <div id="receipt" className="card-premium overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-violet-700 px-6 py-6 text-white">
           <div className="flex items-start justify-between">

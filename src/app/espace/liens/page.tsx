@@ -57,7 +57,7 @@ export default async function LiensPage() {
       ) : (
         <div className="grid gap-4 lg:grid-cols-2">
           {rows.map(({ link, url }) => (
-            <div key={link.id} className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div key={link.id} className="card-premium overflow-hidden hover:shadow-md transition-shadow">
               {/* Header */}
               <div className="bg-gradient-to-r from-blue-50 to-slate-50 border-b border-slate-100 px-5 py-3 flex items-center justify-between">
                 <div>

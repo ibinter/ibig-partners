@@ -52,7 +52,7 @@ export default async function SupportPage() {
       </div>
 
       {/* Formulaire nouveau ticket */}
-      <div className="rounded-2xl bg-white border border-slate-100 shadow-sm p-5">
+      <div className="card-premium p-5">
         <div className="mb-4">
           <h3 className="font-semibold text-ink text-sm">✉️ Nouveau ticket</h3>
           <p className="text-xs text-muted mt-0.5">Notre équipe répond sous 24-48h ouvrables.</p>
@@ -83,7 +83,7 @@ export default async function SupportPage() {
       </div>
 
       {/* Liste tickets */}
-      <div className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+      <div className="card-premium overflow-hidden">
         <div className="px-5 py-4 border-b border-slate-50">
           <h3 className="font-semibold text-ink text-sm">Mes tickets</h3>
           <p className="text-xs text-muted mt-0.5">{tickets.length} ticket(s)</p>

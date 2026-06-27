@@ -65,7 +65,7 @@ export default async function AnalyticsPage() {
       </div>
 
       {/* Graphique barres */}
-      <div className="rounded-2xl bg-white border border-slate-100 shadow-sm p-5">
+      <div className="card-premium p-5">
         <div className="flex items-center justify-between mb-5">
           <div>
             <h3 className="font-semibold text-ink text-sm">Clics quotidiens</h3>
@@ -98,7 +98,7 @@ export default async function AnalyticsPage() {
       </div>
 
       {/* Tableau par lien */}
-      <div className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+      <div className="card-premium overflow-hidden">
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-50">
           <div>
             <h3 className="font-semibold text-ink text-sm">Performance par lien</h3>

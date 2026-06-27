@@ -4,6 +4,7 @@ import { formatDate } from "@/lib/format";
 import { Badge, Button, EmptyState, Field, PageHeader, StatCard, statusTone } from "@/components/ui";
 import { PROSPECT_STATUS_LABELS } from "@/lib/constants";
 import { addProspect, deleteProspect, updateProspectStatus } from "../actions";
+import { ProspectImport } from "./ProspectImport";
 
 export const dynamic = "force-dynamic";
 
@@ -44,9 +45,12 @@ export default async function ProspectsPage() {
         <StatCard label="Convertis" value={counts.converted} accent="green" icon="🎉" />
       </div>
 
+      {/* Import en masse */}
+      <ProspectImport />
+
       <div className="grid gap-5 lg:grid-cols-3">
         {/* Formulaire ajout */}
-        <div className="rounded-2xl bg-white border border-slate-100 shadow-sm p-5">
+        <div className="card-premium p-5">
           <div className="mb-4">
             <h3 className="font-semibold text-ink text-sm">➕ Ajouter un prospect</h3>
             <p className="text-xs text-muted mt-0.5">Suivez vos leads dans le pipeline.</p>
@@ -71,7 +75,7 @@ export default async function ProspectsPage() {
         </div>
 
         {/* Tableau prospects */}
-        <div className="lg:col-span-2 rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+        <div className="lg:col-span-2 card-premium overflow-hidden">
           <div className="px-5 py-4 border-b border-slate-50">
             <h3 className="font-semibold text-ink text-sm">Pipeline de prospects</h3>
             <p className="text-xs text-muted mt-0.5">{prospects.length} prospect(s) au total</p>

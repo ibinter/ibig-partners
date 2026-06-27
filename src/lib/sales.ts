@@ -2,6 +2,7 @@ import { prisma } from "./prisma";
 import { computeCommissions } from "./commissions";
 import { STATUS_RULES } from "./constants";
 import { getNetwork, activeTeamCount, directReferralsCount } from "./metrics";
+import { checkAndAwardBadges } from "@/app/espace/badges/actions";
 import type { PricingType } from "./constants";
 
 /** Remonte la chaine de parrainage : [vendeur, parrain, grand-parrain]. */
@@ -135,5 +136,9 @@ export async function recomputeStatus(userId: string): Promise<string> {
   }
 
   await prisma.user.update({ where: { id: userId }, data: { status } });
+
+  // Attribuer automatiquement les badges mérités (ventes, statut, équipe)
+  await checkAndAwardBadges(userId).catch(() => {});
+
   return status;
 }

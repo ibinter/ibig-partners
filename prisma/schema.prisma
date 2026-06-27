@@ -35,6 +35,13 @@ model User {
   payoutDetail  String? // numero mobile money ou IBAN
   minPayout     Int     @default(5000) // seuil declenchement paiement en FCFA
   city          String?
+  country       String?
+
+  // Profil public (listing partenaires)
+  bio           String?  // courte description / présentation
+  photoUrl      String?  // URL photo de profil ou logo entreprise
+  website       String?  // site web personnel ou entreprise
+  publicListing Boolean  @default(false) // opt-in pour apparaitre dans le listing public
 
   // Parrainage : structure du reseau multi-niveaux
   sponsorId String?
@@ -53,6 +60,10 @@ model User {
   auditLogs        AuditLog[]
   otpCode          OtpCode?
   verification     VerificationRequest?
+  trainingProgress TrainingProgress[]
+  chatParticipations ChatParticipant[]
+  sentMessages     ChatMessage[]      @relation("ChatSender")
+  badges           UserBadge[]
 
   createdAt DateTime @default(now())
 }
@@ -124,8 +135,9 @@ model Branch {
   active          Boolean @default(true)
   order           Int     @default(0)
 
-  products Product[]
-  kits     MarketingKit[]
+  products        Product[]
+  kits            MarketingKit[]
+  trainingModules TrainingModule[]
 }
 
 model Product {
@@ -141,9 +153,10 @@ model Product {
   siteUrl     String? // ex: scolaby.com
   active      Boolean @default(true)
 
-  links AffiliateLink[]
-  sales Sale[]
-  kits  MarketingKit[]
+  links           AffiliateLink[]
+  sales           Sale[]
+  kits            MarketingKit[]
+  trainingModules TrainingModule[]
 }
 
 model AffiliateLink {
@@ -316,6 +329,25 @@ model AuditLog {
 }
 
 // --- Option 10 : 2FA OTP email ---
+// Partenaires institutionnels IBIG (non-affilies, affiches sur la page publique)
+model InstitutionalPartner {
+  id          String  @id @default(cuid())
+  name        String  // nom de l'institution / entreprise
+  category    String  // BANK | NGO | GOVERNMENT | COMPANY | UNIVERSITY | OTHER
+  logoUrl     String?
+  description String? // resume des activites
+  website     String?
+  email       String?
+  phone       String?
+  phone2      String?
+  address     String?
+  city        String?
+  country     String?
+  active      Boolean @default(true)
+  order       Int     @default(0)
+  createdAt   DateTime @default(now())
+}
+
 model OtpCode {
   id        String   @id @default(cuid())
   userId    String   @unique
@@ -323,4 +355,103 @@ model OtpCode {
   code      String   // 6 chiffres hashés
   expiresAt DateTime
   createdAt DateTime @default(now())
+}
+
+// ─── Académie IBIG — modules de formation ───────────────────────────────────
+model TrainingModule {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String?
+  type        String   // VIDEO | PDF | ARTICLE | AI | QUIZ
+  content     String   // URL vidéo, texte article, URL PDF, prompt IA
+  thumbnail   String?  // URL miniature
+  duration    String?  // "15 min", "1h30"
+  branchId    String?
+  branch      Branch?  @relation(fields: [branchId], references: [id])
+  productId   String?
+  product     Product? @relation(fields: [productId], references: [id])
+  tags        String?  // virgule-séparé : "scolaby,saas,vente"
+  minStatus   String   @default("STARTER") // statut minimum pour voir le module
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  featured    Boolean  @default(false)
+  viewCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  progress TrainingProgress[]
+}
+
+model TrainingProgress {
+  id          String         @id @default(cuid())
+  userId      String
+  user        User           @relation(fields: [userId], references: [id])
+  moduleId    String
+  module      TrainingModule @relation(fields: [moduleId], references: [id])
+  startedAt   DateTime       @default(now())
+  completedAt DateTime?
+
+  @@unique([userId, moduleId])
+}
+
+// ─── Chat GOLD+ ──────────────────────────────────────────────────────────────
+model ChatConversation {
+  id            String    @id @default(cuid())
+  type          String    @default("DIRECT") // DIRECT | GROUP | BROADCAST
+  name          String?   // nom du groupe ou canal
+  description   String?
+  createdAt     DateTime  @default(now())
+  lastMessageAt DateTime  @default(now())
+
+  messages     ChatMessage[]
+  participants ChatParticipant[]
+}
+
+model ChatParticipant {
+  id             String           @id @default(cuid())
+  conversationId String
+  conversation   ChatConversation @relation(fields: [conversationId], references: [id])
+  userId         String
+  user           User             @relation(fields: [userId], references: [id])
+  lastReadAt     DateTime?
+  joinedAt       DateTime         @default(now())
+
+  @@unique([conversationId, userId])
+}
+
+model ChatMessage {
+  id             String           @id @default(cuid())
+  conversationId String
+  conversation   ChatConversation @relation(fields: [conversationId], references: [id])
+  senderId       String
+  sender         User             @relation("ChatSender", fields: [senderId], references: [id])
+  body           String
+  type           String           @default("TEXT") // TEXT | FILE | SYSTEM
+  fileUrl        String?
+  createdAt      DateTime         @default(now())
+}
+
+// ─── Badges et récompenses ───────────────────────────────────────────────────
+model Badge {
+  id          String      @id @default(cuid())
+  slug        String      @unique
+  title       String
+  description String
+  icon        String      // emoji ou URL
+  condition   String      // FIRST_SALE | SALES_10 | STATUS_GOLD | TEAM_10 | etc.
+  createdAt   DateTime    @default(now())
+
+  users UserBadge[]
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  badgeId   String
+  badge     Badge    @relation(fields: [badgeId], references: [id])
+  earnedAt  DateTime @default(now())
+
+  @@unique([userId, badgeId])
 }

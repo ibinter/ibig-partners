@@ -65,7 +65,7 @@ function Section({ title, color = "slate", children }: { title: string; color?: 
   };
   const headerCls = colors[color] ?? colors.slate;
   return (
-    <div className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+    <div className="card-premium overflow-hidden">
       <div className={`border-b px-5 py-3 ${headerCls}`}>
         <h3 className={`font-semibold text-sm ${color !== "slate" ? "text-white" : "text-ink"}`}>{title}</h3>
       </div>
@@ -79,7 +79,7 @@ function PaymentSection({ existing }: { existing: Existing }) {
   const isMobile = ["ORANGE_MONEY", "WAVE", "MTN_MOMO"].includes(method);
 
   return (
-    <div className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+    <div className="card-premium overflow-hidden">
       <div className="bg-gradient-to-r from-emerald-600 to-teal-600 px-5 py-3 border-b border-emerald-700">
         <h3 className="font-semibold text-sm text-white">💰 Coordonnées de paiement des commissions</h3>
         <p className="text-xs text-emerald-100 mt-0.5">Comment souhaitez-vous recevoir vos commissions ?</p>
@@ -137,7 +137,7 @@ function IndividualForm({ existing }: { existing: Existing }) {
         <F label="Ville / Région" name="city" defaultValue={existing?.city} required placeholder="Abidjan — Cocody" />
       </Section>
 
-      <div className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+      <div className="card-premium overflow-hidden">
         <div className="bg-slate-50 border-b border-slate-100 px-5 py-3">
           <h3 className="font-semibold text-sm text-ink">📄 Curriculum Vitae / Parcours</h3>
         </div>
@@ -152,7 +152,7 @@ function IndividualForm({ existing }: { existing: Existing }) {
         <F label="Second contact" name="secondPhone" defaultValue={existing?.secondPhone} placeholder="+225 05 00 00 00 00" />
       </Section>
 
-      <div className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+      <div className="card-premium overflow-hidden">
         <div className="bg-slate-50 border-b border-slate-100 px-5 py-3">
           <h3 className="font-semibold text-sm text-ink">👨‍👩‍👧 2 personnes à contacter en dehors de vous (obligatoire)</h3>
           <p className="text-xs text-muted mt-0.5">Personnes joignables indépendamment — famille, amis, collègues.</p>
@@ -209,7 +209,7 @@ export function VerificationForm({ initialType, existing }: {
     <form action={submitVerification} className="space-y-5">
       <input type="hidden" name="partnerType" value={type} />
 
-      <div className="rounded-2xl bg-white border border-slate-100 shadow-sm p-5">
+      <div className="card-premium p-5">
         <p className="text-sm font-semibold text-ink mb-3">Vous êtes :</p>
         <div className="grid grid-cols-2 gap-3">
           {[

@@ -381,6 +381,54 @@ export default function FormationPage() {
         </p>
       </div>
 
+      {/* FORMATION DES FILLEULS */}
+      <div className="rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100 p-6">
+        <div className="flex items-start gap-4">
+          <span className="text-3xl shrink-0">🎓</span>
+          <div>
+            <h2 className="text-base font-bold text-ink mb-1">Le parrain forme ses filleuls</h2>
+            <p className="text-sm text-muted leading-relaxed mb-4">
+              En tant que parrain, vous avez la <strong className="text-ink">responsabilité de former vos filleuls</strong>.
+              Un filleul bien formé vend mieux, et ses ventes vous rapportent des commissions N2 et N3.
+              C&apos;est un investissement direct dans vos revenus passifs.
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {[
+                {
+                  icon: "📦",
+                  title: "Installation des logiciels",
+                  desc: "Vous pouvez accompagner votre filleul (ou son client) pour l'installation et la configuration des solutions IBIG (Scolaby, HRM, etc.). Cette prestation peut être facturée honnêtement.",
+                },
+                {
+                  icon: "🖥️",
+                  title: "Prise en main & usage",
+                  desc: "Formation à l'utilisation du logiciel, tutoriels personnalisés, sessions de démo. Vous pouvez facturer ces formations de manière transparente à votre filleul ou directement au client final.",
+                },
+                {
+                  icon: "💼",
+                  title: "Coaching commercial",
+                  desc: "Apprendre à prospecter, présenter les produits, gérer les objections, conclure une vente. Si vous proposez un coaching structuré, une rémunération honnête est légitime.",
+                },
+                {
+                  icon: "⚖️",
+                  title: "Facturation honnête",
+                  desc: "La règle : facturer de façon transparente et raisonnable. Pas de sur-facturation ni de frais cachés. L'objectif est d'aider votre filleul à réussir — votre enrichissement viendra de ses succès.",
+                },
+              ].map((item) => (
+                <div key={item.title} className="rounded-2xl bg-white border border-amber-100 p-4 shadow-sm">
+                  <div className="text-xl mb-2">{item.icon}</div>
+                  <h3 className="font-bold text-sm text-ink mb-1">{item.title}</h3>
+                  <p className="text-xs text-muted leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-4 text-xs text-amber-700 bg-amber-100 rounded-xl px-4 py-2.5 font-medium">
+              ⚠️ Important : les frais de formation que vous percevez directement sont distincts des commissions IBIG PARTNERS. IBIG SARL n&apos;est pas partie prenante dans ces transactions — elles sont conclues librement entre vous et votre filleul ou son client.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* STRATÉGIES */}
       <div>
         <h2 className="text-base font-bold text-ink mb-1">6 stratégies pour maximiser vos revenus</h2>
@@ -394,7 +442,7 @@ export default function FormationPage() {
             { icon: "♻️", title: "Misez sur les abonnements", desc: "Un client SaaS paie chaque mois. 5 clients Scolaby = commissions récurrentes chaque mois pendant 4 mois. Puis reconvertissez-les en annuel." },
             { icon: "🏆", title: "Montez en statut rapidement", desc: "Gold (+5%) transforme 10 000 FCFA en 10 500 FCFA. Sur un réseau actif de 50 personnes, la différence est massive sur une année." },
           ].map((tip) => (
-            <div key={tip.title} className="rounded-2xl bg-white border border-slate-100 shadow-sm p-4 hover:shadow-md transition-shadow">
+            <div key={tip.title} className="card-premium p-4 hover:shadow-md transition-shadow">
               <div className="text-2xl mb-3">{tip.icon}</div>
               <h3 className="font-bold text-sm text-ink mb-1">{tip.title}</h3>
               <p className="text-xs text-muted leading-relaxed">{tip.desc}</p>
@@ -433,7 +481,7 @@ export default function FormationPage() {
               a: "Non. Pour les SaaS mensuels, les commissions s'arrêtent après 4 mois par client. Mais chaque nouveau client que fait votre filleul relance un nouveau cycle de 4 mois.",
             },
           ].map((faq, i) => (
-            <div key={i} className="rounded-2xl bg-white border border-slate-100 shadow-sm p-5">
+            <div key={i} className="card-premium p-5">
               <p className="font-semibold text-sm text-ink mb-2">❓ {faq.q}</p>
               <p className="text-sm text-muted leading-relaxed">→ {faq.a}</p>
             </div>

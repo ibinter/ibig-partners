@@ -61,7 +61,7 @@ export default async function PaiementsPage() {
       </div>
 
       {/* Seuil de paiement */}
-      <div className="rounded-2xl bg-white border border-slate-100 shadow-sm p-5">
+      <div className="card-premium p-5">
         <div className="flex items-center justify-between mb-3">
           <div>
             <h2 className="font-semibold text-ink text-sm">Seuil de déclenchement automatique</h2>
@@ -87,7 +87,7 @@ export default async function PaiementsPage() {
       </div>
 
       {/* Configuration */}
-      <div className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+      <div className="card-premium overflow-hidden">
         <div className="bg-slate-50 border-b border-slate-100 px-5 py-3">
           <h2 className="font-semibold text-ink text-sm">⚙️ Configuration de paiement</h2>
         </div>
@@ -102,7 +102,7 @@ export default async function PaiementsPage() {
       </div>
 
       {/* Historique des paiements */}
-      <div className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+      <div className="card-premium overflow-hidden">
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-50">
           <h2 className="font-semibold text-ink text-sm">Historique des paiements</h2>
           <span className="text-xs text-muted">{payouts.length} versement{payouts.length !== 1 ? "s" : ""}</span>

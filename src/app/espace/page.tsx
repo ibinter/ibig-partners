@@ -61,7 +61,7 @@ export default async function DashboardPage({
 
       <div className="mt-5 grid gap-5 lg:grid-cols-3">
         {/* Progression de statut */}
-        <div className="lg:col-span-2 rounded-2xl bg-white border border-slate-100 shadow-sm p-5">
+        <div className="lg:col-span-2 card-premium p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-ink text-sm">Progression de statut</h2>
             <Badge tone="gold">🏆 {STATUS_LABELS[user.status]}</Badge>
@@ -106,7 +106,7 @@ export default async function DashboardPage({
       </div>
 
       {/* Commissions récentes */}
-      <div className="mt-5 rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+      <div className="mt-5 card-premium overflow-hidden">
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-50">
           <h2 className="font-semibold text-ink text-sm">Commissions récentes</h2>
           <Link href="/espace/commissions" className="text-xs font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition">

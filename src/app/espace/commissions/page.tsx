@@ -78,7 +78,7 @@ export default async function CommissionsPage() {
       </div>
 
       {/* Tableau */}
-      <div className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+      <div className="card-premium overflow-hidden">
         <div className="px-5 py-4 border-b border-slate-50 flex items-center justify-between">
           <div>
             <h3 className="font-semibold text-ink text-sm">Historique des commissions</h3>

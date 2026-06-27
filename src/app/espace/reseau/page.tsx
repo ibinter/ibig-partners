@@ -44,7 +44,7 @@ export default async function ReseauPage() {
         const members = byLevel(lvl);
         const col = LEVEL_COLORS[lvl - 1];
         return (
-          <div key={lvl} className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+          <div key={lvl} className="card-premium overflow-hidden">
             <div className={`${col.bg} px-5 py-3 flex items-center justify-between`}>
               <div>
                 <h3 className="font-semibold text-sm text-white">Niveau {lvl}</h3>
@@ -98,7 +98,7 @@ export default async function ReseauPage() {
 
       {/* Opportunités B2B */}
       <div className="grid gap-5 lg:grid-cols-2">
-        <div className="rounded-2xl bg-white border border-slate-100 shadow-sm p-5">
+        <div className="card-premium p-5">
           <div className="mb-4">
             <h3 className="font-semibold text-ink text-sm">💼 Apporter une opportunité</h3>
             <p className="text-xs text-muted mt-1">Marché, collaboration, appel d&apos;offres… Toute opportunité signée est commissionnée par accord écrit.</p>
@@ -119,7 +119,7 @@ export default async function ReseauPage() {
           </form>
         </div>
 
-        <div className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+        <div className="card-premium overflow-hidden">
           <div className="px-5 py-4 border-b border-slate-50">
             <h3 className="font-semibold text-ink text-sm">Mes opportunités soumises</h3>
             <p className="text-xs text-muted mt-0.5">{opportunities.length} soumise(s)</p>

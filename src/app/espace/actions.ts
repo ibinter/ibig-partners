@@ -44,6 +44,50 @@ export async function addProspect(formData: FormData) {
   revalidatePath("/espace/prospects");
 }
 
+/**
+ * Import en masse de prospects/contacts depuis un texte CSV.
+ * Chaque ligne : Nom[, Contact[, Note]]. Séparateurs acceptés : virgule,
+ * point-virgule ou tabulation. Une éventuelle ligne d'en-tête est ignorée.
+ */
+export async function importProspects(formData: FormData) {
+  const user = await requireUser();
+  const raw = String(formData.get("data") || "");
+  if (!raw.trim()) return;
+
+  const lines = raw
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter(Boolean);
+
+  const rows: { name: string; contact: string | null; note: string | null }[] = [];
+  for (let i = 0; i < lines.length; i++) {
+    const cols = lines[i].split(/[,;\t]/).map((c) => c.trim());
+    const name = cols[0] ?? "";
+    if (!name) continue;
+    // Ignore une ligne d'en-tête évidente
+    if (i === 0 && /^(nom|name|prenom|prénom|contact)$/i.test(name)) continue;
+    rows.push({
+      name,
+      contact: cols[1] ? cols[1] : null,
+      note: cols.slice(2).join(" ").trim() || null,
+    });
+  }
+
+  if (rows.length === 0) return;
+
+  await prisma.prospect.createMany({
+    data: rows.map((r) => ({
+      userId: user.id,
+      name: r.name,
+      contact: r.contact,
+      note: r.note,
+      status: "CONTACTED",
+    })),
+  });
+
+  revalidatePath("/espace/prospects");
+}
+
 export async function updateProspectStatus(formData: FormData) {
   const user = await requireUser();
   const id = String(formData.get("id") || "");
@@ -82,13 +126,18 @@ export async function submitOpportunity(formData: FormData) {
 
 export async function updateProfile(formData: FormData) {
   const user = await requireUser();
-  await prisma.user.update({
+  await (prisma as any).user.update({
     where: { id: user.id },
     data: {
       phone: String(formData.get("phone") || user.phone).trim(),
       city: String(formData.get("city") || "").trim() || null,
+      country: String(formData.get("country") || "").trim() || null,
       payoutMethod: String(formData.get("payoutMethod") || user.payoutMethod),
       payoutDetail: String(formData.get("payoutDetail") || "").trim() || null,
+      bio: String(formData.get("bio") || "").trim() || null,
+      photoUrl: String(formData.get("photoUrl") || "").trim() || null,
+      website: String(formData.get("website") || "").trim() || null,
+      publicListing: formData.get("publicListing") === "on",
     },
   });
   revalidatePath("/espace/profil");
