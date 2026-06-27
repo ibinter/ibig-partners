@@ -58,11 +58,7 @@ export default function CgvPage() {
               <li><strong>WorldRemit</strong> — envoi vers mobile money ou compte bancaire africain</li>
               <li><strong>Remitly</strong> — transfert international vers l&apos;Afrique</li>
               <li><strong>RIA Money Transfer</strong> — transfert international, présent dans +160 pays</li>
-              <li><strong>Juba Pay</strong> — transfert diaspora africaine vers l&apos;Afrique de l&apos;Ouest</li>
-              <li><strong>Sendwave</strong> — envoi gratuit vers mobile money africain</li>
-              <li><strong>LemFi</strong> — transfert diaspora africaine (UK, Canada, USA → Afrique)</li>
-              <li><strong>Mukuru</strong> — transfert diaspora vers Afrique Centrale et Australe</li>
-              <li><strong>Skrill</strong> — portefeuille numérique international</li>
+              <li><strong>Juba Express</strong> — transfert diaspora africaine vers l&apos;Afrique de l&apos;Ouest</li>
             </ul>
             <p className="mt-3">
               Toute commande est ferme et définitive dès réception du paiement complet. Une confirmation
