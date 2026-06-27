@@ -227,6 +227,96 @@ export async function updateProductRate(formData: FormData) {
   revalidatePath("/admin/branches");
 }
 
+function toSlug(str: string) {
+  return str.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+export async function createBranch(formData: FormData) {
+  await requireAdmin();
+  const name = String(formData.get("name") || "").trim();
+  const tagline = String(formData.get("tagline") || "").trim();
+  const description = String(formData.get("description") || "").trim();
+  const offerType = String(formData.get("offerType") || "").trim();
+  const commissionModel = String(formData.get("commissionModel") || "").trim();
+  const order = Number(formData.get("order") || 0);
+  if (!name) return;
+  const slug = toSlug(name);
+  await prisma.branch.create({ data: { name, slug, tagline, description, offerType, commissionModel, order } });
+  revalidatePath("/admin/branches");
+  revalidatePath("/");
+}
+
+export async function updateBranch(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const name = String(formData.get("name") || "").trim();
+  const tagline = String(formData.get("tagline") || "").trim();
+  const description = String(formData.get("description") || "").trim();
+  const offerType = String(formData.get("offerType") || "").trim();
+  const commissionModel = String(formData.get("commissionModel") || "").trim();
+  const order = Number(formData.get("order") || 0);
+  if (!name || !id) return;
+  await prisma.branch.update({ where: { id }, data: { name, tagline, description, offerType, commissionModel, order } });
+  revalidatePath("/admin/branches");
+  revalidatePath("/");
+}
+
+export async function deleteBranch(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const salesCount = await prisma.sale.count({ where: { product: { branchId: id } } });
+  if (salesCount > 0) return; // Sécurité : ne pas supprimer si des ventes existent
+  await prisma.product.deleteMany({ where: { branchId: id } });
+  await prisma.branch.delete({ where: { id } });
+  revalidatePath("/admin/branches");
+  revalidatePath("/");
+}
+
+export async function createProduct(formData: FormData) {
+  await requireAdmin();
+  const branchId = String(formData.get("branchId") || "").trim();
+  const name = String(formData.get("name") || "").trim();
+  const description = String(formData.get("description") || "").trim();
+  const price = Number(formData.get("price") || 0);
+  const pricingType = String(formData.get("pricingType") || "SERVICE");
+  const rate = Number(formData.get("rate") || 8);
+  const siteUrl = String(formData.get("siteUrl") || "").trim();
+  if (!name || !branchId) return;
+  const slug = toSlug(name) + "-" + Date.now().toString(36);
+  await prisma.product.create({
+    data: { branchId, name, slug, description: description || null, price, pricingType, rate, siteUrl: siteUrl || null },
+  });
+  revalidatePath("/admin/branches");
+  revalidatePath("/");
+}
+
+export async function updateProduct(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") || "").trim();
+  const name = String(formData.get("name") || "").trim();
+  const description = String(formData.get("description") || "").trim();
+  const price = Number(formData.get("price") || 0);
+  const pricingType = String(formData.get("pricingType") || "SERVICE");
+  const rate = Number(formData.get("rate") || 8);
+  const siteUrl = String(formData.get("siteUrl") || "").trim();
+  if (!name || !id) return;
+  await prisma.product.update({
+    where: { id },
+    data: { name, description: description || null, price, pricingType, rate, siteUrl: siteUrl || null },
+  });
+  revalidatePath("/admin/branches");
+}
+
+export async function deleteProduct(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const salesCount = await prisma.sale.count({ where: { productId: id } });
+  if (salesCount > 0) return; // Sécurité : ne pas supprimer si des ventes existent
+  await prisma.product.delete({ where: { id } });
+  revalidatePath("/admin/branches");
+  revalidatePath("/");
+}
+
 // --- Opportunités ---
 export async function updateOpportunity(formData: FormData) {
   await requireAdmin();

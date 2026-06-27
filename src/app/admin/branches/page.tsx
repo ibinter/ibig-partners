@@ -2,59 +2,261 @@ import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { fcfa } from "@/lib/format";
 import { Badge, Button, Card, Field, PageHeader } from "@/components/ui";
-import { PRICING_TYPE_LABELS } from "@/lib/constants";
-import { toggleBranch, toggleProductActive, updateProductRate } from "../actions";
+import { PRICING_TYPE_LABELS, PRICING_TYPES } from "@/lib/constants";
+import {
+  toggleBranch, toggleProductActive, updateProductRate,
+  createBranch, updateBranch, deleteBranch,
+  createProduct, updateProduct, deleteProduct,
+} from "../actions";
 
 export const dynamic = "force-dynamic";
 
-export default async function BranchesPage() {
+const PRICING_OPTIONS = [
+  { value: "MONTHLY_SUB", label: "Abonnement mensuel" },
+  { value: "ANNUAL_SUB", label: "Abonnement annuel" },
+  { value: "COURSE", label: "Formation" },
+  { value: "SERVICE", label: "Prestation / service" },
+  { value: "PRODUCT", label: "Produit physique" },
+];
+
+export default async function BranchesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ action?: string; branchId?: string; productId?: string }>;
+}) {
   await requireAdmin();
+  const { action, branchId, productId } = await searchParams;
 
   const branches = await prisma.branch.findMany({
-    orderBy: { name: "asc" },
+    orderBy: { order: "asc" },
     include: {
       products: {
         orderBy: { name: "asc" },
         include: { _count: { select: { sales: true, links: true } } },
       },
+      _count: { select: { products: true } },
     },
   });
 
+  const editBranch = branchId ? branches.find((b) => b.id === branchId) : null;
+  const editProduct = productId
+    ? branches.flatMap((b) => b.products).find((p) => p.id === productId)
+    : null;
+  const addProductBranch = action === "add-product" && branchId
+    ? branches.find((b) => b.id === branchId)
+    : null;
+
   return (
     <div>
-      <PageHeader
-        title="Branches & Produits"
-        subtitle="Activez ou désactivez les branches et produits, ajustez les taux de commission."
-      />
+      <div className="flex items-center justify-between">
+        <PageHeader
+          title="Branches & Produits"
+          subtitle={`${branches.length} branches · ${branches.reduce((a, b) => a + b.products.length, 0)} produits`}
+        />
+        <a
+          href="/admin/branches?action=new-branch"
+          className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+        >
+          + Nouvelle branche
+        </a>
+      </div>
 
+      {/* Formulaire nouvelle branche */}
+      {action === "new-branch" && (
+        <Card className="mb-6 border-brand-200 bg-brand-50/30">
+          <h2 className="mb-4 font-semibold text-ink">Créer une nouvelle branche</h2>
+          <form action={createBranch} className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Nom de la branche *" name="name" required placeholder="Ex: IBIG SOFT" />
+              <Field label="Tagline *" name="tagline" required placeholder="Ex: Logiciels SaaS de gestion" />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium text-ink">Description</label>
+              <textarea name="description" rows={2} placeholder="Description courte de la branche..."
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+            </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Field label="Type d'offre" name="offerType" placeholder="Ex: Abonnement mensuel/annuel" />
+              <Field label="Modèle de commission" name="commissionModel" placeholder="Ex: 20% mois 1, 15% mois 2..." />
+              <Field label="Ordre d'affichage" name="order" type="number" defaultValue="0" />
+            </div>
+            <div className="flex gap-3">
+              <Button type="submit">Créer la branche</Button>
+              <a href="/admin/branches" className="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100">Annuler</a>
+            </div>
+          </form>
+        </Card>
+      )}
+
+      {/* Formulaire modifier branche */}
+      {editBranch && !editProduct && !addProductBranch && (
+        <Card className="mb-6 border-amber-200 bg-amber-50/30">
+          <h2 className="mb-4 font-semibold text-ink">Modifier — {editBranch.name}</h2>
+          <form action={updateBranch} className="space-y-4">
+            <input type="hidden" name="id" value={editBranch.id} />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Nom *" name="name" required defaultValue={editBranch.name} />
+              <Field label="Tagline" name="tagline" defaultValue={editBranch.tagline} />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium text-ink">Description</label>
+              <textarea name="description" rows={2} defaultValue={editBranch.description}
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+            </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Field label="Type d'offre" name="offerType" defaultValue={editBranch.offerType} />
+              <Field label="Modèle de commission" name="commissionModel" defaultValue={editBranch.commissionModel} />
+              <Field label="Ordre" name="order" type="number" defaultValue={String(editBranch.order)} />
+            </div>
+            <div className="flex gap-3">
+              <Button type="submit">Enregistrer</Button>
+              <a href="/admin/branches" className="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100">Annuler</a>
+            </div>
+          </form>
+        </Card>
+      )}
+
+      {/* Formulaire modifier produit */}
+      {editProduct && (
+        <Card className="mb-6 border-amber-200 bg-amber-50/30">
+          <h2 className="mb-4 font-semibold text-ink">Modifier le produit — {editProduct.name}</h2>
+          <form action={updateProduct} className="space-y-4">
+            <input type="hidden" name="id" value={editProduct.id} />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Nom *" name="name" required defaultValue={editProduct.name} />
+              <div>
+                <label className="mb-1 block text-sm font-medium text-ink">Type de tarification</label>
+                <select name="pricingType" defaultValue={editProduct.pricingType}
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                  {PRICING_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Field label="Prix (FCFA)" name="price" type="number" defaultValue={String(editProduct.price)} />
+              <Field label="Taux commission N1 (%)" name="rate" type="number" defaultValue={String(editProduct.rate)} />
+              <Field label="URL du site produit" name="siteUrl" defaultValue={editProduct.siteUrl ?? ""} placeholder="https://..." />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium text-ink">Description</label>
+              <textarea name="description" rows={2} defaultValue={editProduct.description ?? ""}
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+            </div>
+            <div className="flex gap-3">
+              <Button type="submit">Enregistrer</Button>
+              <a href="/admin/branches" className="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100">Annuler</a>
+            </div>
+          </form>
+        </Card>
+      )}
+
+      {/* Formulaire ajouter produit */}
+      {addProductBranch && (
+        <Card className="mb-6 border-emerald-200 bg-emerald-50/30">
+          <h2 className="mb-4 font-semibold text-ink">Ajouter un produit à {addProductBranch.name}</h2>
+          <form action={createProduct} className="space-y-4">
+            <input type="hidden" name="branchId" value={addProductBranch.id} />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Nom du produit *" name="name" required placeholder="Ex: Scolaby" />
+              <div>
+                <label className="mb-1 block text-sm font-medium text-ink">Type de tarification</label>
+                <select name="pricingType" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                  {PRICING_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Field label="Prix (FCFA)" name="price" type="number" defaultValue="0" />
+              <Field label="Taux commission N1 (%)" name="rate" type="number" defaultValue="8" />
+              <Field label="URL du site produit" name="siteUrl" placeholder="https://..." />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium text-ink">Description</label>
+              <textarea name="description" rows={2} placeholder="Description courte du produit..."
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+            </div>
+            <div className="flex gap-3">
+              <Button type="submit">Ajouter le produit</Button>
+              <a href="/admin/branches" className="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100">Annuler</a>
+            </div>
+          </form>
+        </Card>
+      )}
+
+      {/* Liste des branches */}
       <div className="space-y-6">
+        {branches.length === 0 && (
+          <Card>
+            <p className="text-center text-sm text-muted py-8">
+              Aucune branche. Cliquez sur <strong>+ Nouvelle branche</strong> pour commencer.
+            </p>
+          </Card>
+        )}
+
         {branches.map((branch) => (
           <Card key={branch.id} className={!branch.active ? "opacity-60" : ""}>
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h2 className="text-lg font-semibold text-ink">{branch.name}</h2>
-                {branch.description && <p className="mt-0.5 text-sm text-muted">{branch.description}</p>}
-                <p className="mt-1 text-xs text-muted">{branch.products.length} produits</p>
+            {/* En-tête branche */}
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h2 className="text-lg font-bold text-ink">{branch.name}</h2>
+                  <Badge tone={branch.active ? "green" : "gray"}>{branch.active ? "Active" : "Inactive"}</Badge>
+                  <span className="text-xs text-muted">Ordre #{branch.order}</span>
+                </div>
+                {branch.tagline && <p className="mt-0.5 text-sm font-medium text-brand-600">{branch.tagline}</p>}
+                {branch.description && <p className="mt-1 text-sm text-muted">{branch.description}</p>}
+                {branch.offerType && (
+                  <p className="mt-1 text-xs text-muted">
+                    <span className="font-medium">Offre :</span> {branch.offerType}
+                    {branch.commissionModel && <> · <span className="font-medium">Commission :</span> {branch.commissionModel}</>}
+                  </p>
+                )}
               </div>
-              <form action={toggleBranch} className="flex-shrink-0">
-                <input type="hidden" name="id" value={branch.id} />
-                <input type="hidden" name="active" value={(!branch.active).toString()} />
-                <Button type="submit" variant={branch.active ? "ghost" : "secondary"}>
-                  {branch.active ? "Désactiver la branche" : "Activer la branche"}
-                </Button>
-              </form>
+              <div className="flex flex-wrap items-center gap-2">
+                <a href={`/admin/branches?branchId=${branch.id}`}
+                  className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50">
+                  ✏️ Modifier
+                </a>
+                <a href={`/admin/branches?action=add-product&branchId=${branch.id}`}
+                  className="rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-100">
+                  + Produit
+                </a>
+                <form action={toggleBranch}>
+                  <input type="hidden" name="id" value={branch.id} />
+                  <input type="hidden" name="active" value={(!branch.active).toString()} />
+                  <button type="submit" className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50">
+                    {branch.active ? "Désactiver" : "Activer"}
+                  </button>
+                </form>
+                {branch._count.products === 0 && (
+                  <form action={deleteBranch} onSubmit={(e) => { if (!confirm("Supprimer cette branche ?")) e.preventDefault(); }}>
+                    <input type="hidden" name="id" value={branch.id} />
+                    <button type="submit" className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-600 hover:bg-rose-100">
+                      🗑️ Supprimer
+                    </button>
+                  </form>
+                )}
+              </div>
             </div>
 
-            {branch.products.length > 0 && (
-              <div className="mt-4 overflow-x-auto rounded-lg border border-slate-100">
+            {/* Table des produits */}
+            {branch.products.length === 0 ? (
+              <p className="mt-4 text-sm text-muted italic">
+                Aucun produit —{" "}
+                <a href={`/admin/branches?action=add-product&branchId=${branch.id}`} className="text-brand-600 hover:underline">
+                  ajouter le premier
+                </a>
+              </p>
+            ) : (
+              <div className="mt-4 overflow-x-auto rounded-xl border border-slate-100">
                 <table className="w-full text-sm">
                   <thead className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase text-muted">
                     <tr>
                       <th className="px-4 py-2">Produit</th>
                       <th className="px-3 py-2">Type</th>
                       <th className="px-3 py-2">Prix</th>
-                      <th className="px-3 py-2">Taux (%)</th>
-                      <th className="px-3 py-2">Affiliés</th>
+                      <th className="px-3 py-2">Taux N1</th>
+                      <th className="px-3 py-2">Liens</th>
                       <th className="px-3 py-2">Ventes</th>
                       <th className="px-3 py-2">État</th>
                       <th className="px-3 py-2">Actions</th>
@@ -62,40 +264,56 @@ export default async function BranchesPage() {
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {branch.products.map((p) => (
-                      <tr key={p.id} className={!p.active ? "opacity-50" : ""}>
-                        <td className="px-4 py-2 font-medium text-ink">{p.name}</td>
-                        <td className="px-3 py-2 text-xs text-muted">{PRICING_TYPE_LABELS[p.pricingType]}</td>
-                        <td className="px-3 py-2">{fcfa(p.price)}</td>
+                      <tr key={p.id} className={!p.active ? "opacity-50 bg-slate-50" : "hover:bg-slate-50/50"}>
+                        <td className="px-4 py-2">
+                          <p className="font-semibold text-ink">{p.name}</p>
+                          {p.description && <p className="text-xs text-muted truncate max-w-[200px]">{p.description}</p>}
+                          {p.siteUrl && (
+                            <a href={p.siteUrl} target="_blank" className="text-xs text-brand-600 hover:underline">
+                              {p.siteUrl.replace("https://", "")}
+                            </a>
+                          )}
+                        </td>
+                        <td className="px-3 py-2 text-xs text-muted whitespace-nowrap">
+                          {PRICING_TYPE_LABELS[p.pricingType] ?? p.pricingType}
+                        </td>
+                        <td className="px-3 py-2 text-xs font-medium">{fcfa(p.price)}</td>
                         <td className="px-3 py-2">
-                          <form action={updateProductRate} className="flex items-center gap-2">
+                          <form action={updateProductRate} className="flex items-center gap-1">
                             <input type="hidden" name="id" value={p.id} />
-                            <input
-                              name="rate"
-                              type="number"
-                              defaultValue={p.rate}
-                              min={0}
-                              max={100}
-                              step={1}
-                              className="w-16 rounded border border-slate-300 px-2 py-1 text-xs"
-                            />
-                            <Button type="submit" variant="ghost">OK</Button>
+                            <input name="rate" type="number" defaultValue={p.rate} min={0} max={100}
+                              className="w-14 rounded border border-slate-300 px-2 py-1 text-xs" />
+                            <span className="text-xs text-muted">%</span>
+                            <button type="submit" className="text-xs text-brand-600 hover:underline">OK</button>
                           </form>
                         </td>
-                        <td className="px-3 py-2 text-xs text-muted">{p._count.links}</td>
-                        <td className="px-3 py-2 text-xs text-muted">{p._count.sales}</td>
-                        <td className="px-3 py-2">
-                          <Badge tone={p.active ? "green" : "slate"}>
-                            {p.active ? "Actif" : "Inactif"}
-                          </Badge>
+                        <td className="px-3 py-2 text-xs text-center text-muted">{p._count.links}</td>
+                        <td className="px-3 py-2 text-xs text-center">
+                          <span className={p._count.sales > 0 ? "font-semibold text-emerald-700" : "text-muted"}>
+                            {p._count.sales}
+                          </span>
                         </td>
                         <td className="px-3 py-2">
-                          <form action={toggleProductActive}>
-                            <input type="hidden" name="id" value={p.id} />
-                            <input type="hidden" name="active" value={(!p.active).toString()} />
-                            <Button type="submit" variant="ghost">
-                              {p.active ? "Désactiver" : "Activer"}
-                            </Button>
-                          </form>
+                          <Badge tone={p.active ? "green" : "gray"}>{p.active ? "Actif" : "Inactif"}</Badge>
+                        </td>
+                        <td className="px-3 py-2">
+                          <div className="flex items-center gap-1">
+                            <a href={`/admin/branches?productId=${p.id}`}
+                              className="rounded px-2 py-1 text-xs text-slate-600 hover:bg-slate-100">✏️</a>
+                            <form action={toggleProductActive}>
+                              <input type="hidden" name="id" value={p.id} />
+                              <input type="hidden" name="active" value={(!p.active).toString()} />
+                              <button type="submit" className="rounded px-2 py-1 text-xs text-slate-600 hover:bg-slate-100">
+                                {p.active ? "Off" : "On"}
+                              </button>
+                            </form>
+                            {p._count.sales === 0 && (
+                              <form action={deleteProduct}>
+                                <input type="hidden" name="id" value={p.id} />
+                                <button type="submit" className="rounded px-2 py-1 text-xs text-rose-500 hover:bg-rose-50">🗑️</button>
+                              </form>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     ))}
