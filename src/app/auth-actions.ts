@@ -52,18 +52,14 @@ export async function loginAction(_prev: unknown, formData: FormData) {
     return { error: "Ce compte a été désactivé. Contactez l'équipe IBIG." };
   }
 
-  // 2FA pour les admins : envoyer OTP et stocker userId en cookie temporaire
-  if (user.role === "ADMIN" || user.role === "SUPERADMIN") {
-    void createAndSendOtp(user.id, user.email, user.firstName);
-    const store = await cookies();
-    store.set("ibig_otp_pending", user.id, {
-      httpOnly: true,
-      sameSite: "lax",
-      maxAge: 10 * 60, // 10 min
-      path: "/",
-    });
-    redirect("/connexion/otp");
-  }
+  // 2FA désactivé temporairement (domaine email non vérifié sur Resend)
+  // À réactiver après vérification du domaine ibigpartners.com sur resend.com
+  // if (user.role === "ADMIN" || user.role === "SUPERADMIN") {
+  //   void createAndSendOtp(user.id, user.email, user.firstName);
+  //   const store = await cookies();
+  //   store.set("ibig_otp_pending", user.id, { httpOnly: true, sameSite: "lax", maxAge: 10 * 60, path: "/" });
+  //   redirect("/connexion/otp");
+  // }
 
   await createSession({ userId: user.id, role: user.role });
 
