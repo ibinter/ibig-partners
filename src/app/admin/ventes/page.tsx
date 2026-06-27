@@ -87,23 +87,29 @@ export default async function VentesPage() {
                   <td className="px-3 py-2">{s._count.commissions}</td>
                   <td className="px-3 py-2"><Badge tone={statusTone(s.status)}>{SALE_STATUS_LABELS[s.status]}</Badge></td>
                   <td className="px-3 py-2">
-                    <div className="flex flex-wrap justify-end gap-1">
+                    <div className="flex flex-wrap justify-end gap-1.5">
                       {s.status === "PENDING" && (
                         <form action={confirmSale}>
                           <input type="hidden" name="id" value={s.id} />
-                          <Button type="submit" variant="secondary">Confirmer</Button>
+                          <button type="submit" className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700 transition-colors shadow-sm">
+                            Confirmer
+                          </button>
                         </form>
                       )}
                       {s.status === "CONFIRMED" && s.pricingType === "MONTHLY_SUB" && s.monthsPaid < MONTHLY_DURATION && (
                         <form action={addPaidMonth}>
                           <input type="hidden" name="id" value={s.id} />
-                          <Button type="submit" variant="secondary">+ 1 mois payé</Button>
+                          <button type="submit" className="rounded-lg border border-brand-200 bg-brand-50 px-3 py-1.5 text-xs font-semibold text-brand-700 hover:bg-brand-100 transition-colors whitespace-nowrap">
+                            + 1 mois
+                          </button>
                         </form>
                       )}
                       {s.status !== "CANCELLED" && (
                         <form action={cancelSale}>
                           <input type="hidden" name="id" value={s.id} />
-                          <Button type="submit" variant="ghost">Annuler</Button>
+                          <button type="submit" className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-500 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition-colors">
+                            Annuler
+                          </button>
                         </form>
                       )}
                     </div>

@@ -214,25 +214,28 @@ export default async function BranchesPage({
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 <a href={`/admin/branches?branchId=${branch.id}`}
-                  className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50">
-                  ✏️ Modifier
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg>
+                  Modifier
                 </a>
                 <a href={`/admin/branches?action=add-product&branchId=${branch.id}`}
-                  className="rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 hover:bg-emerald-100">
-                  + Produit
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-700 transition-colors shadow-sm">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="h-3.5 w-3.5"><path d="M12 5v14M5 12h14" /></svg>
+                  Produit
                 </a>
                 <form action={toggleBranch}>
                   <input type="hidden" name="id" value={branch.id} />
                   <input type="hidden" name="active" value={(!branch.active).toString()} />
-                  <button type="submit" className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50">
+                  <button type="submit" className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
                     {branch.active ? "Désactiver" : "Activer"}
                   </button>
                 </form>
                 {branch._count.products === 0 && (
                   <form action={deleteBranch} onSubmit={(e) => { if (!confirm("Supprimer cette branche ?")) e.preventDefault(); }}>
                     <input type="hidden" name="id" value={branch.id} />
-                    <button type="submit" className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-600 hover:bg-rose-100">
-                      🗑️ Supprimer
+                    <button type="submit" className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-100 transition-colors">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" /></svg>
+                      Supprimer
                     </button>
                   </form>
                 )}
@@ -279,12 +282,15 @@ export default async function BranchesPage({
                         </td>
                         <td className="px-3 py-2 text-xs font-medium">{fcfa(p.price)}</td>
                         <td className="px-3 py-2">
-                          <form action={updateProductRate} className="flex items-center gap-1">
+                          <form action={updateProductRate} className="flex items-center gap-1.5">
                             <input type="hidden" name="id" value={p.id} />
                             <input name="rate" type="number" defaultValue={p.rate} min={0} max={100}
-                              className="w-14 rounded border border-slate-300 px-2 py-1 text-xs" />
+                              className="w-14 px-2 py-1 text-xs text-center" />
                             <span className="text-xs text-muted">%</span>
-                            <button type="submit" className="text-xs text-brand-600 hover:underline">OK</button>
+                            <button type="submit"
+                              className="rounded-lg bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700 hover:bg-brand-100 transition-colors">
+                              OK
+                            </button>
                           </form>
                         </td>
                         <td className="px-3 py-2 text-xs text-center text-muted">{p._count.links}</td>
@@ -297,20 +303,30 @@ export default async function BranchesPage({
                           <Badge tone={p.active ? "green" : "gray"}>{p.active ? "Actif" : "Inactif"}</Badge>
                         </td>
                         <td className="px-3 py-2">
-                          <div className="flex items-center gap-1">
-                            <a href={`/admin/branches?productId=${p.id}`}
-                              className="rounded px-2 py-1 text-xs text-slate-600 hover:bg-slate-100">✏️</a>
+                          <div className="flex items-center gap-1.5">
+                            <a href={`/admin/branches?productId=${p.id}`} title="Modifier"
+                              className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-brand-600 transition-colors">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg>
+                            </a>
                             <form action={toggleProductActive}>
                               <input type="hidden" name="id" value={p.id} />
                               <input type="hidden" name="active" value={(!p.active).toString()} />
-                              <button type="submit" className="rounded px-2 py-1 text-xs text-slate-600 hover:bg-slate-100">
-                                {p.active ? "Off" : "On"}
+                              <button type="submit" title={p.active ? "Désactiver" : "Activer"}
+                                className={`inline-flex h-7 items-center rounded-lg border px-2 text-[11px] font-semibold transition-colors ${
+                                  p.active
+                                    ? "border-slate-200 text-slate-500 hover:bg-slate-50"
+                                    : "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                                }`}>
+                                {p.active ? "Désactiver" : "Activer"}
                               </button>
                             </form>
                             {p._count.sales === 0 && (
                               <form action={deleteProduct}>
                                 <input type="hidden" name="id" value={p.id} />
-                                <button type="submit" className="rounded px-2 py-1 text-xs text-rose-500 hover:bg-rose-50">🗑️</button>
+                                <button type="submit" title="Supprimer"
+                                  className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-rose-200 text-rose-500 hover:bg-rose-50 transition-colors">
+                                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" /></svg>
+                                </button>
                               </form>
                             )}
                           </div>
