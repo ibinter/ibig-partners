@@ -5,6 +5,7 @@ import { generateCommissionsForSale, recomputeStatus } from "../src/lib/sales";
 async function main() {
   console.log("Nettoyage de la base…");
   // Ordre de suppression respectant les contraintes de cle etrangere.
+  await prisma.otpCode.deleteMany();
   await prisma.commission.deleteMany();
   await prisma.payout.deleteMany();
   await prisma.click.deleteMany();
@@ -14,6 +15,9 @@ async function main() {
   await prisma.opportunity.deleteMany();
   await prisma.marketingKit.deleteMany();
   await prisma.notification.deleteMany();
+  await prisma.auditLog.deleteMany();
+  await prisma.ticketMessage.deleteMany();
+  await prisma.ticket.deleteMany();
   await prisma.product.deleteMany();
   await prisma.branch.deleteMany();
   await prisma.user.deleteMany();

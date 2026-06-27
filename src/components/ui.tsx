@@ -8,42 +8,87 @@ export function Card({
   children: ReactNode;
   className?: string;
 }) {
-  return <div className={`card p-5 ${className}`}>{children}</div>;
+  return (
+    <div className={`bg-white border border-slate-100 rounded-2xl shadow-sm ${className}`}>
+      {children}
+    </div>
+  );
 }
+
+/* ── StatCard avec fond coloré dégradé ── */
+const STAT_THEMES: Record<string, { bg: string; text: string; sub: string; dot: string }> = {
+  brand: {
+    bg: "bg-gradient-to-br from-blue-600 to-blue-800",
+    text: "text-white",
+    sub: "text-blue-200",
+    dot: "bg-white/20",
+  },
+  gold: {
+    bg: "bg-gradient-to-br from-amber-400 to-orange-500",
+    text: "text-white",
+    sub: "text-amber-100",
+    dot: "bg-white/20",
+  },
+  green: {
+    bg: "bg-gradient-to-br from-emerald-500 to-teal-600",
+    text: "text-white",
+    sub: "text-emerald-100",
+    dot: "bg-white/20",
+  },
+  slate: {
+    bg: "bg-gradient-to-br from-slate-600 to-slate-800",
+    text: "text-white",
+    sub: "text-slate-300",
+    dot: "bg-white/20",
+  },
+  purple: {
+    bg: "bg-gradient-to-br from-violet-500 to-purple-700",
+    text: "text-white",
+    sub: "text-violet-200",
+    dot: "bg-white/20",
+  },
+};
 
 export function StatCard({
   label,
   value,
   sub,
   accent = "brand",
+  icon,
 }: {
   label: string;
   value: ReactNode;
   sub?: ReactNode;
-  accent?: "brand" | "gold" | "green" | "slate";
+  accent?: keyof typeof STAT_THEMES;
+  icon?: string;
 }) {
-  const ring: Record<string, string> = {
-    brand: "text-brand-600",
-    gold: "text-gold-500",
-    green: "text-emerald-600",
-    slate: "text-slate-600",
-  };
+  const t = STAT_THEMES[accent] ?? STAT_THEMES.brand;
   return (
-    <div className="card p-5">
-      <p className="text-sm text-muted">{label}</p>
-      <p className={`mt-1 text-2xl font-bold ${ring[accent]}`}>{value}</p>
-      {sub && <p className="mt-1 text-xs text-muted">{sub}</p>}
+    <div className={`relative overflow-hidden rounded-2xl p-5 shadow-md ${t.bg}`}>
+      {/* Cercle décoratif */}
+      <div className={`absolute -top-4 -right-4 h-24 w-24 rounded-full ${t.dot} blur-sm`} />
+      <div className={`absolute -bottom-6 -right-2 h-16 w-16 rounded-full ${t.dot}`} />
+
+      {icon && (
+        <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 text-lg">
+          {icon}
+        </div>
+      )}
+      <p className={`text-xs font-semibold uppercase tracking-wide ${t.sub}`}>{label}</p>
+      <p className={`mt-1 text-2xl font-bold tracking-tight ${t.text}`}>{value}</p>
+      {sub && <p className={`mt-1 text-xs ${t.sub}`}>{sub}</p>}
     </div>
   );
 }
 
+/* ── Badges ── */
 const TONES: Record<string, string> = {
-  gray: "bg-slate-100 text-slate-700",
-  blue: "bg-brand-50 text-brand-700",
-  green: "bg-emerald-50 text-emerald-700",
-  amber: "bg-amber-50 text-amber-700",
-  red: "bg-rose-50 text-rose-700",
-  gold: "bg-yellow-50 text-yellow-700",
+  gray: "bg-slate-100 text-slate-600 ring-slate-200",
+  blue: "bg-blue-50 text-blue-700 ring-blue-100",
+  green: "bg-emerald-50 text-emerald-700 ring-emerald-100",
+  amber: "bg-amber-50 text-amber-700 ring-amber-100",
+  red: "bg-rose-50 text-rose-700 ring-rose-100",
+  gold: "bg-yellow-50 text-yellow-700 ring-yellow-100",
 };
 
 export function Badge({
@@ -54,9 +99,7 @@ export function Badge({
   tone?: keyof typeof TONES;
 }) {
   return (
-    <span
-      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${TONES[tone]}`}
-    >
+    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset ${TONES[tone]}`}>
       {children}
     </span>
   );
@@ -85,6 +128,7 @@ export function statusTone(status: string): keyof typeof TONES {
   }
 }
 
+/* ── PageHeader ── */
 export function PageHeader({
   title,
   subtitle,
@@ -97,14 +141,15 @@ export function PageHeader({
   return (
     <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
       <div>
-        <h1 className="text-2xl font-bold text-ink">{title}</h1>
-        {subtitle && <p className="text-sm text-muted mt-1">{subtitle}</p>}
+        <h1 className="text-xl font-bold text-ink tracking-tight">{title}</h1>
+        {subtitle && <p className="text-sm text-muted mt-0.5">{subtitle}</p>}
       </div>
       {action}
     </div>
   );
 }
 
+/* ── Button ── */
 export function Button({
   children,
   type = "submit",
@@ -118,15 +163,18 @@ export function Button({
   className?: string;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const styles: Record<string, string> = {
-    primary: "bg-brand-600 text-white hover:bg-brand-700",
-    secondary: "bg-white text-brand-700 border border-brand-200 hover:bg-brand-50",
+    primary:
+      "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-sm hover:from-blue-700 hover:to-blue-800",
+    secondary:
+      "bg-white text-blue-700 border border-blue-200 hover:bg-blue-50 shadow-sm",
     ghost: "text-slate-600 hover:bg-slate-100",
-    danger: "bg-rose-600 text-white hover:bg-rose-700",
+    danger:
+      "bg-gradient-to-r from-rose-500 to-rose-600 text-white hover:from-rose-600 hover:to-rose-700 shadow-sm",
   };
   return (
     <button
       type={type}
-      className={`inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition disabled:opacity-50 ${styles[variant]} ${className}`}
+      className={`inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold transition-all disabled:opacity-50 ${styles[variant]} ${className}`}
       {...rest}
     >
       {children}
@@ -144,13 +192,15 @@ export function LinkButton({
   variant?: "primary" | "secondary";
 }) {
   const styles: Record<string, string> = {
-    primary: "bg-brand-600 text-white hover:bg-brand-700",
-    secondary: "bg-white text-brand-700 border border-brand-200 hover:bg-brand-50",
+    primary:
+      "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-sm",
+    secondary:
+      "bg-white text-blue-700 border border-blue-200 hover:bg-blue-50 shadow-sm",
   };
   return (
     <Link
       href={href}
-      className={`inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition ${styles[variant]}`}
+      className={`inline-flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${styles[variant]}`}
     >
       {children}
     </Link>
@@ -159,7 +209,9 @@ export function LinkButton({
 
 export function EmptyState({ children }: { children: ReactNode }) {
   return (
-    <div className="card p-10 text-center text-muted text-sm">{children}</div>
+    <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-10 text-center text-sm text-muted">
+      {children}
+    </div>
   );
 }
 
@@ -182,7 +234,7 @@ export function Field({
 }) {
   return (
     <label className="block">
-      <span className="block text-sm font-medium text-ink mb-1">{label}</span>
+      <span className="block text-sm font-semibold text-ink mb-1.5">{label}</span>
       {children ?? (
         <input
           name={name}
@@ -190,7 +242,7 @@ export function Field({
           required={required}
           defaultValue={defaultValue}
           placeholder={placeholder}
-          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
+          className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-3 focus:ring-blue-100 placeholder:text-slate-400"
         />
       )}
     </label>

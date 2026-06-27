@@ -94,11 +94,13 @@ export function DashboardShell({
   const initials = (user.firstName[0] ?? "") + (user.lastName[0] ?? "");
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-[#f4f6fb]">
 
       {/* ── Sidebar desktop ── */}
       <aside className={`hidden md:flex w-64 shrink-0 flex-col sticky top-0 h-screen overflow-hidden print:hidden ${
-        variant === "admin" ? "sidebar-admin" : "border-r border-slate-200 bg-white"
+        variant === "admin"
+          ? "sidebar-admin"
+          : "border-r border-slate-100 bg-white shadow-sm"
       }`}>
 
         {/* Logo */}
@@ -206,7 +208,7 @@ export function DashboardShell({
       <div className="flex min-w-0 flex-1 flex-col">
 
         {/* Header */}
-        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-slate-200 bg-white/95 backdrop-blur px-4 py-3 md:px-8 print:hidden">
+        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-slate-100 bg-white/90 backdrop-blur-md px-4 py-3 md:px-8 print:hidden shadow-[0_1px_0_0_rgba(0,0,0,0.05)]">
           <div className="flex items-center gap-3">
             {/* Hamburger mobile */}
             <button

@@ -51,96 +51,112 @@ export default async function DashboardPage({
         </div>
       )}
 
+      {/* Stats colorées */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="CA généré (ventes confirmées)" value={fcfa(summary.revenue)} accent="brand" />
-        <StatCard label="Commissions à venir" value={fcfa(summary.payable)} sub="en attente + validées" accent="gold" />
-        <StatCard label="Commissions versées" value={fcfa(summary.paid)} accent="green" />
-        <StatCard label="Filleuls actifs (N1)" value={summary.activeReferrals} accent="slate" />
+        <StatCard label="CA généré" value={fcfa(summary.revenue)} accent="brand" icon="💼" />
+        <StatCard label="Commissions à venir" value={fcfa(summary.payable)} sub="en attente + validées" accent="gold" icon="⏳" />
+        <StatCard label="Commissions versées" value={fcfa(summary.paid)} accent="green" icon="✅" />
+        <StatCard label="Filleuls actifs N1" value={summary.activeReferrals} accent="slate" icon="👥" />
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-3">
+      <div className="mt-5 grid gap-5 lg:grid-cols-3">
         {/* Progression de statut */}
-        <Card className="lg:col-span-2">
-          <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-ink">Progression de statut</h2>
-            <Badge tone="gold">{STATUS_LABELS[user.status]}</Badge>
+        <div className="lg:col-span-2 rounded-2xl bg-white border border-slate-100 shadow-sm p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold text-ink text-sm">Progression de statut</h2>
+            <Badge tone="gold">🏆 {STATUS_LABELS[user.status]}</Badge>
           </div>
-          <div className="mt-4">
-            <div className="h-3 w-full overflow-hidden rounded-full bg-slate-100">
-              <div
-                className="h-full rounded-full bg-brand-500 transition-all"
-                style={{ width: `${prog.progress}%` }}
-              />
-            </div>
-            <p className="mt-2 text-sm text-muted">{prog.label}</p>
+          <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-700"
+              style={{ width: `${prog.progress}%` }}
+            />
           </div>
-        </Card>
+          <p className="mt-2 text-xs text-muted">{prog.label}</p>
 
-        {/* Réseau */}
-        <Card>
-          <h2 className="font-semibold text-ink">Mon réseau</h2>
-          <div className="mt-4 space-y-2 text-sm">
-            {["Niveau 1", "Niveau 2", "Niveau 3"].map((lbl, i) => (
-              <div key={lbl} className="flex items-center justify-between">
-                <span className="text-muted">{lbl}</span>
-                <span className="font-semibold text-ink">{counts[i]} filleul(s)</span>
+          {/* Mini stats réseau */}
+          <div className="mt-5 grid grid-cols-3 gap-3">
+            {["N1", "N2", "N3"].map((lbl, i) => (
+              <div key={lbl} className="rounded-xl bg-slate-50 border border-slate-100 p-3 text-center">
+                <p className="text-xs text-muted font-medium">{lbl}</p>
+                <p className="text-lg font-bold text-ink mt-0.5">{counts[i]}</p>
               </div>
             ))}
           </div>
-          <Link href="/espace/reseau" className="mt-4 inline-block text-sm font-medium text-brand-600 hover:underline">
+        </div>
+
+        {/* Réseau */}
+        <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 shadow-md p-5 text-white relative overflow-hidden">
+          <div className="absolute -bottom-4 -right-4 h-24 w-24 rounded-full bg-white/10 blur-sm" />
+          <h2 className="font-semibold text-sm text-white/90 mb-1">Mon réseau</h2>
+          <p className="text-3xl font-bold tracking-tight">{counts.reduce((a, b) => a + b, 0)}</p>
+          <p className="text-xs text-blue-200 mb-4">filleuls au total</p>
+          <div className="space-y-2">
+            {[["🥇 Niveau 1", counts[0]], ["🥈 Niveau 2", counts[1]], ["🥉 Niveau 3", counts[2]]].map(([lbl, n]) => (
+              <div key={String(lbl)} className="flex items-center justify-between text-sm">
+                <span className="text-blue-100">{lbl}</span>
+                <span className="font-bold text-white">{n}</span>
+              </div>
+            ))}
+          </div>
+          <Link href="/espace/reseau" className="mt-4 inline-flex items-center gap-1 rounded-xl bg-white/15 hover:bg-white/25 px-3 py-1.5 text-xs font-semibold text-white transition">
             Voir mon réseau →
           </Link>
-        </Card>
+        </div>
       </div>
 
       {/* Commissions récentes */}
-      <Card className="mt-6 p-0">
-        <div className="flex items-center justify-between px-5 py-4">
-          <h2 className="font-semibold text-ink">Commissions récentes</h2>
-          <Link href="/espace/commissions" className="text-sm font-medium text-brand-600 hover:underline">
+      <div className="mt-5 rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-50">
+          <h2 className="font-semibold text-ink text-sm">Commissions récentes</h2>
+          <Link href="/espace/commissions" className="text-xs font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition">
             Tout voir →
           </Link>
         </div>
         {recentCommissions.length === 0 ? (
-          <div className="px-5 pb-6">
+          <div className="px-5 pb-6 pt-4">
             <EmptyState>Aucune commission pour le moment. Partagez vos liens pour commencer !</EmptyState>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-y border-slate-100 bg-slate-50 text-left text-xs uppercase text-muted">
+              <thead className="bg-slate-50 text-left text-xs text-muted">
                 <tr>
-                  <th className="px-5 py-2">Produit</th>
-                  <th className="px-3 py-2">Niveau</th>
-                  <th className="px-3 py-2">Taux</th>
-                  <th className="px-3 py-2">Montant</th>
-                  <th className="px-3 py-2">Statut</th>
-                  <th className="px-3 py-2">Date</th>
+                  <th className="px-5 py-3 font-semibold uppercase tracking-wide">Produit</th>
+                  <th className="px-3 py-3 font-semibold uppercase tracking-wide">Niv.</th>
+                  <th className="px-3 py-3 font-semibold uppercase tracking-wide">Taux</th>
+                  <th className="px-3 py-3 font-semibold uppercase tracking-wide">Montant</th>
+                  <th className="px-3 py-3 font-semibold uppercase tracking-wide">Statut</th>
+                  <th className="px-3 py-3 font-semibold uppercase tracking-wide">Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-50">
                 {recentCommissions.map((c) => (
-                  <tr key={c.id}>
-                    <td className="px-5 py-2 font-medium text-ink">
+                  <tr key={c.id} className="hover:bg-slate-50/60 transition-colors">
+                    <td className="px-5 py-3 font-medium text-ink">
                       {c.sale.product.name}
                       {c.sale.pricingType === "MONTHLY_SUB" && (
-                        <span className="text-muted"> · Mois {c.monthIndex}</span>
+                        <span className="text-muted text-xs"> · Mois {c.monthIndex}</span>
                       )}
                     </td>
-                    <td className="px-3 py-2">N{c.level}</td>
-                    <td className="px-3 py-2">{pct(c.rate)}</td>
-                    <td className="px-3 py-2 font-semibold">{fcfa(c.amount)}</td>
-                    <td className="px-3 py-2">
+                    <td className="px-3 py-3">
+                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700">
+                        {c.level}
+                      </span>
+                    </td>
+                    <td className="px-3 py-3 text-muted">{pct(c.rate)}</td>
+                    <td className="px-3 py-3 font-bold text-ink">{fcfa(c.amount)}</td>
+                    <td className="px-3 py-3">
                       <Badge tone={statusTone(c.status)}>{COMMISSION_STATUS_LABELS[c.status]}</Badge>
                     </td>
-                    <td className="px-3 py-2 text-muted">{formatDate(c.createdAt)}</td>
+                    <td className="px-3 py-3 text-muted text-xs">{formatDate(c.createdAt)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         )}
-      </Card>
+      </div>
     </div>
   );
 }
