@@ -44,12 +44,14 @@ export default function CgvPage() {
               Les paiements s&apos;effectuent via les moyens suivants :
             </p>
             <ul className="mt-2 list-disc space-y-1 pl-5">
-              <li>Orange Money (Côte d&apos;Ivoire)</li>
-              <li>Wave</li>
-              <li>MTN Mobile Money</li>
-              <li>Moov Money</li>
-              <li>Virement bancaire</li>
-              <li>PayPal (diaspora)</li>
+              <li><strong>Orange Money</strong> — CI, Sénégal, Cameroun, Mali, Burkina Faso, Guinée, Niger, RDC…</li>
+              <li><strong>Wave</strong> — CI, Sénégal, Mali, Burkina Faso, Guinée, Ouganda</li>
+              <li><strong>MTN Mobile Money (MoMo)</strong> — CI, Cameroun, Ghana, Bénin, Congo, Zambie…</li>
+              <li><strong>Moov Money / Flooz</strong> — CI, Bénin, Togo, Burkina Faso, Niger, Tchad, Gabon</li>
+              <li><strong>Airtel Money</strong> — RDC, Gabon, Congo-Brazzaville, Rwanda, Zambie…</li>
+              <li><strong>M-Pesa</strong> — Afrique de l&apos;Est et Centrale (Kenya, Tanzania, RDC, Mozambique…)</li>
+              <li><strong>Virement bancaire</strong> — zones UEMOA, CEMAC et international</li>
+              <li><strong>CinetPay</strong> — agrégateur panafricain (carte, mobile money, virement)</li>
             </ul>
             <p className="mt-3">
               Toute commande est ferme et définitive dès réception du paiement complet. Une confirmation
