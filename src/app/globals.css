@@ -29,7 +29,55 @@ body {
   font-family: var(--font-sans), system-ui, Arial, sans-serif;
 }
 
-/* Utilitaires reutilisables */
+/* ===================== ANIMATIONS ===================== */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slide-left {
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(11, 95, 255, 0.4); }
+  70%  { box-shadow: 0 0 0 10px rgba(11, 95, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(11, 95, 255, 0); }
+}
+
+.animate-fade-up    { animation: fade-up 0.55s cubic-bezier(0.22,1,0.36,1) both; }
+.animate-fade-in    { animation: fade-in 0.4s ease both; }
+.animate-slide-left { animation: slide-left 0.45s cubic-bezier(0.22,1,0.36,1) both; }
+.animate-scale-in   { animation: scale-in 0.3s cubic-bezier(0.22,1,0.36,1) both; }
+.animate-float      { animation: float 3s ease-in-out infinite; }
+.animate-pulse-ring { animation: pulse-ring 2s ease-out infinite; }
+
+.delay-75  { animation-delay: 0.075s; }
+.delay-100 { animation-delay: 0.1s; }
+.delay-150 { animation-delay: 0.15s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-600 { animation-delay: 0.6s; }
+.delay-700 { animation-delay: 0.7s; }
+
+/* ===================== UTILITAIRES ===================== */
 .card {
   background: #fff;
   border: 1px solid #e6ebf3;
@@ -37,7 +85,16 @@ body {
   box-shadow: 0 1px 2px rgba(15, 23, 41, 0.04);
 }
 
-/* Gradients — contourne les limites Tailwind v4 avec les CSS vars */
+/* Hover lift effect */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(11, 79, 224, 0.12);
+}
+
+/* ===================== GRADIENTS ===================== */
 .gradient-hero {
   background: linear-gradient(135deg, #0c2d7a 0%, #0d3fb4 45%, #0b4fe0 100%);
 }
@@ -49,4 +106,58 @@ body {
 }
 .gradient-simulateur {
   background: linear-gradient(135deg, #0c1e5c 0%, #0d3fb4 35%, #1e1b8a 100%);
+}
+
+/* ===================== SIDEBAR ADMIN ===================== */
+.sidebar-admin {
+  background: linear-gradient(180deg, #0c1e5c 0%, #0d3fb4 55%, #0b2d8a 100%);
+}
+.sidebar-admin-item {
+  color: rgba(255,255,255,0.7);
+  border-radius: 10px;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+.sidebar-admin-item:hover {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  transform: translateX(3px);
+}
+.sidebar-admin-item.active {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 #f5b73d;
+}
+
+/* ===================== SIDEBAR PARTNER ===================== */
+.sidebar-partner-item {
+  color: #5b6577;
+  border-radius: 10px;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+.sidebar-partner-item:hover {
+  background: #eef4ff;
+  color: #0b4fe0;
+  transform: translateX(3px);
+}
+.sidebar-partner-item.active {
+  background: #eef4ff;
+  color: #0b4fe0;
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 #0b4fe0;
+}
+
+/* ===================== SECTION DIVIDER ===================== */
+.section-wave {
+  position: relative;
+}
+.section-wave::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: inherit;
+  clip-path: ellipse(55% 100% at 50% 0%);
 }

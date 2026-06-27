@@ -9,7 +9,6 @@ export default async function EspaceLayout({
 }) {
   const user = await requireUser();
 
-  // Badge notifications non lues (globales + ciblées)
   const unread = await prisma.notification.count({
     where: {
       read: false,
@@ -18,18 +17,18 @@ export default async function EspaceLayout({
   });
 
   const NAV: NavItem[] = [
-    { href: "/espace", label: "Dashboard", icon: "📊" },
-    { href: "/espace/produits", label: "Mes Produits", icon: "🧩" },
-    { href: "/espace/liens", label: "Mes Liens", icon: "🔗" },
-    { href: "/espace/reseau", label: "Mon Réseau", icon: "🌳" },
-    { href: "/espace/commissions", label: "Mes Commissions", icon: "💰" },
-    { href: "/espace/kit", label: "Kit Marketing", icon: "🎨" },
-    { href: "/espace/prospects", label: "Mes Prospects", icon: "🎯" },
-    { href: "/espace/analytics", label: "Analytics", icon: "📈" },
-    { href: "/espace/classement", label: "Classement", icon: "🏆" },
-    { href: "/espace/notifications", label: "Notifications", icon: "🔔", badge: unread },
-    { href: "/espace/support", label: "Support", icon: "🎫" },
-    { href: "/espace/profil", label: "Mon Profil", icon: "⚙️" },
+    { href: "/espace",              label: "Dashboard",       icon: "📊",  group: "Vue d'ensemble" },
+    { href: "/espace/analytics",    label: "Analytics",       icon: "📈",  group: "Vue d'ensemble" },
+    { href: "/espace/classement",   label: "Classement",      icon: "🏆",  group: "Vue d'ensemble" },
+    { href: "/espace/produits",     label: "Mes Produits",    icon: "🧩",  group: "Mon activité" },
+    { href: "/espace/liens",        label: "Mes Liens",       icon: "🔗",  group: "Mon activité" },
+    { href: "/espace/reseau",       label: "Mon Réseau",      icon: "🌳",  group: "Mon activité" },
+    { href: "/espace/prospects",    label: "Mes Prospects",   icon: "🎯",  group: "Mon activité" },
+    { href: "/espace/commissions",  label: "Commissions",     icon: "💰",  group: "Revenus" },
+    { href: "/espace/kit",          label: "Kit Marketing",   icon: "🎨",  group: "Ressources" },
+    { href: "/espace/notifications",label: "Notifications",   icon: "🔔",  group: "Compte", badge: unread },
+    { href: "/espace/support",      label: "Support",         icon: "🎫",  group: "Compte" },
+    { href: "/espace/profil",       label: "Mon Profil",      icon: "⚙️",  group: "Compte" },
   ];
 
   return (

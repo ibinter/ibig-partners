@@ -1038,3 +1038,27 @@ https://react.dev/link/hydration-mismatch
  GET /manifest.webmanifest 200 in 19ms (next.js: 6ms, application-code: 13ms)
  GET / 200 in 1634ms (next.js: 246ms, application-code: 1389ms)
  GET /manifest.webmanifest 200 in 68ms (next.js: 32ms, application-code: 36ms)
+  Reload env: .env
+ GET /connexion?next=%2Fespace%2Fnotifications 200 in 628ms (next.js: 124ms, application-code: 504ms)
+ GET / 200 in 2.3s (next.js: 1287ms, application-code: 1047ms)
+ GET /manifest.webmanifest 200 in 301ms (next.js: 267ms, application-code: 34ms)
+ GET /manifest.webmanifest 200 in 38ms (next.js: 13ms, application-code: 25ms)
+  Reload env: .env
+ GET /connexion?next=%2Fespace%2Fnotifications 200 in 3.4s (next.js: 354ms, application-code: 3.1s)
+ GET / 200 in 2.2s (next.js: 71ms, application-code: 2.2s)
+ GET /manifest.webmanifest 200 in 297ms (next.js: 265ms, application-code: 32ms)
+ GET /manifest.webmanifest 200 in 17ms (next.js: 6ms, application-code: 12ms)
+ GET / 200 in 4.7s (next.js: 155ms, application-code: 4.5s)
+ GET /manifest.webmanifest 200 in 108ms (next.js: 34ms, application-code: 74ms)
+ GET /connexion 200 in 382ms (next.js: 61ms, application-code: 320ms)
+ GET /manifest.webmanifest 200 in 79ms (next.js: 43ms, application-code: 35ms)
+ GET /espace 200 in 1932ms (next.js: 621ms, proxy.ts: 288ms, application-code: 1022ms)
+ POST /connexion 303 in 2.5s (next.js: 13ms, application-code: 2.5s)
+  └─ ƒ loginAction(null, {}) in 335ms src/app/auth-actions.ts
+ GET /manifest.webmanifest 200 in 31ms (next.js: 10ms, application-code: 21ms)
+ GET /espace/liens 200 in 789ms (next.js: 193ms, proxy.ts: 17ms, application-code: 580ms)
+ GET /manifest.webmanifest 200 in 47ms (next.js: 13ms, application-code: 34ms)
+ GET / 200 in 252ms (next.js: 11ms, application-code: 240ms)
+ POST /espace/liens 303 in 323ms (next.js: 11ms, proxy.ts: 12ms, application-code: 299ms)
+  └─ ƒ logoutAction() in 13ms src/app/auth-actions.ts
+ GET /manifest.webmanifest 200 in 76ms (next.js: 43ms, application-code: 33ms)
