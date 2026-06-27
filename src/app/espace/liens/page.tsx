@@ -1,10 +1,10 @@
-import QRCode from "qrcode";
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { EmptyState, PageHeader } from "@/components/ui";
 import { COOKIE_TRACKING_DAYS } from "@/lib/constants";
 import CopyButton from "./copy-button";
+import QrCard from "./qr-card";
 
 export const dynamic = "force-dynamic";
 
@@ -18,21 +18,10 @@ export default async function LiensPage() {
     orderBy: { createdAt: "desc" },
   });
 
-  const rows = await Promise.all(
-    links.map(async (l) => {
-      const url = `${baseUrl}/aff/${user.code}?p=${l.product.slug}`;
-      const qr = await QRCode.toDataURL(url, { width: 220, margin: 1 });
-      return { link: l, url, qr };
-    }),
-  );
-
-  const BRANCH_COLORS = ["blue", "emerald", "violet", "amber", "rose"] as const;
-  const branchColorMap = new Map<string, string>();
-  links.forEach((l) => {
-    if (!branchColorMap.has(l.product.branchId)) {
-      branchColorMap.set(l.product.branchId, BRANCH_COLORS[branchColorMap.size % 5]);
-    }
-  });
+  const rows = links.map((l) => ({
+    link: l,
+    url: `${baseUrl}/aff/${user.code}?p=${l.product.slug}`,
+  }));
 
   return (
     <div className="space-y-5">
@@ -67,9 +56,9 @@ export default async function LiensPage() {
         </EmptyState>
       ) : (
         <div className="grid gap-4 lg:grid-cols-2">
-          {rows.map(({ link, url, qr }) => (
+          {rows.map(({ link, url }) => (
             <div key={link.id} className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-              {/* Header colorée */}
+              {/* Header */}
               <div className="bg-gradient-to-r from-blue-50 to-slate-50 border-b border-slate-100 px-5 py-3 flex items-center justify-between">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-blue-500">{link.product.branch.name}</p>
@@ -88,17 +77,9 @@ export default async function LiensPage() {
                   </div>
                   <div className="mt-3 flex gap-2 flex-wrap">
                     <CopyButton text={url} />
-                    <a
-                      href={qr}
-                      download={`qr-${link.product.slug}.png`}
-                      className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
-                    >
-                      📥 Télécharger le QR
-                    </a>
+                    <QrCard url={url} slug={link.product.slug} />
                   </div>
                 </div>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={qr} alt="QR code" className="h-20 w-20 rounded-xl border border-slate-100 shadow-sm shrink-0" />
               </div>
             </div>
           ))}
