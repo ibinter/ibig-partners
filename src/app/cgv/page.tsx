@@ -52,6 +52,11 @@ export default function CgvPage() {
               <li><strong>M-Pesa</strong> — Afrique de l&apos;Est et Centrale (Kenya, Tanzania, RDC, Mozambique…)</li>
               <li><strong>Virement bancaire</strong> — zones UEMOA, CEMAC et international</li>
               <li><strong>CinetPay</strong> — agrégateur panafricain (carte, mobile money, virement)</li>
+              <li><strong>Western Union</strong> — transfert international depuis la diaspora</li>
+              <li><strong>MoneyGram</strong> — transfert international depuis la diaspora</li>
+              <li><strong>Wise (ex-TransferWise)</strong> — virement international low-cost</li>
+              <li><strong>WorldRemit</strong> — envoi vers mobile money ou compte bancaire africain</li>
+              <li><strong>Remitly</strong> — transfert international vers l&apos;Afrique</li>
             </ul>
             <p className="mt-3">
               Toute commande est ferme et définitive dès réception du paiement complet. Une confirmation
