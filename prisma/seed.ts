@@ -512,7 +512,7 @@ async function main() {
         offerType: b.offerType,
         commissionModel: b.commissionModel,
         order: b.order,
-        active: b.active ?? true,
+        active: (b as { active?: boolean }).active ?? true,
       },
     });
     for (const p of b.products) {
