@@ -16,6 +16,9 @@
 
   --color-ink: #0f1729;
   --color-muted: #5b6577;
+
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
 }
 
 :root {
@@ -26,7 +29,50 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), system-ui, Arial, sans-serif;
+  font-family: var(--font-sans), "DM Sans", system-ui, sans-serif;
+  font-size: 15.5px;
+  line-height: 1.65;
+  letter-spacing: -0.01em;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display), "Space Grotesk", system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); }
+h2 { font-size: clamp(1.7rem, 3.5vw, 2.6rem); }
+h3 { font-size: clamp(1.25rem, 2.5vw, 1.75rem); }
+
+p {
+  line-height: 1.7;
+}
+
+strong, b {
+  font-weight: 600;
+}
+
+.font-display {
+  font-family: var(--font-display), "Space Grotesk", system-ui, sans-serif;
+}
+
+/* Textes fins et élégants */
+.text-refined {
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+
+/* Labels / captions premium */
+.label-caps {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 /* ===================== ANIMATIONS ===================== */
