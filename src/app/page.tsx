@@ -5,6 +5,7 @@ import { FaqAccordion } from "@/components/faq-accordion";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { HeroSlider, type HeroSlide } from "@/components/hero-slider";
 import { Icon, type IconName } from "@/components/icons";
+import { HeroDashboard, NetworkTree, GrowthBars } from "@/components/illustrations";
 import { fcfa } from "@/lib/format";
 import { STATUS_DETAILS } from "@/lib/constants";
 
@@ -110,25 +111,35 @@ export default async function HomePage() {
           <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
         </div>
 
-        <div className="relative mx-auto max-w-6xl px-4 py-20 sm:py-24">
-          <HeroSlider slides={HERO_SLIDES} />
+        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:py-20 lg:py-24">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
+            {/* Colonne texte */}
+            <div>
+              <HeroSlider slides={HERO_SLIDES} />
 
-          <div className="mt-9 flex flex-wrap gap-4">
-            <Link
-              href="/rejoindre"
-              className="rounded-xl bg-white px-7 py-3.5 font-bold text-brand-700 shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-50 hover:shadow-xl"
-            >
-              Devenir Partenaire — c&apos;est gratuit
-            </Link>
-            <a
-              href="#mission"
-              className="rounded-xl border-2 border-white/30 px-7 py-3.5 font-semibold text-white transition-all duration-200 hover:bg-white/10"
-            >
-              Découvrir notre mission
-            </a>
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
+                <Link
+                  href="/rejoindre"
+                  className="rounded-xl bg-white px-6 py-3.5 text-center font-bold text-brand-700 shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-50 hover:shadow-xl sm:px-7"
+                >
+                  Devenir Partenaire — c&apos;est gratuit
+                </Link>
+                <a
+                  href="#mission"
+                  className="rounded-xl border-2 border-white/30 px-6 py-3.5 text-center font-semibold text-white transition-all duration-200 hover:bg-white/10 sm:px-7"
+                >
+                  Découvrir notre mission
+                </a>
+              </div>
+            </div>
+
+            {/* Colonne illustration */}
+            <div className="hidden lg:block">
+              <HeroDashboard className="animate-float w-full" />
+            </div>
           </div>
 
-          <div className="mt-14 grid grid-cols-2 gap-6 border-t border-white/10 pt-8 sm:flex sm:flex-wrap sm:gap-10">
+          <div className="mt-12 grid grid-cols-2 gap-6 border-t border-white/10 pt-8 sm:flex sm:flex-wrap sm:gap-10 lg:mt-14">
             {[
               { val: branches.length || "8", label: "Branches du groupe" },
               { val: "3",   label: "Niveaux de commission" },
@@ -295,6 +306,13 @@ export default async function HomePage() {
                 Vous touchez sur vos ventes <strong>et</strong> sur celles de vos filleuls
                 jusqu&apos;au 3ème niveau.
               </p>
+            </div>
+          </ScrollReveal>
+
+          {/* Schéma réseau 3 niveaux */}
+          <ScrollReveal animation="scale-in" delay={100}>
+            <div className="mx-auto mt-10 max-w-2xl">
+              <NetworkTree className="w-full" />
             </div>
           </ScrollReveal>
 
@@ -604,6 +622,14 @@ export default async function HomePage() {
                 Plus vous vendez et développez votre réseau, plus votre taux de commission
                 augmente automatiquement.
               </p>
+            </div>
+          </ScrollReveal>
+
+          {/* Graphique : revenus croissants par statut */}
+          <ScrollReveal animation="scale-in" delay={100}>
+            <div className="mx-auto mt-10 max-w-xl rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-100">
+              <p className="mb-2 text-center text-sm font-semibold text-ink">Potentiel de revenu par statut</p>
+              <GrowthBars className="w-full" />
             </div>
           </ScrollReveal>
 
