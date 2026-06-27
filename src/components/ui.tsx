@@ -8,8 +8,10 @@ export function Card({
   children: ReactNode;
   className?: string;
 }) {
+  // Padding par défaut (p-5) sauf si la classe en définit déjà un (p-0, p-6, …).
+  const hasPadding = /(^|\s)p-/.test(className);
   return (
-    <div className={`card-premium ${className}`}>
+    <div className={`card-premium ${hasPadding ? "" : "p-5"} ${className}`}>
       {children}
     </div>
   );
