@@ -1,7 +1,7 @@
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { fcfa, formatDate, pct } from "@/lib/format";
-import { Badge, Card, EmptyState, PageHeader, StatCard, statusTone } from "@/components/ui";
+import { Badge, EmptyState, PageHeader, StatCard, statusTone } from "@/components/ui";
 import { COMMISSION_STATUS_LABELS, MIN_PAYOUT } from "@/lib/constants";
 import { ExportExcelButton, ExportPDFButton } from "@/components/export-buttons";
 
@@ -23,10 +23,10 @@ export default async function CommissionsPage() {
   const paid = sum("PAID");
 
   return (
-    <div>
+    <div className="space-y-5">
       <PageHeader
         title="Mes Commissions"
-        subtitle={`Paiement sous 7 jours ouvrables après encaissement client · Seuil minimum de versement : ${fcfa(MIN_PAYOUT)}`}
+        subtitle={`Seuil minimum de versement : ${fcfa(MIN_PAYOUT)} · Paiement sous 7 jours ouvrables`}
         action={
           <div className="flex flex-wrap gap-2">
             <ExportExcelButton
@@ -34,7 +34,7 @@ export default async function CommissionsPage() {
                 Produit: c.sale.product.name,
                 "Réf. vente": c.sale.reference,
                 Niveau: `N${c.level}`,
-                "Mois": c.monthIndex ?? 1,
+                Mois: c.monthIndex ?? 1,
                 "Taux (%)": c.rate,
                 "Montant (FCFA)": c.amount,
                 Statut: COMMISSION_STATUS_LABELS[c.status] ?? c.status,
@@ -62,7 +62,7 @@ export default async function CommissionsPage() {
             <a
               href="/espace/commissions/releve"
               target="_blank"
-              className="inline-flex items-center rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
+              className="inline-flex items-center rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-blue-700 hover:to-blue-800 transition-all"
             >
               🖨 Relevé imprimable
             </a>
@@ -70,48 +70,60 @@ export default async function CommissionsPage() {
         }
       />
 
+      {/* Stats colorées */}
       <div className="grid gap-4 sm:grid-cols-3">
-        <StatCard label="En attente" value={fcfa(pending)} accent="gold" />
-        <StatCard label="Validées (à verser)" value={fcfa(validated)} accent="brand" />
-        <StatCard label="Versées" value={fcfa(paid)} accent="green" />
+        <StatCard label="En attente" value={fcfa(pending)} accent="gold" icon="⏳" />
+        <StatCard label="Validées (à verser)" value={fcfa(validated)} accent="brand" icon="✔️" />
+        <StatCard label="Versées" value={fcfa(paid)} accent="green" icon="💸" />
       </div>
 
-      <Card className="mt-6 p-0">
+      {/* Tableau */}
+      <div className="rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
+        <div className="px-5 py-4 border-b border-slate-50 flex items-center justify-between">
+          <div>
+            <h3 className="font-semibold text-ink text-sm">Historique des commissions</h3>
+            <p className="text-xs text-muted mt-0.5">{commissions.length} entrée(s)</p>
+          </div>
+        </div>
         {commissions.length === 0 ? (
           <div className="p-6"><EmptyState>Aucune commission enregistrée.</EmptyState></div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="border-b border-slate-100 bg-slate-50 text-left text-xs uppercase text-muted">
+              <thead className="bg-slate-50 text-left text-xs text-muted">
                 <tr>
-                  <th className="px-5 py-2">Vente</th>
-                  <th className="px-3 py-2">Produit</th>
-                  <th className="px-3 py-2">Niv.</th>
-                  <th className="px-3 py-2">Mois</th>
-                  <th className="px-3 py-2">Taux</th>
-                  <th className="px-3 py-2">Montant</th>
-                  <th className="px-3 py-2">Statut</th>
-                  <th className="px-3 py-2">Date</th>
+                  <th className="px-5 py-3 font-semibold uppercase tracking-wide">Vente</th>
+                  <th className="px-3 py-3 font-semibold uppercase tracking-wide">Produit</th>
+                  <th className="px-3 py-3 font-semibold uppercase tracking-wide">Niv.</th>
+                  <th className="px-3 py-3 font-semibold uppercase tracking-wide">Mois</th>
+                  <th className="px-3 py-3 font-semibold uppercase tracking-wide">Taux</th>
+                  <th className="px-3 py-3 font-semibold uppercase tracking-wide">Montant</th>
+                  <th className="px-3 py-3 font-semibold uppercase tracking-wide">Statut</th>
+                  <th className="px-3 py-3 font-semibold uppercase tracking-wide">Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-50">
                 {commissions.map((c) => (
-                  <tr key={c.id}>
-                    <td className="px-5 py-2 font-mono text-xs text-muted">{c.sale.reference}</td>
-                    <td className="px-3 py-2 font-medium text-ink">{c.sale.product.name}</td>
-                    <td className="px-3 py-2">N{c.level}</td>
-                    <td className="px-3 py-2">{c.sale.pricingType === "MONTHLY_SUB" ? `M${c.monthIndex}` : "—"}</td>
-                    <td className="px-3 py-2">{pct(c.rate)}</td>
-                    <td className="px-3 py-2 font-semibold">{fcfa(c.amount)}</td>
-                    <td className="px-3 py-2"><Badge tone={statusTone(c.status)}>{COMMISSION_STATUS_LABELS[c.status]}</Badge></td>
-                    <td className="px-3 py-2 text-muted">{formatDate(c.createdAt)}</td>
+                  <tr key={c.id} className="hover:bg-slate-50/60 transition-colors">
+                    <td className="px-5 py-3 font-mono text-xs text-muted">{c.sale.reference}</td>
+                    <td className="px-3 py-3 font-semibold text-ink">{c.sale.product.name}</td>
+                    <td className="px-3 py-3">
+                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700">
+                        {c.level}
+                      </span>
+                    </td>
+                    <td className="px-3 py-3 text-muted">{c.sale.pricingType === "MONTHLY_SUB" ? `M${c.monthIndex}` : "—"}</td>
+                    <td className="px-3 py-3 text-muted">{pct(c.rate)}</td>
+                    <td className="px-3 py-3 font-bold text-ink">{fcfa(c.amount)}</td>
+                    <td className="px-3 py-3"><Badge tone={statusTone(c.status)}>{COMMISSION_STATUS_LABELS[c.status]}</Badge></td>
+                    <td className="px-3 py-3 text-xs text-muted">{formatDate(c.createdAt)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         )}
-      </Card>
+      </div>
     </div>
   );
 }
