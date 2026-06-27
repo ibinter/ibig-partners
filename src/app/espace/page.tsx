@@ -16,7 +16,7 @@ export default async function DashboardPage({
   const user = await requireUser();
   const { bienvenue } = await searchParams;
   const summary = await partnerSummary(user.id);
-  const prog = nextStatusProgress(summary.confirmedSales, summary.activeReferrals);
+  const prog = nextStatusProgress(summary.confirmedSales, summary.directReferrals, summary.activeTeam);
 
   const recentCommissions = await prisma.commission.findMany({
     where: { userId: user.id },

@@ -3,7 +3,7 @@
 export const ROLES = ["PARTNER", "ADMIN", "SUPERADMIN"] as const;
 export type Role = (typeof ROLES)[number];
 
-export const STATUSES = ["STARTER", "SILVER", "GOLD", "MASTER"] as const;
+export const STATUSES = ["STARTER", "SILVER", "GOLD", "MASTER", "ELITE"] as const;
 export type Status = (typeof STATUSES)[number];
 
 export const PRICING_TYPES = [
@@ -35,101 +35,174 @@ export const PRICING_TYPE_LABELS: Record<string, string> = {
 
 export const STATUS_LABELS: Record<string, string> = {
   STARTER: "⭐ Starter",
-  SILVER: "⭐⭐ Silver",
-  GOLD: "⭐⭐⭐ Gold",
-  MASTER: "🏆 Master Partner",
+  SILVER:  "⭐⭐ Silver",
+  GOLD:    "⭐⭐⭐ Gold",
+  MASTER:  "🏆 Master Partner",
+  ELITE:   "👑 Elite Représentant",
+};
+
+export const STATUS_COLORS: Record<string, { bg: string; text: string; badge: string }> = {
+  STARTER: { bg: "bg-slate-100",  text: "text-slate-700",  badge: "bg-slate-100 text-slate-700" },
+  SILVER:  { bg: "bg-blue-50",    text: "text-blue-700",   badge: "bg-blue-100 text-blue-700" },
+  GOLD:    { bg: "bg-amber-50",   text: "text-amber-700",  badge: "bg-amber-100 text-amber-700" },
+  MASTER:  { bg: "bg-violet-50",  text: "text-violet-700", badge: "bg-violet-100 text-violet-700" },
+  ELITE:   { bg: "bg-yellow-50",  text: "text-yellow-700", badge: "bg-yellow-100 text-yellow-700" },
 };
 
 export const COMMISSION_STATUS_LABELS: Record<string, string> = {
-  PENDING: "En attente",
+  PENDING:   "En attente",
   VALIDATED: "Validée",
-  PAID: "Versée",
+  PAID:      "Versée",
 };
 
 export const SALE_STATUS_LABELS: Record<string, string> = {
-  PENDING: "En attente",
+  PENDING:   "En attente",
   CONFIRMED: "Confirmée",
   CANCELLED: "Annulée",
 };
 
 export const PROSPECT_STATUS_LABELS: Record<string, string> = {
   CONTACTED: "Contacté",
-  DEMO: "Démo",
+  DEMO:      "Démo",
   CONVERTED: "Converti",
-  LOST: "Perdu",
+  LOST:      "Perdu",
 };
 
 export const OPPORTUNITY_STATUS_LABELS: Record<string, string> = {
-  NEW: "Nouvelle",
+  NEW:         "Nouvelle",
   IN_PROGRESS: "En cours",
-  WON: "Gagnée",
-  LOST: "Perdue",
+  WON:         "Gagnée",
+  LOST:        "Perdue",
 };
 
-// --- Grille de commissions (cahier des charges, sections 3.2 a 3.4) ---
-// Taux de base AVANT bonus de statut, par niveau (1/2/3).
+// ─────────────────────────────────────────────────────────────────
+// GRILLE DE COMMISSIONS (cahier des charges sections 3.2 à 3.5)
+// ─────────────────────────────────────────────────────────────────
 
-// 3.2 Abonnements mensuels : degressif sur 4 mois.
+// 3.2 Abonnements mensuels SaaS — dégressif sur 4 mois
 export const MONTHLY_RATES: Record<number, Record<number, number>> = {
-  1: { 1: 0.2, 2: 0.1, 3: 0.05 },
+  1: { 1: 0.20, 2: 0.10, 3: 0.05 },
   2: { 1: 0.15, 2: 0.08, 3: 0.03 },
-  3: { 1: 0.1, 2: 0.05, 3: 0.02 },
+  3: { 1: 0.10, 2: 0.05, 3: 0.02 },
   4: { 1: 0.05, 2: 0.03, 3: 0.01 },
 };
 export const MONTHLY_DURATION = 4;
 
-// 3.3 Abonnements annuels : one-shot.
-export const ANNUAL_RATES: Record<number, number> = { 1: 0.2, 2: 0.08, 3: 0.03 };
+// 3.3 Abonnements annuels — one-shot
+export const ANNUAL_RATES: Record<number, number> = { 1: 0.20, 2: 0.08, 3: 0.03 };
 
-// 3.4 Formations IBIG EDUFORM : one-shot.
-export const COURSE_RATES: Record<number, number> = { 1: 0.1, 2: 0.05, 3: 0.02 };
+// 3.4 Formations catalogue IBIG EDUFORM — one-shot
+export const COURSE_RATES: Record<number, number> = { 1: 0.10, 2: 0.05, 3: 0.02 };
 
-// SERVICE / PRODUCT : le taux N1 est defini par produit (Product.rate, en %).
-// Les niveaux 2 et 3 percoivent une fraction du taux N1.
+// 3.5 Services & Produits — taux N1 défini par produit (Product.rate en %)
+// N2 = 50% du taux N1 — N3 = 25% du taux N1
 export const SERVICE_LEVEL_FACTOR: Record<number, number> = { 1: 1, 2: 0.5, 3: 0.25 };
 
-// --- Bonus de statut (section 4) : ajout en points de pourcentage sur tous les taux. ---
+// Taux spéciaux par catégorie de service (N1 défini par produit, facteurs N2/N3)
+// Formations sur mesure / Contrats entreprises : 15% N1, N2=7.5%, pas de N3
+// IBIG SOFT sur mesure : 25% N1, N2=12.5%, pas de N3
+// Immobilier vente/location : 25% commission agence N1, N2=12.5%, pas de N3
+// Gérance : 1 mois commission agence payé en 2x50%, N1 uniquement
+// Construction / Opportunités : négocié, N1 uniquement
+// Digital Kit : 25% N1, 10% N2, 5% N3 (taux fixés dans Product.rate)
+
+// ─────────────────────────────────────────────────────────────────
+// BONUS DE STATUT — s'ajoute à TOUS les taux de base
+// ─────────────────────────────────────────────────────────────────
 export const STATUS_BONUS: Record<string, number> = {
   STARTER: 0,
-  SILVER: 0.02,
-  GOLD: 0.05,
-  MASTER: 0.08,
+  SILVER:  0.02,
+  GOLD:    0.05,
+  MASTER:  0.08,
+  ELITE:   0.12,
 };
 
-// Regles de progression de statut (section 4).
+// ─────────────────────────────────────────────────────────────────
+// RÈGLES DE PROGRESSION DE STATUT
+// ─────────────────────────────────────────────────────────────────
+// activeTeam = N1+N2+N3 ayant effectué au moins 1 vente confirmée
+// directReferrals = filleuls N1 uniquement recrutés directement
 export const STATUS_RULES = {
-  SILVER: { sales: 5 },
-  GOLD: { salesOr: 15, activeReferralsOr: 3 },
-  MASTER: { sales: 30, activeReferrals: 5 },
+  SILVER: {
+    sales: 10,
+  },
+  GOLD: {
+    sales: 25,
+    directReferrals: 10,
+    activeTeam: 20,
+  },
+  MASTER: {
+    sales: 50,
+    directReferrals: 25,
+    activeTeam: 50,
+  },
+  ELITE: {
+    sales: 100,
+    directReferrals: 50,
+    activeTeam: 100,
+  },
 };
 
-// Section 5.2 — regles de paiement.
 export const MIN_PAYOUT = 5000; // FCFA
 export const COOKIE_TRACKING_DAYS = 90;
 
+// ─────────────────────────────────────────────────────────────────
+// DÉTAILS STATUTS (pour affichage formation / public)
+// ─────────────────────────────────────────────────────────────────
 export const STATUS_DETAILS = [
   {
-    status: "STARTER",
+    status:    "STARTER",
+    label:     "⭐ Starter",
     condition: "Inscription gratuite",
-    advantage: "Accès standard",
-    bonus: "Taux standard",
+    sales:     0,
+    direct:    0,
+    team:      0,
+    bonus:     "+0%",
+    advantage: "Accès complet à la plateforme",
+    color:     "from-slate-500 to-slate-600",
   },
   {
-    status: "SILVER",
-    condition: "5 ventes cumulées",
+    status:    "SILVER",
+    label:     "⭐⭐ Silver",
+    condition: "10 ventes confirmées",
+    sales:     10,
+    direct:    0,
+    team:      0,
+    bonus:     "+2% sur tous les taux",
     advantage: "Kit marketing premium",
-    bonus: "+2% sur tous les taux",
+    color:     "from-blue-400 to-blue-600",
   },
   {
-    status: "GOLD",
-    condition: "15 ventes OU 3 filleuls actifs",
+    status:    "GOLD",
+    label:     "⭐⭐⭐ Gold",
+    condition: "25 ventes + 10 filleuls directs + équipe 20 actifs",
+    sales:     25,
+    direct:    10,
+    team:      20,
+    bonus:     "+5% sur tous les taux",
     advantage: "Badge Ambassadeur IBIG",
-    bonus: "+5% sur tous les taux",
+    color:     "from-amber-400 to-yellow-500",
   },
   {
-    status: "MASTER",
-    condition: "30 ventes ET 5 filleuls actifs",
-    advantage: "Support dédié + visibilité IBIG",
-    bonus: "+8% sur tous les taux",
+    status:    "MASTER",
+    label:     "🏆 Master Partner",
+    condition: "50 ventes + 25 filleuls directs + équipe 50 actifs",
+    sales:     50,
+    direct:    25,
+    team:      50,
+    bonus:     "+8% sur tous les taux",
+    advantage: "Représentant communal officiel possible",
+    color:     "from-violet-500 to-purple-700",
+  },
+  {
+    status:    "ELITE",
+    label:     "👑 Elite Représentant",
+    condition: "100 ventes + 50 filleuls directs + équipe 100 actifs",
+    sales:     100,
+    direct:    50,
+    team:      100,
+    bonus:     "+12% sur tous les taux",
+    advantage: "Représentant Pays officiel IBIG SARL",
+    color:     "from-yellow-400 to-orange-500",
   },
 ];

@@ -39,10 +39,11 @@ const BRANCH_TITLE_COLORS = [
 ];
 
 const STATUS_CONFIG = [
-  { key: "STARTER", emoji: "⭐", label: "Starter", bg: "bg-slate-50",     border: "border-slate-200", badge: "bg-slate-100 text-slate-700",  ring: "" },
-  { key: "SILVER",  emoji: "🥈", label: "Silver",  bg: "bg-slate-100/60", border: "border-slate-300", badge: "bg-slate-200 text-slate-800",  ring: "ring-2 ring-slate-300" },
-  { key: "GOLD",    emoji: "🥇", label: "Gold",    bg: "bg-amber-50",     border: "border-amber-200", badge: "bg-amber-100 text-amber-800",  ring: "ring-2 ring-amber-300" },
-  { key: "MASTER",  emoji: "🏆", label: "Master",  bg: "bg-brand-50",     border: "border-brand-200", badge: "bg-brand-100 text-brand-800",  ring: "ring-2 ring-brand-400" },
+  { key: "STARTER", emoji: "⭐",  label: "Starter",          bg: "bg-slate-50",     border: "border-slate-200",  badge: "bg-slate-100 text-slate-700",   ring: "" },
+  { key: "SILVER",  emoji: "🥈",  label: "Silver",           bg: "bg-slate-100/60", border: "border-slate-300",  badge: "bg-slate-200 text-slate-800",   ring: "ring-2 ring-slate-300" },
+  { key: "GOLD",    emoji: "🥇",  label: "Gold",             bg: "bg-amber-50",     border: "border-amber-200",  badge: "bg-amber-100 text-amber-800",   ring: "ring-2 ring-amber-300" },
+  { key: "MASTER",  emoji: "🏆",  label: "Master Partner",   bg: "bg-brand-50",     border: "border-brand-200",  badge: "bg-brand-100 text-brand-800",   ring: "ring-2 ring-brand-400" },
+  { key: "ELITE",   emoji: "👑",  label: "Elite Représentant", bg: "bg-yellow-50",  border: "border-yellow-300", badge: "bg-yellow-100 text-yellow-800", ring: "ring-2 ring-yellow-400" },
 ];
 
 export default async function HomePage() {
@@ -455,7 +456,7 @@ export default async function HomePage() {
             </div>
           </ScrollReveal>
 
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {STATUS_DETAILS.map((s, i) => {
               const cfg = STATUS_CONFIG.find((c) => c.key === s.status) ?? STATUS_CONFIG[0];
               return (
@@ -476,13 +477,15 @@ export default async function HomePage() {
 
           <ScrollReveal animation="fade-up" delay={400}>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-2 text-sm text-muted">
-              <span className="font-medium text-slate-500">Starter</span>
-              <span className="text-brand-300">──────▶</span>
-              <span className="font-medium text-slate-500">Silver</span>
-              <span className="text-brand-300">──────▶</span>
-              <span className="font-medium text-amber-600">Gold</span>
-              <span className="text-brand-300">──────▶</span>
-              <span className="font-bold text-brand-700">Master 🏆</span>
+              <span className="font-medium text-slate-500">⭐ Starter</span>
+              <span className="text-brand-300">──▶</span>
+              <span className="font-medium text-slate-600">🥈 Silver</span>
+              <span className="text-brand-300">──▶</span>
+              <span className="font-medium text-amber-600">🥇 Gold</span>
+              <span className="text-brand-300">──▶</span>
+              <span className="font-bold text-brand-700">🏆 Master</span>
+              <span className="text-brand-300">──▶</span>
+              <span className="font-bold text-yellow-600">👑 Elite</span>
             </div>
           </ScrollReveal>
         </div>

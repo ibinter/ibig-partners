@@ -1,5 +1,7 @@
 import { prisma } from "./prisma";
 import { computeCommissions } from "./commissions";
+import { STATUS_RULES } from "./constants";
+import { getNetwork, activeTeamCount, directReferralsCount } from "./metrics";
 import type { PricingType } from "./constants";
 
 /** Remonte la chaine de parrainage : [vendeur, parrain, grand-parrain]. */
@@ -66,7 +68,7 @@ export async function generateCommissionsForSale(saleId: string): Promise<number
         },
       },
     });
-    if (existing) continue; // on ne touche pas aux commissions deja enregistrees
+    if (existing) continue;
     await prisma.commission.create({
       data: {
         saleId,
@@ -83,19 +85,54 @@ export async function generateCommissionsForSale(saleId: string): Promise<number
   return created;
 }
 
-/** Recalcule le statut d'un partenaire selon ses ventes confirmees et filleuls actifs. */
+/**
+ * Recalcule le statut d'un partenaire selon :
+ *   - ses ventes personnelles confirmées
+ *   - ses filleuls directs (N1)
+ *   - son équipe active (N1+N2+N3 ayant ≥1 vente confirmée)
+ *
+ * Règles approuvées :
+ *   Starter → Silver  : 10 ventes perso
+ *   Silver  → Gold    : 25 ventes + 10 filleuls directs + 20 actifs équipe
+ *   Gold    → Master  : 50 ventes + 25 filleuls directs + 50 actifs équipe
+ *   Master  → Elite   : 100 ventes + 50 filleuls directs + 100 actifs équipe
+ */
 export async function recomputeStatus(userId: string): Promise<string> {
-  const salesCount = await prisma.sale.count({
-    where: { sellerId: userId, status: "CONFIRMED" },
-  });
-  const activeReferrals = await prisma.user.count({
-    where: { sponsorId: userId, active: true, approved: true },
-  });
+  const [salesCount, network] = await Promise.all([
+    prisma.sale.count({ where: { sellerId: userId, status: "CONFIRMED" } }),
+    getNetwork(userId),
+  ]);
+
+  const direct = directReferralsCount(network);
+  const activeTeam = activeTeamCount(network);
+  const r = STATUS_RULES;
 
   let status = "STARTER";
-  if (salesCount >= 5) status = "SILVER";
-  if (salesCount >= 15 || activeReferrals >= 3) status = "GOLD";
-  if (salesCount >= 30 && activeReferrals >= 5) status = "MASTER";
+
+  if (salesCount >= r.SILVER.sales) {
+    status = "SILVER";
+  }
+  if (
+    salesCount >= r.GOLD.sales &&
+    direct >= r.GOLD.directReferrals &&
+    activeTeam >= r.GOLD.activeTeam
+  ) {
+    status = "GOLD";
+  }
+  if (
+    salesCount >= r.MASTER.sales &&
+    direct >= r.MASTER.directReferrals &&
+    activeTeam >= r.MASTER.activeTeam
+  ) {
+    status = "MASTER";
+  }
+  if (
+    salesCount >= r.ELITE.sales &&
+    direct >= r.ELITE.directReferrals &&
+    activeTeam >= r.ELITE.activeTeam
+  ) {
+    status = "ELITE";
+  }
 
   await prisma.user.update({ where: { id: userId }, data: { status } });
   return status;

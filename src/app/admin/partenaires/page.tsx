@@ -2,7 +2,7 @@ import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { fcfa, formatDate } from "@/lib/format";
 import { Badge, Button, Card, PageHeader, statusTone } from "@/components/ui";
-import { STATUS_LABELS } from "@/lib/constants";
+import { STATUS_LABELS, STATUS_COLORS } from "@/lib/constants";
 import { approvePartner, setPartnerActive, setPartnerRole } from "../actions";
 
 export const dynamic = "force-dynamic";
@@ -60,7 +60,11 @@ export default async function PartenairesPage() {
                   </td>
                   <td className="px-3 py-2 font-mono text-xs">{p.code}</td>
                   <td className="px-3 py-2 font-mono text-xs text-muted">{p.sponsor?.code ?? "—"}</td>
-                  <td className="px-3 py-2">{STATUS_LABELS[p.status]}</td>
+                  <td className="px-3 py-2">
+                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_COLORS[p.status]?.badge ?? "bg-slate-100 text-slate-700"}`}>
+                      {STATUS_LABELS[p.status] ?? p.status}
+                    </span>
+                  </td>
                   <td className="px-3 py-2">{p._count.sales}</td>
                   <td className="px-3 py-2">{p._count.referrals}</td>
                   <td className="px-3 py-2">{fcfa(paidOf(p.id))}</td>
