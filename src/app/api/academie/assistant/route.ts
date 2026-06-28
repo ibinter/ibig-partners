@@ -179,13 +179,54 @@ function findBestAnswer(message: string): string {
   return DEFAULT_ANSWER;
 }
 
+const SYSTEM_PROMPT = `Tu es l'assistant de formation officiel d'IBIG PARTNERS, le programme d'affiliation multi-niveaux d'INTERMARK BUSINESS INTERNATIONAL GROUP SARL (IBIG SARL), basé à Abidjan, Côte d'Ivoire.
+
+Tu aides les partenaires affiliés à :
+- Comprendre les produits IBIG (Scolaby, Suite RH, IBIG IMMO TRUST, formations IBIG EDUFORM, IBIG MARKET)
+- Maîtriser les commissions sur 3 niveaux (N1, N2=50% de N1, N3=25% de N1)
+- Progresser dans les statuts : Starter → Silver (10 ventes) → Gold (25 ventes + 10 filleuls + 20 actifs) → Master (50 ventes + 25 filleuls + 50 actifs) → Elite (100 ventes + 50 filleuls + 100 actifs)
+- Vendre et recruter efficacement
+- Comprendre les paiements (seuil 5 000 FCFA, Orange Money, Wave, MTN MoMo, Virement)
+
+Règles :
+- Réponds toujours en français
+- Sois concis, pratique et motivant
+- Utilise des emojis avec modération
+- Si tu ne sais pas, dis-le clairement et oriente vers support@ibigpartners.com
+- Ne parle que de ce qui concerne IBIG PARTNERS`;
+
+async function geminiAnswer(message: string, history: {role:string;content:string}[]): Promise<string> {
+  const { GoogleGenerativeAI } = await import("@google/generative-ai");
+  const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY!);
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash", systemInstruction: SYSTEM_PROMPT });
+
+  const geminiHistory = history.slice(-8).map((m) => ({
+    role: m.role === "user" ? "user" : "model",
+    parts: [{ text: m.content }],
+  }));
+
+  const chat = model.startChat({ history: geminiHistory });
+  const result = await chat.sendMessage(message);
+  return result.response.text();
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { message } = body as { message?: string };
+    const { message, history = [] } = body as { message?: string; history?: {role:string;content:string}[] };
 
     if (!message?.trim()) {
       return NextResponse.json({ reply: "Veuillez entrer une question." }, { status: 400 });
+    }
+
+    // Si la clé Gemini est configurée, on utilise l'IA — sinon fallback sur la base de connaissances
+    if (process.env.GOOGLE_AI_API_KEY) {
+      try {
+        const reply = await geminiAnswer(message, history);
+        return NextResponse.json({ reply });
+      } catch (err) {
+        console.error("[Gemini] Erreur, fallback KB :", err);
+      }
     }
 
     const reply = findBestAnswer(message);
