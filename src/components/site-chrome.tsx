@@ -37,12 +37,6 @@ function MarqueeBanner() {
           ))}
         </div>
       </div>
-      <Link
-        href="/rejoindre"
-        className="hidden shrink-0 items-center gap-1.5 self-stretch bg-gold-400 px-5 text-xs font-bold uppercase tracking-wide text-brand-900 transition-colors hover:bg-gold-500 sm:flex"
-      >
-        Devenir Partenaire →
-      </Link>
     </div>
   );
 }
