@@ -16,11 +16,17 @@ export default async function RejoindrePage({
 
   let sponsorName: string | null = null;
   if (prefillCode) {
-    const sponsor = await prisma.user.findFirst({
-      where: { code: prefillCode },
-      select: { firstName: true, lastName: true },
-    });
-    if (sponsor) sponsorName = `${sponsor.firstName} ${sponsor.lastName}`;
+    try {
+      const sponsor = await prisma.user.findFirst({
+        where: { code: prefillCode },
+        select: { firstName: true, lastName: true },
+      });
+      if (sponsor) sponsorName = `${sponsor.firstName} ${sponsor.lastName}`;
+    } catch (error) {
+      // Une panne temporaire de la base ne doit pas empêcher l'ouverture du
+      // formulaire : le nom du parrain est seulement une aide d'affichage.
+      console.error("Impossible de précharger le parrain :", error);
+    }
   }
 
   return (
