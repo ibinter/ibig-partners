@@ -2,7 +2,7 @@ import { prisma } from "./prisma";
 import { computeCommissions } from "./commissions";
 import { STATUS_RULES } from "./constants";
 import { getNetwork, activeTeamCount, directReferralsCount } from "./metrics";
-import { checkAndAwardBadges } from "@/app/espace/badges/actions";
+import { checkAndAwardBadges } from "@/lib/badges";
 import type { PricingType } from "./constants";
 
 /** Remonte la chaine de parrainage : [vendeur, parrain, grand-parrain]. */

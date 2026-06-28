@@ -2,9 +2,8 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { STATUS_LABELS, STATUS_COLORS } from "@/lib/constants";
-import { formatDateTime } from "@/lib/format";
-import { ChatInput } from "./chat-input";
+import { STATUS_LABELS } from "@/lib/constants";
+import { ChatMessages, type ChatMessageData } from "./ChatMessages";
 
 export const dynamic = "force-dynamic";
 
@@ -66,6 +65,23 @@ export default async function ConversationPage({
       ? STATUS_LABELS[other.status]
       : `${conversation.participants.length} participants`;
 
+  // Serialise messages for the client component (Dates → ISO strings)
+  const initialMessages: ChatMessageData[] = conversation.messages.map((m: any) => ({
+    id: m.id,
+    conversationId: m.conversationId,
+    senderId: m.senderId,
+    body: m.body,
+    type: m.type,
+    createdAt: m.createdAt instanceof Date ? m.createdAt.toISOString() : String(m.createdAt),
+    sender: {
+      id: m.sender.id,
+      firstName: m.sender.firstName,
+      lastName: m.sender.lastName,
+      status: m.sender.status,
+      photoUrl: m.sender.photoUrl ?? null,
+    },
+  }));
+
   return (
     <div className="flex flex-col h-[calc(100vh-9rem)] max-h-[800px]">
       {/* Header */}
@@ -97,64 +113,12 @@ export default async function ConversationPage({
         </div>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto border-x border-slate-100 bg-slate-50 px-4 py-5 space-y-4">
-        {conversation.messages.length === 0 ? (
-          <div className="flex h-full items-center justify-center text-center">
-            <div>
-              <p className="text-3xl mb-2">👋</p>
-              <p className="text-sm font-semibold text-slate-600">Démarrez la conversation</p>
-              <p className="text-xs text-slate-400 mt-1">Envoyez le premier message ci-dessous.</p>
-            </div>
-          </div>
-        ) : (
-          conversation.messages.map((m: any) => {
-            const mine = m.senderId === user.id;
-            const sc = STATUS_COLORS[m.sender.status];
-            return (
-              <div key={m.id} className={`flex gap-2.5 ${mine ? "flex-row-reverse" : ""}`}>
-                {m.sender.photoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={m.sender.photoUrl} alt="" className="h-8 w-8 rounded-full object-cover border border-slate-200 shrink-0" />
-                ) : (
-                  <div className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white text-xs font-bold">
-                    {initials(m.sender.firstName, m.sender.lastName)}
-                  </div>
-                )}
-                <div className={`max-w-[75%] ${mine ? "items-end" : "items-start"} flex flex-col`}>
-                  {!mine && (
-                    <div className="flex items-center gap-1.5 mb-0.5 px-1">
-                      <span className="text-xs font-semibold text-slate-600">
-                        {m.sender.firstName} {m.sender.lastName}
-                      </span>
-                      <span className={`rounded-full px-1.5 text-[9px] font-semibold ${sc?.badge ?? "bg-slate-100 text-slate-600"}`}>
-                        {STATUS_LABELS[m.sender.status]?.replace(/[⭐🏆👑\s]/g, "") || m.sender.status}
-                      </span>
-                    </div>
-                  )}
-                  <div
-                    className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
-                      mine
-                        ? "bg-blue-600 text-white rounded-tr-sm"
-                        : "bg-white text-slate-800 border border-slate-100 rounded-tl-sm"
-                    }`}
-                  >
-                    {m.body}
-                  </div>
-                  <span className="mt-0.5 px-1 text-[10px] text-slate-400">
-                    {formatDateTime(m.createdAt)}
-                  </span>
-                </div>
-              </div>
-            );
-          })
-        )}
-      </div>
-
-      {/* Input */}
-      <div className="rounded-b-2xl overflow-hidden">
-        <ChatInput conversationId={conversation.id} />
-      </div>
+      {/* Messages + Input (client component with polling) */}
+      <ChatMessages
+        initialMessages={initialMessages}
+        conversationId={conversation.id}
+        currentUserId={user.id}
+      />
     </div>
   );
 }
