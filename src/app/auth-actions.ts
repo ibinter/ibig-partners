@@ -44,7 +44,26 @@ export async function loginAction(_prev: unknown, formData: FormData) {
     return { error: "Email et mot de passe requis." };
   }
 
-  const user = await prisma.user.findUnique({ where: { email } });
+  let databaseAvailable = true;
+  const user = await prisma.user.findUnique({
+    where: { email },
+    select: {
+      id: true,
+      passwordHash: true,
+      active: true,
+      role: true,
+    },
+  }).catch((error) => {
+    databaseAvailable = false;
+    console.error("Connexion à la base de données impossible :", error);
+    return null;
+  });
+
+  if (!databaseAvailable) {
+    return {
+      error: "Le service de connexion est momentanément indisponible. Merci de réessayer dans quelques instants.",
+    };
+  }
   if (!user || !(await verifyPassword(password, user.passwordHash))) {
     return { error: "Identifiants incorrects." };
   }
