@@ -221,7 +221,7 @@ export default async function PartnerLandingPage({
                                 <p className="text-xl font-extrabold text-ink">{fcfa(l.product.price)}</p>
                               </div>
                               <a
-                                href={`${SITE}/aff/${l.code}?p=${l.product.slug}`}
+                                href={`${SITE}/paiement/${l.product.slug}?ref=${partner.code}`}
                                 className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-brand-700 shadow-sm"
                               >
                                 Commander →
