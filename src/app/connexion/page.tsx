@@ -26,15 +26,7 @@ export default async function ConnexionPage({
           </Link>
         </p>
       </div>
-      <div className="mt-6 w-full max-w-md rounded-lg border border-dashed border-slate-300 bg-white/60 p-4 text-xs text-muted">
-        <p className="font-semibold text-slate-600">Comptes de démonstration (mot de passe : <code>password123</code>) :</p>
-        <ul className="mt-1 space-y-0.5">
-          <li>SuperAdmin — admin@ibigpartners.com</li>
-          <li>Partenaire N1 — koffi@example.com</li>
-          <li>Partenaire N2 — aya@example.com · N3 — moussa@example.com</li>
-        </ul>
-      </div>
-      <Link href="/" className="mt-6 text-sm text-muted hover:underline">← Retour à l&apos;accueil</Link>
+<Link href="/" className="mt-6 text-sm text-muted hover:underline">← Retour à l&apos;accueil</Link>
     </div>
   );
 }
