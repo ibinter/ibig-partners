@@ -8,6 +8,8 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
+const INSTALL_BANNER_DISMISSED_KEY = "ibig_pwa_install_banner_dismissed";
+
 declare global {
   interface Window {
     __ibigPWAPrompt?: BeforeInstallPromptEvent;
@@ -41,6 +43,10 @@ export function PWAInstallBanner() {
       return;
     }
 
+    if (window.localStorage.getItem(INSTALL_BANNER_DISMISSED_KEY) === "1") {
+      return;
+    }
+
     const handler = (e: Event) => {
       e.preventDefault();
       const evt = e as BeforeInstallPromptEvent;
@@ -66,9 +72,16 @@ export function PWAInstallBanner() {
     if (!prompt) return;
     await prompt.prompt();
     const choice = await prompt.userChoice;
+    window.localStorage.setItem(INSTALL_BANNER_DISMISSED_KEY, "1");
     if (choice.outcome === "accepted") {
       setInstalled(true);
     }
+    setVisible(false);
+    setPrompt(null);
+  }
+
+  function handleDismiss() {
+    window.localStorage.setItem(INSTALL_BANNER_DISMISSED_KEY, "1");
     setVisible(false);
     setPrompt(null);
   }
@@ -89,7 +102,7 @@ export function PWAInstallBanner() {
         Installer
       </button>
       <button
-        onClick={() => setVisible(false)}
+        onClick={handleDismiss}
         className="shrink-0 text-brand-300 hover:text-white text-xl leading-none"
         aria-label="Fermer"
       >
