@@ -74,12 +74,15 @@ export async function registerAction(_prev: unknown, formData: FormData) {
   const phone = String(formData.get("phone") || "").trim();
   const city = String(formData.get("city") || "").trim();
   const password = String(formData.get("password") || "");
-  const payoutMethod = String(formData.get("payoutMethod") || "ORANGE_MONEY");
-  const payoutDetail = String(formData.get("payoutDetail") || "").trim();
+  const partnerType = String(formData.get("partnerType") || "INDIVIDUAL");
+  const orgName = String(formData.get("orgName") || "").trim();
   let sponsorCode = String(formData.get("sponsorCode") || "").trim().toUpperCase();
 
   if (!firstName || !lastName || !email || !phone || !password) {
     return { error: "Merci de remplir tous les champs obligatoires." };
+  }
+  if (partnerType !== "INDIVIDUAL" && !orgName) {
+    return { error: "Merci d'indiquer le nom de votre organisation." };
   }
   if (password.length < 6) {
     return { error: "Le mot de passe doit contenir au moins 6 caractères." };
@@ -111,8 +114,8 @@ export async function registerAction(_prev: unknown, formData: FormData) {
       phone,
       city: city || null,
       passwordHash: await hashPassword(password),
-      payoutMethod,
-      payoutDetail: payoutDetail || null,
+      partnerType,
+      orgName: orgName || null,
       sponsorId,
       approved: false,
     },

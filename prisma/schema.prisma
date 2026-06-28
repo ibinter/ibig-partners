@@ -28,7 +28,8 @@ model User {
   approved     Boolean @default(false) // validation manuelle des inscriptions
 
   // KYC — verification du compte
-  partnerType        String  @default("INDIVIDUAL") // INDIVIDUAL | COMPANY
+  partnerType        String  @default("INDIVIDUAL") // INDIVIDUAL | COMPANY | NGO | ASSOCIATION | OTHER
+  orgName            String? // Nom de l'organisation (si non Particulier)
   verificationStatus String  @default("NONE")       // NONE | SUBMITTED | VERIFIED | REJECTED
 
   // Paiement
