@@ -84,6 +84,7 @@ export default async function AcademiePage({
   const completedCount = progressList.filter((p: any) => p.completedAt).length;
 
   const allCount = await (prisma as any).trainingModule.count({ where: { active: true } });
+  const productCount = await prisma.product.count({ where: { active: true } });
 
   return (
     <div>
@@ -91,6 +92,27 @@ export default async function AcademiePage({
         title="Académie IBIG"
         subtitle="Formez-vous pour mieux vendre et développer votre réseau"
       />
+
+      <div className="mb-6 overflow-hidden rounded-2xl bg-gradient-to-r from-violet-700 via-violet-600 to-blue-600 p-6 text-white shadow-lg">
+        <div className="flex flex-wrap items-center justify-between gap-5">
+          <div className="max-w-2xl">
+            <div className="flex items-center gap-2">
+              <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-wide">Coach personnalisé</span>
+              <span className="flex items-center gap-1 text-xs text-violet-100"><span className="h-2 w-2 rounded-full bg-emerald-400" /> Synchronisé</span>
+            </div>
+            <h2 className="mt-3 text-2xl font-bold text-white">Coach IA IBIG</h2>
+            <p className="mt-2 text-sm leading-relaxed text-violet-100">
+              Maîtrisez {productCount} offres actives, préparez vos argumentaires, calculez vos commissions et obtenez un plan de prospection adapté à votre statut.
+            </p>
+          </div>
+          <Link
+            href="/espace/academie/assistant"
+            className="inline-flex items-center rounded-xl bg-white px-5 py-3 text-sm font-bold text-violet-700 shadow-md transition hover:-translate-y-0.5 hover:bg-violet-50"
+          >
+            Parler au Coach IA →
+          </Link>
+        </div>
+      </div>
 
       {/* Stats hero */}
       <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">

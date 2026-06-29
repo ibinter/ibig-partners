@@ -1,4 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireUser } from "@/lib/auth";
+import {
+  buildKnowledgePrompt,
+  findDynamicAnswer,
+  loadAssistantContext,
+  type AssistantContext,
+} from "@/lib/assistant-knowledge";
 
 /**
  * Assistant de formation IBIG — moteur de base de connaissances 100% gratuit.
@@ -195,10 +202,17 @@ Règles :
 - Si tu ne sais pas, dis-le clairement et oriente vers support@ibigpartners.com
 - Ne parle que de ce qui concerne IBIG PARTNERS`;
 
-async function geminiAnswer(message: string, history: {role:string;content:string}[]): Promise<string> {
+async function geminiAnswer(
+  message: string,
+  history: { role: string; content: string }[],
+  context: AssistantContext,
+): Promise<string> {
   const { GoogleGenerativeAI } = await import("@google/generative-ai");
   const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY!);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash", systemInstruction: SYSTEM_PROMPT });
+  const model = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash",
+    systemInstruction: `${SYSTEM_PROMPT}\n\n${buildKnowledgePrompt(context)}`,
+  });
 
   const geminiHistory = history.slice(-8).map((m) => ({
     role: m.role === "user" ? "user" : "model",
@@ -212,24 +226,36 @@ async function geminiAnswer(message: string, history: {role:string;content:strin
 
 export async function POST(req: NextRequest) {
   try {
+    const user = await requireUser();
     const body = await req.json();
     const { message, history = [] } = body as { message?: string; history?: {role:string;content:string}[] };
 
-    if (!message?.trim()) {
+    if (typeof message !== "string" || !message.trim()) {
       return NextResponse.json({ reply: "Veuillez entrer une question." }, { status: 400 });
     }
+    if (message.length > 2000) {
+      return NextResponse.json({ reply: "Votre question est trop longue. Merci de la résumer." }, { status: 400 });
+    }
+
+    const context = await loadAssistantContext(user.id, user.status);
 
     // Si la clé Gemini est configurée, on utilise l'IA — sinon fallback sur la base de connaissances
     if (process.env.GOOGLE_AI_API_KEY) {
       try {
-        const reply = await geminiAnswer(message, history);
+        const safeHistory = Array.isArray(history)
+          ? history
+              .filter((item) => item && typeof item.content === "string" && ["user", "assistant"].includes(item.role))
+              .slice(-8)
+              .map((item) => ({ role: item.role, content: item.content.slice(0, 2000) }))
+          : [];
+        const reply = await geminiAnswer(message, safeHistory, context);
         return NextResponse.json({ reply });
       } catch (err) {
         console.error("[Gemini] Erreur, fallback KB :", err);
       }
     }
 
-    const reply = findBestAnswer(message);
+    const reply = findDynamicAnswer(message, context) ?? findBestAnswer(message);
     return NextResponse.json({ reply });
   } catch {
     return NextResponse.json(

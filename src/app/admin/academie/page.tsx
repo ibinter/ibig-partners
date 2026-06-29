@@ -51,11 +51,18 @@ export default async function AcademieAdminPage() {
   const modules = await (prisma as any).trainingModule.findMany({
     orderBy: [{ order: "asc" }, { createdAt: "desc" }],
   });
+  const products = await prisma.product.findMany({
+    where: { active: true },
+    orderBy: { name: "asc" },
+    select: { id: true, name: true },
+  });
 
   const total     = modules.length as number;
   const published = modules.filter((m: any) => m.active).length as number;
   const videos    = modules.filter((m: any) => m.type === "VIDEO").length as number;
   const guides    = modules.filter((m: any) => m.type === "PDF" || m.type === "ARTICLE").length as number;
+  const coveredProductIds = new Set(modules.filter((m: any) => m.active && m.productId).map((m: any) => m.productId));
+  const productsWithoutTraining = products.filter((product) => !coveredProductIds.has(product.id));
 
   return (
     <div className="space-y-5">
@@ -73,12 +80,30 @@ export default async function AcademieAdminPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
         <StatCard label="Total"     value={total}     accent="brand" icon="🎓" />
         <StatCard label="Publiés"   value={published} accent="green" icon="✅" />
         <StatCard label="Vidéos"    value={videos}    accent="gold"  icon="🎬" />
         <StatCard label="Guides"    value={guides}    accent="slate" icon="📄" />
+        <StatCard label="Produits couverts" value={`${products.length - productsWithoutTraining.length}/${products.length}`} accent="purple" icon="🤖" />
       </div>
+
+      {productsWithoutTraining.length > 0 && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p className="text-sm font-bold text-amber-900">{productsWithoutTraining.length} offre(s) sans formation dédiée</p>
+              <p className="mt-1 text-xs leading-relaxed text-amber-800">
+                {productsWithoutTraining.slice(0, 12).map((product) => product.name).join(" · ")}
+                {productsWithoutTraining.length > 12 ? "…" : ""}
+              </p>
+            </div>
+            <Link href="/admin/academie/nouveau" className="rounded-xl bg-amber-600 px-4 py-2 text-xs font-bold text-white hover:bg-amber-700">
+              Créer une formation
+            </Link>
+          </div>
+        </div>
+      )}
 
       {modules.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-12 text-center">

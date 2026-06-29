@@ -8,12 +8,12 @@ interface Message {
 }
 
 const SUGGESTIONS = [
-  "Comment vendre Scolaby ?",
-  "Expliquez les commissions N2",
-  "Comment passer au statut Gold ?",
-  "Quels sont les produits IBIG disponibles ?",
-  "Comment recruter un filleul efficacement ?",
-  "Qu'est-ce qu'IBIG IMMO TRUST ?",
+  "Quel produit me conseillez-vous de promouvoir ?",
+  "Donnez-moi un argumentaire WhatsApp pour Scolaby",
+  "Quels sont tous les produits IBIG disponibles ?",
+  "Calculez ma commission sur une vente",
+  "Créez-moi un plan de prospection sur 7 jours",
+  "Quelles formations dois-je suivre en priorité ?",
 ];
 
 export default function AssistantPage({
@@ -27,8 +27,8 @@ export default function AssistantPage({
     {
       role: "assistant",
       content: topic
-        ? `Bonjour ! Je suis votre assistant de formation IBIG. Vous souhaitez en savoir plus sur « ${topic} » ? Posez-moi vos questions !`
-        : "Bonjour ! Je suis votre assistant de formation IBIG PARTNERS. Je suis là pour vous aider à comprendre les produits, les commissions, les techniques de vente et bien plus encore. Comment puis-je vous aider ?",
+        ? `Bonjour ! Je suis votre Coach IA IBIG. Vous souhaitez en savoir plus sur « ${topic} » ? Posez-moi vos questions !`
+        : "Bonjour ! Je suis votre Coach IA IBIG. Je connais le catalogue actif, vos commissions, les formations de l'Académie et vos offres activées. Je peux vous aider à choisir une offre, préparer un argumentaire ou bâtir un plan de prospection. Que souhaitez-vous accomplir ?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -81,12 +81,12 @@ export default function AssistantPage({
           🤖
         </div>
         <div>
-          <h1 className="font-bold text-white text-sm">Assistant Formation IBIG</h1>
-          <p className="text-xs text-violet-200">Réponses instantanées sur les produits, commissions et la vente</p>
+          <h1 className="font-bold text-white text-sm">Coach IA IBIG</h1>
+          <p className="text-xs text-violet-200">Catalogue et Académie synchronisés · conseils personnalisés</p>
         </div>
         <div className="ml-auto flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-xs text-violet-200">En ligne</span>
+          <span className="text-xs text-violet-200">Synchronisé</span>
         </div>
       </div>
 
