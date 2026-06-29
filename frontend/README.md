@@ -1,70 +1,133 @@
-# Getting Started with Create React App
+# IBIG PARTNERS — Plateforme d'affiliation multi-niveaux
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Plateforme centralisée d'affiliation pour **IBIG SARL** (Abidjan, Côte d'Ivoire).  
+8 branches métiers · Réseau MLM 3 niveaux · Espace partenaire + SuperAdmin.
 
-## Available Scripts
+## Stack
 
-In the project directory, you can run:
+- **Next.js 16** (App Router, Turbopack, Server Actions)
+- **Prisma 6** + **SQLite** (dev) — compatible PostgreSQL pour la production
+- **Tailwind CSS v4**
+- **jose** (JWT HS256) + **bcryptjs** (hash mots de passe)
 
-### `npm start`
+## Démarrage rapide
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```bash
+# 1. Installer les dépendances
+npm install
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# 2. Créer la base de données et appliquer le schéma
+npm run db:push
 
-### `npm test`
+# 3. Insérer les données de démonstration
+npm run db:seed
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# 4. Lancer le serveur de développement
+npm run dev
+```
 
-### `npm run build`
+Ouvrez [http://localhost:3000](http://localhost:3000).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Variables d'environnement (`.env`)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```env
+DATABASE_URL="file:./dev.db"
+AUTH_SECRET="ibig-partners-dev-secret-change-me-in-production-please-0123456789"
+NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+> **Production** : remplacez `DATABASE_URL` par une URL PostgreSQL et changez `AUTH_SECRET`.
 
-### `npm run eject`
+## Comptes de démonstration
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+| Rôle | Email | Mot de passe | Code partenaire |
+|---|---|---|---|
+| **SuperAdmin** | admin@ibigpartners.com | password123 | — |
+| **Partenaire N1** | koffi@example.com | password123 | AFF-KOFFI-001 |
+| **Partenaire N2** (filleul de Koffi) | aya@example.com | password123 | AFF-AYA-002 |
+| **Partenaire N3** (filleul d'Aya) | moussa@example.com | password123 | AFF-MOUSSA-003 |
+| **Partenaire en attente** | fatou@example.com | password123 | AFF-FATOU-004 |
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Espaces principaux
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+| URL | Description |
+|---|---|
+| `/` | Site public (présentation, branches) |
+| `/rejoindre` | Inscription partenaire (avec code parrain optionnel) |
+| `/connexion` | Connexion |
+| `/espace` | Tableau de bord partenaire |
+| `/espace/produits` | Activation des liens d'affiliation |
+| `/espace/liens` | Liens + QR codes |
+| `/espace/reseau` | Réseau N1/N2/N3 + soumission d'opportunités |
+| `/espace/commissions` | Historique des commissions + relevé PDF |
+| `/espace/kit` | Kit marketing (selon statut) |
+| `/espace/prospects` | CRM prospects |
+| `/espace/profil` | Coordonnées + méthode de paiement |
+| `/admin` | Tableau de bord SuperAdmin |
+| `/admin/partenaires` | Gestion des partenaires (validation, suspension) |
+| `/admin/ventes` | Enregistrement et suivi des ventes |
+| `/admin/commissions` | Validation des commissions |
+| `/admin/paiements` | Ordres de virement |
+| `/admin/branches` | Activation branches & produits, taux |
+| `/admin/opportunites` | Suivi des pistes B2B |
+| `/admin/communication` | Envoi d'annonces |
+| `/admin/parametres` | Paramètres plateforme (SuperAdmin uniquement) |
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Tracking d'affiliation
 
-## Learn More
+Un lien d'affiliation suit le format `/aff/[code]?p=slug-produit`.  
+Il pose un cookie `ibig_ref` de **90 jours**.  
+Si un visiteur s'inscrit comme partenaire dans ce délai, le parrain est automatiquement attribué.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Grille de commissions
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+| Type | N1 | N2 | N3 |
+|---|---|---|---|
+| Abonnement mensuel M1 | 20% | 10% | 5% |
+| Abonnement mensuel M2 | 15% | 8% | 3% |
+| Abonnement mensuel M3 | 10% | 5% | 2% |
+| Abonnement mensuel M4 | 5% | 3% | 1% |
+| Abonnement annuel | 20% | 8% | 3% |
+| Formation / Cours | 10% | 5% | 2% |
+| Service / Produit | taux produit | ×0,5 | ×0,25 |
 
-### Code Splitting
+Bonus de statut : Silver +2% · Gold +5% · Master +8% (appliqué sur le taux N1 du bénéficiaire).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Scripts disponibles
 
-### Analyzing the Bundle Size
+```bash
+npm run dev          # Serveur de développement
+npm run build        # Build de production
+npm run start        # Serveur de production
+npm run db:push      # Synchroniser le schéma Prisma → DB
+npm run db:seed      # Insérer les données de démo
+npm run db:reset     # Réinitialiser la DB et re-seeder
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Structure du projet
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+src/
+  app/
+    (site)/          # Pages publiques (/, /rejoindre, /connexion)
+    aff/[code]/      # Route de tracking affiliation
+    espace/          # Espace partenaire (protégé)
+    admin/           # Espace SuperAdmin (protégé)
+    auth-actions.ts  # Server actions auth (login, register, logout)
+  components/
+    ui.tsx           # Composants UI réutilisables
+    dashboard-shell.tsx
+    site-chrome.tsx
+  lib/
+    auth.ts          # JWT session (jose)
+    commissions.ts   # Moteur de calcul MLM
+    constants.ts     # Taux, statuts, labels
+    format.ts        # fcfa(), formatDate()
+    metrics.ts       # partnerSummary(), getNetwork()
+    prisma.ts        # Instance Prisma singleton
+    sales.ts         # generateCommissionsForSale(), recomputeStatus()
+  proxy.ts           # Middleware Next.js 16 (protection des routes)
+prisma/
+  schema.prisma
+  seed.ts
+```
