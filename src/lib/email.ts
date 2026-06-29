@@ -10,7 +10,7 @@ const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
 
-const FROM = process.env.EMAIL_FROM ?? "IBIG PARTNERS <noreply@ibigpartners.com>";
+const FROM = process.env.EMAIL_FROM ?? "IBIG PARTNERS <noreply@mail.ibigpartners.com>";
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 // ─── Utilitaire d'envoi ────────────────────────────────────────────────────
