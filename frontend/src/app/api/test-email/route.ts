@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { sendWelcomeEmail } from "@/lib/email";
-import { getSession } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 
 export async function GET() {
-  const session = await getSession();
+  const session = await getCurrentUser();
   if (!session || session.role !== "SUPERADMIN") {
     return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
   }

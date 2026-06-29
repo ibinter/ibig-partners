@@ -91,7 +91,7 @@ export function OnboardingQuest({ doneSteps = {} }: QuestProps) {
     }
   }, []);
 
-  const done = { ...localDone, ...doneSteps };
+  const done: Record<string, boolean> = { ...localDone, ...(doneSteps as Record<string, boolean>) };
   const completed = STEPS.filter((s) => done[s.id]).length;
   const pct = Math.round((completed / STEPS.length) * 100);
 

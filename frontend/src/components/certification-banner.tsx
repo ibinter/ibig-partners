@@ -21,7 +21,8 @@ export function CertificationBanner({ completed, total, partnerName, partnerCode
     setDownloading(true);
     try {
       // Génération PDF côté client avec jsPDF
-      const { jsPDF } = await import("jspdf");
+      const jsPDFModule = await import("jspdf");
+      const jsPDF = jsPDFModule.default;
       const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
 
       // Fond bleu
