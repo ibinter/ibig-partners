@@ -45,6 +45,10 @@ const BRANCH_GRADIENTS = [
   "from-teal-500 to-cyan-600",
 ];
 
+function normalizeUrl(url: string) {
+  return url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`;
+}
+
 export default async function PartnerLandingPage({
   params,
 }: {
@@ -215,17 +219,31 @@ export default async function PartnerLandingPage({
                             )}
 
                             {/* Prix */}
-                            <div className="mt-4 flex items-end justify-between border-t border-slate-100 pt-3">
+                            <div className="mt-4 flex items-end justify-between gap-3 border-t border-slate-100 pt-3">
                               <div>
                                 <p className="text-xs text-muted">Prix</p>
-                                <p className="text-xl font-extrabold text-ink">{fcfa(l.product.price)}</p>
+                                <p className="text-xl font-extrabold text-ink">
+                                  {l.product.price > 0 ? fcfa(l.product.price) : "Sur devis"}
+                                </p>
                               </div>
-                              <a
-                                href={`${SITE}/paiement/${l.product.slug}?ref=${partner.code}`}
-                                className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-brand-700 shadow-sm"
-                              >
-                                Commander →
-                              </a>
+                              <div className="flex flex-col gap-2">
+                                {l.product.siteUrl && (
+                                  <a
+                                    href={normalizeUrl(l.product.siteUrl)}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-center text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                                  >
+                                    Découvrir l’offre ↗
+                                  </a>
+                                )}
+                                <a
+                                  href={`${SITE}/paiement/${l.product.slug}?ref=${partner.code}`}
+                                  className="rounded-lg bg-brand-600 px-4 py-2 text-center text-sm font-bold text-white transition-colors hover:bg-brand-700 shadow-sm"
+                                >
+                                  Commander →
+                                </a>
+                              </div>
                             </div>
                           </div>
                         </div>

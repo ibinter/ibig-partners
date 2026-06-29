@@ -272,6 +272,17 @@ export async function deleteBranch(formData: FormData) {
   revalidatePath("/");
 }
 
+function normalizeSiteUrl(raw: FormDataEntryValue | null): string | null {
+  const value = String(raw || "").trim();
+  if (!value) return null;
+  const candidate = /^https?:\/\//i.test(value) ? value : `https://${value}`;
+  try {
+    return new URL(candidate).toString();
+  } catch {
+    return null;
+  }
+}
+
 export async function createProduct(formData: FormData) {
   await requireAdmin();
   const branchId = String(formData.get("branchId") || "").trim();
@@ -280,13 +291,14 @@ export async function createProduct(formData: FormData) {
   const price = Number(formData.get("price") || 0);
   const pricingType = String(formData.get("pricingType") || "SERVICE");
   const rate = Number(formData.get("rate") || 8);
-  const siteUrl = String(formData.get("siteUrl") || "").trim();
+  const siteUrl = normalizeSiteUrl(formData.get("siteUrl"));
   if (!name || !branchId) return;
   const slug = toSlug(name) + "-" + Date.now().toString(36);
   await prisma.product.create({
-    data: { branchId, name, slug, description: description || null, price, pricingType, rate, siteUrl: siteUrl || null },
+    data: { branchId, name, slug, description: description || null, price, pricingType, rate, siteUrl },
   });
   revalidatePath("/admin/branches");
+  revalidatePath("/espace/produits");
   revalidatePath("/");
 }
 
@@ -298,13 +310,14 @@ export async function updateProduct(formData: FormData) {
   const price = Number(formData.get("price") || 0);
   const pricingType = String(formData.get("pricingType") || "SERVICE");
   const rate = Number(formData.get("rate") || 8);
-  const siteUrl = String(formData.get("siteUrl") || "").trim();
+  const siteUrl = normalizeSiteUrl(formData.get("siteUrl"));
   if (!name || !id) return;
   await prisma.product.update({
     where: { id },
-    data: { name, description: description || null, price, pricingType, rate, siteUrl: siteUrl || null },
+    data: { name, description: description || null, price, pricingType, rate, siteUrl },
   });
   revalidatePath("/admin/branches");
+  revalidatePath("/espace/produits");
 }
 
 export async function deleteProduct(formData: FormData) {

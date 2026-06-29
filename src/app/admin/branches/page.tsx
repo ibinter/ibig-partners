@@ -19,6 +19,10 @@ const PRICING_OPTIONS = [
   { value: "PRODUCT", label: "Produit physique" },
 ];
 
+function normalizeUrl(url: string) {
+  return url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`;
+}
+
 export default async function BranchesPage({
   searchParams,
 }: {
@@ -45,6 +49,9 @@ export default async function BranchesPage({
   const addProductBranch = action === "add-product" && branchId
     ? branches.find((b) => b.id === branchId)
     : null;
+  const allProducts = branches.flatMap((branch) => branch.products);
+  const completeProducts = allProducts.filter((product) => product.description && product.siteUrl);
+  const productsWithoutDestination = allProducts.filter((product) => !product.siteUrl);
 
   return (
     <div>
@@ -59,6 +66,24 @@ export default async function BranchesPage({
         >
           + Nouvelle branche
         </a>
+      </div>
+
+      <div className="mb-6 grid gap-3 sm:grid-cols-3">
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted">Catalogue</p>
+          <p className="mt-1 text-2xl font-bold text-ink">{allProducts.length}</p>
+          <p className="text-xs text-muted">produits enregistrés</p>
+        </div>
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Fiches complètes</p>
+          <p className="mt-1 text-2xl font-bold text-emerald-800">{completeProducts.length}</p>
+          <p className="text-xs text-emerald-700">description + destination publique</p>
+        </div>
+        <div className={`rounded-2xl border p-4 shadow-sm ${productsWithoutDestination.length ? "border-amber-200 bg-amber-50" : "border-blue-200 bg-blue-50"}`}>
+          <p className={`text-xs font-semibold uppercase tracking-wide ${productsWithoutDestination.length ? "text-amber-700" : "text-blue-700"}`}>À compléter</p>
+          <p className={`mt-1 text-2xl font-bold ${productsWithoutDestination.length ? "text-amber-800" : "text-blue-800"}`}>{productsWithoutDestination.length}</p>
+          <p className={`text-xs ${productsWithoutDestination.length ? "text-amber-700" : "text-blue-700"}`}>sans lien public de destination</p>
+        </div>
       </div>
 
       {/* Formulaire nouvelle branche */}
@@ -135,12 +160,13 @@ export default async function BranchesPage({
             <div className="grid gap-4 sm:grid-cols-3">
               <Field label="Prix (FCFA)" name="price" type="number" defaultValue={String(editProduct.price)} />
               <Field label="Taux commission N1 (%)" name="rate" type="number" defaultValue={String(editProduct.rate)} />
-              <Field label="URL du site produit" name="siteUrl" defaultValue={editProduct.siteUrl ?? ""} placeholder="https://..." />
+              <Field label="Lien public de destination" name="siteUrl" defaultValue={editProduct.siteUrl ?? ""} placeholder="https://site-produit.com/offre" />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-ink">Description</label>
-              <textarea name="description" rows={2} defaultValue={editProduct.description ?? ""}
+              <label className="mb-1 block text-sm font-medium text-ink">Présentation commerciale détaillée</label>
+              <textarea name="description" rows={5} defaultValue={editProduct.description ?? ""} placeholder="Expliquez le besoin résolu, le public cible, les bénéfices et ce qui est inclus dans l'offre."
                 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+              <p className="mt-1 text-xs text-muted">Cette présentation sera visible par les affiliés et sur leur vitrine publique.</p>
             </div>
             <div className="flex gap-3">
               <Button type="submit">Enregistrer</Button>
@@ -168,12 +194,13 @@ export default async function BranchesPage({
             <div className="grid gap-4 sm:grid-cols-3">
               <Field label="Prix (FCFA)" name="price" type="number" defaultValue="0" />
               <Field label="Taux commission N1 (%)" name="rate" type="number" defaultValue="8" />
-              <Field label="URL du site produit" name="siteUrl" placeholder="https://..." />
+              <Field label="Lien public de destination" name="siteUrl" placeholder="https://site-produit.com/offre" />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-ink">Description</label>
-              <textarea name="description" rows={2} placeholder="Description courte du produit..."
+              <label className="mb-1 block text-sm font-medium text-ink">Présentation commerciale détaillée</label>
+              <textarea name="description" rows={5} placeholder="Expliquez le besoin résolu, le public cible, les bénéfices et ce qui est inclus dans l'offre."
                 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+              <p className="mt-1 text-xs text-muted">Une fiche complète aide les affiliés à mieux vendre l'offre.</p>
             </div>
             <div className="flex gap-3">
               <Button type="submit">Ajouter le produit</Button>
@@ -269,13 +296,19 @@ export default async function BranchesPage({
                     {branch.products.map((p) => (
                       <tr key={p.id} className={!p.active ? "opacity-50 bg-slate-50" : "hover:bg-slate-50/50"}>
                         <td className="px-4 py-2">
-                          <p className="font-semibold text-ink">{p.name}</p>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="font-semibold text-ink">{p.name}</p>
+                            <Badge tone={p.description && p.siteUrl ? "green" : "amber"}>
+                              {p.description && p.siteUrl ? "Fiche complète" : "À compléter"}
+                            </Badge>
+                          </div>
                           {p.description && <p className="text-xs text-muted truncate max-w-[200px]">{p.description}</p>}
                           {p.siteUrl && (
-                            <a href={p.siteUrl} target="_blank" className="text-xs text-brand-600 hover:underline">
-                              {p.siteUrl.replace("https://", "")}
+                            <a href={normalizeUrl(p.siteUrl)} target="_blank" rel="noreferrer" className="text-xs font-medium text-brand-600 hover:underline">
+                              Ouvrir la destination publique ↗
                             </a>
                           )}
+                          {!p.siteUrl && <p className="text-xs font-medium text-amber-700">Lien public manquant</p>}
                         </td>
                         <td className="px-3 py-2 text-xs text-muted whitespace-nowrap">
                           {PRICING_TYPE_LABELS[p.pricingType] ?? p.pricingType}
