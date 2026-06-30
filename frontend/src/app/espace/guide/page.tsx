@@ -5,6 +5,20 @@ import { useState } from "react";
 export default function GuideAffilie() {
   const [loading, setLoading] = useState(false);
 
+  // Accent-stripping helper — outside try so catch can use it
+  function t(s: string): string {
+    return s
+      .replace(/[àáâãä]/g,"a").replace(/[ÀÁÂÃÄ]/g,"A")
+      .replace(/[èéêë]/g,"e").replace(/[ÈÉÊË]/g,"E")
+      .replace(/[ìíîï]/g,"i").replace(/[ÌÍÎÏ]/g,"I")
+      .replace(/[òóôõö]/g,"o").replace(/[ÒÓÔÕÖ]/g,"O")
+      .replace(/[ùúûü]/g,"u").replace(/[ÙÚÛÜ]/g,"U")
+      .replace(/ç/g,"c").replace(/Ç/g,"C")
+      .replace(/ñ/g,"n").replace(/Ñ/g,"N")
+      .replace(/[«»""]/g,'"').replace(/['']/g,"'")
+      .replace(/…/g,"...").replace(/[–—]/g,"-");
+  }
+
   async function generatePDF() {
     setLoading(true);
     try {
@@ -25,7 +39,7 @@ export default function GuideAffilie() {
 
       const TOTAL_PAGES = 17;
 
-      // ── Accent-stripping helper ─────────────────────────────────────────────
+      // ── Accent-stripping helper (also defined above for catch scope) ───────
       function t(s: string): string {
         return s
           .replace(/[àáâãä]/g, "a").replace(/[ÀÁÂÃÄ]/g, "A")
