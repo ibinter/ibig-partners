@@ -41,6 +41,15 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Le chat commercial Tawk.to est réservé aux pages publiques. */
+html.internal-app iframe[src*="tawk.to"],
+html.internal-app iframe[title*="chat" i],
+html.internal-app .tawk-min-container,
+html.internal-app .tawk-button-circle {
+  display: none !important;
+  visibility: hidden !important;
+}
+
 /* ===================== TYPOGRAPHIE ===================== */
 /* Une seule famille cohérente pour le site public et les espaces internes. */
 .font-display,

@@ -3,8 +3,8 @@ import { sendWelcomeEmail } from "@/lib/email";
 import { getCurrentUser } from "@/lib/auth";
 
 export async function GET() {
-  const session = await getCurrentUser();
-  if (!session || session.role !== "SUPERADMIN") {
+  const user = await getCurrentUser();
+  if (!user || user.role !== "SUPERADMIN") {
     return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
   }
 

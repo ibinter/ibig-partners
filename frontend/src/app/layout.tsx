@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { PWARegister, PWAInstallBanner } from "@/components/pwa-register";
+import { TawkVisibility } from "@/components/tawk-visibility";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -50,6 +51,7 @@ export default function RootLayout({
     <html lang="fr" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         {children}
+        <TawkVisibility />
         <PWARegister />
         <PWAInstallBanner />
 
