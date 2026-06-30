@@ -124,6 +124,41 @@ export async function submitOpportunity(formData: FormData) {
   revalidatePath("/espace/reseau");
 }
 
+/**
+ * Un affilié déclare une vente manuelle (paiement WhatsApp, abonnement SaaS direct, etc.).
+ * La vente est créée en statut PENDING — l'admin doit la confirmer pour générer les commissions.
+ */
+export async function declareSale(formData: FormData) {
+  const user = await requireUser();
+  const productId = String(formData.get("productId") || "").trim();
+  const customerName = String(formData.get("customerName") || "").trim();
+  const customerPhone = String(formData.get("customerPhone") || "").trim();
+  const channel = String(formData.get("channel") || "WhatsApp").trim();
+
+  if (!productId || !customerName) return;
+
+  const product = await prisma.product.findUnique({ where: { id: productId } });
+  if (!product) return;
+
+  const count = await prisma.sale.count();
+  await prisma.sale.create({
+    data: {
+      reference: `VTE-${String(count + 1).padStart(4, "0")}`,
+      productId,
+      sellerId: user.id,
+      customerName: `${customerName} [${channel}]`,
+      customerPhone: customerPhone || null,
+      amount: product.price,
+      pricingType: product.pricingType,
+      status: "PENDING",
+      monthsPaid: 0,
+    },
+  });
+
+  revalidatePath("/espace/ventes");
+  revalidatePath("/admin/ventes");
+}
+
 export async function updateProfile(formData: FormData) {
   const user = await requireUser();
   await (prisma as any).user.update({

@@ -32,6 +32,7 @@ export default async function EspaceLayout({
     { href: "/espace/liens",        label: "Mes Liens",       icon: "🔗",  group: "Mon activité" },
     { href: "/espace/reseau",       label: "Mon Réseau",      icon: "🌳",  group: "Mon activité" },
     { href: "/espace/prospects",    label: "Mes Prospects",   icon: "📇",  group: "Mon activité" },
+    { href: "/espace/ventes",       label: "Déclarer une vente", icon: "📝", group: "Mon activité" },
     { href: "/espace/commissions",  label: "Commissions",     icon: "💰",  group: "Revenus" },
     { href: "/espace/paiements",    label: "Mes Paiements",   icon: "🏦",  group: "Revenus" },
     { href: "/espace/academie",     label: "Académie IBIG",   icon: "🎓",  group: "Formation & Communauté" },

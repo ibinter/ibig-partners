@@ -70,6 +70,16 @@ export default async function PaiementPage({
                 {product.description}
               </p>
             )}
+            {(product as { siteUrl?: string | null }).siteUrl && (
+              <a
+                href={(product as { siteUrl: string }).siteUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700 hover:underline"
+              >
+                Découvrir le produit ↗
+              </a>
+            )}
           </div>
 
           {/* Carte principale */}

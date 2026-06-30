@@ -38,11 +38,15 @@ export async function GET(
           },
         });
       }
-      if (product.siteUrl) {
+      // Pour les produits avec un prix défini → page paiement IBIG (tracking Moneroo)
+      // Pour les produits sur devis (price=0) → redirection vers le site du produit
+      if (product.price > 0) {
+        destination = `/paiement/${product.slug}?ref=${encodeURIComponent(refCode)}`;
+      } else if (product.siteUrl) {
         const base = product.siteUrl.startsWith("http") ? product.siteUrl : `https://${product.siteUrl}`;
         destination = `${base.replace(/\/$/, "")}/?ref=${encodeURIComponent(refCode)}`;
       } else {
-        destination = `/rejoindre?ref=${encodeURIComponent(refCode)}&product=${encodeURIComponent(product.name)}`;
+        destination = `/p/${encodeURIComponent(refCode)}`;
       }
     }
   }

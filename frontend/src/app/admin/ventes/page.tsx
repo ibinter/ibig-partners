@@ -26,12 +26,25 @@ export default async function VentesPage() {
     }),
   ]);
 
+  const pendingFromAffiliates = sales.filter((s) => s.status === "PENDING");
+
   return (
     <div>
       <PageHeader
         title="Suivi des ventes & conversions"
         subtitle="Ventes générées par affiliation et génération des commissions."
       />
+
+      {pendingFromAffiliates.length > 0 && (
+        <div className="mb-6 rounded-2xl border border-amber-300 bg-amber-50 px-5 py-4">
+          <p className="font-bold text-amber-800">
+            ⏳ {pendingFromAffiliates.length} vente{pendingFromAffiliates.length > 1 ? "s" : ""} en attente de validation
+          </p>
+          <p className="text-sm text-amber-700 mt-1">
+            Des affiliés ont déclaré des ventes manuelles (WhatsApp, abonnement SaaS direct, etc.). Vérifiez et confirmez pour générer leurs commissions.
+          </p>
+        </div>
+      )}
 
       {/* Formulaire d'enregistrement */}
       <Card className="mb-6">
