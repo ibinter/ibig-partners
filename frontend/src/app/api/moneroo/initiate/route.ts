@@ -14,7 +14,9 @@ export async function POST(req: NextRequest) {
     await req.json();
 
   const secretKey = process.env.MONEROO_SECRET_KEY;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  // Dériver l'URL de base depuis la requête elle-même — toujours correct en prod
+  const origin = new URL(req.url).origin;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? origin;
 
   if (!secretKey) {
     return NextResponse.json(
