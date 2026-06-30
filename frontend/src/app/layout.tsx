@@ -55,8 +55,8 @@ export default function RootLayout({
         <PWARegister />
         <PWAInstallBanner />
 
-        {/* Tawk.to live chat — bottom-left, identifié IBIG SOFT */}
-        <Script id="tawk-to-ibig-soft" strategy="afterInteractive">
+        {/* Tawk.to live chat — bottom-left, identifié IBIG PARTNERS */}
+        <Script id="tawk-to-ibig-partners" strategy="afterInteractive">
           {`
             var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
             Tawk_API.customStyle = {
@@ -66,12 +66,12 @@ export default function RootLayout({
               }
             };
             Tawk_API.visitor = {
-              name:  'Visiteur IBIG Soft',
-              email: 'visitor@ibigsoft.com'
+              name:  'Visiteur IBIG PARTNERS',
+              email: 'visitor@ibigpartners.com'
             };
             Tawk_API.onLoad = function(){
               if (typeof Tawk_API.addTags === 'function') {
-                Tawk_API.addTags(['soft','tech','digital'], function(){});
+                Tawk_API.addTags(['ibig-partners','affiliation'], function(){});
               }
             };
             (function(){
