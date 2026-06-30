@@ -41,6 +41,7 @@ export default async function EspaceLayout({
     { href: "/espace/verification", label: "Vérifier mon compte", icon: "🔐", group: "Compte" },
     { href: "/espace/formation",    label: "Guide Commissions", icon: "📚",  group: "Ressources" },
     { href: "/espace/kit",          label: "Kit Marketing",   icon: "🎨",  group: "Ressources" },
+    { href: "/espace/guide",        label: "Guide Affilié (PDF)", icon: "📖", group: "Ressources" },
     { href: "/espace/notifications",label: "Notifications",   icon: "🔔",  group: "Compte", badge: unread },
     { href: "/espace/support",      label: "Support",         icon: "🎫",  group: "Compte" },
     { href: "/espace/profil",       label: "Mon Profil",      icon: "⚙️",  group: "Compte" },

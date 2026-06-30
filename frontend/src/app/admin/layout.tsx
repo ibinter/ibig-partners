@@ -15,7 +15,11 @@ const NAV: NavItem[] = [
   { href: "/admin/tickets",       label: "Tickets Support",    icon: "🎫", group: "Communication" },
   { href: "/admin/communication", label: "Communication",      icon: "📣", group: "Communication" },
   { href: "/admin/audit",         label: "Journal d'audit",    icon: "🔍", group: "Administration" },
+  { href: "/admin/nettoyage",     label: "Nettoyage données",  icon: "🧹", group: "Administration" },
   { href: "/admin/parametres",    label: "Paramètres",         icon: "⚙️", group: "Administration" },
+  { href: "/admin/guide",         label: "Guide Admin (PDF)",   icon: "📘", group: "Documents" },
+  { href: "/admin/projet",        label: "Présentation Projet", icon: "📊", group: "Documents" },
+  { href: "/admin/visite-guidee", label: "Visite guidée (test)",icon: "🎯", group: "Documents" },
 ];
 
 export default async function AdminLayout({
