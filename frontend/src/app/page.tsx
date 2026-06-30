@@ -13,6 +13,7 @@ import { SocialProofBar } from "@/components/social-proof-bar";
 import { StickyMobileCta } from "@/components/sticky-mobile-cta";
 import { Testimonials } from "@/components/testimonials";
 import { HallOfFame } from "@/components/hall-of-fame";
+import { ParrainDuMois } from "@/components/parrain-du-mois";
 
 export const dynamic = "force-dynamic";
 
@@ -753,6 +754,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ═══════════ PARRAIN DU MOIS (NEW) ═══════════ */}
+      <ParrainDuMois />
 
       {/* ═══════════ HALL OF FAME (NEW) ═══════════ */}
       <HallOfFame />

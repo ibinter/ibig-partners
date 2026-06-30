@@ -56,6 +56,7 @@ export function SiteHeader() {
           <a href="/#statuts" className="hover:text-brand-600 transition-colors">Statuts</a>
           <a href="/#espace" className="hover:text-brand-600 transition-colors">Espace partenaire</a>
           <a href="/#faq" className="hover:text-brand-600 transition-colors">FAQ</a>
+          <Link href="/top-partenaires" className="hover:text-amber-600 transition-colors font-semibold">🏆 Top Partenaires</Link>
           <Link href="/partenaires" className="hover:text-brand-600 transition-colors">Nos partenaires</Link>
         </nav>
 
@@ -159,6 +160,7 @@ export function SiteFooter() {
                 <li><a href="/#commissions" className="text-slate-400 hover:text-brand-400 transition-colors">Commissions</a></li>
                 <li><a href="/#statuts" className="text-slate-400 hover:text-brand-400 transition-colors">Statuts</a></li>
                 <li><a href="/#faq" className="text-slate-400 hover:text-brand-400 transition-colors">FAQ</a></li>
+                <li><Link href="/top-partenaires" className="text-amber-400 hover:text-amber-300 transition-colors font-semibold">🏆 Top Partenaires</Link></li>
                 <li><Link href="/partenaires" className="text-slate-400 hover:text-brand-400 transition-colors">Nos partenaires</Link></li>
                 <li><Link href="/rejoindre" className="text-slate-400 hover:text-brand-400 transition-colors">Rejoindre</Link></li>
                 <li><Link href="/connexion" className="text-slate-400 hover:text-brand-400 transition-colors">Connexion</Link></li>

@@ -97,16 +97,16 @@
 
 ## Préparation déploiement Vercel ✅
 - Schéma Prisma migré sur **PostgreSQL** (provider postgres + directUrl)
-- PostgreSQL local installé pour la preview Emergent (`ibig:ibig_dev_pwd@localhost:5432/ibig`)
-- DB seedée avec succès
-- **Build de production validé** (`yarn build` → ✓ Compiled successfully in 11.7s)
-- Coach IA porté en **TypeScript natif Next.js** dans `/api/coach/chat/route.ts` (utilise EMERGENT_LLM_KEY via fetch direct vers `https://integrations.emergentagent.com/llm/v1/chat/completions`) — fonctionne sur Vercel sans Python
-- Bugs build corrigés :
-  * `react-is` ajouté en dépendance (peer dep recharts manquante)
-  * `getSession` → `getCurrentUser` dans `/api/test-email/route.ts`
-  * `jsPDF` import default au lieu de named (TypeScript strict)
-  * `doneSteps` typage `Record<string, boolean>` dans onboarding-quest
+- Coach IA porté en **TypeScript natif Next.js** (compatible Vercel sans Python)
+- **Build de production validé**
 - Documentation déploiement complète : `/app/DEPLOIEMENT_VERCEL.md`
-- `vercel.json` déjà présent avec `framework: nextjs`
+
+## Améliorations ajoutées post-déploiement (Vague 8) ✅
+- **CelebrationToaster repositionné** (top-20 au lieu de top-5) + auto-dismiss après 8s — ne cache plus le menu utilisateur
+- **Programme "Parrain du Mois"** : composant `parrain-du-mois.tsx` affichant le top recruteur du mois avec bonus +5% sur 30 jours
+- **Page publique `/top-partenaires`** : Hall of Fame étendu, SEO friendly, stats globales, CTA d'inscription
+- **OG Image dynamique** `/api/og?code=XXX&product=YYY` : génère un visuel 1200x630 personnalisé pour chaque partenaire (utilisé par Facebook/Twitter/WhatsApp preview)
+- **Meta OG améliorés** sur `/p/[code]` : visuels et descriptions automatiques pour le partage social
+- **Liens nav** "🏆 Top Partenaires" ajoutés au header et footer
 
 EOF

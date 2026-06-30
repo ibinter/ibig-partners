@@ -14,9 +14,26 @@ export async function generateMetadata({
   const { code } = await params;
   const partner = await prisma.user.findFirst({ where: { code: code.toUpperCase() } });
   if (!partner) return { title: "Partenaire introuvable" };
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ibigpartners.com";
+  const ogImageUrl = `${baseUrl}/api/og?code=${encodeURIComponent(partner.code)}`;
+  const title = `${partner.firstName} ${partner.lastName} — Partenaire officiel IBIG PARTNERS`;
+  const description = `Découvrez les produits IBIG PARTNERS présentés par ${partner.firstName} ${partner.lastName}, partenaire officiel. Commissions attractives sur 3 niveaux. Rejoignez le réseau gratuitement.`;
   return {
-    title: `${partner.firstName} ${partner.lastName} — Partenaire officiel IBIG PARTNERS`,
-    description: `Découvrez les produits IBIG PARTNERS présentés par ${partner.firstName} ${partner.lastName}, partenaire officiel. Commissions attractives sur 3 niveaux. Rejoignez le réseau gratuitement.`,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: title }],
+      type: "website",
+      siteName: "IBIG PARTNERS",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImageUrl],
+    },
   };
 }
 
