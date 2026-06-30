@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
         last_name: customerLastName ?? "IBIG",
         phone: customerPhone ?? "",
       },
-      return_url: `${siteUrl}/paiement/merci?ref=${productSlug}|${partnerCode}`,
+      return_url: `${siteUrl}/paiement/merci?slug=${encodeURIComponent(productSlug)}&ref=${encodeURIComponent(partnerCode)}`,
       notify_url: `${siteUrl}/api/moneroo/webhook`,
       metadata: {
         product_slug: productSlug,
