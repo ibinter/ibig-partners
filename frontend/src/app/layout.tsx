@@ -65,11 +65,11 @@ export default function RootLayout({
                 mobile:  { position: 'bl', xOffset: 5,  yOffset: 70 }
               }
             };
-            Tawk_API.visitor = {
-              name:  'Visiteur IBIG PARTNERS',
-              email: 'visitor@ibigpartners.com'
-            };
             Tawk_API.onLoad = function(){
+              Tawk_API.setAttributes({
+                name:  'Visiteur IBIG PARTNERS',
+                email: 'visitor@ibigpartners.com'
+              }, function(){});
               if (typeof Tawk_API.addTags === 'function') {
                 Tawk_API.addTags(['ibig-partners','affiliation'], function(){});
               }
