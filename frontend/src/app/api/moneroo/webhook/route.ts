@@ -17,6 +17,9 @@ function verifySignature(payload: string, signature: string, secret: string): bo
   return expected === signature;
 }
 
+// Statuts Moneroo considérés comme "paiement réussi"
+const SUCCESS_STATUSES = new Set(["success", "paid", "completed", "SUCCESS", "PAID", "COMPLETED"]);
+
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
   let body: Record<string, unknown>;
@@ -36,20 +39,25 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Log complet pour déboguer le format Moneroo
-  console.log("[Moneroo Webhook] Payload reçu :", JSON.stringify(body));
+  // Log complet pour déboguer
+  console.log("[Moneroo Webhook] Payload brut :", JSON.stringify(body));
 
-  const { status, amount, metadata } = body as {
-    status: string;
-    amount: number;
-    metadata?: { product_slug?: string; partner_code?: string };
+  // Moneroo peut envoyer le payload à la racine OU sous body.data
+  const data = (body.data ?? body) as Record<string, unknown>;
+  const status = String(data.status ?? body.status ?? "");
+  const amount = Number(data.amount ?? body.amount ?? 0);
+
+  // Les metadata peuvent être à la racine ou sous data
+  const metadata = (data.metadata ?? body.metadata ?? {}) as {
+    product_slug?: string;
+    partner_code?: string;
   };
 
   console.log("[Moneroo Webhook] status =", status, "| amount =", amount, "| metadata =", JSON.stringify(metadata));
 
   // Ne traiter que les paiements réussis
-  if (status !== "success") {
-    console.log("[Moneroo Webhook] Statut non traité :", status);
+  if (!SUCCESS_STATUSES.has(status)) {
+    console.log("[Moneroo Webhook] Statut ignoré :", status);
     return NextResponse.json({ message: `statut "${status}" ignoré` });
   }
 
@@ -57,6 +65,7 @@ export async function POST(req: NextRequest) {
   const partnerCode = metadata?.partner_code;
 
   if (!productSlug || !partnerCode) {
+    console.error("[Moneroo Webhook] Metadata manquants — product_slug:", productSlug, "partner_code:", partnerCode);
     return NextResponse.json({ error: "metadata product_slug / partner_code manquants" }, { status: 400 });
   }
 
@@ -65,11 +74,24 @@ export async function POST(req: NextRequest) {
     prisma.user.findFirst({ where: { code: partnerCode, approved: true, active: true } }),
   ]);
 
-  if (!product || !seller) {
-    return NextResponse.json({ error: "produit ou partenaire introuvable" }, { status: 404 });
+  if (!product) {
+    console.error("[Moneroo Webhook] Produit introuvable :", productSlug);
+    return NextResponse.json({ error: "produit introuvable" }, { status: 404 });
+  }
+  if (!seller) {
+    console.error("[Moneroo Webhook] Partenaire introuvable :", partnerCode);
+    return NextResponse.json({ error: "partenaire introuvable" }, { status: 404 });
   }
 
-  const saleAmount = Math.round(Number(amount));
+  // Récupérer le nom du client depuis le payload Moneroo si disponible
+  const customer = (data.customer ?? body.customer ?? {}) as {
+    first_name?: string;
+    last_name?: string;
+    email?: string;
+  };
+  const customerName = [customer.first_name, customer.last_name].filter(Boolean).join(" ") || "Client Moneroo";
+
+  const saleAmount = Math.round(amount) || product.price;
   const count = await prisma.sale.count();
 
   const sale = await prisma.sale.create({
@@ -77,7 +99,7 @@ export async function POST(req: NextRequest) {
       reference: `VTE-${String(count + 1).padStart(4, "0")}`,
       productId: product.id,
       sellerId: seller.id,
-      customerName: `Moneroo-Client`,
+      customerName,
       amount: saleAmount,
       pricingType: product.pricingType,
       status: "CONFIRMED",
@@ -88,6 +110,6 @@ export async function POST(req: NextRequest) {
   await generateCommissionsForSale(sale.id);
   await recomputeStatus(seller.id);
 
-  console.log(`[Moneroo] Vente ${sale.reference} créée automatiquement — ${saleAmount} FCFA`);
+  console.log(`[Moneroo] Vente ${sale.reference} créée — ${saleAmount} FCFA — Client: ${customerName} — Vendeur: ${seller.code}`);
   return NextResponse.json({ success: true, saleId: sale.id });
 }
