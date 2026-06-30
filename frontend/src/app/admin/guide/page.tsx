@@ -17,16 +17,7 @@ export default function GuidePage() {
 
       // Fix: jsPDF Helvetica ne supporte pas les caracteres accentues
       function t(s: string): string {
-        return s
-          .replace(/[àáâãä]/g,"a").replace(/[ÀÁÂÃÄ]/g,"A")
-          .replace(/[èéêë]/g,"e").replace(/[ÈÉÊË]/g,"E")
-          .replace(/[ìíîï]/g,"i").replace(/[ÌÍÎÏ]/g,"I")
-          .replace(/[òóôõö]/g,"o").replace(/[ÒÓÔÕÖ]/g,"O")
-          .replace(/[ùúûü]/g,"u").replace(/[ÙÚÛÜ]/g,"U")
-          .replace(/ç/g,"c").replace(/Ç/g,"C")
-          .replace(/ñ/g,"n").replace(/Ñ/g,"N")
-          .replace(/[«»""]/g,'"').replace(/['']/g,"'")
-          .replace(/…/g,"...").replace(/[–—]/g,"-");
+    return s;
       }
 
       const W = 210;
@@ -158,7 +149,7 @@ export default function GuidePage() {
       // Bas de page couverture
       doc.setFontSize(8);
       doc.setTextColor(150, 170, 210);
-      doc.text(t("CONFIDENTIEL - Usage interne et partenaires agrees"), W / 2, H - 20, { align: "center" });
+      doc.text(t("CONFIDENTIEL - Usage interne et partenaires agréés"), W / 2, H - 20, { align: "center" });
       doc.text("ibigpartners.com  ·  contact@ibigpartners.com  ·  +225 27 22 27 60 14", W / 2, H - 13, { align: "center" });
 
       // ═══════════════════════════════════════════════════════════
@@ -173,7 +164,7 @@ export default function GuidePage() {
       doc.setFontSize(20);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(...DARK);
-      doc.text(t("Table des matieres"), 14, 32);
+      doc.text(t("Table des matières"), 14, 32);
       doc.setFillColor(...GOLD);
       doc.rect(14, 36, 40, 2, "F");
 
@@ -228,13 +219,13 @@ export default function GuidePage() {
       py = sectionTitle("1. Présentation d'IBIG PARTNERS", py);
       py += 4;
 
-      py = body("IBIG PARTNERS est la plateforme officielle d'affiliation multi-niveaux d'INTERMARK BUSINESS INTERNATIONAL GROUP SARL (IBIG SARL). Elle permet à toute personne ou organisation de devenir Partenaire Affilié et de générer des revenus en recommandant les produits et services du groupe IBIG.", py);
+      py = body("IBIG PARTNERS est la plateformé officielle d'affiliation multi-niveaux d'INTERMARK BUSINESS INTERNATIONAL GROUP SARL (IBIG SARL). Elle permet à toute personne ou organisation de devenir Partenaire Affilié et de générer des revenus en recommandant les produits et services du groupe IBIG.", py);
       py += 4;
 
       py = subTitle("Vision & Mission", py);
       py = body("Notre vision : créer le plus grand réseau de partenaires commerciaux panafricains, capables de distribuer des solutions de qualité mondiale adaptées aux réalités africaines.", py);
       py += 3;
-      py = body("Notre mission : offrir à chaque partenaire les outils, la formation et les commissions attractives pour bâtir un revenu durable et construire son propre réseau.", py);
+      py = body("Notre mission : offrir à chaque partenaire les outils, la formation et les commissions attractivés pour bâtir un revenu durable et construire son propre réseau.", py);
       py += 5;
 
       py = subTitle("Les 5 Branches du Groupe IBIG", py);
@@ -323,7 +314,7 @@ export default function GuidePage() {
       // @ts-ignore
       py = (doc as any).lastAutoTable.finalY + 8;
 
-      py = infoBox("Votre code d'affiliation unique (ex : AFF-DUPONT-042) est votre identité sur la plateforme. Partagez-le pour parrainer de nouveaux partenaires et construire votre réseau.", py, [240, 253, 244]);
+      py = infoBox("Votre code d'affiliation unique (ex : AFF-DUPONT-042) est votre identité sur la plateformé. Partagez-le pour parrainer de nouveaux partenaires et construire votre réseau.", py, [240, 253, 244]);
 
       // ═══════════════════════════════════════════════════════════
       // PAGE 5 — TABLEAU DE BORD
@@ -350,9 +341,9 @@ export default function GuidePage() {
         ["🏆 Badges", "Collection de vos badges gagnés : 1ère vente, 10 ventes, statut Gold, équipe de 10..."],
         ["📚 Académie", "Modules de formation IBIG : articles, vidéos, quiz et assistant IA pour progresser."],
         ["🤖 Coach IA", "Assistant intelligent formé sur les produits IBIG pour répondre à toutes vos questions."],
-        ["💬 Communication", "Chat avec l'équipe IBIG et les autres partenaires Gold+."],
-        ["⚙️ Paramètres", "Modification du profil, méthode de paiement, mot de passe, préférences."],
-        ["🔐 Vérification KYC", "Soumission de votre dossier de vérification pour activer les paiements de commissions."],
+        ["💬 Communication", "Chat avec l'équipe IBIG et les autrès partenaires Gold+."],
+        ["⚙️ Paramètrès", "Modification du profil, méthode de paiement, mot de passe, préférences."],
+        ["🔐 Vérification KYC", "Soumission de votre dossier de vérification pour activér les paiements de commissions."],
       ];
 
       sections.forEach(([name, desc]) => {
@@ -514,12 +505,12 @@ export default function GuidePage() {
       py = sectionTitle("7. Liens d'affiliation et QR codes", py);
       py += 4;
 
-      py = body("Chaque partenaire dispose de liens d'affiliation uniques pour chaque produit qu'il active. Ces liens contiennent votre code affilié et permettent le tracking automatique de vos ventes.", py);
+      py = body("Chaque partenaire dispose de liens d'affiliation uniques pour chaque produit qu'il activé. Ces liens contiennent votre code affilié et permettent le tracking automatique de vos ventes.", py);
       py += 5;
 
       py = subTitle("Comment obtenir vos liens", py);
       py = bullet("Rendez-vous dans « Mes Liens » depuis votre espace partenaire.", py);
-      py = bullet("Activez les produits que vous souhaitez promouvoir (cliquez sur « Activer »).", py);
+      py = bullet("Activéz les produits que vous souhaitez promouvoir (cliquez sur « Activér »).", py);
       py = bullet("Copiez votre lien unique (ex : ibigpartners.com/p/AFF-DUPONT-042)", py);
       py = bullet("Téléchargez votre QR code personnalisé pour vos supports imprimés.", py);
       py = bullet("Partagez par WhatsApp, réseaux sociaux, email, SMS ou en personne.", py);
@@ -673,7 +664,7 @@ export default function GuidePage() {
       const academy = [
         ["📄 Articles", "Guides détaillés sur les produits, techniques de vente, stratégies de recrutement."],
         ["🎥 Vidéos", "Démonstrations produits, témoignages de partenaires, formations en ligne."],
-        ["📋 Quiz", "Évaluations interactives pour valider vos connaissances et débloquer des badges."],
+        ["📋 Quiz", "Évaluations interactivés pour valider vos connaissances et débloquer des badges."],
         ["🤖 Assistant IA", "Posez toutes vos questions sur les produits IBIG, les commissions ou les techniques de vente — réponse instantanée 24h/24."],
         ["🎓 Coach IA IBIG", "Assistant personnel intelligent formé spécifiquement sur les valeurs, produits et processus d'IBIG PARTNERS."],
       ];
@@ -700,10 +691,10 @@ export default function GuidePage() {
       footer();
 
       py = 22;
-      py = sectionTitle("11. Espace SUPERADMIN — Administration de la plateforme", py);
+      py = sectionTitle("11. Espace SUPERADMIN — Administration de la plateformé", py);
       py += 4;
 
-      py = infoBox("L'espace SUPERADMIN est réservé exclusivement à l'équipe IBIG SARL. Il permet la gestion complète de la plateforme : partenaires, ventes, commissions, catalogue, contenu et paramètres.", py, [255, 243, 205]);
+      py = infoBox("L'espace SUPERADMIN est réservé exclusivement à l'équipe IBIG SARL. Il permet la gestion complète de la plateformé : partenaires, ventes, commissions, catalogue, contenu et paramètrès.", py, [255, 243, 205]);
       py += 3;
 
       py = subTitle("Modules d'administration disponibles", py);
@@ -724,7 +715,7 @@ export default function GuidePage() {
           ["Opportunités", "Suivi des grandes opportunités commerciales du réseau"],
           ["Communication", "Messagerie, annonces globales, tickets support"],
           ["Journal d'audit", "Traçabilité de toutes les actions administratives"],
-          ["Paramètres", "Configuration globale : seuils, délais, coordonnées IBIG"],
+          ["Paramètrès", "Configuration globale : seuils, délais, coordonnées IBIG"],
         ],
         headStyles: { fillColor: DARK, textColor: WHITE, fontStyle: "bold", fontSize: 9 },
         bodyStyles: { fontSize: 8.5 },
@@ -737,10 +728,10 @@ export default function GuidePage() {
 
       py = subTitle("Processus de validation KYC (Admin)", py);
       py = bullet("Un nouveau partenaire s'inscrit → dossier KYC créé automatiquement avec statut « En attente ».", py);
-      py = bullet("L'admin accède à /admin/verifications et clique sur « Examiner » pour voir le dossier complet.", py);
-      py = bullet("Après vérification des informations : cliquer « Valider » (active le compte) ou « Rejeter » (avec motif).", py);
+      py = bullet("L'admin accède à /admin/vérifications et clique sur « Examiner » pour voir le dossier complet.", py);
+      py = bullet("Après vérification des informations : cliquer « Valider » (activé le compte) ou « Rejeter » (avec motif).", py);
       py = bullet("Le partenaire reçoit automatiquement une notification et un email de confirmation/rejet.", py);
-      py = bullet("Un partenaire rejeté peut corriger son dossier et le resoumettre depuis son espace.", py);
+      py = bullet("Un partenaire rejeté peut corriger son dossier et le soumettre à nouveau depuis son espace.", py);
 
       // ═══════════════════════════════════════════════════════════
       // PAGE 11 — BADGES + FAQ
@@ -795,7 +786,7 @@ export default function GuidePage() {
           ["WhatsApp", "+225 07 78 88 25 92", "Support rapide, questions urgentes"],
           ["Téléphone", "+225 27 22 27 60 14", "Appels professionnels"],
           ["Site officiel", "intermark-business.com", "Groupe IBIG SARL"],
-          ["Plateforme", "ibigpartners.com", "Espace partenaire"],
+          ["Plateformé", "ibigpartners.com", "Espace partenaire"],
         ],
         headStyles: { fillColor: BLUE, textColor: WHITE, fontStyle: "bold", fontSize: 9 },
         bodyStyles: { fontSize: 8.5 },
@@ -808,9 +799,9 @@ export default function GuidePage() {
 
       py = subTitle("Questions fréquentes (FAQ)", py);
       const faq = [
-        ["L'inscription est-elle payante ?", "Non. L'inscription sur IBIG PARTNERS est 100% gratuite et sans investissement obligatoire."],
+        ["L'inscription est-elle payante ?", "Non. L'inscription sur IBIG PARTNERS est 100% gratuité et sans investissement obligatoire."],
         ["Quand sont versées les commissions ?", "Les commissions sont validées par l'équipe IBIG puis virées selon votre méthode de paiement configurée. Délai standard : 7 jours ouvrés après validation."],
-        ["Puis-je m'inscrire depuis n'importe quel pays ?", "Oui. IBIG PARTNERS est une plateforme panafricaine ouverte à tous les pays d'Afrique et à la diaspora mondiale."],
+        ["Puis-je m'inscrire depuis n'importe quel pays ?", "Oui. IBIG PARTNERS est une plateformé panafricaine ouverte à tous les pays d'Afrique et à la diaspora mondiale."],
         ["Combien de filleuls puis-je recruter ?", "Illimité. Vous pouvez recruter autant de partenaires que vous le souhaitez sur vos 3 niveaux."],
         ["Que se passe-t-il si je ne valide pas mon KYC ?", "Vos commissions sont calculées et conservées mais non versées. Elles seront débloquées dès la validation de votre KYC."],
         ["Comment signaler un problème technique ?", "Utilisez la section « Support » dans votre espace (tickets), envoyez un email à support@ibigpartners.com ou contactez-nous sur WhatsApp."],
@@ -860,14 +851,14 @@ export default function GuidePage() {
       doc.setFontSize(10);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(200, 220, 255);
-      const closing = t("Vous faites maintenant partie du programme d'affiliation panafricain le plus structure du groupe IBIG SARL. Chaque vente que vous realisez, chaque partenaire que vous recrutez construit votre revenu durable et contribue au developpement economique de l'Afrique.");
+      const closing = t("Vous faites maintenant partie du programme d'affiliation panafricain le plus structuré du groupe IBIG SARL. Chaque vente que vous réalisez, chaque partenaire que vous recrutez construit votre revenu durable et contribue au développement économique de l'Afrique.");
       const closingLines = doc.splitTextToSize(closing, W - 60);
       doc.text(closingLines, W / 2, 115, { align: "center" });
 
       doc.setFontSize(11);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(...WHITE);
-      doc.text(t("Votre succes est notre succes."), W / 2, 150, { align: "center" });
+      doc.text(t("Votre succès est notre succès."), W / 2, 150, { align: "center" });
 
       doc.setFontSize(9);
       doc.setFont("helvetica", "normal");
@@ -879,12 +870,12 @@ export default function GuidePage() {
       doc.setFontSize(8);
       doc.setTextColor(150, 170, 210);
       doc.text("INTERMARK BUSINESS INTERNATIONAL GROUP SARL", W / 2, 198, { align: "center" });
-      doc.text(t("Cocody Riviera Palmeraie - Abidjan, Cote d'Ivoire"), W / 2, 205, { align: "center" });
+      doc.text(t("Cocody Riviera Palmeraie - Abidjan, Côte d'Ivoire"), W / 2, 205, { align: "center" });
 
       // Watermark discret
       doc.setFontSize(7);
       doc.setTextColor(80, 100, 140);
-      doc.text(t("Document confidentiel - Usage reserve aux administrateurs IBIG PARTNERS agrees"), W / 2, 220, { align: "center" });
+      doc.text(t("Document confidentiel - Usage réservé aux administrateurs IBIG PARTNERS agréés"), W / 2, 220, { align: "center" });
 
       doc.save("IBIG_PARTNERS_Guide_Utilisateur_Officiel_2026.pdf");
     } catch (err) {
@@ -909,7 +900,7 @@ export default function GuidePage() {
         {/* Contenu */}
         <div className="bg-white px-8 py-6 space-y-5">
           <p className="text-slate-600 text-sm leading-relaxed">
-            Ce guide couvre l'intégralité de la plateforme IBIG PARTNERS de A à Z : inscription, KYC, liens d'affiliation, commissions sur 3 niveaux, réseau, académie, espace admin et FAQ.
+            Ce guide couvre l'intégralité de la plateformé IBIG PARTNERS de A à Z : inscription, KYC, liens d'affiliation, commissions sur 3 niveaux, réseau, académie, espace admin et FAQ.
           </p>
 
           <div className="grid grid-cols-2 gap-3 text-sm">

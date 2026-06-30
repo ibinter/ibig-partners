@@ -7,16 +7,7 @@ export default function GuideAffilie() {
 
   // Accent-stripping helper — outside try so catch can use it
   function t(s: string): string {
-    return s
-      .replace(/[àáâãä]/g,"a").replace(/[ÀÁÂÃÄ]/g,"A")
-      .replace(/[èéêë]/g,"e").replace(/[ÈÉÊË]/g,"E")
-      .replace(/[ìíîï]/g,"i").replace(/[ÌÍÎÏ]/g,"I")
-      .replace(/[òóôõö]/g,"o").replace(/[ÒÓÔÕÖ]/g,"O")
-      .replace(/[ùúûü]/g,"u").replace(/[ÙÚÛÜ]/g,"U")
-      .replace(/ç/g,"c").replace(/Ç/g,"C")
-      .replace(/ñ/g,"n").replace(/Ñ/g,"N")
-      .replace(/[«»""]/g,'"').replace(/['']/g,"'")
-      .replace(/…/g,"...").replace(/[–—]/g,"-");
+    return s;
   }
 
   async function generatePDF() {
@@ -41,18 +32,7 @@ export default function GuideAffilie() {
 
       // ── Accent-stripping helper (also defined above for catch scope) ───────
       function t(s: string): string {
-        return s
-          .replace(/[àáâãä]/g, "a").replace(/[ÀÁÂÃÄ]/g, "A")
-          .replace(/[èéêë]/g, "e").replace(/[ÈÉÊË]/g, "E")
-          .replace(/[ìíîï]/g, "i").replace(/[ÌÍÎÏ]/g, "I")
-          .replace(/[òóôõö]/g, "o").replace(/[ÒÓÔÕÖ]/g, "O")
-          .replace(/[ùúûü]/g, "u").replace(/[ÙÚÛÜ]/g, "U")
-          .replace(/ç/g, "c").replace(/Ç/g, "C")
-          .replace(/ñ/g, "n").replace(/Ñ/g, "N")
-          .replace(/[«»""]/g, '"')
-          .replace(/['']/g, "'")
-          .replace(/…/g, "...")
-          .replace(/[–—]/g, "-");
+    return s;
       }
 
       // ── Layout helpers ──────────────────────────────────────────────────────
@@ -60,7 +40,7 @@ export default function GuideAffilie() {
       function header(n: number) {
         doc.setFillColor(...BLUE); doc.rect(0, 0, W, 12, "F");
         doc.setFontSize(8); doc.setTextColor(...WHITE);
-        doc.text(t("IBIG PARTNERS  Guide du Partenaire Affilie"), 14, 8);
+        doc.text(t("IBIG PARTNERS  Guide du Partenaire Affilié"), 14, 8);
         doc.text(t(`Page ${n} / ${TOTAL_PAGES}`), W - 14, 8, { align: "right" });
       }
       function footer() {
@@ -113,9 +93,9 @@ export default function GuideAffilie() {
       doc.setTextColor(...GOLD); doc.text("PARTNERS", W / 2, 126, { align: "center" });
       doc.setDrawColor(...WHITE); doc.setLineWidth(0.4); doc.line(50, 134, W - 50, 134);
       doc.setFontSize(13); doc.setFont("helvetica", "normal"); doc.setTextColor(...WHITE);
-      doc.text(t("GUIDE DU PARTENAIRE AFFILIE"), W / 2, 144, { align: "center" });
+      doc.text(t("GUIDE DU PARTENAIRE AFFILIÉ"), W / 2, 144, { align: "center" });
       doc.setFontSize(9); doc.setTextColor(180, 200, 255);
-      doc.text(t("Programme d'Affiliation Multi-Niveaux  Toutes les cles pour reussir"), W / 2, 154, { align: "center" });
+      doc.text(t("Programme d'Affiliation Multi-Niveaux  Toutes les cles pour réussir"), W / 2, 154, { align: "center" });
       doc.text(t("INTERMARK BUSINESS INTERNATIONAL GROUP SARL"), W / 2, 162, { align: "center" });
       doc.setTextColor(...GOLD); doc.setFontSize(8);
       doc.text(t("Version 1.0  Juin 2026"), W / 2, 174, { align: "center" });
@@ -128,24 +108,24 @@ export default function GuideAffilie() {
       newPage(); header(2); footer();
       doc.setFillColor(...LIGHT); doc.rect(0, 12, W, 30, "F");
       doc.setFontSize(18); doc.setFont("helvetica", "bold"); doc.setTextColor(...DARK);
-      doc.text(t("Table des matieres"), 14, 30);
+      doc.text(t("Table des matières"), 14, 30);
       doc.setFillColor(...GOLD); doc.rect(14, 34, 35, 2, "F");
       const toc = [
         ["1.", t("Bienvenue dans IBIG PARTNERS"), "3"],
         ["2.", t("Inscription et activation du compte"), "3"],
         ["3.", t("Naviguer dans votre espace partenaire"), "4"],
-        ["4.", t("Commissions - le systeme N1/N2/N3"), "5"],
+        ["4.", t("Commissions - le système N1/N2/N3"), "5"],
         ["5.", t("Comment prospecter efficacement"), "6"],
-        ["6.", t("Strategies pour developper son reseau"), "7"],
+        ["6.", t("Stratégies pour développer son réseau"), "7"],
         ["7.", t("Les branches et produits IBIG"), "8"],
-        ["8.", t("KYC - Activer vos paiements"), "9"],
+        ["8.", t("KYC - Activér vos paiements"), "9"],
         ["9.", t("Liens d'affiliation et QR codes"), "9"],
         ["10.", t("Suivre vos ventes et commissions"), "10"],
         ["11.", t("Outils disponibles dans votre espace"), "11"],
-        ["12.", t("Construire et animer votre reseau"), "12"],
+        ["12.", t("Construire et animer votre réseau"), "12"],
         ["13.", t("Gestion des paiements et optimisation"), "13"],
-        ["14.", t("Academie, formation et Coach IA"), "14"],
-        ["15.", t("Badges, recompenses et classement"), "15"],
+        ["14.", t("Académie, formation et Coach IA"), "14"],
+        ["15.", t("Badges, récompenses et classement"), "15"],
         ["16.", t("Support et contact"), "15"],
         ["17.", t("Conclusion"), "16"],
       ];
@@ -163,27 +143,27 @@ export default function GuideAffilie() {
       // ══════════════════════════════════════════════════════════════════════
       newPage(); header(3); footer();
       y = 22; y = secTitle(t("1. Bienvenue dans IBIG PARTNERS"), y); y += 3;
-      y = body(t("IBIG PARTNERS est le programme officiel d'affiliation multi-niveaux du groupe IBIG SARL. Il vous permet de gagner des commissions attractives en recommandant les produits et services du groupe a votre entourage, et de construire un reseau de partenaires qui genere des revenus passifs automatiques."), y); y += 4;
-      y = body(t("L'inscription est 100% GRATUITE. Aucun investissement requis. Vous etes paye uniquement sur les ventes realisees."), y); y += 5;
+      y = body(t("IBIG PARTNERS est le programme officiel d'affiliation multi-niveaux du groupe IBIG SARL. Il vous permet de gagner des commissions attractivés en recommandant les produits et services du groupe a votre entourage, et de construire un réseau de partenaires qui généré des revenus passifs automatiques."), y); y += 4;
+      y = body(t("L'inscription est 100% GRATUITE. Aucun investissement requis. Vous êtes payé uniquement sur les ventes réalisées."), y); y += 5;
 
       y = sub(t("Pourquoi rejoindre IBIG PARTNERS ?"), y);
-      y = bullet(t("Revenus passifs automatiques : vos filleuls vendent, vous gagnez sans effort supplementaire."), y);
-      y = bullet(t("Reseau illimite : recrutez autant de partenaires que vous voulez sur 3 niveaux."), y);
-      y = bullet(t("Formations gratuites : acces a l'Academie IBIG avec modules, videos et quiz inclus."), y);
+      y = bullet(t("Revenus passifs automatiques : vos filleuls vendent, vous gagnez sans effort supplémentaire."), y);
+      y = bullet(t("Réseau illimite : recrutez autant de partenaires que vous voulez sur 3 niveaux."), y);
+      y = bullet(t("Formations gratuités : accès a l'Académie IBIG avec modules, videos et quiz inclus."), y);
       y = bullet(t("Outils professionnels : liens traces, QR codes, simulateur, gestionnaire de prospects."), y);
-      y = bullet(t("Support dedie : equipe disponible par email, WhatsApp et Coach IA 24h/24."), y);
+      y = bullet(t("Support dédié : équipe disponible par email, WhatsApp et Coach IA 24h/24."), y);
       y += 4;
 
-      y = infoBox(t("EXEMPLE CONCRET : Si vous vendez Scolaby a 30 000 FCFA/mois, vous gagnez 6 000 FCFA (20%). Votre filleul vend aussi Scolaby : vous gagnez automatiquement 3 000 FCFA supplementaires (10% N2) sans rien faire de plus."), y, [240, 253, 244]);
+      y = infoBox(t("EXEMPLE CONCRET : Si vous vendez Scolaby a 30 000 FCFA/mois, vous gagnez 6 000 FCFA (20%). Votre filleul vend aussi Scolaby : vous gagnez automatiquement 3 000 FCFA supplémentaires (10% N2) sans rien faire de plus."), y, [240, 253, 244]);
       y += 3;
 
       y = sub(t("Les 5 Branches du Groupe IBIG"), y);
       const branches = [
         [t("IBIG SOFT"), t("Logiciels SaaS : Scolaby, Fleet 360, GESCOMXEL, Zelivry, Lokativo, StockFlow"), t("20%/10%/5%")],
-        [t("IBIG EDUFORM"), t("Formations certifiantes : comptabilite, RH, QHSE, Sage, SAP, IA..."), t("10%/5%/2%")],
+        [t("IBIG EDUFORM"), t("Formations certifiantes : comptabilité, RH, QHSE, Sage, SAP, IA..."), t("10%/5%/2%")],
         [t("IBIG IMMOTRUST"), t("Immobilier, BTP, gestion locative, construction cle en main"), t("5%/2,5%/1%")],
-        [t("IBIG MARKET"), t("Commerce, distribution, materiel informatique, mobilier, fournitures"), t("8%/4%/2%")],
-        [t("INTERMARK BUSINESS"), t("Conseil strategique, ingenierie de projets, digitalisation, levee de fonds"), t("8%/4%/2%")],
+        [t("IBIG MARKET"), t("Commerce, distribution, matériel informatique, mobilier, fournitures"), t("8%/4%/2%")],
+        [t("INTERMARK BUSINESS"), t("Conseil stratégique, ingénierie de projets, digitalisation, levée de fonds"), t("8%/4%/2%")],
       ];
       branches.forEach(([name, desc, comm]) => {
         y = checkPage(y, 3);
@@ -202,11 +182,11 @@ export default function GuideAffilie() {
       const steps = [
         t("Allez sur ibigpartners.com - cliquez sur \"Devenir Partenaire\"."),
         t("Choisissez votre type : Particulier, Entreprise, ONG, Association ou Autre."),
-        t("Remplissez le formulaire et creez votre mot de passe securise."),
-        t("Si vous avez un code parrain, saisissez-le dans le champ prevu a cet effet."),
-        t("Votre code affilie unique est genere automatiquement (ex : AFF-DUPONT-042)."),
-        t("L'equipe IBIG valide votre compte sous 24-48h - vous recevez un email de confirmation."),
-        t("Completez ensuite votre KYC pour activer le versement de vos commissions."),
+        t("Remplissez le formulaire et créez votre mot de passe sécurisé."),
+        t("Si vous avez un code parrain, saisissez-le dans le champ prévu a cet effet."),
+        t("Votre code affilié unique est généré automatiquement (ex : AFF-DUPONT-042)."),
+        t("L'équipe IBIG valide votre compte sous 24-48h - vous recevez un email de confirmation."),
+        t("Completez ensuite votre KYC pour activér le versement de vos commissions."),
       ];
       steps.forEach((s, i) => {
         y = checkPage(y, 3);
@@ -217,10 +197,10 @@ export default function GuideAffilie() {
       });
 
       y += 3;
-      y = sub(t("Apres l'inscription - ce qui se passe ensuite"), y);
-      y = bullet(t("Email de bienvenue avec votre code affilie et vos identifiants de connexion."), y);
-      y = bullet(t("Acces immediat a votre espace partenaire et a l'Academie IBIG."), y);
-      y = bullet(t("Dossier KYC a soumettre pour activer les paiements (delai : 24-48h)."), y);
+      y = sub(t("Après l'inscription - ce qui se passe ensuite"), y);
+      y = bullet(t("Email de bienvenue avec votre code affilié et vos identifiants de connexion."), y);
+      y = bullet(t("Accès immediat a votre espace partenaire et a l'Académie IBIG."), y);
+      y = bullet(t("Dossier KYC a soumettre pour activér les paiements (delai : 24-48h)."), y);
       y = bullet(t("Premier module de formation recommande : 'Decouvrir les produits IBIG'."), y);
       y = bullet(t("Activation de vos premiers liens d'affiliation dans la section 'Mes Liens'."), y);
       y += 4;
@@ -230,7 +210,7 @@ export default function GuideAffilie() {
         startY: y,
         head: [[t("Type de partenaire"), t("Documents requis")]],
         body: [
-          [t("Particulier"), t("CNI/Passeport, CV, contacts de reference")],
+          [t("Particulier"), t("CNI/Passeport, CV, contacts de référence")],
           [t("Entreprise"), t("RCCM, NIF, representant legal, adresse siege")],
           [t("ONG/Association"), t("Statuts, recepisse, representant legal")],
           [t("Autre"), t("Document d'identification valide")],
@@ -246,21 +226,21 @@ export default function GuideAffilie() {
       // ══════════════════════════════════════════════════════════════════════
       newPage(); header(4); footer();
       y = 22; y = secTitle(t("3. Naviguer dans votre espace partenaire"), y); y += 3;
-      y = body(t("Votre espace partenaire (ibigpartners.com/espace) est votre centrale de controle. Toutes vos informations sont disponibles en temps reel. Voici un guide detaille de chaque section du menu."), y); y += 5;
+      y = body(t("Votre espace partenaire (ibigpartners.com/espace) est votre centrale de controle. Toutes vos informations sont disponibles en temps reel. Voici un guide détaillé de chaque section du menu."), y); y += 5;
 
       const dash = [
-        [t("Accueil"), t("Vue d'ensemble : commissions du mois, statut, ventes recentes, alertes importantes. Consultez-le chaque matin pour suivre votre activite."), t("Conseil : verifiez vos alertes KYC et validations en attente.")],
-        [t("Mes Liens"), t("Liens d'affiliation et QR codes pour chaque produit active. Copiez et partagez vos liens traces pour suivre chaque conversion automatiquement."), t("Conseil : activez d'abord les produits IBIG SOFT, les plus faciles a vendre.")],
+        [t("Accueil"), t("Vue d'ensemble : commissions du mois, statut, ventes recentes, alertes importantes. Consultez-le chaque matin pour suivre votre activité."), t("Conseil : vérifiez vos alertes KYC et validations en attente.")],
+        [t("Mes Liens"), t("Liens d'affiliation et QR codes pour chaque produit activé. Copiez et partagez vos liens traces pour suivre chaque conversion automatiquement."), t("Conseil : activéz d'abord les produits IBIG SOFT, les plus faciles a vendre.")],
         [t("Ventes"), t("Historique complet de toutes vos ventes avec montants et statuts. Filtrez par date, branche ou statut pour analyser vos performances."), t("Conseil : exportez en CSV chaque mois pour suivre votre progression.")],
-        [t("Commissions"), t("Detail N1/N2/N3 : montant, statut (En attente / Validee / Payee). Toutes vos commissions sont calculees automatiquement a chaque vente confirmee."), t("Conseil : verifiez vos commissions N2 pour voir la performance de vos filleuls.")],
-        [t("Paiements"), t("Historique des virements recus avec references et montants. Permet de reconcilier vos paiements et de contacter le support en cas d'ecart."), t("Conseil : seuil minimum 5 000 FCFA pour declencher un paiement.")],
-        [t("Mon Reseau"), t("Arbre de parrainage sur 3 niveaux avec performances de vos filleuls. Identifiez vos meilleurs filleuls et ceux qui ont besoin d'accompagnement."), t("Conseil : contactez vos filleuls inactifs pour les remotiver.")],
-        [t("Prospects"), t("Gestion de vos contacts : Contacte - Demo - Converti - Perdu. Suivez chaque prospect de la premiere prise de contact jusqu'a la vente."), t("Conseil : visez 10 nouveaux prospects par semaine.")],
-        [t("Badges"), t("Vos badges gagnes et objectifs en cours. Les badges debloquent des formations avancees et ameliorent votre classement."), t("Conseil : l'objectif 'Premiere vente' est prioritaire.")],
-        [t("Academie"), t("Modules de formation, videos, PDFs, quiz et ressources marketing. Completez un module par semaine pour progresser rapidement."), t("Conseil : commencez par le module 'Argumentaire Scolaby'.")],
-        [t("Coach IA"), t("Assistant intelligent disponible 24h/24 pour toutes vos questions sur les produits, commissions, techniques de vente et gestion du reseau."), t("Conseil : preparez vos rendez-vous clients avec le Coach IA.")],
-        [t("Communication"), t("Chat avec l'equipe IBIG (partenaires Gold+ et au-dessus). Posez vos questions directement a l'equipe pour des reponses personnalisees."), t("Conseil : accessible des le statut GOLD.")],
-        [t("Verification KYC"), t("Soumission et suivi de votre dossier de verification. Indispensable pour recevoir vos commissions."), t("Conseil : soumettez votre KYC des la premiere semaine.")],
+        [t("Commissions"), t("Detail N1/N2/N3 : montant, statut (En attente / Validee / Payee). Toutes vos commissions sont calculees automatiquement a chaque vente confirmée."), t("Conseil : vérifiez vos commissions N2 pour voir la performance de vos filleuls.")],
+        [t("Paiements"), t("Historique des virements reçus avec références et montants. Permet de reconcilier vos paiements et de contacter le support en cas d'ecart."), t("Conseil : seuil minimum 5 000 FCFA pour déclencher un paiement.")],
+        [t("Mon Réseau"), t("Arbre de parrainage sur 3 niveaux avec performances de vos filleuls. Identifiez vos meilleurs filleuls et ceux qui ont besoin d'accompagnement."), t("Conseil : contactez vos filleuls inactifs pour les remotivér.")],
+        [t("Prospects"), t("Gestion de vos contacts : Contacte - Demo - Converti - Perdu. Suivez chaque prospect de la première prise de contact jusqu'a la vente."), t("Conseil : visez 10 nouveaux prospects par semaine.")],
+        [t("Badges"), t("Vos badges gagnes et objectifs en cours. Les badges debloquent des formations avancees et améliorent votre classement."), t("Conseil : l'objectif 'Première vente' est prioritaire.")],
+        [t("Académie"), t("Modules de formation, videos, PDFs, quiz et ressources marketing. Completez un module par semaine pour progresser rapidement."), t("Conseil : commencez par le module 'Argumentaire Scolaby'.")],
+        [t("Coach IA"), t("Assistant intelligent disponible 24h/24 pour toutes vos questions sur les produits, commissions, techniques de vente et gestion du réseau."), t("Conseil : préparez vos rendez-vous clients avec le Coach IA.")],
+        [t("Communication"), t("Chat avec l'équipe IBIG (partenaires Gold+ et au-dessus). Posez vos questions directement a l'équipe pour des réponses personnalisees."), t("Conseil : accèssible des le statut GOLD.")],
+        [t("Verification KYC"), t("Soumission et suivi de votre dossier de vérification. Indispensable pour recevoir vos commissions."), t("Conseil : soumettez votre KYC des la première semaine.")],
       ];
       dash.forEach(([name, desc, tip]) => {
         y = checkPage(y + 1, 4);
@@ -278,8 +258,8 @@ export default function GuideAffilie() {
       // PAGE 5 : COMMISSIONS
       // ══════════════════════════════════════════════════════════════════════
       newPage(); header(5); footer();
-      y = 22; y = secTitle(t("4. Commissions - le systeme N1/N2/N3"), y); y += 3;
-      y = body(t("Chaque vente que vous realisez (N1) ou que vos filleuls realisent (N2, N3) genere automatiquement une commission. Plus votre reseau est actif, plus vos revenus passifs augmentent sans effort supplementaire de votre part."), y); y += 5;
+      y = 22; y = secTitle(t("4. Commissions - le système N1/N2/N3"), y); y += 3;
+      y = body(t("Chaque vente que vous réalisez (N1) ou que vos filleuls réalisént (N2, N3) généré automatiquement une commission. Plus votre réseau est actif, plus vos revenus passifs augmentent sans effort supplémentaire de votre part."), y); y += 5;
 
       y = sub(t("Comment fonctionnent les 3 niveaux"), y);
       const niveaux = [
@@ -319,10 +299,10 @@ export default function GuideAffilie() {
       // @ts-ignore
       y = (doc as any).lastAutoTable.finalY + 6;
 
-      y = infoBox(t("ABONNEMENTS MENSUELS IBIG SOFT : commissions versees sur 4 mois. Mois 1 : taux plein - Mois 2 : 75% - Mois 3 : 50% - Mois 4 : 25%. Recompense la fidelisation client sur la duree."), y, [255, 251, 235]);
+      y = infoBox(t("ABONNEMENTS MENSUELS IBIG SOFT : commissions versées sur 4 mois. Mois 1 : taux plein - Mois 2 : 75% - Mois 3 : 50% - Mois 4 : 25%. Recompense la fidélisation client sur la duree."), y, [255, 251, 235]);
       y += 3;
 
-      y = sub(t("Exemple concret - Jean et son reseau"), y);
+      y = sub(t("Exemple concret - Jean et son réseau"), y);
       y = infoBox(t("Jean recrute Marie (N1) et Paul (N1). Marie recrute Sophie (N2 de Jean). Sophie vend EDUFORM a 400 000 FCFA. Jean gagne : 400 000 x 2% (N2 EDUFORM) = 8 000 FCFA automatiquement, sans rien faire. Si Paul vend Scolaby a 30 000 FCFA : Jean gagne 30 000 x 10% (N2 SOFT) = 3 000 FCFA de plus."), y, [240, 253, 244]);
       y += 3;
 
@@ -353,8 +333,8 @@ export default function GuideAffilie() {
         body: [
           [t("STARTER"), t("Inscription validee"), t("Taux de base")],
           [t("SILVER"), t("500 000 FCFA CA cumule"), t("+1% sur toutes les commissions")],
-          [t("GOLD"), t("2 000 000 FCFA CA cumule"), t("+2%  Acces au Chat IBIG")],
-          [t("MASTER"), t("5 000 000 FCFA CA cumule"), t("+3%  Acces formation avancee")],
+          [t("GOLD"), t("2 000 000 FCFA CA cumule"), t("+2%  Accès au Chat IBIG")],
+          [t("MASTER"), t("5 000 000 FCFA CA cumule"), t("+3%  Accès formation avancee")],
           [t("ELITE"), t("15 000 000 FCFA CA cumule"), t("+5%  Avantages exclusifs")],
         ],
         headStyles: { fillColor: GOLD, textColor: DARK, fontStyle: "bold", fontSize: 9 },
@@ -368,15 +348,15 @@ export default function GuideAffilie() {
       // ══════════════════════════════════════════════════════════════════════
       newPage(); header(6); footer();
       y = 22; y = secTitle(t("5. Comment prospecter efficacement"), y); y += 3;
-      y = body(t("La prospection est le moteur de vos revenus. Plus vous contactez de personnes qualifiees, plus vos chances de vente augmentent. Voici les 5 techniques les plus efficaces pour les affilies IBIG PARTNERS."), y); y += 5;
+      y = body(t("La prospection est le moteur de vos revenus. Plus vous contactez de personnes qualifiées, plus vos chances de vente augmentent. Voici les 5 techniques les plus efficaces pour les affiliés IBIG PARTNERS."), y); y += 5;
 
       y = sub(t("5 techniques de prospection"), y);
       const techniques = [
-        [t("Reseaux sociaux (Facebook, Instagram)"), t("Publiez des temoignages clients, des demonstrations de produits et des resultats concrets. Utilisez les visuels de l'Academie IBIG. Frequence : 1 post par jour minimum.")],
-        [t("WhatsApp et groupes WhatsApp"), t("Partagez votre lien d'affiliation dans vos groupes. Envoyez des messages personnalises (pas de spam). Creez un groupe 'Opportunite IBIG' pour vos prospects chauds.")],
-        [t("Bouche a oreille et networking"), t("Parlez d'IBIG PARTNERS a votre entourage professionnel : collegues, anciens camarades, membres d'associations. La confiance accelere la conversion.")],
-        [t("Groupes Facebook thematiques"), t("Rejoignez des groupes de chefs d'entreprise, enseignants, RH, transporteurs, gerants d'immeubles. Proposez des solutions adaptees a leurs besoins specifiques.")],
-        [t("LinkedIn professionnel"), t("Ciblez les decideurs, DRH, directeurs d'ecoles et gerants de PME. Redigez un message de connexion professionnel suivi d'une presentation personnalisee.")],
+        [t("Réseaux sociaux (Facebook, Instagram)"), t("Publiez des témoignages clients, des démonstrations de produits et des resultats concrets. Utilisez les visuels de l'Académie IBIG. Frequence : 1 post par jour minimum.")],
+        [t("WhatsApp et groupes WhatsApp"), t("Partagez votre lien d'affiliation dans vos groupes. Envoyez des messages personnalises (pas de spam). Créez un groupe 'Opportunite IBIG' pour vos prospects chauds.")],
+        [t("Bouche a oreille et networking"), t("Parlez d'IBIG PARTNERS a votre entourage professionnel : collegues, anciens camarades, membres d'associations. La confiance accelère la conversion.")],
+        [t("Groupes Facebook thematiques"), t("Rejoignez des groupes de chefs d'entreprise, enseignants, RH, transporteurs, gerants d'immeubles. Proposez des solutions adaptees a leurs besoins spécifiques.")],
+        [t("LinkedIn professionnel"), t("Ciblez les decideurs, DRH, directeurs d'écoles et gerants de PME. Redigez un message de connexion professionnel suivi d'une présentation personnalisee.")],
       ];
       techniques.forEach(([tech, desc], i) => {
         y = checkPage(y, 6);
@@ -390,16 +370,16 @@ export default function GuideAffilie() {
 
       y = sub(t("Script de prospection WhatsApp personnalisable"), y);
       y = infoBox(
-        t("Bonjour [Prenom], je pense a vous car je suis partenaire d'IBIG PARTNERS, un groupe ivoirien qui propose des logiciels de gestion, formations certifiantes et bien plus. Je connais [votre secteur] et je pense que [produit X] pourrait vraiment vous aider a [benefice concret]. Est-ce que vous avez 5 minutes cette semaine pour que je vous fasse une rapide demonstration ? Vous ne payez rien pour decouvrir. Cordialement, [Votre prenom]."),
+        t("Bonjour [Prenom], je pense a vous car je suis partenaire d'IBIG PARTNERS, un groupe ivoirien qui propose des logiciels de gestion, formations certifiantes et bien plus. Je connais [votre secteur] et je pense que [produit X] pourrait vraiment vous aider a [benefice concret]. Est-ce que vous avez 5 minutes cette semaine pour que je vous fasse une rapide démonstration ? Vous ne payéz rien pour découvrir. Cordialement, [Votre prenom]."),
         y, [239, 246, 255]
       ); y += 3;
 
-      y = sub(t("Objections courantes et reponses type"), y);
+      y = sub(t("Objections courantes et réponses type"), y);
       const objections = [
-        [t("\"C'est trop cher\""), t("Reponse : 'Je comprends. Dites-moi quel budget vous avez en tete ? En fait, si ce logiciel vous fait gagner [X heures/mois], combien cela vaut-il pour vous ?'")],
-        [t("\"Je n'ai pas le temps\""), t("Reponse : 'C'est justement pour ca que je vous contacte. Notre solution fait gagner du temps. Je vous propose 15 minutes seulement pour vous montrer comment.'")],
-        [t("\"J'ai deja un outil similaire\""), t("Reponse : 'Parfait, vous avez deja compris la valeur de ce type d'outil. Ce qui differencie IBIG c'est [specificite]. Que manque-t-il a votre solution actuelle ?'")],
-        [t("\"Je dois y reflechir\""), t("Reponse : 'Bien sur. Qu'est-ce qui vous ferait prendre une decision positive ? Puis-je vous envoyer une fiche produit detaillee et vous rappeler dans 3 jours ?'")],
+        [t("\"C'est trop cher\""), t("Réponse : 'Je comprends. Dites-moi quel budget vous avez en tete ? En fait, si ce logiciel vous fait gagner [X heures/mois], combien cela vaut-il pour vous ?'")],
+        [t("\"Je n'ai pas le temps\""), t("Réponse : 'C'est justement pour ca que je vous contacte. Notre solution fait gagner du temps. Je vous propose 15 minutes seulement pour vous montrer comment.'")],
+        [t("\"J'ai deja un outil similaire\""), t("Réponse : 'Parfait, vous avez deja compris la valeur de ce type d'outil. Ce qui différencié IBIG c'est [spécificité]. Que manque-t-il a votre solution actuelle ?'")],
+        [t("\"Je dois y reflechir\""), t("Réponse : 'Bien sur. Qu'est-ce qui vous ferait prendre une decision positive ? Puis-je vous envoyer une fiche produit détaillée et vous rappeler dans 3 jours ?'")],
       ];
       objections.forEach(([obj, rep]) => {
         y = checkPage(y, 6);
@@ -409,62 +389,62 @@ export default function GuideAffilie() {
         const lines = doc.splitTextToSize(rep, W - 36); doc.text(lines, 18, y + 8); y += lines.length * 4.5 + 10;
       });
 
-      y = sub(t("Conseils pour les rendez-vous de presentation"), y);
-      y = bullet(t("Preparez votre demonstration avec le Coach IA avant le rendez-vous."), y);
-      y = bullet(t("Commencez par ecouter les besoins du prospect avant de presenter le produit."), y);
-      y = bullet(t("Montrez une demonstration concrete sur votre ecran ou tablette."), y);
-      y = bullet(t("Proposez un essai gratuit si disponible pour le produit concerne."), y);
+      y = sub(t("Conseils pour les rendez-vous de présentation"), y);
+      y = bullet(t("Preparez votre démonstration avec le Coach IA avant le rendez-vous."), y);
+      y = bullet(t("Commencez par ecouter les besoins du prospect avant de présentér le produit."), y);
+      y = bullet(t("Montrez une démonstration concrète sur votre écran ou tablette."), y);
+      y = bullet(t("Proposez un essai gratuit si disponible pour le produit concerné."), y);
       y = bullet(t("Fixez toujours une date de suivi avant de quitter le rendez-vous."), y);
 
       // ══════════════════════════════════════════════════════════════════════
       // PAGE 7 : STRATEGIES POUR DEVELOPPER SON RESEAU
       // ══════════════════════════════════════════════════════════════════════
       newPage(); header(7); footer();
-      y = 22; y = secTitle(t("6. Strategies pour developper son reseau"), y); y += 3;
-      y = body(t("Votre reseau de partenaires est votre moteur de revenus passifs. Un reseau de qualite, bien forme et motive, genere des commissions N2 et N3 automatiquement. Voici comment le construire intelligemment."), y); y += 5;
+      y = 22; y = secTitle(t("6. Stratégies pour développer son réseau"), y); y += 3;
+      y = body(t("Votre réseau de partenaires est votre moteur de revenus passifs. Un réseau de qualité, bien formé et motivé, généré des commissions N2 et N3 automatiquement. Voici comment le construire intelligemment."), y); y += 5;
 
-      y = sub(t("Comment choisir ses filleuls (qualite vs quantite)"), y);
-      y = body(t("Mieux vaut 5 filleuls actifs que 50 filleuls inactifs. Privilegiez des personnes avec : une capacite commerciale naturelle, un reseau personnel etendu, de la motivation et de la disponibilite, et une comprehension des outils numeriques."), y); y += 4;
+      y = sub(t("Comment choisir ses filleuls (qualité vs quantite)"), y);
+      y = body(t("Mieux vaut 5 filleuls actifs que 50 filleuls inactifs. Privilégiez des personnes avec : une capacité commerciale naturelle, un réseau personnel étendu, de la motivation et de la disponibilité, et une compréhension des outils numériques."), y); y += 4;
 
-      y = bullet(t("Profils ideaux : commerciaux, enseignants, RH, chefs d'entreprise, agents immobiliers."), y);
-      y = bullet(t("Evitez de recruter des personnes sans motivation ou uniquement attires par les gains."), y);
-      y = bullet(t("Evaluez le serieux d'un prospect filleul lors d'un appel de 15 minutes."), y);
+      y = bullet(t("Profils idéaux : commerciaux, enseignants, RH, chefs d'entreprise, agents immobiliers."), y);
+      y = bullet(t("Évitez de recruter des personnes sans motivation ou uniquement attirés par les gains."), y);
+      y = bullet(t("Évaluez le sérieux d'un prospect filleul lors d'un appel de 15 minutes."), y);
       y += 4;
 
-      y = sub(t("Comment former et motiver vos filleuls"), y);
-      y = bullet(t("Envoyez-leur le lien vers l'Academie IBIG des leur inscription."), y);
-      y = bullet(t("Partagez ce guide PDF avec eux pour qu'ils comprennent le systeme."), y);
-      y = bullet(t("Organisez un appel de bienvenue de 30 minutes pour repondre a leurs questions."), y);
-      y = bullet(t("Partagez vos propres succes pour les inspirer et les remotiver."), y);
-      y = bullet(t("Creez un groupe WhatsApp de votre equipe pour partager astuces et motivation."), y);
+      y = sub(t("Comment formér et motivér vos filleuls"), y);
+      y = bullet(t("Envoyez-leur le lien vers l'Académie IBIG des leur inscription."), y);
+      y = bullet(t("Partagez ce guide PDF avec eux pour qu'ils comprennent le système."), y);
+      y = bullet(t("Organisez un appel de bienvenue de 30 minutes pour répondre a leurs questions."), y);
+      y = bullet(t("Partagez vos propres succès pour les inspirer et les remotivér."), y);
+      y = bullet(t("Créez un groupe WhatsApp de votre équipe pour partager astuces et motivation."), y);
       y += 4;
 
-      y = sub(t("Organisation d'evenements de recrutement"), y);
-      y = body(t("Organisez des reunions d'information (presentiel ou visio) pour presenter IBIG PARTNERS a plusieurs prospects a la fois. C'est beaucoup plus efficace que des presentations individuelles."), y); y += 3;
+      y = sub(t("Organisation d'événements de recrutement"), y);
+      y = body(t("Organisez des reunions d'information (présentiel ou visio) pour présentér IBIG PARTNERS a plusieurs prospects a la fois. C'est beaucoup plus efficace que des présentations individuelles."), y); y += 3;
       y = bullet(t("Reunion virtuelle : Zoom/Google Meet - 30 personnes max - 45 minutes."), y);
       y = bullet(t("Presentiel : salle associative, cafe d'affaires, bureau d'un membre."), y);
-      y = bullet(t("Contenu : presentation du groupe IBIG, temoignage d'un partenaire, demo produit, Q&A."), y);
-      y = bullet(t("Frequence recommandee : 1 evenement par mois minimum."), y);
+      y = bullet(t("Contenu : présentation du groupe IBIG, témoignage d'un partenaire, demo produit, Q&A."), y);
+      y = bullet(t("Frequence recommandee : 1 événement par mois minimum."), y);
       y += 4;
 
       y = sub(t("Suivi des filleuls inactifs"), y);
-      y = infoBox(t("Un filleul inactif depuis 30 jours merite un contact. Envoyez un message personnalise : 'Bonjour [Prenom], j'ai vu que tu n'as pas encore realise ta premiere vente. Est-ce que tu as des questions ou des blocages ? Je suis disponible pour t'aider.' Un simple encouragement peut relancer un filleul."), y, [240, 253, 244]);
+      y = infoBox(t("Un filleul inactif depuis 30 jours mérite un contact. Envoyez un message personnalise : 'Bonjour [Prenom], j'ai vu que tu n'as pas encore réalisé ta première vente. Est-ce que tu as des questions ou des blocages ? Je suis disponible pour t'aider.' Un simple encouragement peut relancer un filleul."), y, [240, 253, 244]);
       y += 3;
 
-      y = sub(t("Projection motivante : votre reseau dans 6 mois"), y);
-      y = infoBox(t("Scenario : vous recrutez 4 filleuls actifs par mois. Au bout de 6 mois, vous avez 24 filleuls N1. Chacun fait en moyenne 2 ventes Scolaby/mois (30 000 FCFA). Vos commissions N2 : 24 x 2 x 3 000 FCFA = 144 000 FCFA/mois de revenus passifs, en plus de vos propres ventes."), y, [239, 246, 255]);
+      y = sub(t("Projection motivante : votre réseau dans 6 mois"), y);
+      y = infoBox(t("Scénario : vous recrutez 4 filleuls actifs par mois. Au bout de 6 mois, vous avez 24 filleuls N1. Chacun fait en moyenne 2 ventes Scolaby/mois (30 000 FCFA). Vos commissions N2 : 24 x 2 x 3 000 FCFA = 144 000 FCFA/mois de revenus passifs, en plus de vos propres ventes."), y, [239, 246, 255]);
       y += 4;
 
-      y = sub(t("Meilleures pratiques de gestion d'equipe"), y);
+      y = sub(t("Meilleures pratiques de gestion d'équipe"), y);
       // @ts-ignore
       autoTable(doc, {
         startY: y,
         head: [[t("Action"), t("Frequence"), t("Impact")],],
         body: [
           [t("Appel de suivi filleul"), t("1x/semaine"), t("Maintien de la motivation")],
-          [t("Partage de ressources Academie"), t("2x/semaine"), t("Montee en competence")],
-          [t("Groupe WhatsApp equipe"), t("Quotidien"), t("Cohesion et partage d'astuces")],
-          [t("Evenement de recrutement"), t("1x/mois"), t("Croissance du reseau")],
+          [t("Partage de ressources Académie"), t("2x/semaine"), t("Montee en compétence")],
+          [t("Groupe WhatsApp équipe"), t("Quotidien"), t("Cohesion et partage d'astuces")],
+          [t("Événement de recrutement"), t("1x/mois"), t("Croissance du réseau")],
           [t("Bilan mensuel des performances"), t("1x/mois"), t("Identification des blocages")],
         ],
         headStyles: { fillColor: BLUE, textColor: WHITE, fontStyle: "bold", fontSize: 9 },
@@ -479,7 +459,7 @@ export default function GuideAffilie() {
       newPage(); header(8); footer();
       y = 22; y = secTitle(t("7. Les branches et produits IBIG a promouvoir"), y); y += 3;
 
-      y = infoBox(t("PRODUIT LE PLUS FACILE A VENDRE EN DEBUT : Scolaby (gestion scolaire). Cible facile a identifier (ecoles, creches, academies), besoin urgent et universel, prix abordable, demonstration rapide en 10 minutes."), y, [240, 253, 244]);
+      y = infoBox(t("PRODUIT LE PLUS FACILE A VENDRE EN DEBUT : Scolaby (gestion scolaire). Cible facile a identifier (écoles, crèches, académies), besoin urgent et universel, prix abordable, démonstration rapide en 10 minutes."), y, [240, 253, 244]);
       y += 4;
 
       const prods = [
@@ -490,7 +470,7 @@ export default function GuideAffilie() {
             t("Scolaby Annuel - 300 000 FCFA/an | N1=60 000, N2=30 000, N3=15 000 FCFA"),
             t("IBIG Fleet 360 (gestion flotte) - 45 000 FCFA/mois | N1=9 000, N2=4 500, N3=2 250 FCFA"),
             t("Zelivry (gestion livraison) - 25 000 FCFA/mois | N1=5 000, N2=2 500, N3=1 250 FCFA"),
-            t("Lokativo (gestion immobiliere) - 35 000 FCFA/mois | N1=7 000, N2=3 500, N3=1 750 FCFA"),
+            t("Lokativo (gestion immobilière) - 35 000 FCFA/mois | N1=7 000, N2=3 500, N3=1 750 FCFA"),
             t("GESCOMXEL (gestion commerciale) - 20 000 FCFA/mois | N1=4 000, N2=2 000, N3=1 000 FCFA"),
             t("STOCKFLOW ERP - 40 000 FCFA/mois | N1=8 000, N2=4 000, N3=2 000 FCFA"),
           ],
@@ -498,7 +478,7 @@ export default function GuideAffilie() {
         {
           branch: t("IBIG EDUFORM - Commissions : N1=10%, N2=5%, N3=2%"),
           items: [
-            t("Comptabilite & Finance 4 en 1 - 400 000 FCFA | N1=40 000, N2=20 000, N3=8 000 FCFA"),
+            t("Comptabilité & Finance 4 en 1 - 400 000 FCFA | N1=40 000, N2=20 000, N3=8 000 FCFA"),
             t("DAF Dirigeant - 425 000 FCFA | N1=42 500, N2=21 250, N3=8 500 FCFA"),
             t("Expert RH 3 en 1 - 450 000 FCFA | N1=45 000, N2=22 500, N3=9 000 FCFA"),
             t("QHSE Expert - 350 000 FCFA | N1=35 000, N2=17 500, N3=7 000 FCFA"),
@@ -510,7 +490,7 @@ export default function GuideAffilie() {
         {
           branch: t("IBIG IMMOTRUST - Commissions : N1=5%, N2=2,5%, N3=1%"),
           items: [
-            t("Achat / Vente Immobiliere - commissions sur prix de transaction"),
+            t("Achat / Vente Immobilière - commissions sur prix de transaction"),
             t("Gestion Locative Garantie - commissions sur honoraires annuels"),
             t("Construction Cle en Main - commissions sur devis total"),
             t("Renovation & Rehabilitation"),
@@ -520,18 +500,18 @@ export default function GuideAffilie() {
         {
           branch: t("IBIG MARKET - Commissions : N1=8%, N2=4%, N3=2%"),
           items: [
-            t("Ordinateurs et materiel informatique"),
+            t("Ordinateurs et matériel informatique"),
             t("Canon PIXMA G3410 Multifonction"),
             t("Mobilier & Amenagement Professionnel"),
             t("Fournitures de Bureau - Pack PME"),
-            t("Materiel BTP & Construction"),
+            t("Matériel BTP & Construction"),
           ],
         },
         {
           branch: t("INTERMARK BUSINESS - Commissions : N1=8%, N2=4%, N3=2%"),
           items: [
-            t("Conseil & Diagnostic Strategique"),
-            t("Ingenierie Financiere & Levee de Fonds"),
+            t("Conseil & Diagnostic Stratégique"),
+            t("Ingenierie Financière & Levee de Fonds"),
             t("Digitalisation & Deploiement ERP"),
             t("Developpement Commercial & Partenariats"),
           ],
@@ -555,17 +535,17 @@ export default function GuideAffilie() {
       // PAGE 9 : KYC + LIENS
       // ══════════════════════════════════════════════════════════════════════
       newPage(); header(9); footer();
-      y = 22; y = secTitle(t("8. KYC - Activer vos paiements de commissions"), y); y += 3;
-      y = body(t("La verification KYC est obligatoire pour recevoir vos commissions. Sans KYC, vos commissions sont calculees et conservees mais non versees. Completez votre KYC des la premiere semaine."), y); y += 4;
+      y = 22; y = secTitle(t("8. KYC - Activér vos paiements de commissions"), y); y += 3;
+      y = body(t("La vérification KYC est obligatoire pour recevoir vos commissions. Sans KYC, vos commissions sont calculees et conservees mais non versées. Completez votre KYC des la première semaine."), y); y += 4;
 
-      y = sub(t("Etapes de verification"), y);
+      y = sub(t("Étapes de vérification"), y);
       const kyc = [
         t("Dans votre espace, cliquez sur 'Verification' dans le menu gauche."),
         t("Choisissez Particulier ou Entreprise - le formulaire s'adapte automatiquement."),
-        t("Particulier : Nom etat civil, type et numero de piece d'identite, profession, contacts de reference, CV."),
+        t("Particulier : Nom état civil, type et numéro de piece d'identite, profession, contacts de référence, CV."),
         t("Entreprise/ONG : Raison sociale, RCCM, NIF, representant legal, adresse siege."),
         t("Ajoutez vos coordonnees de paiement : Orange Money, Wave, MTN MoMo, virement bancaire..."),
-        t("Soumettez - l'equipe IBIG examine votre dossier sous 24-48h ouvrables."),
+        t("Soumettez - l'équipe IBIG examine votre dossier sous 24-48h ouvrables."),
         t("Confirmation par notification et email - vos commissions en attente sont debloquees."),
       ];
       kyc.forEach((s, i) => {
@@ -577,23 +557,23 @@ export default function GuideAffilie() {
       });
 
       y += 3;
-      y = sub(t("Que se passe-t-il si mon KYC est rejete ?"), y);
-      y = infoBox(t("Si votre KYC est rejete, vous recevez un email explicatif indiquant le motif du rejet (document illisible, information manquante, etc.). Vous pouvez corriger et resoumettre immediatement. En cas de doute, contactez le support a support@ibigpartners.com avec votre code affilie."), y, [255, 235, 235]);
+      y = sub(t("Que se passe-t-il si mon KYC est rejeté ?"), y);
+      y = infoBox(t("Si votre KYC est rejeté, vous recevez un email explicatif indiquant le motif du rejet (document illisible, information manquante, etc.). Vous pouvez corriger et soumettre à nouveau immediatement. En cas de doute, contactez le support a support@ibigpartners.com avec votre code affilié."), y, [255, 235, 235]);
       y += 3;
 
       y = sub(t("Delais de traitement et informations importantes"), y);
-      y = bullet(t("Delai standard KYC : 24 a 48 heures ouvrables apres soumission."), y);
-      y = bullet(t("Vos commissions s'accumulent pendant le traitement du KYC et sont versees apres validation."), y);
+      y = bullet(t("Delai standard KYC : 24 a 48 heures ouvrables après soumission."), y);
+      y = bullet(t("Vos commissions s'accumulent pendant le traitement du KYC et sont versées après validation."), y);
       y = bullet(t("La mise a jour des coordonnees de paiement necessite une revalidation partielle."), y);
-      y = bullet(t("Le KYC est valable indefiniment sauf changement de situation ou de documents."), y);
+      y = bullet(t("Le KYC est valable indéfiniment sauf changement de situation ou de documents."), y);
       y += 5;
 
       y = secTitle(t("9. Liens d'affiliation et QR codes"), y); y += 3;
-      y = body(t("Vos liens d'affiliation uniques permettent le tracking automatique de vos ventes. Partagez-les partout pour generer des commissions. Chaque clic est trace pendant 90 jours."), y); y += 4;
-      y = bullet(t("Rendez-vous dans 'Mes Liens' - activez les produits souhaites."), y);
+      y = body(t("Vos liens d'affiliation uniques permettent le tracking automatique de vos ventes. Partagez-les partout pour générer des commissions. Chaque clic est trace pendant 90 jours."), y); y += 4;
+      y = bullet(t("Rendez-vous dans 'Mes Liens' - activéz les produits souhaites."), y);
       y = bullet(t("Copiez votre lien unique (ex : ibigpartners.com/p/AFF-DUPONT-042)."), y);
-      y = bullet(t("Telechargez votre QR code pour vos supports imprimes (flyers, cartes, roll-up)."), y);
-      y = bullet(t("Partagez par WhatsApp, reseaux sociaux, email, SMS, en face-a-face."), y);
+      y = bullet(t("Téléchargez votre QR code pour vos supports imprimes (flyers, cartes, roll-up)."), y);
+      y = bullet(t("Partagez par WhatsApp, réseaux sociaux, email, SMS, en face-a-face."), y);
       y = bullet(t("Cookie de tracking : 90 jours - toute inscription dans ce delai vous est attribuee."), y);
       y += 5;
       y = infoBox(t("Lien de parrainage : ibigpartners.com/rejoindre?ref=VOTRE-CODE - Tout nouveau partenaire qui s'inscrit via ce lien devient automatiquement votre filleul N1."), y, [240, 253, 244]);
@@ -609,8 +589,8 @@ export default function GuideAffilie() {
         startY: y,
         head: [[t("Statut"), t("Signification")]],
         body: [
-          [t("EN ATTENTE"), t("Paiement client en cours de verification")],
-          [t("CONFIRMEE"), t("Paiement recu - commissions generees automatiquement")],
+          [t("EN ATTENTE"), t("Paiement client en cours de vérification")],
+          [t("CONFIRMEE"), t("Paiement reçu - commissions générées automatiquement")],
           [t("ANNULEE"), t("Paiement echoue ou rembourse - aucune commission")],
         ],
         headStyles: { fillColor: DARK, textColor: WHITE, fontStyle: "bold", fontSize: 9 },
@@ -626,9 +606,9 @@ export default function GuideAffilie() {
         startY: y,
         head: [[t("Statut"), t("Signification"), t("A faire")]],
         body: [
-          [t("EN ATTENTE"), t("Vente confirmee, commission calculee"), t("Rien - processus auto")],
-          [t("VALIDEE"), t("Approuvee par l'equipe IBIG"), t("Attendre le virement")],
-          [t("PAYEE"), t("Viree sur votre compte"), t("Verifier reception")],
+          [t("EN ATTENTE"), t("Vente confirmée, commission calculee"), t("Rien - processus auto")],
+          [t("VALIDEE"), t("Approuvee par l'équipe IBIG"), t("Attendre le virement")],
+          [t("PAYEE"), t("Viree sur votre compte"), t("Vérifiér reception")],
         ],
         headStyles: { fillColor: BLUE, textColor: WHITE, fontStyle: "bold", fontSize: 9 },
         bodyStyles: { fontSize: 8.5 },
@@ -640,22 +620,22 @@ export default function GuideAffilie() {
 
       y = sub(t("Comment maximiser vos ventes"), y);
       y = bullet(t("Concentrez-vous sur 2-3 produits maximum au debut plutot que de tout vendre."), y);
-      y = bullet(t("Preparez des temoignages clients authentiques pour chaque produit."), y);
+      y = bullet(t("Preparez des témoignages clients authentiques pour chaque produit."), y);
       y = bullet(t("Utilisez le simulateur de revenus pour montrer le ROI concret a vos prospects."), y);
       y = bullet(t("Suivez vos prospects dans l'outil CRM de votre espace (section Prospects)."), y);
-      y = bullet(t("Relancez systematiquement a J+3, J+7 et J+14 apres une demo."), y);
+      y = bullet(t("Relancez systematiquement a J+3, J+7 et J+14 après une demo."), y);
       y += 4;
 
       y = sub(t("Conseils saisonniers et moments cles"), y);
-      y = bullet(t("Rentree scolaire (septembre) : moment ideal pour Scolaby - ciblez les ecoles en aout."), y);
+      y = bullet(t("Rentree scolaire (septembre) : moment idéal pour Scolaby - ciblez les écoles en aout."), y);
       y = bullet(t("Debut d'annee (janvier) : ciblez les entreprises pour les formations et logiciels de gestion."), y);
       y = bullet(t("Fin d'annee (novembre-decembre) : budgets d'investissement a depenser dans les entreprises."), y);
-      y = bullet(t("Apres les bulletins de paie (fin de mois) : moment propice pour les achats B2B."), y);
+      y = bullet(t("Après les bulletins de paie (fin de mois) : moment propice pour les achats B2B."), y);
       y += 4;
 
       y = sub(t("Methodes de paiement disponibles"), y);
       const payments = [
-        t("Orange Money (Cote d'Ivoire)"), t("Wave (CI, Senegal)"), t("MTN MoMo (multi-pays)"),
+        t("Orange Money (Côte d'Ivoire)"), t("Wave (CI, Senegal)"), t("MTN MoMo (multi-pays)"),
         t("Moov Money / Airtel Money"), t("M-Pesa (Kenya, Tanzanie, RDC...)"), t("CinetPay (panafricain)"),
         t("Virement bancaire IBAN/SWIFT"), t("Western Union / MoneyGram"),
         t("Wise / WorldRemit / Remitly"), t("Juba Express / RIA Money Transfer"),
@@ -668,7 +648,7 @@ export default function GuideAffilie() {
         doc.text(p, xi + 5, yi);
       });
       y = py2 + 5 * 12 + 5;
-      y = infoBox(t("Seuil minimum de versement : 5 000 FCFA. Les commissions inferieures s'accumulent jusqu'a atteindre ce seuil. Les frais de transfert international (Western Union, virement SWIFT) sont deduits du montant verse. Delai de versement : 7 jours ouvrables apres validation."), y, [255, 251, 235]);
+      y = infoBox(t("Seuil minimum de versement : 5 000 FCFA. Les commissions inferieures s'accumulent jusqu'a atteindre ce seuil. Les frais de transfert international (Western Union, virement SWIFT) sont déduits du montant verse. Delai de versement : 7 jours ouvrables après validation."), y, [255, 251, 235]);
 
       // ══════════════════════════════════════════════════════════════════════
       // PAGE 11 : OUTILS DISPONIBLES
@@ -680,32 +660,32 @@ export default function GuideAffilie() {
       const tools = [
         [
           t("Liens d'affiliation traces"),
-          t("Comment utiliser : Activez chaque produit que vous souhaitez vendre dans 'Mes Liens'. Copiez le lien unique genere et partagez-le directement dans vos messages et publications. Chaque clic est enregistre avec la date et la source."),
-          t("Astuce : creez un lien court avec bit.ly ou tinyurl pour les partages sur les reseaux sociaux.")
+          t("Comment utiliser : Activéz chaque produit que vous souhaitez vendre dans 'Mes Liens'. Copiez le lien unique généré et partagez-le directement dans vos messages et publications. Chaque clic est enregistre avec la date et la source."),
+          t("Astuce : créez un lien court avec bit.ly ou tinyurl pour les partages sur les réseaux sociaux.")
         ],
         [
           t("QR codes personnalises"),
-          t("Comment utiliser : Telechargez le QR code de chaque produit en PNG haute resolution. Imprimez-le sur vos flyers, cartes de visite et affiches. Presentez-le lors de vos reunions pour une inscription instantanee."),
-          t("Astuce : faites imprimer 50 cartes de visite avec votre QR code Scolaby pour vos contacts en ecoles.")
+          t("Comment utiliser : Téléchargez le QR code de chaque produit en PNG haute résolution. Imprimez-le sur vos flyers, cartes de visite et affiches. Presentez-le lors de vos reunions pour une inscription instantanee."),
+          t("Astuce : faites imprimer 50 cartes de visite avec votre QR code Scolaby pour vos contacts en écoles.")
         ],
         [
           t("Gestionnaire de prospects (CRM)"),
-          t("Comment utiliser : Ajoutez chaque contact interesse dans la section Prospects. Faites evoluer le statut : Contacte - Demo programmee - Demo realisee - Converti - Perdu. Ajoutez des notes a chaque prospect."),
-          t("Astuce : relancez les prospects 'Demo realisee' a J+3 systematiquement.")
+          t("Comment utiliser : Ajoutez chaque contact intèresse dans la section Prospects. Faites evoluer le statut : Contacte - Demo programmee - Demo réalisée - Converti - Perdu. Ajoutez des notes a chaque prospect."),
+          t("Astuce : relancez les prospects 'Demo réalisée' a J+3 systematiquement.")
         ],
         [
           t("Simulateur de revenus"),
-          t("Comment utiliser : Entrez votre volume de ventes estime et la taille de votre reseau. Le simulateur calcule automatiquement vos commissions N1, N2 et N3 potentielles. Montrez-le a vos prospects filleuls pour les convaincre."),
-          t("Astuce : preparez 3 scenarios (conservateur, realiste, optimiste) avant votre presentation.")
+          t("Comment utiliser : Entrez votre volume de ventes estime et la taille de votre réseau. Le simulateur calcule automatiquement vos commissions N1, N2 et N3 potentielles. Montrez-le a vos prospects filleuls pour les convaincre."),
+          t("Astuce : préparez 3 scénarios (conservateur, realiste, optimiste) avant votre présentation.")
         ],
         [
           t("Coach IA IBIG"),
-          t("Comment utiliser : Posez vos questions en langage naturel. Le Coach connait tous les produits IBIG, les taux de commission, les techniques de vente et peut vous aider a rediger un email de prospection ou preparer une demonstration."),
-          t("Astuce : avant chaque rendez-vous client, demandez au Coach : 'Comment presenter Scolaby a un directeur d'ecole ?'")
+          t("Comment utiliser : Posez vos questions en langage naturel. Le Coach connait tous les produits IBIG, les taux de commission, les techniques de vente et peut vous aider a rediger un email de prospection ou préparer une démonstration."),
+          t("Astuce : avant chaque rendez-vous client, demandez au Coach : 'Comment présentér Scolaby a un directeur d'école ?'")
         ],
         [
           t("Tableau de bord et statistiques"),
-          t("Comment utiliser : Consultez chaque matin votre dashboard pour voir vos commissions du mois, vos ventes recentes et les alertes importantes. Identifiez vos meilleures periodes de vente pour optimiser votre activite."),
+          t("Comment utiliser : Consultez chaque matin votre dashboard pour voir vos commissions du mois, vos ventes recentes et les alertes importantes. Identifiez vos meilleures périodes de vente pour optimiser votre activité."),
           t("Astuce : exportez vos stats mensuelles pour suivre votre progression trimestre par trimestre.")
         ],
       ];
@@ -726,27 +706,27 @@ export default function GuideAffilie() {
       // PAGE 12 : RESEAU
       // ══════════════════════════════════════════════════════════════════════
       newPage(); header(12); footer();
-      y = 22; y = secTitle(t("12. Construire et animer votre reseau"), y); y += 3;
-      y = body(t("Votre reseau de partenaires est votre moteur de revenus passifs. Chaque partenaire que vous recrutez devient votre filleul N1 et ses ventes vous rapportent automatiquement des commissions N2."), y); y += 5;
+      y = 22; y = secTitle(t("12. Construire et animer votre réseau"), y); y += 3;
+      y = body(t("Votre réseau de partenaires est votre moteur de revenus passifs. Chaque partenaire que vous recrutez devient votre filleul N1 et ses ventes vous rapportent automatiquement des commissions N2."), y); y += 5;
 
       y = sub(t("Comment recruter un partenaire"), y);
       y = bullet(t("Partagez votre lien de parrainage : ibigpartners.com/rejoindre?ref=VOTRE-CODE"), y);
-      y = bullet(t("Votre filleul s'inscrit avec votre code - il apparait dans votre reseau N1."), y);
-      y = bullet(t("Des sa 1ere vente, vous recevez votre commission N2 automatiquement."), y);
-      y = bullet(t("Ses propres filleuls generent votre commission N3."), y);
+      y = bullet(t("Votre filleul s'inscrit avec votre code - il apparait dans votre réseau N1."), y);
+      y = bullet(t("Des sa 1ère vente, vous recevez votre commission N2 automatiquement."), y);
+      y = bullet(t("Ses propres filleuls génèrent votre commission N3."), y);
       y += 5;
 
-      y = sub(t("Outils de gestion reseau"), y);
+      y = sub(t("Outils de gestion réseau"), y);
       // @ts-ignore
       autoTable(doc, {
         startY: y,
         head: [[t("Outil"), t("Description")]],
         body: [
-          [t("Mon Reseau"), t("Vue arbre 3 niveaux avec CA et performances de chaque filleul")],
+          [t("Mon Réseau"), t("Vue arbre 3 niveaux avec CA et performances de chaque filleul")],
           [t("Prospects"), t("Suivi de vos contacts : Contacte - Demo - Converti - Perdu")],
           [t("Objectifs"), t("Fixer et suivre vos objectifs mensuels de ventes et recrutements")],
           [t("Classement"), t("Votre rang parmi les meilleurs partenaires du mois")],
-          [t("Simulateur"), t("Estimez vos revenus potentiels selon votre reseau et volume de ventes")],
+          [t("Simulateur"), t("Estimez vos revenus potentiels selon votre réseau et volume de ventes")],
         ],
         headStyles: { fillColor: BLUE, textColor: WHITE, fontStyle: "bold", fontSize: 9 },
         bodyStyles: { fontSize: 8.5 },
@@ -756,14 +736,14 @@ export default function GuideAffilie() {
       // @ts-ignore
       y = (doc as any).lastAutoTable.finalY + 8;
 
-      y = sub(t("Projection motivante : reseau de 20 filleuls actifs"), y);
-      y = infoBox(t("Scenario : un reseau de 20 filleuls actifs chacun realisant 2 ventes Scolaby/mois (30 000 FCFA). Vos commissions N2 : 20 x 2 x 3 000 FCFA = 120 000 FCFA/mois de revenus passifs. Si 5 de vos filleuls ont eux-memes des filleuls (N3) : +30 000 FCFA supplem. Soit 150 000 FCFA/mois sans compter vos propres ventes."), y, [240, 253, 244]);
+      y = sub(t("Projection motivante : réseau de 20 filleuls actifs"), y);
+      y = infoBox(t("Scénario : un réseau de 20 filleuls actifs chacun realisant 2 ventes Scolaby/mois (30 000 FCFA). Vos commissions N2 : 20 x 2 x 3 000 FCFA = 120 000 FCFA/mois de revenus passifs. Si 5 de vos filleuls ont eux-mêmes des filleuls (N3) : +30 000 FCFA supplem. Soit 150 000 FCFA/mois sans compter vos propres ventes."), y, [240, 253, 244]);
       y += 4;
 
-      y = sub(t("Meilleures pratiques pour votre equipe"), y);
+      y = sub(t("Meilleures pratiques pour votre équipe"), y);
       y = bullet(t("Identifiez vos 3 filleuls les plus actifs et investissez davantage dans leur formation."), y);
       y = bullet(t("Organisez un challenge mensuel dans votre groupe WhatsApp pour stimuler la competition saine."), y);
-      y = bullet(t("Partagez regulierement vos propres succes pour montrer que c'est possible."), y);
+      y = bullet(t("Partagez regulièrement vos propres succès pour montrer que c'est possible."), y);
       y = bullet(t("Recompensez symboliquement vos meilleurs filleuls (message de felicitations public)."), y);
       y = bullet(t("Faites des bilans trimestriels en visio avec vos filleuls les plus engages."), y);
 
@@ -772,16 +752,16 @@ export default function GuideAffilie() {
       // ══════════════════════════════════════════════════════════════════════
       newPage(); header(13); footer();
       y = 22; y = secTitle(t("13. Gestion des paiements et optimisation"), y); y += 3;
-      y = body(t("Comprendre le cycle de paiement vous permet d'optimiser votre tresorerie et d'atteindre le seuil de versement plus rapidement. Voici tout ce que vous devez savoir sur les paiements IBIG PARTNERS."), y); y += 5;
+      y = body(t("Comprendre le cycle de paiement vous permet d'optimiser votre trésorerie et d'atteindre le seuil de versement plus rapidement. Voici tout ce que vous devez savoir sur les paiements IBIG PARTNERS."), y); y += 5;
 
       y = sub(t("Cycle complet d'un paiement"), y);
       const cycle = [
-        t("Vous realisez une vente et envoyez le lien/QR code au client."),
-        t("Le client effectue son paiement sur la plateforme IBIG."),
-        t("La vente passe en statut 'EN ATTENTE' (verification 24-48h)."),
+        t("Vous réalisez une vente et envoyez le lien/QR code au client."),
+        t("Le client effectué son paiement sur la plateformé IBIG."),
+        t("La vente passe en statut 'EN ATTENTE' (vérification 24-48h)."),
         t("La vente est 'CONFIRMEE' - votre commission est calculee automatiquement."),
-        t("L'equipe IBIG valide les commissions (statut 'VALIDEE')."),
-        t("Le virement est effectue sous 7 jours ouvrables (statut 'PAYEE')."),
+        t("L'équipe IBIG valide les commissions (statut 'VALIDEE')."),
+        t("Le virement est effectué sous 7 jours ouvrables (statut 'PAYEE')."),
         t("Vous recevez une notification et l'historique est mis a jour dans 'Paiements'."),
       ];
       cycle.forEach((s, i) => {
@@ -794,13 +774,13 @@ export default function GuideAffilie() {
 
       y += 3;
       y = sub(t("Conseils pour atteindre le seuil de paiement plus vite"), y);
-      y = bullet(t("Cumulez les commissions N1 + N2 + N3 : meme de petites ventes filleuls s'additionnent."), y);
-      y = bullet(t("Privilegiez les produits a commission elevee (EDUFORM, IMMOTRUST) pour les gros montants."), y);
-      y = bullet(t("Activez les abonnements mensuels : vous touchez des commissions sur 4 mois par vente."), y);
+      y = bullet(t("Cumulez les commissions N1 + N2 + N3 : même de petites ventes filleuls s'additionnent."), y);
+      y = bullet(t("Privilégiez les produits a commission elevée (EDUFORM, IMMOTRUST) pour les gros montants."), y);
+      y = bullet(t("Activéz les abonnements mensuels : vous touchez des commissions sur 4 mois par vente."), y);
       y = bullet(t("Suivez votre solde en temps reel dans 'Commissions' pour anticiper le versement."), y);
       y += 4;
 
-      y = sub(t("Comment lire votre releve de commissions"), y);
+      y = sub(t("Comment lire votre rélève de commissions"), y);
       // @ts-ignore
       autoTable(doc, {
         startY: y,
@@ -809,7 +789,7 @@ export default function GuideAffilie() {
           [t("Date"), t("Date de confirmation de la vente generatrice")],
           [t("Source"), t("N1 (votre vente), N2 (filleul direct), N3 (filleul de filleul)")],
           [t("Produit"), t("Nom du produit et branche IBIG")],
-          [t("Montant vente"), t("Prix paye par le client final")],
+          [t("Montant vente"), t("Prix payé par le client final")],
           [t("Taux"), t("Pourcentage de commission applique selon votre statut")],
           [t("Commission"), t("Montant net qui vous est du")],
           [t("Statut"), t("En attente / Validee / Payee")],
@@ -824,34 +804,34 @@ export default function GuideAffilie() {
 
       y = sub(t("Informations importantes sur les paiements"), y);
       y = bullet(t("Seuil minimum : 5 000 FCFA (les commissions inferieures s'accumulent)."), y);
-      y = bullet(t("Delai de versement : 7 jours ouvrables apres validation par l'equipe IBIG."), y);
-      y = bullet(t("Frais de transfert international deduits du montant verse (Wave, OM : frais minimes)."), y);
+      y = bullet(t("Delai de versement : 7 jours ouvrables après validation par l'équipe IBIG."), y);
+      y = bullet(t("Frais de transfert international déduits du montant verse (Wave, OM : frais minimes)."), y);
       y = bullet(t("Mise a jour coordonnees bancaires : revalidation partielle KYC requise."), y);
-      y = bullet(t("En cas d'ecart constate : contactez support@ibigpartners.com avec votre code affilie."), y);
+      y = bullet(t("En cas d'ecart constate : contactez support@ibigpartners.com avec votre code affilié."), y);
       y += 4;
 
-      y = infoBox(t("OPTIMISATION FISCALE : En Cote d'Ivoire, les commissions d'affiliation sont assujetties a l'IUTS si elles depassent un certain seuil annuel. Renseignez-vous aupres d'un comptable local pour votre situation personnelle. IBIG SARL emet des justificatifs de commissions sur demande."), y, [255, 251, 235]);
+      y = infoBox(t("OPTIMISATION FISCALE : En Côte d'Ivoire, les commissions d'affiliation sont assujetties a l'IUTS si elles dépassént un certain seuil annuel. Renseignez-vous aupres d'un comptable local pour votre situation personnelle. IBIG SARL emet des justificatifs de commissions sur demande."), y, [255, 251, 235]);
 
       // ══════════════════════════════════════════════════════════════════════
       // PAGE 14 : ACADEMIE
       // ══════════════════════════════════════════════════════════════════════
       newPage(); header(14); footer();
-      y = 22; y = secTitle(t("14. Academie, formation et Coach IA"), y); y += 3;
-      y = body(t("L'Academie IBIG est votre espace d'apprentissage integre. Elle contient des ressources variees pour vous aider a mieux vendre, mieux recruter et mieux comprendre les produits IBIG. Les meilleurs affilies sont ceux qui se forment continuellement."), y); y += 5;
+      y = 22; y = secTitle(t("14. Académie, formation et Coach IA"), y); y += 3;
+      y = body(t("L'Académie IBIG est votre espace d'apprentissage intégré. Elle contient des ressources variees pour vous aider a mieux vendre, mieux recruter et mieux comprendre les produits IBIG. Les meilleurs affiliés sont ceux qui se formént continuellement."), y); y += 5;
 
-      y = sub(t("Parcours d'apprentissage recommande pour un nouvel affilie"), y);
+      y = sub(t("Parcours d'apprentissage recommande pour un nouvel affilié"), y);
       const parcours = [
         [t("Semaine 1"), t("Decouvrir les produits IBIG + Comprendre les commissions N1/N2/N3")],
         [t("Semaine 2"), t("Techniques de vente de base + Script de prospection WhatsApp")],
-        [t("Semaine 3"), t("Argumentaire Scolaby detaille + Preparation d'une demonstration")],
-        [t("Semaine 4"), t("Strategies de recrutement + Gestion de votre premier filleul")],
-        [t("Mois 2"), t("Formations avancees sur EDUFORM et IMMOTRUST + Objectifs reseau")],
-        [t("Mois 3+"), t("Formations specifiques par branche + Leadership et gestion d'equipe")],
+        [t("Semaine 3"), t("Argumentaire Scolaby détaillé + Preparation d'une démonstration")],
+        [t("Semaine 4"), t("Stratégies de recrutement + Gestion de votre premier filleul")],
+        [t("Mois 2"), t("Formations avancees sur EDUFORM et IMMOTRUST + Objectifs réseau")],
+        [t("Mois 3+"), t("Formations spécifiques par branche + Leadership et gestion d'équipe")],
       ];
       // @ts-ignore
       autoTable(doc, {
         startY: y,
-        head: [[t("Periode"), t("Contenu recommande")]],
+        head: [[t("Période"), t("Contenu recommande")]],
         body: parcours,
         headStyles: { fillColor: BLUE, textColor: WHITE, fontStyle: "bold", fontSize: 9 },
         bodyStyles: { fontSize: 8.5, textColor: DARK },
@@ -862,21 +842,21 @@ export default function GuideAffilie() {
       y = (doc as any).lastAutoTable.finalY + 6;
 
       y = sub(t("Comment utiliser le Coach IA efficacement"), y);
-      y = bullet(t("Preparation de rendez-vous : 'Comment presenter IBIG Fleet 360 a un transporteur ?'"), y);
-      y = bullet(t("Reponse aux objections : 'Comment repondre si un client dit que c'est trop cher ?'"), y);
-      y = bullet(t("Redaction de messages : 'Aide-moi a rediger un message WhatsApp pour prospecter une ecole.'"), y);
-      y = bullet(t("Comprehension produit : 'Quelles sont les differences entre Scolaby et GESCOMXEL ?'"), y);
+      y = bullet(t("Preparation de rendez-vous : 'Comment présentér IBIG Fleet 360 a un transporteur ?'"), y);
+      y = bullet(t("Réponse aux objections : 'Comment répondre si un client dit que c'est trop cher ?'"), y);
+      y = bullet(t("Redaction de messages : 'Aide-moi a rediger un message WhatsApp pour prospecter une école.'"), y);
+      y = bullet(t("Comprehension produit : 'Quelles sont les diffèrences entre Scolaby et GESCOMXEL ?'"), y);
       y = bullet(t("Calcul commissions : 'Si je vends EDUFORM a 400 000 FCFA, combien je gagne en N1 ?'"), y);
       y += 4;
 
-      y = sub(t("Contenu disponible dans l'Academie"), y);
+      y = sub(t("Contenu disponible dans l'Académie"), y);
       const acad = [
-        [t("Articles & Guides"), t("Techniques de vente, argumentaires produits, strategies de recrutement.")],
-        [t("Videos"), t("Demonstrations produits, temoignages, formations visuelles pas-a-pas.")],
-        [t("PDF telechargeables"), t("Supports de presentation, fiches produits, scripts de vente prêts a l'emploi.")],
-        [t("Ressources visuelles"), t("Visuels prêts a l'emploi pour vos reseaux sociaux et WhatsApp.")],
+        [t("Articles & Guides"), t("Techniques de vente, argumentaires produits, stratégies de recrutement.")],
+        [t("Videos"), t("Demonstrations produits, témoignages, formations visuelles pas-a-pas.")],
+        [t("PDF téléchargéables"), t("Supports de présentation, fiches produits, scripts de vente prêts a l'emploi.")],
+        [t("Ressources visuelles"), t("Visuels prêts a l'emploi pour vos réseaux sociaux et WhatsApp.")],
         [t("Quiz"), t("Evaluations pour valider vos connaissances et debloquer des badges.")],
-        [t("Coach IA IBIG"), t("Posez toutes vos questions 24h/24 - reponses instantanees.")],
+        [t("Coach IA IBIG"), t("Posez toutes vos questions 24h/24 - réponses instantanees.")],
         [t("Kit Marketing personnalisable"), t("Modeles de posts, textes de prospection et visuels que vous adaptez.")],
       ];
       acad.forEach(([icon, desc]) => {
@@ -889,26 +869,26 @@ export default function GuideAffilie() {
 
       y += 3;
       y = sub(t("Comment les badges debloquent du contenu"), y);
-      y = body(t("Certains modules avances de l'Academie sont reserves aux partenaires ayant obtenu des badges specifiques. Par exemple, la formation 'Leadership et gestion d'equipe' est accessible apres le badge 'Recruteur'. Cela encourage la progression et garantit que vous avez les bases avant les modules avances."), y);
+      y = body(t("Certains modules avances de l'Académie sont réservés aux partenaires ayant obtenu des badges spécifiques. Par exemple, la formation 'Leadership et gestion d'équipe' est accèssible après le badge 'Recruteur'. Cela encourage la progression et garantit que vous avez les bases avant les modules avances."), y);
       y += 3;
-      y = infoBox(t("CONSEIL : Consacrez 30 minutes par jour a votre formation IBIG. Les partenaires qui se forment regularierement enregistrent en moyenne 3x plus de ventes que ceux qui ne suivent aucune formation."), y, [240, 253, 244]);
+      y = infoBox(t("CONSEIL : Consacrez 30 minutes par jour a votre formation IBIG. Les partenaires qui se formént regularièrement enregistrent en moyenne 3x plus de ventes que ceux qui ne suivent aucune formation."), y, [240, 253, 244]);
 
       // ══════════════════════════════════════════════════════════════════════
       // PAGE 15 : BADGES + SUPPORT
       // ══════════════════════════════════════════════════════════════════════
       newPage(); header(15); footer();
-      y = 22; y = secTitle(t("15. Badges, recompenses et classement"), y); y += 3;
+      y = 22; y = secTitle(t("15. Badges, récompenses et classement"), y); y += 3;
       // @ts-ignore
       autoTable(doc, {
         startY: y,
         head: [[t("Badge"), t("Condition d'obtention"), t("Avantage")]],
         body: [
-          [t("Premiere vente"), t("Realiser votre toute premiere vente confirmee"), t("Acces module vente avance")],
-          [t("Vendeur confirme"), t("Atteindre 10 ventes confirmees"), t("Kit marketing premium")],
-          [t("Champion des ventes"), t("Atteindre 50 ventes confirmees"), t("Formation leadership")],
-          [t("Centurion"), t("Atteindre 100 ventes confirmees"), t("Avantages ELITE anticipes")],
-          [t("Recruteur"), t("Parrainer votre 1er filleul direct"), t("Acces outils reseau avances")],
-          [t("Batisseur d'equipe"), t("Atteindre 10 filleuls directs"), t("Formation gestion equipe")],
+          [t("Première vente"), t("Realiser votre toute première vente confirmée"), t("Accès module vente avance")],
+          [t("Vendeur confirmé"), t("Atteindre 10 ventes confirmées"), t("Kit marketing premium")],
+          [t("Champion des ventes"), t("Atteindre 50 ventes confirmées"), t("Formation leadership")],
+          [t("Centurion"), t("Atteindre 100 ventes confirmées"), t("Avantages ELITE anticipes")],
+          [t("Recruteur"), t("Parrainer votre 1er filleul direct"), t("Accès outils réseau avances")],
+          [t("Batisseur d'équipe"), t("Atteindre 10 filleuls directs"), t("Formation gestion équipe")],
           [t("Ambassadeur Silver"), t("Atteindre le statut SILVER"), t("+1% commission permanente")],
           [t("Ambassadeur Gold"), t("Atteindre le statut GOLD"), t("+2% + Chat IBIG")],
           [t("Master Partner"), t("Atteindre le statut MASTER"), t("+3% + Formation avancee")],
@@ -926,13 +906,13 @@ export default function GuideAffilie() {
       // @ts-ignore
       autoTable(doc, {
         startY: y,
-        head: [[t("Canal"), t("Coordonnees"), t("Delai de reponse")]],
+        head: [[t("Canal"), t("Coordonnees"), t("Delai de réponse")]],
         body: [
           [t("Email support"), t("support@ibigpartners.com"), t("24-48h ouvrables")],
           [t("Email general"), t("contact@ibigpartners.com"), t("48-72h ouvrables")],
           [t("WhatsApp"), t("+225 07 78 88 25 92"), t("Heures ouvrables CI")],
           [t("Telephone"), t("+225 27 22 27 60 14"), t("Lun-Ven 8h-17h")],
-          [t("Plateforme"), t("ibigpartners.com/espace"), t("Immediat (Coach IA)"),],
+          [t("Plateformé"), t("ibigpartners.com/espace"), t("Immediat (Coach IA)"),],
           [t("Site groupe"), t("intermark-business.com"), t("Informatif")],
         ],
         headStyles: { fillColor: DARK, textColor: WHITE, fontStyle: "bold", fontSize: 9 },
@@ -946,9 +926,9 @@ export default function GuideAffilie() {
       y = sub(t("Processus d'escalade du support"), y);
       const escalade = [
         t("Niveau 1 : Consultez d'abord le Coach IA et la FAQ de votre espace partenaire."),
-        t("Niveau 2 : Envoyez un email a support@ibigpartners.com avec votre code affilie et une description precise."),
-        t("Niveau 3 : Si pas de reponse sous 48h, contactez par WhatsApp en joignant votre email initial."),
-        t("Niveau 4 : Pour les litiges de commission, joignez les captures d'ecran de votre espace partenaire."),
+        t("Niveau 2 : Envoyez un email a support@ibigpartners.com avec votre code affilié et une description precise."),
+        t("Niveau 3 : Si pas de réponse sous 48h, contactez par WhatsApp en joignant votre email initial."),
+        t("Niveau 4 : Pour les litiges de commission, joignez les captures d'écran de votre espace partenaire."),
       ];
       escalade.forEach((s, i) => {
         y = checkPage(y, 15);
@@ -960,30 +940,30 @@ export default function GuideAffilie() {
 
       y += 4;
       y = sub(t("Communaute IBIG PARTNERS"), y);
-      y = bullet(t("Groupe WhatsApp officiel : demandez le lien a support@ibigpartners.com apres validation KYC."), y);
-      y = bullet(t("Page Facebook IBIG PARTNERS : suivez pour les actualites, nouveaux produits et offres speciales."), y);
+      y = bullet(t("Groupe WhatsApp officiel : demandez le lien a support@ibigpartners.com après validation KYC."), y);
+      y = bullet(t("Page Facebook IBIG PARTNERS : suivez pour les actualités, nouveaux produits et offrès speciales."), y);
       y = bullet(t("Chat interne : disponible dans votre espace pour les partenaires GOLD et au-dessus."), y);
-      y = bullet(t("Evenements mensuels : webinaires de formation et sessions Q&A avec l'equipe IBIG."), y);
+      y = bullet(t("Événements mensuels : webinaires de formation et sessions Q&A avec l'équipe IBIG."), y);
 
       // ══════════════════════════════════════════════════════════════════════
       // PAGE 16-17 : CONCLUSION + FAQ
       // ══════════════════════════════════════════════════════════════════════
       newPage(); header(16); footer();
-      y = 22; y = secTitle(t("17. Conclusion et prochaines etapes"), y); y += 3;
-      y = body(t("Vous avez maintenant toutes les cles pour reussir en tant que Partenaire Affilie IBIG PARTNERS. Ce guide couvre l'ensemble du programme, de l'inscription a la gestion avancee de votre reseau. La reussite depend de votre constance et de votre engagement."), y); y += 5;
+      y = 22; y = secTitle(t("17. Conclusion et prochaines étapes"), y); y += 3;
+      y = body(t("Vous avez maintenant toutes les cles pour réussir en tant que Partenaire Affilié IBIG PARTNERS. Ce guide couvre l'ensemble du programme, de l'inscription a la gestion avancee de votre réseau. La réussite depend de votre constance et de votre engagement."), y); y += 5;
 
       y = sub(t("Plan d'action pour vos 30 premiers jours"), y);
       const plan30 = [
         [t("Jour 1-3"), t("Completer votre profil et soumettre votre KYC")],
-        [t("Jour 4-7"), t("Suivre les 3 premiers modules de l'Academie")],
-        [t("Jour 8-14"), t("Activer vos liens et realiser votre 1ere prospection (10 contacts minimum)")],
-        [t("Jour 15-21"), t("Viser votre 1ere vente et recruter votre 1er filleul")],
-        [t("Jour 22-30"), t("Analyser vos resultats et ajuster votre strategie")],
+        [t("Jour 4-7"), t("Suivre les 3 premiers modules de l'Académie")],
+        [t("Jour 8-14"), t("Activér vos liens et réaliser votre 1ère prospection (10 contacts minimum)")],
+        [t("Jour 15-21"), t("Viser votre 1ère vente et recruter votre 1er filleul")],
+        [t("Jour 22-30"), t("Analyser vos resultats et ajuster votre stratégie")],
       ];
       // @ts-ignore
       autoTable(doc, {
         startY: y,
-        head: [[t("Periode"), t("Objectif")]],
+        head: [[t("Période"), t("Objectif")]],
         body: plan30,
         headStyles: { fillColor: BLUE, textColor: WHITE, fontStyle: "bold", fontSize: 9 },
         bodyStyles: { fontSize: 8.5, textColor: DARK },
@@ -996,12 +976,12 @@ export default function GuideAffilie() {
       y = sub(t("FAQ Rapide"), y);
       const faq = [
         [t("L'inscription est-elle payante ?"), t("Non. 100% gratuit, aucun investissement obligatoire.")],
-        [t("Quand recois-je mes commissions ?"), t("Sous 7 jours ouvrables apres validation par l'equipe IBIG, une fois le KYC approuve.")],
-        [t("Puis-je m'inscrire depuis l'etranger ?"), t("Oui. La plateforme est ouverte a toute l'Afrique et a la diaspora mondiale.")],
+        [t("Quand recois-je mes commissions ?"), t("Sous 7 jours ouvrables après validation par l'équipe IBIG, une fois le KYC approuve.")],
+        [t("Puis-je m'inscrire depuis l'etranger ?"), t("Oui. La plateformé est ouverte a toute l'Afrique et a la diaspora mondiale.")],
         [t("Combien de filleuls puis-je recruter ?"), t("Illimite sur 3 niveaux.")],
-        [t("Comment signaler un probleme ?"), t("Via l'onglet Support de votre espace, ou a support@ibigpartners.com.")],
-        [t("Les abonnements genèrent-ils des commissions chaque mois ?"), t("Oui, sur 4 mois avec un taux degressif (100%, 75%, 50%, 25%).")],
-        [t("Puis-je vendre plusieurs branches en meme temps ?"), t("Oui, vous pouvez activer des liens pour toutes les branches simultanement.")],
+        [t("Comment signaler un problème ?"), t("Via l'onglet Support de votre espace, ou a support@ibigpartners.com.")],
+        [t("Les abonnements genèrent-ils des commissions chaque mois ?"), t("Oui, sur 4 mois avec un taux dégressif (100%, 75%, 50%, 25%).")],
+        [t("Puis-je vendre plusieurs branches en même temps ?"), t("Oui, vous pouvez activér des liens pour toutes les branches simultanement.")],
       ];
       faq.forEach(([q, a]) => {
         y = checkPage(y, 16);
@@ -1016,7 +996,7 @@ export default function GuideAffilie() {
       y = checkPage(y + 5, 16);
       doc.setFillColor(...DARK); doc.roundedRect(14, y, W - 28, 25, 2, 2, "F");
       doc.setFontSize(12); doc.setFont("helvetica", "bold"); doc.setTextColor(...GOLD);
-      doc.text(t("Votre succes est notre succes."), W / 2, y + 10, { align: "center" });
+      doc.text(t("Votre succès est notre succès."), W / 2, y + 10, { align: "center" });
       doc.setFontSize(9); doc.setFont("helvetica", "normal"); doc.setTextColor(...WHITE);
       doc.text(t("Bienvenue dans la famille IBIG PARTNERS !"), W / 2, y + 18, { align: "center" });
       doc.setFontSize(7.5); doc.setTextColor(180, 200, 255);

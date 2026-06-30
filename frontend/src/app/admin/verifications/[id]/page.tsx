@@ -86,7 +86,7 @@ async function rejectKyc(formData: FormData) {
       data: {
         userId,
         title: "❌ Dossier KYC rejeté",
-        body: `Votre dossier a été rejeté. Motif : ${reason}. Veuillez corriger et resoumettre depuis votre espace.`,
+        body: `Votre dossier a été rejeté. Motif : ${reason}. Veuillez corriger et soumettre à nouveau depuis votre espace.`,
       },
     }),
   ]);
