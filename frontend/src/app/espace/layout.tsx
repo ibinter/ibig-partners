@@ -2,6 +2,7 @@ import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { DashboardShell, type NavItem } from "@/components/dashboard-shell";
 import { CelebrationToaster } from "@/components/celebration-toaster";
+import OnboardingTourWrapper from "@/components/onboarding-tour-wrapper";
 
 export default async function EspaceLayout({
   children,
@@ -9,6 +10,10 @@ export default async function EspaceLayout({
   children: React.ReactNode;
 }) {
   const user = await requireUser();
+
+  // Afficher la visite guidee pour les nouveaux affilies (compte < 7 jours)
+  const accountAgeMs = Date.now() - new Date(user.createdAt).getTime();
+  const isNewUser = user.role === "PARTNER" && accountAgeMs < 7 * 24 * 60 * 60 * 1000;
 
   const unread = await prisma.notification.count({
     where: {
@@ -45,6 +50,7 @@ export default async function EspaceLayout({
     <DashboardShell nav={NAV} user={user} variant="partner">
       {children}
       <CelebrationToaster />
+      <OnboardingTourWrapper isNewUser={isNewUser} />
     </DashboardShell>
   );
 }

@@ -14,6 +14,21 @@ export default function GuidePage() {
       const autoTable = (await import("jspdf-autotable")).default;
 
       const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+
+      // Fix: jsPDF Helvetica ne supporte pas les caracteres accentues
+      function t(s: string): string {
+        return s
+          .replace(/[àáâãä]/g,"a").replace(/[ÀÁÂÃÄ]/g,"A")
+          .replace(/[èéêë]/g,"e").replace(/[ÈÉÊË]/g,"E")
+          .replace(/[ìíîï]/g,"i").replace(/[ÌÍÎÏ]/g,"I")
+          .replace(/[òóôõö]/g,"o").replace(/[ÒÓÔÕÖ]/g,"O")
+          .replace(/[ùúûü]/g,"u").replace(/[ÙÚÛÜ]/g,"U")
+          .replace(/ç/g,"c").replace(/Ç/g,"C")
+          .replace(/ñ/g,"n").replace(/Ñ/g,"N")
+          .replace(/[«»""]/g,'"').replace(/['']/g,"'")
+          .replace(/…/g,"...").replace(/[–—]/g,"-");
+      }
+
       const W = 210;
       const H = 297;
       const BLUE = [11, 95, 255] as [number, number, number];
@@ -31,7 +46,7 @@ export default function GuidePage() {
         doc.rect(0, 0, W, 12, "F");
         doc.setFontSize(8);
         doc.setTextColor(...WHITE);
-        doc.text("IBIG PARTNERS — Guide Utilisateur Officiel", 14, 8);
+        doc.text(t("IBIG PARTNERS — Guide Utilisateur Officiel"), 14, 8);
         doc.text(`Page ${pageNum} / ${total}`, W - 14, 8, { align: "right" });
       }
 
@@ -40,7 +55,7 @@ export default function GuidePage() {
         doc.rect(0, H - 10, W, 10, "F");
         doc.setFontSize(7);
         doc.setTextColor(...GOLD);
-        doc.text("© 2026 IBIG SARL — INTERMARK BUSINESS INTERNATIONAL GROUP SARL — ibigpartners.com", W / 2, H - 4, { align: "center" });
+        doc.text(t("© 2026 IBIG SARL — INTERMARK BUSINESS INTERNATIONAL GROUP SARL — ibigpartners.com"), W / 2, H - 4, { align: "center" });
       }
 
       function sectionTitle(text: string, y: number) {
@@ -49,7 +64,7 @@ export default function GuidePage() {
         doc.setFontSize(12);
         doc.setFont("helvetica", "bold");
         doc.setTextColor(...WHITE);
-        doc.text(text, 20, y);
+        doc.text(t(text), 20, y);
         return y + 12;
       }
 
@@ -57,7 +72,7 @@ export default function GuidePage() {
         doc.setFontSize(10);
         doc.setFont("helvetica", "bold");
         doc.setTextColor(...BLUE);
-        doc.text(text, 14, y);
+        doc.text(t(text), 14, y);
         doc.setDrawColor(...BLUE);
         doc.setLineWidth(0.3);
         doc.line(14, y + 1.5, W - 14, y + 1.5);
@@ -68,7 +83,7 @@ export default function GuidePage() {
         doc.setFontSize(9);
         doc.setFont("helvetica", "normal");
         doc.setTextColor(...DARK);
-        const lines = doc.splitTextToSize(text, W - indent - 14);
+        const lines = doc.splitTextToSize(t(text), W - indent - 14);
         doc.text(lines, indent, y);
         return y + lines.length * 5;
       }
@@ -79,13 +94,13 @@ export default function GuidePage() {
         doc.setTextColor(...DARK);
         doc.setFillColor(...GOLD);
         doc.circle(18, y - 1.5, 1, "F");
-        const lines = doc.splitTextToSize(text, W - 30);
+        const lines = doc.splitTextToSize(t(text), W - 30);
         doc.text(lines, 22, y);
         return y + lines.length * 5 + 1;
       }
 
       function infoBox(text: string, y: number, color: [number, number, number] = [239, 246, 255]) {
-        const lines = doc.splitTextToSize(text, W - 34);
+        const lines = doc.splitTextToSize(t(text), W - 34);
         const h = lines.length * 5 + 8;
         doc.setFillColor(...color);
         doc.roundedRect(14, y, W - 28, h, 2, 2, "F");
@@ -132,18 +147,18 @@ export default function GuidePage() {
 
       doc.setFontSize(9);
       doc.setTextColor(200, 215, 255);
-      doc.text("Programme d'Affiliation Multi-Niveaux", W / 2, 153, { align: "center" });
-      doc.text("INTERMARK BUSINESS INTERNATIONAL GROUP SARL", W / 2, 160, { align: "center" });
+      doc.text(t("Programme d'Affiliation Multi-Niveaux"), W / 2, 153, { align: "center" });
+      doc.text(t("INTERMARK BUSINESS INTERNATIONAL GROUP SARL"), W / 2, 160, { align: "center" });
 
       // Version & date
       doc.setFontSize(8);
       doc.setTextColor(...GOLD);
-      doc.text("Version 1.0 — Juin 2026", W / 2, 175, { align: "center" });
+      doc.text(t("Version 1.0 - Juin 2026"), W / 2, 175, { align: "center" });
 
       // Bas de page couverture
       doc.setFontSize(8);
       doc.setTextColor(150, 170, 210);
-      doc.text("CONFIDENTIEL — Usage interne et partenaires agréés", W / 2, H - 20, { align: "center" });
+      doc.text(t("CONFIDENTIEL - Usage interne et partenaires agrees"), W / 2, H - 20, { align: "center" });
       doc.text("ibigpartners.com  ·  contact@ibigpartners.com  ·  +225 27 22 27 60 14", W / 2, H - 13, { align: "center" });
 
       // ═══════════════════════════════════════════════════════════
@@ -158,7 +173,7 @@ export default function GuidePage() {
       doc.setFontSize(20);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(...DARK);
-      doc.text("Table des matières", 14, 32);
+      doc.text(t("Table des matieres"), 14, 32);
       doc.setFillColor(...GOLD);
       doc.rect(14, 36, 40, 2, "F");
 
@@ -402,12 +417,12 @@ export default function GuidePage() {
       doc.setFontSize(8);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(...GOLD);
-      doc.text("Commissions N1 = TAUX PLEIN", W / 2, n1y + 18, { align: "center" });
+      doc.text(t("Commissions N1 = TAUX PLEIN"), W / 2, n1y + 18, { align: "center" });
 
       doc.setFontSize(7.5);
       doc.setTextColor(...GRAY);
-      doc.text("(Les filleuls N1 ont eux-mêmes des filleuls N2 qui vous rapportent N2)", W / 2, n1y + 24, { align: "center" });
-      doc.text("(Les filleuls N2 ont eux-mêmes des filleuls N3 qui vous rapportent N3)", W / 2, n1y + 30, { align: "center" });
+      doc.text(t("(Les filleuls N1 ont leurs propres filleuls N2 qui vous rapportent des commissions)"), W / 2, n1y + 24, { align: "center" });
+      doc.text(t("(Les filleuls N2 ont leurs propres filleuls N3 qui vous rapportent des commissions)"), W / 2, n1y + 30, { align: "center" });
 
       py = n1y + 40;
 
@@ -834,7 +849,7 @@ export default function GuidePage() {
       doc.setFontSize(22);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(...WHITE);
-      doc.text("Bienvenue dans la famille", W / 2, 80, { align: "center" });
+      doc.text(t("Bienvenue dans la famille"), W / 2, 80, { align: "center" });
       doc.setTextColor(...GOLD);
       doc.text("IBIG PARTNERS", W / 2, 96, { align: "center" });
 
@@ -845,31 +860,31 @@ export default function GuidePage() {
       doc.setFontSize(10);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(200, 220, 255);
-      const closing = "Vous faites maintenant partie du programme d'affiliation panafricain le plus structuré du groupe IBIG SARL. Chaque vente que vous réalisez, chaque partenaire que vous recrutez construit votre revenu durable et contribue au développement économique de l'Afrique.";
+      const closing = t("Vous faites maintenant partie du programme d'affiliation panafricain le plus structure du groupe IBIG SARL. Chaque vente que vous realisez, chaque partenaire que vous recrutez construit votre revenu durable et contribue au developpement economique de l'Afrique.");
       const closingLines = doc.splitTextToSize(closing, W - 60);
       doc.text(closingLines, W / 2, 115, { align: "center" });
 
       doc.setFontSize(11);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(...WHITE);
-      doc.text("Votre succès est notre succès.", W / 2, 150, { align: "center" });
+      doc.text(t("Votre succes est notre succes."), W / 2, 150, { align: "center" });
 
       doc.setFontSize(9);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(...GOLD);
       doc.text("ibigpartners.com", W / 2, 165, { align: "center" });
       doc.text("contact@ibigpartners.com", W / 2, 173, { align: "center" });
-      doc.text("+225 27 22 27 60 14  ·  +225 07 78 88 25 92", W / 2, 181, { align: "center" });
+      doc.text("+225 27 22 27 60 14  .  +225 07 78 88 25 92", W / 2, 181, { align: "center" });
 
       doc.setFontSize(8);
       doc.setTextColor(150, 170, 210);
       doc.text("INTERMARK BUSINESS INTERNATIONAL GROUP SARL", W / 2, 198, { align: "center" });
-      doc.text("Cocody Riviera Palmeraie — Abidjan, Côte d'Ivoire", W / 2, 205, { align: "center" });
+      doc.text(t("Cocody Riviera Palmeraie - Abidjan, Cote d'Ivoire"), W / 2, 205, { align: "center" });
 
       // Watermark discret
       doc.setFontSize(7);
       doc.setTextColor(80, 100, 140);
-      doc.text("Document confidentiel — Usage autorisé aux partenaires IBIG PARTNERS agréés uniquement", W / 2, 220, { align: "center" });
+      doc.text(t("Document confidentiel - Usage reserve aux administrateurs IBIG PARTNERS agrees"), W / 2, 220, { align: "center" });
 
       doc.save("IBIG_PARTNERS_Guide_Utilisateur_Officiel_2026.pdf");
     } catch (err) {
