@@ -1,44 +1,98 @@
-import { notFound } from "next/navigation";
-import { requireAdmin } from "@/lib/auth";
+import { notFound, redirect } from "next/navigation";
+import Link from "next/link";
+import { requireAdmin, getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Badge, Button, Card, PageHeader } from "@/components/ui";
+import { Badge, Card, PageHeader } from "@/components/ui";
 import { formatDate } from "@/lib/format";
-import { approveVerification, rejectVerification } from "../actions";
 
 export const dynamic = "force-dynamic";
 
 function Row({ label, value }: { label: string; value?: string | null }) {
   if (!value) return null;
   return (
-    <div className="flex gap-3 py-2 border-b border-slate-50 last:border-0">
-      <dt className="w-44 shrink-0 text-xs font-semibold text-slate-500 uppercase tracking-wide pt-0.5">
-        {label}
-      </dt>
-      <dd className="text-sm text-slate-900">{value}</dd>
+    <div className="grid grid-cols-3 gap-2 py-2 border-b border-slate-50 last:border-0">
+      <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{label}</span>
+      <span className="col-span-2 text-sm text-slate-800 break-words">{value}</span>
     </div>
   );
 }
 
-const PAYOUT_METHOD_LABELS: Record<string, string> = {
-  ORANGE_MONEY: "Orange Money",
-  WAVE: "Wave",
-  MTN_MOMO: "MTN MoMo",
-  BANK: "Virement bancaire",
-  PAYPAL: "PayPal",
-  WESTERN_UNION: "Western Union",
-};
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <Card className="p-0 overflow-hidden">
+      <div className="bg-slate-50 border-b border-slate-100 px-5 py-3">
+        <h3 className="font-semibold text-sm text-slate-800">{title}</h3>
+      </div>
+      <div className="px-5 py-3">{children}</div>
+    </Card>
+  );
+}
 
-const STATUS_LABEL: Record<string, string> = {
-  PENDING: "En attente",
-  APPROVED: "Approuvé",
-  REJECTED: "Rejeté",
-};
+async function approveKyc(formData: FormData) {
+  "use server";
+  await requireAdmin();
+  const session = await getSession();
+  const id = String(formData.get("id"));
+  const userId = String(formData.get("userId"));
 
-const STATUS_TONE: Record<string, "amber" | "green" | "red"> = {
-  PENDING: "amber",
-  APPROVED: "green",
-  REJECTED: "red",
-};
+  await prisma.$transaction([
+    prisma.verificationRequest.update({
+      where: { id },
+      data: {
+        status: "APPROVED",
+        reviewedAt: new Date(),
+        reviewedBy: session?.userId ?? null,
+      },
+    }),
+    prisma.user.update({
+      where: { id: userId },
+      data: { approved: true, verificationStatus: "VERIFIED" },
+    }),
+    prisma.notification.create({
+      data: {
+        userId,
+        title: "✅ Dossier KYC validé",
+        body: "Votre dossier de vérification a été approuvé. Vous pouvez désormais percevoir vos commissions.",
+      },
+    }),
+  ]);
+
+  redirect("/admin/verifications");
+}
+
+async function rejectKyc(formData: FormData) {
+  "use server";
+  await requireAdmin();
+  const session = await getSession();
+  const id = String(formData.get("id"));
+  const userId = String(formData.get("userId"));
+  const reason = String(formData.get("reason") || "Dossier incomplet.");
+
+  await prisma.$transaction([
+    prisma.verificationRequest.update({
+      where: { id },
+      data: {
+        status: "REJECTED",
+        reviewedAt: new Date(),
+        reviewedBy: session?.userId ?? null,
+        reviewNote: reason,
+      },
+    }),
+    prisma.user.update({
+      where: { id: userId },
+      data: { approved: false, verificationStatus: "REJECTED" },
+    }),
+    prisma.notification.create({
+      data: {
+        userId,
+        title: "❌ Dossier KYC rejeté",
+        body: `Votre dossier a été rejeté. Motif : ${reason}. Veuillez corriger et resoumettre depuis votre espace.`,
+      },
+    }),
+  ]);
+
+  redirect("/admin/verifications");
+}
 
 export default async function VerificationDetailPage({
   params,
@@ -48,16 +102,14 @@ export default async function VerificationDetailPage({
   await requireAdmin();
   const { id } = await params;
 
-  const req = await (prisma as any).verificationRequest.findUnique({
+  const req = await prisma.verificationRequest.findUnique({
     where: { id },
     include: {
       user: {
         select: {
-          firstName: true,
-          lastName: true,
-          email: true,
-          code: true,
-          phone: true,
+          id: true, firstName: true, lastName: true, email: true,
+          phone: true, code: true, partnerType: true, orgName: true,
+          city: true, createdAt: true, status: true, approved: true,
         },
       },
     },
@@ -65,181 +117,162 @@ export default async function VerificationDetailPage({
 
   if (!req) notFound();
 
+  const u = req.user;
   const isIndividual = req.type === "INDIVIDUAL";
 
+  const STATUS_TONE: Record<string, "amber" | "green" | "red"> = {
+    PENDING: "amber", APPROVED: "green", REJECTED: "red",
+  };
+  const STATUS_LABEL: Record<string, string> = {
+    PENDING: "En attente", APPROVED: "Approuvé", REJECTED: "Rejeté",
+  };
+
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 pb-10">
+      <Link href="/admin/verifications" className="text-xs text-slate-500 hover:text-blue-600">
+        ← Retour aux vérifications
+      </Link>
+
       <PageHeader
-        title={`Dossier KYC — ${req.user.firstName} ${req.user.lastName}`}
-        subtitle={`Soumis le ${formatDate(req.submittedAt)} · ${req.user.email}`}
+        title={`Dossier KYC — ${u.firstName} ${u.lastName}`}
+        subtitle={`${u.code} · Soumis le ${formatDate(req.submittedAt)}`}
       />
 
-      {/* Status badge */}
-      <div className="flex items-center gap-3">
-        <Badge tone={STATUS_TONE[req.status] ?? "gray"}>
-          {STATUS_LABEL[req.status] ?? req.status}
-        </Badge>
-        <Badge tone={isIndividual ? "blue" : "gold"}>
-          {isIndividual ? "Particulier" : "Entreprise"}
-        </Badge>
-        {req.reviewNote && (
-          <span className="text-sm text-rose-600 font-medium">
-            Note : {req.reviewNote}
-          </span>
-        )}
-      </div>
-
-      <div className="grid gap-5 lg:grid-cols-2">
-        {/* Identity / Company Info */}
-        <Card className="p-5">
-          <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-slate-500">
-            {isIndividual ? "Informations personnelles" : "Informations société"}
-          </h2>
-          <dl>
-            {isIndividual ? (
-              <>
-                <Row label="Nom complet"   value={req.fullName} />
-                <Row label="Type de pièce" value={req.idType} />
-                <Row label="N° de pièce"   value={req.idNumber} />
-                <Row label="Pays"          value={req.country} />
-                <Row label="Ville"         value={req.city} />
-                <Row label="Profession"    value={req.profession} />
-                <Row label="WhatsApp"      value={req.whatsapp} />
-                <Row label="Tél. 2"        value={req.secondPhone} />
-              </>
-            ) : (
-              <>
-                <Row label="Raison sociale"  value={req.companyName} />
-                <Row label="RCCM"            value={req.rccm} />
-                <Row label="NIF"             value={req.nif} />
-                <Row label="Compte contrib." value={req.compteContrib} />
-                <Row label="Représentant"    value={req.legalRep} />
-                <Row label="Titre"           value={req.legalRepTitle} />
-                <Row label="Pays"            value={req.companyCountry} />
-                <Row label="Ville"           value={req.companyCity} />
-                <Row label="Adresse"         value={req.companyAddress} />
-                <Row label="Email société"   value={req.companyEmail} />
-                <Row label="WhatsApp"        value={req.companyWhatsapp} />
-                <Row label="Tél. 2"          value={req.companyPhone2} />
-              </>
-            )}
-          </dl>
-        </Card>
-
-        {/* Additional info */}
-        <div className="space-y-5">
-          {isIndividual && req.cvText && (
-            <Card className="p-5">
-              <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-slate-500">
-                CV / Présentation
-              </h2>
-              <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
-                {req.cvText}
-              </p>
-            </Card>
-          )}
-
-          {isIndividual && (req.contact1Name || req.contact2Name) && (
-            <Card className="p-5">
-              <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-slate-500">
-                Contacts de référence
-              </h2>
-              <dl>
-                <Row label="Contact 1"       value={req.contact1Name} />
-                <Row label="Tél. contact 1"  value={req.contact1Phone} />
-                <Row label="Contact 2"       value={req.contact2Name} />
-                <Row label="Tél. contact 2"  value={req.contact2Phone} />
-              </dl>
-            </Card>
-          )}
-
-          {/* Payment info */}
-          <Card className="p-5">
-            <h2 className="mb-3 text-sm font-bold uppercase tracking-wide text-slate-500">
-              Paiement
-            </h2>
-            <dl>
-              <Row
-                label="Mode"
-                value={PAYOUT_METHOD_LABELS[req.payoutMethod] ?? req.payoutMethod}
-              />
-              <Row label="N° Mobile Money"   value={req.mobileMoneyNum} />
-              <Row label="Email PayPal"      value={req.paypalEmail} />
-              <Row label="Nom Western Union" value={req.westernUnionName} />
-              <Row label="RIB"               value={req.rib} />
-              <Row label="Banque"            value={req.bankName} />
-              <Row label="Pays banque"       value={req.bankCountry} />
-              <Row label="SWIFT / BIC"       value={req.swift} />
-              <Row label="IBAN"              value={req.iban} />
-            </dl>
-          </Card>
-        </div>
-      </div>
-
-      {/* Actions */}
-      {req.status === "PENDING" && (
-        <Card className="p-5">
-          <h2 className="mb-4 text-sm font-bold uppercase tracking-wide text-slate-500">
-            Décision
-          </h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {/* Approve */}
-            <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-4">
-              <p className="mb-3 text-sm font-semibold text-emerald-800">
-                ✅ Approuver le dossier
-              </p>
-              <p className="mb-3 text-xs text-emerald-700">
-                Le partenaire sera marqué comme vérifié et son compte sera activé pour les paiements.
-              </p>
-              <form action={approveVerification}>
-                <input type="hidden" name="id" value={req.id} />
-                <input type="hidden" name="userId" value={req.userId} />
-                <Button type="submit" className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0">
-                  Approuver
-                </Button>
-              </form>
-            </div>
-
-            {/* Reject */}
-            <div className="rounded-2xl border border-rose-100 bg-rose-50 p-4">
-              <p className="mb-3 text-sm font-semibold text-rose-800">
-                ❌ Rejeter le dossier
-              </p>
-              <form action={rejectVerification} className="space-y-3">
-                <input type="hidden" name="id" value={req.id} />
-                <input type="hidden" name="userId" value={req.userId} />
-                <label className="block">
-                  <span className="block text-xs font-semibold text-rose-700 mb-1">
-                    Motif du rejet (optionnel)
-                  </span>
-                  <textarea
-                    name="reviewNote"
-                    rows={3}
-                    placeholder="Expliquez pourquoi le dossier est rejeté…"
-                    className="w-full rounded-xl border border-rose-200 bg-white px-3 py-2 text-sm outline-none resize-none focus:border-rose-400 focus:ring-3 focus:ring-rose-100"
-                  />
-                </label>
-                <Button type="submit" variant="danger">
-                  Rejeter
-                </Button>
-              </form>
-            </div>
+      {/* Statut + actions */}
+      <Card className="p-5">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-semibold text-slate-700">Statut :</span>
+            <Badge tone={STATUS_TONE[req.status] ?? "gray"}>
+              {STATUS_LABEL[req.status] ?? req.status}
+            </Badge>
           </div>
-        </Card>
+
+          {req.status === "PENDING" && (
+            <div className="flex flex-wrap gap-3">
+              <form action={approveKyc}>
+                <input type="hidden" name="id" value={req.id} />
+                <input type="hidden" name="userId" value={u.id} />
+                <button
+                  type="submit"
+                  className="rounded-xl bg-emerald-600 px-5 py-2 text-sm font-semibold text-white hover:bg-emerald-700 transition-colors shadow-sm"
+                >
+                  ✅ Valider le dossier
+                </button>
+              </form>
+
+              <form action={rejectKyc} className="flex gap-2">
+                <input type="hidden" name="id" value={req.id} />
+                <input type="hidden" name="userId" value={u.id} />
+                <input
+                  type="text"
+                  name="reason"
+                  placeholder="Motif du rejet (obligatoire)"
+                  required
+                  className="rounded-xl border border-slate-200 px-3 py-2 text-sm w-56 focus:outline-none focus:border-rose-400"
+                />
+                <button
+                  type="submit"
+                  className="rounded-xl bg-rose-600 px-5 py-2 text-sm font-semibold text-white hover:bg-rose-700 transition-colors shadow-sm"
+                >
+                  ❌ Rejeter
+                </button>
+              </form>
+            </div>
+          )}
+
+          {req.status === "APPROVED" && (
+            <span className="text-sm text-emerald-700 font-medium">
+              ✅ Validé le {req.reviewedAt ? formatDate(req.reviewedAt) : "—"}
+            </span>
+          )}
+
+          {req.status === "REJECTED" && (
+            <div className="rounded-xl bg-rose-50 border border-rose-100 px-4 py-3 text-sm text-rose-700">
+              <span className="font-medium">❌ Rejeté</span>
+              {req.reviewNote && <span className="ml-2">— Motif : {req.reviewNote}</span>}
+            </div>
+          )}
+        </div>
+      </Card>
+
+      {/* Infos du compte */}
+      <Section title="👤 Informations du compte">
+        <Row label="Nom complet" value={`${u.firstName} ${u.lastName}`} />
+        <Row label="Email" value={u.email} />
+        <Row label="Téléphone" value={u.phone} />
+        <Row label="Code affilié" value={u.code} />
+        <Row label="Type" value={u.partnerType === "INDIVIDUAL" ? "Particulier" : "Organisation"} />
+        {u.orgName && <Row label="Organisation" value={u.orgName} />}
+        <Row label="Ville" value={u.city ?? undefined} />
+        <Row label="Inscrit le" value={formatDate(u.createdAt)} />
+      </Section>
+
+      {/* KYC Particulier */}
+      {isIndividual && (
+        <>
+          <Section title="📋 Identité">
+            <Row label="Nom état civil" value={req.fullName ?? undefined} />
+            <Row label="Type pièce ID" value={req.idType ?? undefined} />
+            <Row label="N° pièce ID" value={req.idNumber ?? undefined} />
+            <Row label="Profession" value={req.profession ?? undefined} />
+            <Row label="Pays" value={req.country ?? undefined} />
+            <Row label="Ville" value={req.city ?? undefined} />
+            {!req.fullName && (
+              <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2 mt-2">
+                ⚠️ L&apos;affilié n&apos;a pas encore complété les détails de son dossier KYC dans son espace.
+              </p>
+            )}
+          </Section>
+
+          {req.cvText && (
+            <Section title="📄 Curriculum Vitae / Parcours">
+              <p className="text-sm text-slate-700 whitespace-pre-line leading-relaxed">{req.cvText}</p>
+            </Section>
+          )}
+
+          <Section title="📞 Contacts">
+            <Row label="WhatsApp" value={req.whatsapp ?? undefined} />
+            <Row label="Second tél." value={req.secondPhone ?? undefined} />
+            <Row label="Contact 1" value={req.contact1Name ? `${req.contact1Name} — ${req.contact1Phone ?? ""}` : undefined} />
+            <Row label="Contact 2" value={req.contact2Name ? `${req.contact2Name} — ${req.contact2Phone ?? ""}` : undefined} />
+          </Section>
+        </>
       )}
 
-      {req.status !== "PENDING" && (
-        <Card className="p-5">
-          <p className="text-sm text-slate-500">
-            Ce dossier a déjà été traité le{" "}
-            {req.reviewedAt ? formatDate(req.reviewedAt) : "—"}.
-            {req.reviewNote && (
-              <span className="ml-1 font-medium text-slate-700">
-                Note : {req.reviewNote}
-              </span>
-            )}
-          </p>
-        </Card>
+      {/* KYC Entreprise / Organisation */}
+      {!isIndividual && (
+        <Section title="🏢 Entreprise / Organisation">
+          <Row label="Dénomination" value={req.companyName ?? u.orgName ?? undefined} />
+          <Row label="RCCM" value={req.rccm ?? undefined} />
+          <Row label="NIF" value={req.nif ?? undefined} />
+          <Row label="Compte contribuable" value={req.compteContrib ?? undefined} />
+          <Row label="Représentant légal" value={req.legalRep ?? undefined} />
+          <Row label="Titre" value={req.legalRepTitle ?? undefined} />
+          <Row label="Pays siège" value={req.companyCountry ?? undefined} />
+          <Row label="Ville siège" value={req.companyCity ?? undefined} />
+          <Row label="Adresse" value={req.companyAddress ?? undefined} />
+          <Row label="Email" value={req.companyEmail ?? undefined} />
+          <Row label="WhatsApp" value={req.companyWhatsapp ?? undefined} />
+          {!req.rccm && (
+            <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2 mt-2">
+              ⚠️ L&apos;affilié n&apos;a pas encore complété les détails de son dossier KYC dans son espace.
+            </p>
+          )}
+        </Section>
+      )}
+
+      {/* Paiement */}
+      {req.payoutMethod && (
+        <Section title="💰 Coordonnées de paiement">
+          <Row label="Méthode" value={req.payoutMethod ?? undefined} />
+          <Row label="Mobile Money" value={req.mobileMoneyNum ?? undefined} />
+          <Row label="PayPal" value={req.paypalEmail ?? undefined} />
+          <Row label="Western Union" value={req.westernUnionName ?? undefined} />
+          <Row label="Banque" value={req.bankName ?? undefined} />
+          <Row label="IBAN" value={req.iban ?? undefined} />
+          <Row label="SWIFT" value={req.swift ?? undefined} />
+        </Section>
       )}
     </div>
   );

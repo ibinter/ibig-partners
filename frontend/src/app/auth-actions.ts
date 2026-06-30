@@ -137,6 +137,17 @@ export async function registerAction(_prev: unknown, formData: FormData) {
       orgName: orgName || null,
       sponsorId,
       approved: false,
+      verificationStatus: "SUBMITTED",
+    },
+  });
+
+  // Créer automatiquement un dossier KYC pré-rempli pour que l'admin le voie
+  await prisma.verificationRequest.create({
+    data: {
+      userId: user.id,
+      type: partnerType === "INDIVIDUAL" ? "INDIVIDUAL" : "COMPANY",
+      companyName: orgName || null,
+      status: "PENDING",
     },
   });
 
