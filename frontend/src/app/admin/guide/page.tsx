@@ -37,7 +37,7 @@ export default function GuidePage() {
         doc.rect(0,0,W,12,"F");
         doc.setFontSize(8);
         doc.setTextColor(...WHITE);
-        doc.text(t("IBIG PARTNERS — Guide Utilisateur Officiel"),14,8);
+        doc.text(t("IBIG PARTNERS - Guide Utilisateur Officiel"),14,8);
         doc.text(`Page ${pageNum} / ${total}`,W - 14,8,{ align: "right"});
       }
 
@@ -46,7 +46,7 @@ export default function GuidePage() {
         doc.rect(0,H - 10,W,10,"F");
         doc.setFontSize(7);
         doc.setTextColor(...GOLD);
-        doc.text(t("2026 IBIG SARL — INTERMARK BUSINESS INTERNATIONAL GROUP SARL — ibigpartners.com"),W / 2,H - 4,{ align: "center"});
+        doc.text(t("2026 IBIG SARL - INTERMARK BUSINESS INTERNATIONAL GROUP SARL - ibigpartners.com"),W / 2,H - 4,{ align: "center"});
       }
 
       function sectionTitle(text: string,y: number) {
@@ -150,7 +150,7 @@ export default function GuidePage() {
       doc.setFontSize(8);
       doc.setTextColor(150,170,210);
       doc.text(t("CONFIDENTIEL - Usage interne et partenaires agréés"),W / 2,H - 20,{ align: "center"});
-      doc.text("ibigpartners.com · contact@ibigpartners.com · +225 27 22 27 60 14",W / 2,H - 13,{ align: "center"});
+      doc.text("ibigpartners.com . contact@ibigpartners.com . +225 27 22 27 60 14",W / 2,H - 13,{ align: "center"});
 
       // ═══════════════════════════════════════════════════════════
       // PAGE 2 — TABLE DES MATIÈRES
@@ -172,13 +172,13 @@ export default function GuidePage() {
         ["1.","Présentation d'IBIG PARTNERS","3"],
         ["2.","Inscription et types de comptes","4"],
         ["3.","Tableau de bord partenaire","5"],
-        ["4.","Programme d'affiliation — Commissions sur 3 niveaux","6"],
+        ["4.","Programme d'affiliation - Commissions sur 3 niveaux","6"],
         ["5.","Catalogue des branches et produits","7"],
-        ["6.","Vérification KYC — Activation des paiements","8"],
+        ["6.","Vérification KYC - Activation des paiements","8"],
         ["7.","Liens d'affiliation et QR codes","9"],
         ["8.","Suivi des ventes et commissions","10"],
         ["9.","Réseau et parrainage","10"],
-        ["10.","Académie IBIG — Formation","11"],
+        ["10.","Académie IBIG - Formation","11"],
         ["11.","Espace SUPERADMIN","11"],
         ["12.","Support, contact et FAQ","12"],
       ];
@@ -231,11 +231,11 @@ export default function GuidePage() {
       py = subTitle("Les 5 Branches du Groupe IBIG",py);
 
       const branches = [
-        ["IBIG SOFT","Logiciels SaaS de gestion (Scolaby, Fleet 360, GESCOMXEL, Zelivry, Lokativo, StockFlow)","Commission : 20% N1 • 10% N2 • 5% N3 (dégressive sur 4 mois)"],
-        ["IBIG EDUFORM","Formations professionnelles certifiantes (comptabilité, RH, QHSE, Sage, SAP, IA...)","Commission : 10% N1 • 5% N2 • 2% N3 par inscription"],
-        ["IBIG IMMOTRUST","Immobilier, BTP, gestion locative, construction clé en main, diaspora","Commission : 5% N1 • 2, 5% N2 • 1% N3 sur la valeur"],
-        ["IBIG MARKET","Commerce, distribution, matériel informatique, mobilier, fournitures BTP","Commission : 8% N1 • 4% N2 • 2% N3 par vente"],
-        ["INTERMARK BUSINESS","Conseil stratégique, ingénierie de projets, digitalisation, levée de fonds","Commission : 8% N1 • 4% N2 • 2% N3 sur la mission"],
+        ["IBIG SOFT","Logiciels SaaS de gestion (Scolaby, Fleet 360, GESCOMXEL, Zelivry, Lokativo, StockFlow)","Commission : 20% N1 - 10% N2 - 5% N3 (dégressive sur 4 mois)"],
+        ["IBIG EDUFORM","Formations professionnelles certifiantes (comptabilité, RH, QHSE, Sage, SAP, IA...)","Commission : 10% N1 - 5% N2 - 2% N3 par inscription"],
+        ["IBIG IMMOTRUST","Immobilier, BTP, gestion locative, construction clé en main, diaspora","Commission : 5% N1 - 2, 5% N2 - 1% N3 sur la valeur"],
+        ["IBIG MARKET","Commerce, distribution, matériel informatique, mobilier, fournitures BTP","Commission : 8% N1 - 4% N2 - 2% N3 par vente"],
+        ["INTERMARK BUSINESS","Conseil stratégique, ingénierie de projets, digitalisation, levée de fonds","Commission : 8% N1 - 4% N2 - 2% N3 sur la mission"],
       ];
 
       branches.forEach(([name,desc,comm]) => {
@@ -254,7 +254,7 @@ export default function GuidePage() {
         py += 24;
       });
 
-      py = infoBox("IBIG PARTNERS est 100% gratuit — aucun investissement requis. L'inscription est ouverte à tous : particuliers, entreprises, ONG, associations. Vos commissions sont calculées automatiquement et versées sur votre méthode de paiement préférée.",py,[239,246,255]);
+      py = infoBox("IBIG PARTNERS est 100% gratuit - aucun investissement requis. L'inscription est ouverte à tous : particuliers, entreprises, ONG, associations. Vos commissions sont calculées automatiquement et versées sur votre méthode de paiement préférée.",py,[239,246,255]);
 
       // ═══════════════════════════════════════════════════════════
       // PAGE 4 — INSCRIPTION
@@ -273,7 +273,7 @@ export default function GuidePage() {
         "Choisissez votre type de compte : Particulier, Entreprise, ONG, Association ou Autre.",
         "Remplissez le formulaire : prénom, nom, email, téléphone, ville, mot de passe.",
         "Si vous avez été recommandé par un partenaire, entrez son code parrain (ex : AFF-KOFFI-001).",
-        "Cliquez sur « Créer mon compte partenaire » — votre code d'affiliation est généré automatiquement.",
+        "Cliquez sur « Créer mon compte partenaire » - votre code d'affiliation est généré automatiquement.",
         "Votre compte est en attente de validation par l'équipe IBIG (sous 24-48h ouvrées).",
         "Une fois validé, vous recevez un email de confirmation et accédez à toutes les fonctionnalités.",
       ];
@@ -369,7 +369,7 @@ export default function GuidePage() {
       footer();
 
       py = 22;
-      py = sectionTitle("4. Programme d'affiliation — Commissions sur 3 niveaux",py);
+      py = sectionTitle("4. Programme d'affiliation - Commissions sur 3 niveaux",py);
       py += 4;
 
       py = body("Le système de commissions IBIG PARTNERS fonctionne sur 3 niveaux de profondeur. Plus votre réseau est actif, plus vos revenus passifs augmentent automatiquement.",py);
@@ -461,7 +461,7 @@ export default function GuidePage() {
       // @ts-ignore
       py = (doc as any).lastAutoTable.finalY + 8;
 
-      py = infoBox("Pour les abonnements MENSUELS IBIG SOFT, les commissions sont versées sur 4 mois consécutifs : Mois 1 (taux plein) → Mois 2 (75%) → Mois 3 (50%) → Mois 4 (25%). C'est conçu pour récompenser les partenaires qui fidélisent leurs clients sur la durée.",py,[255,251,235]);
+      py = infoBox("Pour les abonnements MENSUELS IBIG SOFT, les commissions sont versées sur 4 mois consécutifs : Mois 1 (taux plein) -> Mois 2 (75%) -> Mois 3 (50%) -> Mois 4 (25%). C'est conçu pour récompenser les partenaires qui fidélisent leurs clients sur la durée.",py,[255,251,235]);
 
       // ═══════════════════════════════════════════════════════════
       // PAGE 7 — KYC ET LIENS
@@ -471,7 +471,7 @@ export default function GuidePage() {
       footer();
 
       py = 22;
-      py = sectionTitle("6. Vérification KYC — Activation des paiements",py);
+      py = sectionTitle("6. Vérification KYC - Activation des paiements",py);
       py += 4;
 
       py = body("La vérification KYC (Know Your Customer) est obligatoire pour percevoir vos commissions. Sans KYC validé, vos commissions sont calculées et conservées mais non versées.",py);
@@ -480,7 +480,7 @@ export default function GuidePage() {
       py = subTitle("Étapes de vérification",py);
       const kyc = [
         ["Accéder","Dans votre espace partenaire, cliquez sur « Vérification » dans le menu gauche."],
-        ["Choisir votre profil","Particulier ou Entreprise/Organisation — le formulaire s'adapte automatiquement."],
+        ["Choisir votre profil","Particulier ou Entreprise/Organisation - le formulaire s'adapte automatiquement."],
         ["Remplir le formulaire","Particulier : Nom état civil, pièce d'identité, profession, contacts, CV. | Entreprise : Raison sociale, RCCM, NIF, représentant légal, adresse siège."],
         ["Coordonnées de paiement","Indiquez comment vous souhaitez recevoir vos commissions : Orange Money, Wave, MTN MoMo, virement bancaire, PayPal ou Western Union."],
         ["Soumettre","Cliquez sur « Soumettre mon dossier ». L'équipe IBIG examine votre dossier sous 24-48h."],
@@ -517,7 +517,7 @@ export default function GuidePage() {
       py += 5;
 
       py = subTitle("Tracking et cookie d'affiliation",py);
-      py = body("Lorsqu'un prospect clique sur votre lien, un cookie est déposé sur son navigateur pendant 90 jours. Si ce prospect s'inscrit ou achète pendant cette période — même s'il ne clique plus sur votre lien — la vente vous est automatiquement attribuée.",py);
+      py = body("Lorsqu'un prospect clique sur votre lien, un cookie est déposé sur son navigateur pendant 90 jours. Si ce prospect s'inscrit ou achète pendant cette période - même s'il ne clique plus sur votre lien - la vente vous est automatiquement attribuée.",py);
 
       // ═══════════════════════════════════════════════════════════
       // PAGE 8 — VENTES ET COMMISSIONS SUIVI
@@ -565,8 +565,8 @@ export default function GuidePage() {
         startY: py,
         head: [["Statut","Signification","Action requise"]],
         body: [
-          ["EN ATTENTE","Vente confirmée, commission calculée, en attente de validation admin","Aucune — processus automatique"],
-          ["VALIDÉE","Commission approuvée par l'équipe IBIG — prête à être versée","Attendre le virement"],
+          ["EN ATTENTE","Vente confirmée, commission calculée, en attente de validation admin","Aucune - processus automatique"],
+          ["VALIDÉE","Commission approuvée par l'équipe IBIG - prête à être versée","Attendre le virement"],
           ["PAYÉE","Commission virée sur votre compte de paiement","Vérifier votre réception"],
         ],
         headStyles: { fillColor: DARK,textColor: WHITE,fontStyle: "bold",fontSize: 9 },
@@ -628,7 +628,7 @@ export default function GuidePage() {
       py = subTitle("Comment recruter un partenaire",py);
       py = bullet("Partagez votre code affilié ou votre lien de parrainage (ibigpartners.com/rejoindre?ref=AFF-XXXX-000).",py);
       py = bullet("Votre filleul s'inscrit en utilisant votre code dans le champ « Code parrain ».",py);
-      py = bullet("Son compte est lié au vôtre automatiquement — il apparaît dans votre réseau N1.",py);
+      py = bullet("Son compte est lié au vôtre automatiquement - il apparaît dans votre réseau N1.",py);
       py = bullet("Dès qu'il fait une vente, vous percevez automatiquement votre commission N2.",py);
       py = bullet("Si ses filleuls font des ventes, vous percevez votre commission N3.",py);
       py += 5;
@@ -641,7 +641,7 @@ export default function GuidePage() {
         body: [
           ["Vue arbre","Visualisation hiérarchique de votre réseau jusqu'à 3 niveaux"],
           ["Performances filleuls","CA généré, nombre de ventes et statut de chaque filleul"],
-          ["Prospects","Suivi de vos contacts potentiels : Contacté → Démo → Converti"],
+          ["Prospects","Suivi de vos contacts potentiels : Contacté -> Démo -> Converti"],
           ["Opportunités","Gestion des opportunités commerciales importantes avec valeur estimée"],
           ["Classement","Votre position parmi les meilleurs partenaires du mois"],
         ],
@@ -654,7 +654,7 @@ export default function GuidePage() {
       // @ts-ignore
       py = (doc as any).lastAutoTable.finalY + 10;
 
-      py = sectionTitle("10. Académie IBIG — Formation",py);
+      py = sectionTitle("10. Académie IBIG - Formation",py);
       py += 4;
 
       py = body("L'Académie IBIG est votre espace d'apprentissage intégré. Elle contient des modules de formation conçus pour vous aider à mieux vendre les produits IBIG et à développer votre réseau.",py);
@@ -665,7 +665,7 @@ export default function GuidePage() {
         ["Articles","Guides détaillés sur les produits, techniques de vente, stratégies de recrutement."],
         ["Vidéos","Démonstrations produits, témoignages de partenaires, formations en ligne."],
         ["Quiz","Évaluations interactivés pour valider vos connaissances et débloquer des badges."],
-        ["Assistant IA","Posez toutes vos questions sur les produits IBIG, les commissions ou les techniques de vente — réponse instantanée 24h/24."],
+        ["Assistant IA","Posez toutes vos questions sur les produits IBIG, les commissions ou les techniques de vente - réponse instantanée 24h/24."],
         ["Coach IA IBIG","Assistant personnel intelligent formé spécifiquement sur les valeurs, produits et processus d'IBIG PARTNERS."],
       ];
       academy.forEach(([icon,desc]) => {
@@ -691,7 +691,7 @@ export default function GuidePage() {
       footer();
 
       py = 22;
-      py = sectionTitle("11. Espace SUPERADMIN — Administration de la plateformé",py);
+      py = sectionTitle("11. Espace SUPERADMIN - Administration de la plateformé",py);
       py += 4;
 
       py = infoBox("L'espace SUPERADMIN est réservé exclusivement à l'équipe IBIG SARL. Il permet la gestion complète de la plateformé : partenaires, ventes, commissions, catalogue, contenu et paramètrès.",py,[255,243,205]);
@@ -727,7 +727,7 @@ export default function GuidePage() {
       py = (doc as any).lastAutoTable.finalY + 10;
 
       py = subTitle("Processus de validation KYC (Admin)",py);
-      py = bullet("Un nouveau partenaire s'inscrit → dossier KYC créé automatiquement avec statut « En attente ».",py);
+      py = bullet("Un nouveau partenaire s'inscrit -> dossier KYC créé automatiquement avec statut « En attente ».",py);
       py = bullet("L'admin accède à /admin/vérifications et clique sur « Examiner » pour voir le dossier complet.",py);
       py = bullet("Après vérification des informations : cliquer « Valider » (activé le compte) ou « Rejeter » (avec motif).",py);
       py = bullet("Le partenaire reçoit automatiquement une notification et un email de confirmation/rejet.",py);
@@ -757,11 +757,11 @@ export default function GuidePage() {
           ["Champion des ventes","Atteindre 50 ventes confirmées"],
           ["Centurion","Atteindre 100 ventes confirmées"],
           ["Recruteur","Parrainer votre 1er filleul"],
-          ["‍‍ Bâtisseur d'équipe","Atteindre 10 filleuls directs"],
+          ["Bâtisseur d'équipe","Atteindre 10 filleuls directs"],
           ["Ambassadeur Silver","Accéder au statut SILVER"],
           ["Ambassadeur Gold","Accéder au statut GOLD"],
           ["Master Partner","Accéder au statut MASTER"],
-          ["Elite Représentant","Accéder au statut ELITE — le sommet"],
+          ["Elite Représentant","Accéder au statut ELITE - le sommet"],
         ],
         headStyles: { fillColor: GOLD,textColor: DARK,fontStyle: "bold",fontSize: 9 },
         bodyStyles: { fontSize: 8.5 },
@@ -927,7 +927,7 @@ export default function GuidePage() {
             disabled={loading}
             className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-4 text-base font-bold text-white hover:from-blue-700 hover:to-blue-900 disabled:opacity-60 transition-all shadow-lg"
           >
-            {loading ? "Génération du PDF en cours…": "Télécharger le Guide PDF (Premium)"}
+            {loading ? "Génération du PDF en cours...": "Télécharger le Guide PDF (Premium)"}
           </button>
 
           <p className="text-center text-xs text-slate-400">

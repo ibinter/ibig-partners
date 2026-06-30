@@ -42,7 +42,7 @@ export default function ProjetPage() {
         doc.setFontSize(8);
         doc.setTextColor(...WHITE);
         doc.setFont("helvetica","normal");
-        doc.text(t("IBIG PARTNERS — Document de Presentation du Projet"),14,8);
+        doc.text(t("IBIG PARTNERS - Document de Presentation du Projet"),14,8);
         doc.text(`Page ${n} / ${total}`,W - 14,8,{ align: "right"});
       }
 
@@ -51,7 +51,7 @@ export default function ProjetPage() {
         doc.rect(0,H - 10,W,10,"F");
         doc.setFontSize(7);
         doc.setTextColor(...GOLD);
-        doc.text(t("2026 IBIG SARL — INTERMARK BUSINESS INTERNATIONAL GROUP SARL — ibigpartners.com"),W / 2,H - 4,{ align: "center"});
+        doc.text(t("2026 IBIG SARL - INTERMARK BUSINESS INTERNATIONAL GROUP SARL - ibigpartners.com"),W / 2,H - 4,{ align: "center"});
       }
 
       function sectionTitle(text: string,y: number): number {
@@ -160,7 +160,7 @@ export default function ProjetPage() {
 
       doc.setFontSize(8);
       doc.setTextColor(...GOLD);
-      doc.text(t("Version 1.0 — Juin 2026 — DOCUMENT CONFIDENTIEL"),W / 2,170,{ align: "center"});
+      doc.text(t("Version 1.0 - Juin 2026 - DOCUMENT CONFIDENTIEL"),W / 2,170,{ align: "center"});
 
       doc.setFontSize(7);
       doc.setTextColor(150,170,210);
@@ -189,21 +189,21 @@ export default function ProjetPage() {
         ["2.",t("Presentation du Groupe IBIG SARL"),"5"],
         ["3.",t("Vision, Mission et Valeurs"),"5"],
         ["4.",t("Historique et Positionnement"),"6"],
-        ["5.",t("IBIG SOFT — Logiciels SaaS de Gestion"),"7"],
-        ["6.",t("IBIG EDUFORM — Formations Professionnelles Certifiantes"),"7"],
-        ["7.",t("IBIG IMMOTRUST — Immobilier et BTP"),"8"],
-        ["8.",t("IBIG MARKET — Commerce et Distribution"),"8"],
-        ["9.",t("INTERMARK BUSINESS — Conseil et Ingenierie"),"9"],
+        ["5.",t("IBIG SOFT - Logiciels SaaS de Gestion"),"7"],
+        ["6.",t("IBIG EDUFORM - Formations Professionnelles Certifiantes"),"7"],
+        ["7.",t("IBIG IMMOTRUST - Immobilier et BTP"),"8"],
+        ["8.",t("IBIG MARKET - Commerce et Distribution"),"8"],
+        ["9.",t("INTERMARK BUSINESS - Conseil et Ingenierie"),"9"],
         ["10.",t("Système de Commissions N1/N2/N3"),"10"],
         ["11.",t("Degressivite commissions IBIG SOFT mensuel"),"11"],
         ["12.",t("Simulation de revenus passifs"),"11"],
         ["13.",t("Statuts Partenaires et Avantages"),"12"],
         ["14.",t("Gamification et Badges"),"12"],
-        ["15.",t("Plateformé Technologique — Stack et Modules"),"13"],
+        ["15.",t("Plateformé Technologique - Stack et Modules"),"13"],
         ["16.",t("Securite, Conformite et Performance"),"14"],
         ["17.",t("Processus d'Affiliation"),"15"],
         ["18.",t("Methodes de Paiement"),"16"],
-        ["19.",t("Académie IBIG — Formation Integree"),"17"],
+        ["19.",t("Académie IBIG - Formation Integree"),"17"],
         ["20.",t("Coach IA IBIG"),"18"],
         ["21.",t("Stratégie de Developpement 2026-2028"),"19"],
         ["22.",t("Avantages Concurrentiels"),"20"],
@@ -252,7 +252,7 @@ export default function ProjetPage() {
       y += 5;
 
       y = checkPage(y,80);
-      y = subTitle(t("Indicateurs cles de performance — Projections"),y);
+      y = subTitle(t("Indicateurs cles de performance - Projections"),y);
 
       autoTable(doc,{
         startY: y,
@@ -352,7 +352,7 @@ export default function ProjetPage() {
       y = sectionTitle(t("Les 5 Branches du Groupe IBIG"),y);
 
       // --- IBIG SOFT ---
-      y = subTitle(t("IBIG SOFT — Logiciels SaaS de Gestion"),y);
+      y = subTitle(t("IBIG SOFT - Logiciels SaaS de Gestion"),y);
       y = body(t("Division technologique d'IBIG SARL, IBIG SOFT developpe et distribue des logiciels SaaS (Software as a Service) de gestion sur abonnement mensuel ou annuel. Les solutions couvrent la gestion scolaire, la flotte de vehicules, le commerce, la livraison, la gestion immobilière et la gestion des stocks."),y);
       y += 3;
 
@@ -380,7 +380,7 @@ export default function ProjetPage() {
 
       y = checkPage(y,80);
       // --- IBIG EDUFORM ---
-      y = subTitle(t("IBIG EDUFORM — Formations Professionnelles Certifiantes"),y);
+      y = subTitle(t("IBIG EDUFORM - Formations Professionnelles Certifiantes"),y);
       y = body(t("Organisme de formation professionnelle certifiant, IBIG EDUFORM propose des parcours intensifs dans les domaines de la comptabilité, des ressources humaines, de la qualité, de la logistique, des ERP et des nouvelles technologies."),y);
       y += 3;
 
@@ -411,7 +411,7 @@ export default function ProjetPage() {
 
       y = checkPage(y,70);
       // --- IBIG IMMOTRUST ---
-      y = subTitle(t("IBIG IMMOTRUST — Immobilier et BTP"),y);
+      y = subTitle(t("IBIG IMMOTRUST - Immobilier et BTP"),y);
       y = body(t("Division specialisee dans les transactions immobilières, la gestion locative, la construction et la renovation au profit des particuliers et des entreprises en Afrique de l'Ouest. Service diaspora inclus pour les Africains de l'etranger."),y);
       y += 3;
 
@@ -437,7 +437,7 @@ export default function ProjetPage() {
 
       y = checkPage(y,70);
       // --- IBIG MARKET ---
-      y = subTitle(t("IBIG MARKET — Commerce et Distribution"),y);
+      y = subTitle(t("IBIG MARKET - Commerce et Distribution"),y);
       y = body(t("Plateformé de commerce B2B et B2C proposant du matériel informatique, du mobilier professionnel, des fournitures de bureau et du matériel BTP. IBIG Market est le guichet unique d'approvisionnement des PME africaines."),y);
       y += 3;
 
@@ -463,7 +463,7 @@ export default function ProjetPage() {
 
       y = checkPage(y,70);
       // --- INTERMARK BUSINESS ---
-      y = subTitle(t("INTERMARK BUSINESS — Conseil et Ingenierie de Projets"),y);
+      y = subTitle(t("INTERMARK BUSINESS - Conseil et Ingenierie de Projets"),y);
       y = body(t("Cabinet de conseil en stratégie, ingénierie financière, développement commercial et digitalisation. Accompagne les PME, ETI et institutions dans leur structuration, croissance et transformation digitale."),y);
       y += 3;
 
@@ -494,7 +494,7 @@ export default function ProjetPage() {
       header(pageNum,TOTAL_PAGES);
       footer();
       y = 22;
-      y = sectionTitle(t("Système de Commissions — Architecture N1/N2/N3"),y);
+      y = sectionTitle(t("Système de Commissions - Architecture N1/N2/N3"),y);
 
       y = subTitle(t("Principe fondamental"),y);
       y = body(t("Le programme IBIG PARTNERS repose sur un système de commissions a 3 niveaux de profondeur. Lorsqu'un Partenaire (niveau N1) réalisé directement une vente, il percoit une commission de niveau N1. Lorsqu'un de ses filleuls directs (niveau N2) réalisé une vente, le partenaire filleul percoit sa commission N1, et le partenaire parrain percoit une commission N2. De même, lorsqu'un filleul de filleul (niveau N3) réalisé une vente, le parrain de parrain percoit une commission N3. Ce système permet de construire un revenu passif croissant en developpant un réseau de partenaires actifs."),y);
@@ -647,17 +647,17 @@ export default function ProjetPage() {
       header(pageNum,TOTAL_PAGES);
       footer();
       y = 22;
-      y = sectionTitle(t("Plateformé IBIG PARTNERS — Architecture Technologique"),y);
+      y = sectionTitle(t("Plateformé IBIG PARTNERS - Architecture Technologique"),y);
 
       y = subTitle(t("Stack technologique"),y);
-      y = bullet(t("Next.js 15 (App Router) — Framework React de dernière generation"),y);
-      y = bullet(t("PostgreSQL (Supabase) — Base de donnees relationnelle managee"),y);
-      y = bullet(t("Prisma ORM — Gestion des migrations et des requêtes"),y);
-      y = bullet(t("Vercel — Deploiement serverless CDN mondial"),y);
-      y = bullet(t("Resend — Emails transactionnels (notifications, validations)"),y);
-      y = bullet(t("jsPDF + jspdf-autotable — Generation PDF côté client"),y);
-      y = bullet(t("OAuth / JWT sessions — Authentification sécurisée"),y);
-      y = bullet(t("API Moneroo — Paiements en ligne intégrés"),y);
+      y = bullet(t("Next.js 15 (App Router) - Framework React de dernière generation"),y);
+      y = bullet(t("PostgreSQL (Supabase) - Base de donnees relationnelle managee"),y);
+      y = bullet(t("Prisma ORM - Gestion des migrations et des requêtes"),y);
+      y = bullet(t("Vercel - Deploiement serverless CDN mondial"),y);
+      y = bullet(t("Resend - Emails transactionnels (notifications, validations)"),y);
+      y = bullet(t("jsPDF + jspdf-autotable - Generation PDF côté client"),y);
+      y = bullet(t("OAuth / JWT sessions - Authentification sécurisée"),y);
+      y = bullet(t("API Moneroo - Paiements en ligne intégrés"),y);
       y += 5;
 
       y = checkPage(y,100);
@@ -694,8 +694,8 @@ export default function ProjetPage() {
       y = bullet(t("HTTPS obligatoire (TLS 1.3) sur toutes les communications"),y);
       y = bullet(t("Audit log de toutes les actions admin (qui, quoi, quand)"),y);
       y = bullet(t("KYC obligatoire avant tout premier paiement de commission"),y);
-      y = bullet(t("Conformite OHADA — droit des affaires africain"),y);
-      y = bullet(t("Protection des donnees personnelles — chiffrement AES-256 au repos"),y);
+      y = bullet(t("Conformite OHADA - droit des affaires africain"),y);
+      y = bullet(t("Protection des donnees personnelles - chiffrement AES-256 au repos"),y);
       y += 4;
 
       y = checkPage(y,40);
@@ -713,7 +713,7 @@ export default function ProjetPage() {
  header(pageNum, TOTAL_PAGES);
  footer();
  y = 22;
- y = sectionTitle(t("Processus d'Affiliation — De l'Inscription au Premier Paiement"), y);
+ y = sectionTitle(t("Processus d'Affiliation - De l'Inscription au Premier Paiement"), y);
 
  y = body(t("Le processus d'affiliation IBIG PARTNERS est simple,digital et transparent. De l'inscription gratuité jusqu'au premier virement de commission,chaque etape est tracee et notifiee en temps reel."), y);
  y += 5;
@@ -755,7 +755,7 @@ export default function ProjetPage() {
  header(pageNum, TOTAL_PAGES);
  footer();
  y = 22;
- y = sectionTitle(t("Methodes de Paiement — Versement des Commissions"), y);
+ y = sectionTitle(t("Methodes de Paiement - Versement des Commissions"), y);
 
  autoTable(doc,{
  startY: y,
@@ -790,7 +790,7 @@ export default function ProjetPage() {
  header(pageNum, TOTAL_PAGES);
  footer();
  y = 22;
- y = sectionTitle(t("Académie IBIG — Plateformé de Formation Integree"), y);
+ y = sectionTitle(t("Académie IBIG - Plateformé de Formation Integree"), y);
 
  y = subTitle(t("Objectif de l'Academie"), y);
  y = body(t("Former les partenaires affilies pour maximiser leurs performances commerciales. L'Académie IBIG est une bibliotheque de ressources pedagogiques couvrant les produits, les techniques de vente, le recrutement de partenaires et le développement personnel. Elle est accèssible 24h/24, 7j/7 directement depuis le dashboard partenaire."), y);
@@ -848,7 +848,7 @@ export default function ProjetPage() {
  y += 3;
 
  y = checkPage(y, 50);
- y = subTitle(t("Coach IA IBIG — Intelligence Artificielle Embarquee"), y);
+ y = subTitle(t("Coach IA IBIG - Intelligence Artificielle Embarquee"), y);
  y = body(t("Le Coach IA IBIG est un assistant conversationnel entraine spécifiquement sur les produits, commissions et processus d'IBIG PARTNERS. Il repond aux questions des partenaires 24h/24,7j/7,en francais et en anglais. Cas d'usage principaux : calcul de commissions, preparation de scripts de vente, simulation de revenus, réponses aux objections clients les plus courantes, conseils de recrutement réseau, et preparation d'argumentaires personnalises par branche et par cible."), y);
  y += 3;
  y = infoBox(t("Le Coach IA est une innovation unique sur le marche de l'affiliation en Afrique. Aucun autre programme d'affiliation ne propose un assistant IA entraine specifiquement sur ses produits et processus. C'est un avantage competitif majeur d'IBIG PARTNERS."), y,[255, 250, 235]);
@@ -997,7 +997,7 @@ export default function ProjetPage() {
  y = subTitle(t("Protection des donnees personnelles"), y);
  y = bullet(t("Donnees chiffrees en transit (HTTPS/TLS 1.3) et au repos (AES-256)"), y);
  y = bullet(t("Acces aux donnees personnelles limite au strictement necessaire (principe de minimisation)"), y);
- y = bullet(t("Droit a l'oubli sur demande écrite — suppression sous 30 jours"), y);
+ y = bullet(t("Droit a l'oubli sur demande écrite - suppression sous 30 jours"), y);
  y = bullet(t("Aucune revente de donnees a des tiers commerciaux"), y);
  y = bullet(t("Audit log de tous les accès administrateurs aux donnees partenaires"), y);
  y += 5;
@@ -1093,7 +1093,7 @@ export default function ProjetPage() {
  },
  {
  q: t("Est-il possible de cumuler les commissions de plusieurs branches ?"),
- r: t("Absolument. Un partenaire peut promouvoir simultanement les 5 branches et cumuler des commissions sur toutes. Un client peut acheter un logiciel IBIG SOFT,s'inscrire en formation EDUFORM et commander du matériel IBIG MARKET — le partenaire percoit une commission sur chacune de ces transactions."),
+ r: t("Absolument. Un partenaire peut promouvoir simultanement les 5 branches et cumuler des commissions sur toutes. Un client peut acheter un logiciel IBIG SOFT,s'inscrire en formation EDUFORM et commander du matériel IBIG MARKET - le partenaire percoit une commission sur chacune de ces transactions."),
  },
  {
  q: t("Comment rejoindre IBIG PARTNERS en tant qu'entreprise ?"),
@@ -1188,7 +1188,7 @@ export default function ProjetPage() {
  doc.setFontSize(14);
  doc.setFont("helvetica","bold");
  doc.setTextColor(...GOLD);
- doc.text(t("IBIG PARTNERS — L'AFFILIATION QUI CHANGE DES VIES"), W / 2, y + 23,{ align:"center"});
+ doc.text(t("IBIG PARTNERS - L'AFFILIATION QUI CHANGE DES VIES"), W / 2, y + 23,{ align:"center"});
 
  doc.setFontSize(8);
  doc.setFont("helvetica","normal");
@@ -1223,7 +1223,7 @@ export default function ProjetPage() {
  { icon: "", title:"Systeme de commissions", desc:"Architecture N1/N2/N3,tableaux detailles"},
  { icon: "", title:"Degressivite commissions", desc:"Modele 4 mois IBIG SOFT mensuel"},
  { icon: "", title:"Simulation revenus", desc:"4 scenarios de revenus passifs"},
- { icon: "⭐", title:"Statuts partenaires", desc:"STARTER > SILVER > GOLD > MASTER > ELITE"},
+ { icon: "*", title:"Statuts partenaires", desc:"STARTER > SILVER > GOLD > MASTER > ELITE"},
  { icon: "", title:"Gamification", desc:"Badges,classements,competitions"},
  { icon: "", title:"Plateforme technologique", desc:"Stack Next.js,modules,securite"},
  { icon: "", title:"Securite et conformite", desc:"KYC,JWT,HTTPS,audit log"},
