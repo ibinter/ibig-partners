@@ -61,12 +61,19 @@ export function CelebrationToaster() {
     return () => clearInterval(timer);
   }, [seen]);
 
+  // Auto-dismiss après 8 secondes
+  useEffect(() => {
+    if (!active) return;
+    const dismissTimer = setTimeout(() => setActive(null), 8000);
+    return () => clearTimeout(dismissTimer);
+  }, [active]);
+
   if (!active) return null;
 
   return (
     <div
       data-testid="celebration-toast"
-      className="fixed top-5 right-5 z-50 max-w-sm animate-slide-left"
+      className="fixed top-20 right-4 sm:right-5 z-30 max-w-xs sm:max-w-sm animate-slide-left"
     >
       <div className="card-premium border-2 border-emerald-300 bg-gradient-to-br from-white to-emerald-50 p-4 shadow-2xl">
         <div className="flex items-start gap-3">
