@@ -36,14 +36,20 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // Log complet pour déboguer le format Moneroo
+  console.log("[Moneroo Webhook] Payload reçu :", JSON.stringify(body));
+
   const { status, amount, metadata } = body as {
     status: string;
     amount: number;
     metadata?: { product_slug?: string; partner_code?: string };
   };
 
+  console.log("[Moneroo Webhook] status =", status, "| amount =", amount, "| metadata =", JSON.stringify(metadata));
+
   // Ne traiter que les paiements réussis
   if (status !== "success") {
+    console.log("[Moneroo Webhook] Statut non traité :", status);
     return NextResponse.json({ message: `statut "${status}" ignoré` });
   }
 
