@@ -84,6 +84,51 @@ export default function RootLayout({
             })();
           `}
         </Script>
+
+        {/* IBIG SARL — Tracking cross-site : envoie les visites PARTNERS vers l'admin Analytics d'intermark-business.com */}
+        <Script id="ibig-sarl-tracking" strategy="afterInteractive">
+          {`
+            (function(){
+              'use strict';
+              var site = 'partners';
+              var endpoint = 'https://intermark-business.com/api/track.php';
+              var SESS_KEY = '_ibig_xsess';
+              var sess = '', isUnique = 0;
+              try {
+                sess = localStorage.getItem(SESS_KEY) || '';
+                if (!sess) {
+                  sess = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+                    .map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+                  localStorage.setItem(SESS_KEY, sess);
+                  isUnique = 1;
+                }
+              } catch(e){}
+              var payload = {
+                site: site,
+                url: location.href,
+                path: location.pathname,
+                referer: document.referrer || '',
+                session: sess,
+                unique: isUnique
+              };
+              try {
+                if (window.fetch) {
+                  fetch(endpoint, {
+                    method:'POST',
+                    headers:{'Content-Type':'application/json'},
+                    body: JSON.stringify(payload),
+                    credentials:'omit',
+                    keepalive: true,
+                    mode:'cors'
+                  }).catch(function(){});
+                } else if (navigator.sendBeacon) {
+                  var blob = new Blob([JSON.stringify(payload)], {type:'application/json'});
+                  navigator.sendBeacon(endpoint, blob);
+                }
+              } catch(e){}
+            })();
+          `}
+        </Script>
       </body>
     </html>
   );
