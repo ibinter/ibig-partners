@@ -3,14 +3,26 @@ import { MobileMenu } from "./mobile-menu";
 
 export function Logo({ light = false }: { light?: boolean }) {
   return (
-    <Link href="/" className="flex items-center gap-2">
-      <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white font-extrabold text-sm shadow-sm">
-        iB
+    <Link href="/" className="group flex shrink-0 items-center gap-2.5 transition-transform hover:scale-[1.02]">
+      <span className="relative inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-brand-500 via-brand-600 to-brand-800 text-white font-extrabold text-sm shadow-md shadow-brand-700/30 ring-1 ring-white/10">
+        <span className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        <span className="relative">iB</span>
       </span>
-      <span className={`font-extrabold tracking-tight ${light ? "text-white" : "text-ink"}`}>
-        IBIG <span className={light ? "text-brand-300" : "text-brand-500"}>PARTNERS</span>
+      <span className={`whitespace-nowrap font-extrabold tracking-tight leading-none ${light ? "text-white" : "text-ink"}`}>
+        IBIG <span className={light ? "text-gold-400" : "text-brand-600"}>PARTNERS</span>
       </span>
     </Link>
+  );
+}
+
+function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <a
+      href={href}
+      className="relative rounded-lg px-3 py-2 text-slate-600 hover:text-brand-700 transition-colors after:absolute after:bottom-1 after:left-1/2 after:h-0.5 after:w-0 after:-translate-x-1/2 after:rounded-full after:bg-brand-500 after:transition-all hover:after:w-4"
+    >
+      {children}
+    </a>
   );
 }
 
@@ -45,33 +57,42 @@ export function SiteHeader() {
   return (
     <>
     <MarqueeBanner />
-    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
-      <div className="relative mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+    <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-white/85 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70 shadow-[0_1px_0_rgba(11,79,224,0.04),0_8px_24px_-12px_rgba(11,79,224,0.08)]">
+      <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-2.5 sm:px-6">
         <Logo />
 
         {/* Navigation desktop */}
-        <nav className="hidden items-center gap-6 text-sm font-medium text-slate-600 md:flex">
-          <a href="/#branches" className="hover:text-brand-600 transition-colors">Branches</a>
-          <a href="/#commissions" className="hover:text-brand-600 transition-colors">Commissions</a>
-          <a href="/#statuts" className="hover:text-brand-600 transition-colors">Statuts</a>
-          <a href="/#espace" className="hover:text-brand-600 transition-colors">Espace partenaire</a>
-          <a href="/#faq" className="hover:text-brand-600 transition-colors">FAQ</a>
-          <Link href="/top-partenaires" className="hover:text-amber-600 transition-colors font-semibold">🏆 Top Partenaires</Link>
-          <Link href="/partenaires" className="hover:text-brand-600 transition-colors">Nos partenaires</Link>
+        <nav className="hidden items-center gap-1 text-sm font-medium text-slate-600 lg:flex">
+          <NavLink href="/#branches">Branches</NavLink>
+          <NavLink href="/#commissions">Commissions</NavLink>
+          <NavLink href="/#statuts">Statuts</NavLink>
+          <NavLink href="/#espace">Espace partenaire</NavLink>
+          <NavLink href="/#faq">FAQ</NavLink>
+          <Link
+            href="/top-partenaires"
+            className="ml-1 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-400/15 to-orange-500/15 px-3 py-1.5 text-amber-700 font-semibold ring-1 ring-amber-300/40 hover:from-amber-400/25 hover:to-orange-500/25 transition-all"
+          >
+            <span>🏆</span>
+            <span className="hidden xl:inline">Top Partenaires</span>
+            <span className="xl:hidden">Top</span>
+          </Link>
+          <NavLink href="/partenaires">Nos partenaires</NavLink>
         </nav>
 
         <div className="flex items-center gap-2">
           <Link
             href="/connexion"
-            className="hidden rounded-lg px-3 py-2 text-sm font-medium text-brand-700 hover:bg-brand-50 transition-colors sm:block"
+            className="hidden rounded-lg px-3.5 py-2 text-sm font-semibold text-brand-700 hover:bg-brand-50 transition-colors sm:inline-flex"
           >
             Connexion
           </Link>
           <Link
             href="/rejoindre"
-            className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 transition-colors shadow-sm"
+            className="group relative inline-flex items-center gap-1.5 overflow-hidden rounded-xl bg-gradient-to-r from-brand-600 via-brand-600 to-brand-700 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-brand-600/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-600/40"
           >
-            Devenir Partenaire
+            <span className="relative z-10">Devenir Partenaire</span>
+            <span className="relative z-10 transition-transform group-hover:translate-x-0.5">→</span>
+            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
           </Link>
           {/* Hamburger mobile */}
           <MobileMenu />
