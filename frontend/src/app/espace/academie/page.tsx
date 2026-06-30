@@ -12,6 +12,8 @@ const TYPE_LABELS: Record<string, string> = {
   ARTICLE: "Article",
   AI: "Assistant IA",
   QUIZ: "Quiz",
+  AUDIO: "Audio",
+  IMAGE: "Image",
 };
 
 const TYPE_ICONS: Record<string, string> = {
@@ -20,6 +22,8 @@ const TYPE_ICONS: Record<string, string> = {
   ARTICLE: "📝",
   AI: "🤖",
   QUIZ: "🧠",
+  AUDIO: "🎧",
+  IMAGE: "🖼️",
 };
 
 const TYPE_COLORS: Record<string, string> = {
@@ -28,6 +32,8 @@ const TYPE_COLORS: Record<string, string> = {
   ARTICLE: "bg-green-100 text-green-700",
   AI: "bg-violet-100 text-violet-700",
   QUIZ: "bg-orange-100 text-orange-700",
+  AUDIO: "bg-pink-100 text-pink-700",
+  IMAGE: "bg-teal-100 text-teal-700",
 };
 
 const EMOJI_THUMBS: Record<string, string> = {
@@ -36,6 +42,8 @@ const EMOJI_THUMBS: Record<string, string> = {
   ARTICLE: "📰",
   AI: "🤖",
   QUIZ: "🧪",
+  AUDIO: "🎧",
+  IMAGE: "🖼️",
 };
 
 const TABS = [
@@ -43,6 +51,8 @@ const TABS = [
   { key: "VIDEO", label: "Vidéos" },
   { key: "PDF", label: "Guides PDF" },
   { key: "ARTICLE", label: "Articles" },
+  { key: "AUDIO", label: "Audios" },
+  { key: "IMAGE", label: "Images" },
   { key: "AI", label: "Assistant IA" },
   { key: "QUIZ", label: "Quiz" },
 ];

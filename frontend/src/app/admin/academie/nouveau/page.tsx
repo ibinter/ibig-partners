@@ -6,11 +6,13 @@ import { createModule } from "../actions";
 export const dynamic = "force-dynamic";
 
 const CONTENT_PLACEHOLDERS: Record<string, string> = {
-  VIDEO:   "https://www.youtube.com/watch?v=... ou lien vidéo direct",
-  PDF:     "https://... lien vers le fichier PDF hébergé",
+  VIDEO:   "https://www.youtube.com/watch?v=... ou lien vidéo direct (YouTube, Vimeo, MP4...)",
+  PDF:     "https://... lien vers le fichier PDF hébergé (Google Drive, Dropbox, serveur...)",
   ARTICLE: "Rédigez votre article en Markdown ou HTML...",
   AI:      "Prompt système ou configuration de l'assistant IA...",
   QUIZ:    "Questions et réponses au format JSON ou texte structuré...",
+  AUDIO:   "https://... lien vers le fichier audio (MP3, WAV, OGG, Spotify podcast...)",
+  IMAGE:   "https://... lien vers l'image (JPG, PNG, WebP, Google Drive partagé...)",
 };
 
 export default async function NouveauModulePage() {
@@ -53,11 +55,13 @@ export default async function NouveauModulePage() {
               required
               className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
             >
-              <option value="VIDEO">🎬 Vidéo</option>
-              <option value="PDF">📄 PDF</option>
-              <option value="ARTICLE">📝 Article</option>
-              <option value="AI">🤖 Module IA</option>
-              <option value="QUIZ">🧠 Quiz</option>
+              <option value="VIDEO">🎬 Vidéo (YouTube, Vimeo, MP4)</option>
+              <option value="PDF">📄 PDF (document téléchargeable)</option>
+              <option value="ARTICLE">📝 Article (texte/Markdown)</option>
+              <option value="AUDIO">🎧 Audio (MP3, podcast, capsule son)</option>
+              <option value="IMAGE">🖼️ Image (visuel, infographie, affiche)</option>
+              <option value="AI">🤖 Module IA (assistant conversationnel)</option>
+              <option value="QUIZ">🧠 Quiz (évaluation interactive)</option>
             </select>
           </Field>
 

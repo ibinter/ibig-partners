@@ -87,19 +87,15 @@ export default async function ModulePage({
   });
 
   const TYPE_LABELS: Record<string, string> = {
-    VIDEO: "Vidéo",
-    PDF: "Guide PDF",
-    ARTICLE: "Article",
-    AI: "Assistant IA",
-    QUIZ: "Quiz",
+    VIDEO: "Vidéo", PDF: "Guide PDF", ARTICLE: "Article",
+    AI: "Assistant IA", QUIZ: "Quiz", AUDIO: "Audio", IMAGE: "Image",
   };
 
   const TYPE_COLORS: Record<string, string> = {
-    VIDEO: "bg-blue-100 text-blue-700",
-    PDF: "bg-amber-100 text-amber-700",
-    ARTICLE: "bg-green-100 text-green-700",
-    AI: "bg-violet-100 text-violet-700",
-    QUIZ: "bg-orange-100 text-orange-700",
+    VIDEO: "bg-blue-100 text-blue-700", PDF: "bg-amber-100 text-amber-700",
+    ARTICLE: "bg-green-100 text-green-700", AI: "bg-violet-100 text-violet-700",
+    QUIZ: "bg-orange-100 text-orange-700", AUDIO: "bg-pink-100 text-pink-700",
+    IMAGE: "bg-teal-100 text-teal-700",
   };
 
   let questions: QuizQuestion[] = [];
@@ -203,6 +199,66 @@ export default async function ModulePage({
           <div className="prose prose-slate max-w-none">
             <div className="rounded-xl bg-slate-50 p-6 text-sm leading-relaxed text-slate-800 whitespace-pre-wrap font-sans">
               {mod.content}
+            </div>
+          </div>
+        )}
+
+        {/* AUDIO */}
+        {mod.type === "AUDIO" && mod.content && (
+          <div className="space-y-4 p-6">
+            <div className="flex items-center gap-4 rounded-2xl bg-gradient-to-r from-pink-50 to-rose-50 p-6 border border-pink-100">
+              <span className="text-5xl">🎧</span>
+              <div className="flex-1">
+                <p className="font-semibold text-ink mb-3">{mod.title}</p>
+                <audio
+                  src={mod.content}
+                  controls
+                  className="w-full"
+                  title={mod.title}
+                />
+              </div>
+            </div>
+            <a
+              href={mod.content}
+              download
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:border-pink-400 hover:text-pink-700 transition"
+            >
+              📥 Télécharger l&apos;audio
+            </a>
+          </div>
+        )}
+
+        {/* IMAGE */}
+        {mod.type === "IMAGE" && mod.content && (
+          <div className="space-y-4 p-6">
+            <div className="overflow-hidden rounded-2xl border border-slate-100 bg-slate-50">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={mod.content}
+                alt={mod.title}
+                className="mx-auto max-h-[70vh] w-full object-contain"
+              />
+            </div>
+            <div className="flex gap-3">
+              <a
+                href={mod.content}
+                download
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:border-teal-400 hover:text-teal-700 transition"
+              >
+                📥 Télécharger l&apos;image
+              </a>
+              <a
+                href={mod.content}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:border-blue-400 hover:text-blue-700 transition"
+              >
+                🔍 Ouvrir en plein écran
+              </a>
             </div>
           </div>
         )}
