@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
-import { requireAdmin, getSession } from "@/lib/auth";
+import { requireAdmin, getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Badge, Card, PageHeader } from "@/components/ui";
 import { formatDate } from "@/lib/format";
@@ -31,7 +31,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 async function approveKyc(formData: FormData) {
   "use server";
   await requireAdmin();
-  const session = await getSession();
+  const session = await getCurrentUser();
   const id = String(formData.get("id"));
   const userId = String(formData.get("userId"));
 
@@ -41,7 +41,7 @@ async function approveKyc(formData: FormData) {
       data: {
         status: "APPROVED",
         reviewedAt: new Date(),
-        reviewedBy: session?.userId ?? null,
+        reviewedBy: session?.id ?? null,
       },
     }),
     prisma.user.update({
@@ -63,7 +63,7 @@ async function approveKyc(formData: FormData) {
 async function rejectKyc(formData: FormData) {
   "use server";
   await requireAdmin();
-  const session = await getSession();
+  const session = await getCurrentUser();
   const id = String(formData.get("id"));
   const userId = String(formData.get("userId"));
   const reason = String(formData.get("reason") || "Dossier incomplet.");
@@ -74,7 +74,7 @@ async function rejectKyc(formData: FormData) {
       data: {
         status: "REJECTED",
         reviewedAt: new Date(),
-        reviewedBy: session?.userId ?? null,
+        reviewedBy: session?.id ?? null,
         reviewNote: reason,
       },
     }),
