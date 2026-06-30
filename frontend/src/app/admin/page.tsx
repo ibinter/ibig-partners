@@ -5,6 +5,7 @@ import { fcfa, formatDate } from "@/lib/format";
 import { Badge, Card, PageHeader, StatCard, statusTone } from "@/components/ui";
 import { SALE_STATUS_LABELS } from "@/lib/constants";
 import { AdminChartsSection } from "./charts-section";
+import { AdminActionCenter } from "./action-center";
 
 export const dynamic = "force-dynamic";
 
@@ -59,6 +60,9 @@ export default async function AdminDashboard() {
         title="Tableau de bord"
         subtitle="Vue d'ensemble du programme d'affiliation IBIG PARTNERS"
       />
+
+      {/* Centre d'actions prioritaires + KPIs avancés + Activité temps réel */}
+      <AdminActionCenter />
 
       {/* KPIs principaux */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
