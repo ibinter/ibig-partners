@@ -17,7 +17,7 @@ const FAQS = [
   },
   {
     q: "Qui peut devenir partenaire ?",
-    a: "Toute personne majeure résidant en Côte d'Ivoire ou dans la diaspora. Aucune expérience commerciale n'est requise — IBIG vous fournit tous les outils (liens, visuels, argumentaires) pour démarrer immédiatement.",
+    a: "IBIG PARTNERS est un programme panafricain et international, sans limite de pays : toute personne majeure peut rejoindre le réseau, en Côte d'Ivoire, ailleurs en Afrique, ou depuis la diaspora partout dans le monde. C'est un programme pensé pour donner à la jeunesse africaine — et à tous ceux qui veulent s'y associer — un vrai moyen de générer des revenus. Aucune expérience commerciale n'est requise — IBIG vous fournit tous les outils (liens, visuels, argumentaires) pour démarrer immédiatement, où que vous soyez.",
   },
   {
     q: "Dois-je vendre tous les produits IBIG ?",
