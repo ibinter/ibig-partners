@@ -78,6 +78,16 @@ export function SyncBranchesButton() {
   );
 }
 
+export function SyncSoftButton() {
+  return (
+    <SyncButton
+      label="Sync IBIG SOFT"
+      endpoint="/api/admin/sync-soft"
+      className="rounded-lg border border-indigo-300 bg-indigo-50 px-4 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-100 disabled:opacity-50"
+    />
+  );
+}
+
 export function SyncEduformButton() {
   return (
     <SyncButton
