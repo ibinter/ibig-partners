@@ -87,3 +87,13 @@ export function SyncEduformButton() {
     />
   );
 }
+
+export function SyncDigitalKitsButton() {
+  return (
+    <SyncButton
+      label="Sync DIGITAL KITS"
+      endpoint="/api/admin/sync-digital-kits"
+      className="rounded-lg border border-violet-300 bg-violet-50 px-4 py-2 text-sm font-semibold text-violet-700 hover:bg-violet-100 disabled:opacity-50"
+    />
+  );
+}

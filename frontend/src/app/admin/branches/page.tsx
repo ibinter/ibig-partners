@@ -8,7 +8,7 @@ import {
   createBranch, updateBranch, deleteBranch,
   createProduct, updateProduct, deleteProduct,
 } from "../actions";
-import { SyncBranchesButton, SyncEduformButton, MigrateButton } from "./sync-button";
+import { SyncBranchesButton, SyncEduformButton, SyncDigitalKitsButton, MigrateButton } from "./sync-button";
 
 export const dynamic = "force-dynamic";
 
@@ -83,6 +83,7 @@ export default async function BranchesPage({
           subtitle={`${branches.length} branches · ${branches.reduce((a, b) => a + b.products.length, 0)} produits`}
         />
         <div className="flex gap-2 flex-wrap">
+          <SyncDigitalKitsButton />
           <SyncEduformButton />
           <SyncBranchesButton />
           <a
