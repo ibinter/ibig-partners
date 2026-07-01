@@ -40,7 +40,7 @@ const PARTNERS_PRODUCTS = [
   {
     slug: "partners-representation-commerciale",
     name: "Représentation Commerciale IBIG",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 50000,
     rate: 0,
     siteUrl: BASE,

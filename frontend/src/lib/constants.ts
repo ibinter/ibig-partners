@@ -98,13 +98,14 @@ export const COURSE_RATES: Record<number, number> = { 1: 0.10, 2: 0.05, 3: 0.02 
 // N2 = 50% du taux N1 — N3 = 25% du taux N1
 export const SERVICE_LEVEL_FACTOR: Record<number, number> = { 1: 1, 2: 0.5, 3: 0.25 };
 
-// Taux spéciaux par catégorie de service (N1 défini par produit, facteurs N2/N3)
-// Formations sur mesure / Contrats entreprises : 15% N1, N2=7.5%, pas de N3
-// IBIG SOFT sur mesure : 25% N1, N2=12.5%, pas de N3
-// Immobilier vente/location : 25% commission agence N1, N2=12.5%, pas de N3
-// Gérance : 1 mois commission agence payé en 2x50%, N1 uniquement
-// Construction / Opportunités : négocié, N1 uniquement
-// Digital Kit : 25% N1, 10% N2, 5% N3 (taux fixés dans Product.rate)
+// NB : le moteur applique TOUJOURS SERVICE_LEVEL_FACTOR (100%/50%/25%) aux
+// produits SERVICE/PRODUCT — il n'existe pas de mécanisme "N1 uniquement"
+// ni de facteurs N2/N3 différents par catégorie. Toute variation se fait
+// uniquement via le champ Product.rate (N1), N2/N3 en découlent automatiquement.
+// IBIG DIGITAL KITS : rate = 15 sur tous les produits → 15% N1, 7,5% N2, 3,75% N3.
+// IBIG IMMO TRUST : rate = 10 sur la plupart des produits → 10% N1, 5% N2, 2,5% N3
+// (Gestion Locative Complète : rate = 50, une vente par mois de mandat = 50% du
+// mois de commission d'agence à l'affilié).
 
 // ─────────────────────────────────────────────────────────────────
 // BONUS DE STATUT — s'ajoute à TOUS les taux de base

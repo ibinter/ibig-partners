@@ -29,7 +29,7 @@ const BRANCHES_DATA = [
     description: "IBIG IMMO TRUST propose des solutions immobilières complètes : gestion locative, transactions immobilières, conseil en investissement, assistance diaspora, régularisation foncière et BTP. Tous les services pour sécuriser et rentabiliser votre patrimoine immobilier en Côte d'Ivoire et en Afrique.",
     website: "https://ibigimmotrust.com/",
     offerType: "Service / Produit immobilier",
-    commissionModel: "5% N1 • 3% N2 • 1% N3",
+    commissionModel: "10% N1 • 5% N2 • 2,5% N3 (jusqu'à 50%/25%/12,5% pour la Gestion Locative)",
     order: 3, active: true,
   },
   {
@@ -56,7 +56,7 @@ const BRANCHES_DATA = [
     description: "IBIG DIGITAL KITS accompagne les entreprises dans leur transformation numérique : intégration ERP (SAP, SAGE, Odoo), GED, développement web et mobile, intelligence artificielle, chatbots, kits numériques prêts à l'emploi et marketing digital. Des solutions technologiques clé en main pour digitaliser votre activité.",
     website: "https://kits.intermark-business.com/",
     offerType: "Service / Produit digital",
-    commissionModel: "10% N1 • 5% N2 • 2% N3",
+    commissionModel: "15% N1 • 7,5% N2 • 3,75% N3",
     order: 6, active: true,
   },
   {

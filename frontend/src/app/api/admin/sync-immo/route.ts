@@ -134,7 +134,7 @@ const IMMO_PRODUCTS = [
   {
     slug: "immo-suivi-construction-diaspora",
     name: "Suivi de Construction pour la Diaspora",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 75000,
     rate: 10,
     siteUrl: BASE,

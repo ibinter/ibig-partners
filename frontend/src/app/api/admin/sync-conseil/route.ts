@@ -11,7 +11,7 @@ const CONSEIL_PRODUCTS = [
   {
     slug: "conseil-compta-tpe-pme",
     name: "Gestion Comptable TPE/PME",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 50000,
     rate: 10,
     siteUrl: BASE,
@@ -20,7 +20,7 @@ const CONSEIL_PRODUCTS = [
   {
     slug: "conseil-compta-ong",
     name: "Gestion Comptable ONG & Associations",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 60000,
     rate: 10,
     siteUrl: BASE,
@@ -212,7 +212,7 @@ const CONSEIL_PRODUCTS = [
   {
     slug: "conseil-assistance-recherche-emploi",
     name: "Assistance à la Recherche d'Emploi",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 30000,
     rate: 15,
     siteUrl: BASE,
@@ -279,7 +279,7 @@ const CONSEIL_PRODUCTS = [
   {
     slug: "conseil-domiciliation-entreprise",
     name: "Domiciliation d'Entreprise",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 20000,
     rate: 10,
     siteUrl: BASE,

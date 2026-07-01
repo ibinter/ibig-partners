@@ -89,7 +89,7 @@ const MULTISERVICES_PRODUCTS = [
   {
     slug: "multi-maintenance-batiment",
     name: "Maintenance & Entretien de Bâtiment",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 60000,
     rate: 10,
     siteUrl: BASE,
@@ -107,7 +107,7 @@ const MULTISERVICES_PRODUCTS = [
   {
     slug: "multi-nettoyage-locaux",
     name: "Nettoyage & Entretien de Locaux",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 40000,
     rate: 10,
     siteUrl: BASE,
@@ -116,7 +116,7 @@ const MULTISERVICES_PRODUCTS = [
   {
     slug: "multi-jardinage-espaces-verts",
     name: "Jardinage & Entretien Espaces Verts",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 30000,
     rate: 10,
     siteUrl: BASE,
@@ -156,7 +156,7 @@ const MULTISERVICES_PRODUCTS = [
   {
     slug: "multi-gestion-stock-logistique",
     name: "Gestion de Stock & Logistique Externalisée",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 100000,
     rate: 10,
     siteUrl: BASE,
@@ -205,7 +205,7 @@ const MULTISERVICES_PRODUCTS = [
   {
     slug: "multi-gardiennage-securite",
     name: "Gardiennage & Sécurité",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 80000,
     rate: 10,
     siteUrl: BASE,
@@ -234,7 +234,7 @@ const MULTISERVICES_PRODUCTS = [
   {
     slug: "multi-mise-a-disposition-personnel",
     name: "Mise à Disposition de Personnel (Intérim)",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 80000,
     rate: 10,
     siteUrl: BASE,
@@ -252,7 +252,7 @@ const MULTISERVICES_PRODUCTS = [
   {
     slug: "multi-externalisation-rh",
     name: "Externalisation RH & Gestion de la Paie",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 50000,
     rate: 10,
     siteUrl: BASE,

@@ -78,7 +78,7 @@ const DIGITAL_PRODUCTS = [
   {
     slug: "digital-cm-essentiel",
     name: "Community Management – Formule Essentielle",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 75000,
     rate: 10,
     siteUrl: BASE,
@@ -87,7 +87,7 @@ const DIGITAL_PRODUCTS = [
   {
     slug: "digital-cm-pro",
     name: "Community Management – Formule Pro",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 150000,
     rate: 10,
     siteUrl: BASE,
@@ -96,7 +96,7 @@ const DIGITAL_PRODUCTS = [
   {
     slug: "digital-cm-premium",
     name: "Community Management – Formule Premium",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 250000,
     rate: 10,
     siteUrl: BASE,
@@ -125,7 +125,7 @@ const DIGITAL_PRODUCTS = [
   {
     slug: "digital-creation-contenu-mensuel",
     name: "Pack Création de Contenus Mensuel",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 100000,
     rate: 10,
     siteUrl: BASE,
@@ -136,7 +136,7 @@ const DIGITAL_PRODUCTS = [
   {
     slug: "digital-pub-meta",
     name: "Campagne Publicitaire Meta (Facebook & Instagram)",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 125000,
     rate: 10,
     siteUrl: BASE,
@@ -145,7 +145,7 @@ const DIGITAL_PRODUCTS = [
   {
     slug: "digital-pub-google",
     name: "Campagne Google Ads (SEA)",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 150000,
     rate: 10,
     siteUrl: BASE,
@@ -163,7 +163,7 @@ const DIGITAL_PRODUCTS = [
   {
     slug: "digital-seo",
     name: "Référencement Naturel (SEO)",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 100000,
     rate: 10,
     siteUrl: BASE,
