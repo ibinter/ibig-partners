@@ -31,23 +31,36 @@ export async function SocialProofBar() {
   ]);
 
   if (partnersCount < MIN_PARTNERS_FOR_PROOF) {
+    // Rang réel qu'aurait un inscrit aujourd'hui — vrai (basé sur le
+    // compte actuel), pas un compteur de stock fictif.
+    const nextRank = partnersCount + 1;
     return (
       <section
         data-testid="social-proof-bar"
-        className="relative bg-gradient-to-b from-white via-slate-50/50 to-white py-12"
+        className="relative overflow-hidden bg-gradient-to-br from-brand-700 via-brand-600 to-brand-800 py-14 text-white"
       >
-        <div className="mx-auto max-w-4xl px-4 text-center">
-          <span className="label-caps inline-block rounded-full bg-brand-50 px-4 py-1.5 text-brand-700">
-            🚀 Programme en phase de lancement
+        <div className="pointer-events-none absolute inset-0 opacity-20" style={{
+          backgroundImage: "radial-gradient(circle at 25% 30%, rgba(245,183,61,0.5) 0%, transparent 50%)",
+        }} />
+        <div className="relative mx-auto max-w-3xl px-4 text-center">
+          <span className="label-caps inline-flex items-center gap-2 rounded-full bg-gold-400/20 px-4 py-1.5 text-gold-400">
+            🔥 Programme tout juste lancé
           </span>
-          <p className="mt-4 text-lg font-bold text-ink sm:text-xl">
-            Rejoignez les tout premiers partenaires IBIG PARTNERS
+          <p className="mt-4 text-2xl font-extrabold sm:text-3xl">
+            Vous seriez le partenaire n°{nextRank} du réseau
           </p>
-          <p className="mx-auto mt-2 max-w-2xl text-sm text-muted">
-            {branchesCount} branches actives et {productsCount} produits/services déjà disponibles à la vente.
-            Les premiers partenaires inscrits bénéficient d&apos;un accès prioritaire aux meilleures opportunités
-            de commission avant que le réseau ne grandisse.
+          <p className="mx-auto mt-3 max-w-2xl text-brand-100">
+            {branchesCount} branches et {productsCount}+ produits/services déjà actifs et prêts à être vendus.
+            Avec un réseau qui démarre à peine, la concurrence entre partenaires pour approcher les mêmes
+            prospects est quasi nulle — un avantage qui se réduit à mesure que le réseau grandit.
           </p>
+          <a
+            href="/rejoindre"
+            data-testid="founder-cta"
+            className="mt-7 inline-flex items-center gap-2 rounded-xl bg-white px-8 py-3.5 font-extrabold text-brand-700 shadow-xl transition-all hover:-translate-y-0.5 hover:bg-brand-50 hover:shadow-2xl"
+          >
+            🚀 Rejoindre maintenant — Gratuit
+          </a>
         </div>
       </section>
     );

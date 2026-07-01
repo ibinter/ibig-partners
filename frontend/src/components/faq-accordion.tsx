@@ -31,6 +31,18 @@ const FAQS = [
     q: "Comment fonctionne le parrainage ?",
     a: "Chaque partenaire reçoit un lien d'affiliation unique. Quand quelqu'un s'inscrit via votre lien, il devient votre filleul Niveau 1. Ses propres filleuls deviennent vos Niveau 2, et ainsi de suite sur 3 niveaux.",
   },
+  {
+    q: "Est-ce un système pyramidal / une arnaque ?",
+    a: "Non. Vous n'êtes jamais payé pour recruter quelqu'un — vos commissions viennent uniquement de ventes réelles de produits et services (logiciels, formations, immobilier, etc.) livrés par IBIG SARL, une entreprise enregistrée en Côte d'Ivoire. Aucun frais d'entrée, aucun stock à acheter : c'est un programme d'affiliation classique, pas un système pyramidal.",
+  },
+  {
+    q: "Le programme est-il nouveau ? Est-ce risqué de rejoindre maintenant ?",
+    a: "Oui, IBIG PARTNERS vient de lancer sa plateforme digitale. C'est justement l'intérêt de rejoindre tôt : moins de partenaires dans le réseau signifie plus de territoire disponible pour recruter, et les premiers inscrits ont un accès prioritaire aux meilleures opportunités avant que le réseau ne se densifie. Le groupe IBIG SARL, lui, existe depuis plus longtemps avec des produits déjà utilisés par de vrais clients.",
+  },
+  {
+    q: "Et si je n'arrive pas à vendre ?",
+    a: "Aucun engagement ni objectif minimum n'est imposé. Vous gardez l'accès à la plateforme, à l'Académie et à vos liens sans aucune pénalité. La majorité des partenaires démarrent en partageant simplement leurs liens à leur entourage proche (WhatsApp, réseaux sociaux) — aucune compétence commerciale préalable n'est nécessaire.",
+  },
 ];
 
 export function FaqAccordion() {
