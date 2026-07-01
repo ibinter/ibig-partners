@@ -149,6 +149,33 @@ const EDUFORM_PRODUCTS = [
     siteUrl: "https://ibig-eduform.com/formation/canva-pro-et-design-marketing",
     description: "Formation Samedi Pro — Canva Pro & Design Marketing (7h). Créer des flyers professionnels, des visuels pour les réseaux sociaux, des présentations percutantes et exploiter les fonctionnalités IA de Canva Pro. Pour community managers, marketeurs, communicants et entrepreneurs souhaitant produire des contenus visuels de qualité sans être graphiste. À partir de 22 500 FCFA en ligne.",
   },
+  {
+    slug: "eduform-kobotoolbox",
+    name: "KoBoToolbox & Collecte de Données",
+    pricingType: "COURSE",
+    price: 27000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com/formation/kobotoolbox-et-collecte-de-donnees",
+    description: "Formation KoBoToolbox & Collecte de Données (14h). Maîtriser la conception d'enquêtes, la collecte de données sur mobile et l'analyse des résultats avec KoBoToolbox, l'outil de référence des ONG et organismes de recherche. Pour ONG, consultants, statisticiens, enquêteurs et chercheurs souhaitant digitaliser leur collecte terrain. Attestation IBIG EDUFORM incluse. À partir de 27 000 FCFA en ligne.",
+  },
+  {
+    slug: "eduform-sage100-gescom",
+    name: "Sage 100 GESCOM",
+    pricingType: "COURSE",
+    price: 22500,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com/formation/sage-100-gescom",
+    description: "Formation pratique Sage 100 GESCOM (7h — 1 journée). Maîtriser les achats, les ventes, la gestion des stocks et la facturation dans Sage 100. Formation 100 % pratique, opérationnelle dès la sortie. Pour commerciaux, gestionnaires de stocks et responsables commerciaux souhaitant automatiser leur gestion avec Sage. À partir de 22 500 FCFA en ligne.",
+  },
+  {
+    slug: "eduform-sage-etats-fiscaux",
+    name: "Sage États Comptables & Fiscaux",
+    pricingType: "COURSE",
+    price: 22500,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com/formation/sage-etats-comptables-et-fiscaux",
+    description: "Formation Samedi Pro — Sage États Comptables & Fiscaux (7h). Maîtriser la production des états financiers et des déclarations fiscales avec le logiciel Sage. Formation pratique et directement applicable. Pour comptables, chefs comptables, responsables administratifs et financiers (RAF) et fiscalistes. À partir de 22 500 FCFA en ligne.",
+  },
 ];
 
 export async function POST() {
