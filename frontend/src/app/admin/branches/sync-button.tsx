@@ -88,6 +88,16 @@ export function SyncEduformButton() {
   );
 }
 
+export function SyncConseilButton() {
+  return (
+    <SyncButton
+      label="Sync IBIG CONSEIL+"
+      endpoint="/api/admin/sync-conseil"
+      className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-700 hover:bg-amber-100 disabled:opacity-50"
+    />
+  );
+}
+
 export function SyncDigitalButton() {
   return (
     <SyncButton
