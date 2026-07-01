@@ -8,7 +8,7 @@ import {
   createBranch, updateBranch, deleteBranch,
   createProduct, updateProduct, deleteProduct,
 } from "../actions";
-import { SyncBranchesButton } from "./sync-button";
+import { SyncBranchesButton, MigrateButton } from "./sync-button";
 
 export const dynamic = "force-dynamic";
 
@@ -32,16 +32,29 @@ export default async function BranchesPage({
   await requireAdmin();
   const { action, branchId, productId } = await searchParams;
 
-  const branches = await prisma.branch.findMany({
+  let branches: Awaited<ReturnType<typeof prisma.branch.findMany<{
     orderBy: { order: "asc" },
     include: {
-      products: {
-        orderBy: { name: "asc" },
-        include: { _count: { select: { sales: true, links: true } } },
+      products: { orderBy: { name: "asc" }, include: { _count: { select: { sales: true, links: true } } } },
+      _count: { select: { products: true } }
+    }
+  }>>> = [];
+  let dbError: string | null = null;
+
+  try {
+    branches = await prisma.branch.findMany({
+      orderBy: { order: "asc" },
+      include: {
+        products: {
+          orderBy: { name: "asc" },
+          include: { _count: { select: { sales: true, links: true } } },
+        },
+        _count: { select: { products: true } },
       },
-      _count: { select: { products: true } },
-    },
-  });
+    });
+  } catch (err) {
+    dbError = err instanceof Error ? err.message : String(err);
+  }
 
   const editBranch = branchId ? branches.find((b) => b.id === branchId) : null;
   const editProduct = productId
@@ -53,6 +66,19 @@ export default async function BranchesPage({
   const allProducts = branches.flatMap((branch) => branch.products);
   const completeProducts = allProducts.filter((product) => product.description && product.siteUrl);
   const productsWithoutDestination = allProducts.filter((product) => !product.siteUrl);
+
+  if (dbError) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6 text-center">
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-8 max-w-xl">
+          <p className="text-xl font-bold text-red-700 mb-2">Erreur base de données</p>
+          <p className="text-sm text-red-600 mb-4">Des colonnes manquent dans la base de données (schéma non synchronisé).</p>
+          <pre className="text-xs text-left bg-red-100 rounded p-3 mb-6 overflow-auto max-h-32">{dbError}</pre>
+          <MigrateButton />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

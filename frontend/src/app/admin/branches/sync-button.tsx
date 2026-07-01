@@ -2,6 +2,43 @@
 
 import { useState } from "react";
 
+export function MigrateButton() {
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState("");
+
+  async function handleMigrate() {
+    setLoading(true);
+    setMsg("");
+    try {
+      const r = await fetch("/api/admin/migrate", { method: "POST" });
+      const d = await r.json();
+      if (r.ok) {
+        setMsg("Migration OK — rechargement…");
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        setMsg(d.error ?? "Erreur");
+      }
+    } catch {
+      setMsg("Erreur réseau");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <button
+        onClick={handleMigrate}
+        disabled={loading}
+        className="rounded-lg bg-red-600 px-6 py-3 text-sm font-bold text-white hover:bg-red-700 disabled:opacity-50"
+      >
+        {loading ? "Migration en cours…" : "Corriger le schéma DB"}
+      </button>
+      {msg && <p className="text-sm text-red-700 font-medium">{msg}</p>}
+    </div>
+  );
+}
+
 export function SyncBranchesButton() {
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
