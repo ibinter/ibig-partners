@@ -34,12 +34,12 @@ const KB: KbEntry[] = [
   {
     keywords: ["scolaby", "logiciel scolaire", "gestion scolaire", "ecole", "etablissement"],
     answer:
-      "📚 Scolaby est la plateforme de gestion scolaire d'IBIG SOFT (à partir de 30 000 FCFA/mois).\n\nElle gère : élèves, inscriptions, notes, bulletins, absences, paiements de frais et communication parents-école.\n\n👉 Cible idéale : directeurs d'écoles, du préscolaire au supérieur.\n💰 Commission : 20% N1 le 1er mois (dégressif sur 4 mois). Un abonnement annuel existe aussi (20% N1 one-shot).\n\nConseil de vente : proposez une démo gratuite au directeur — c'est le meilleur déclencheur d'achat.",
+      "📚 Scolaby est la plateforme de gestion scolaire d'IBIG SOFT (à partir de 10 000 FCFA/mois pour le maternelle/primaire ≤300 élèves, jusqu'à 150 000 FCFA/mois pour les grands groupes scolaires — tarif selon cycle et taille d'établissement).\n\nElle gère : élèves, inscriptions, notes, bulletins, absences, paiements de frais et communication parents-école.\n\n👉 Cible idéale : directeurs d'écoles, du préscolaire au supérieur.\n💰 Commission : 20% N1 le 1er mois (dégressif sur 4 mois). Un abonnement annuel existe aussi (20% N1 one-shot).\n\nConseil de vente : proposez une démo gratuite au directeur — c'est le meilleur déclencheur d'achat.",
   },
   {
     keywords: ["fleet", "flotte", "gestion flotte", "lokativo", "gescomxel", "zelivry", "stockflow", "erp"],
     answer:
-      "💻 Les autres logiciels IBIG SOFT (tous 20% N1 le 1er mois, dégressif sur 4 mois) :\n\n• IBIG Fleet 360 — gestion de flotte (45 000 FCFA/mois)\n• Lokativo — gestion immobilière pour agences (35 000 FCFA/mois)\n• GESCOMXEL — gestion commerciale, stock et caisse (20 000 FCFA/mois)\n• Zelivry — gestion de livraison (25 000 FCFA/mois)\n• STOCKFLOW ERP — ERP commercial cloud (40 000 FCFA/mois)\n\nRetrouvez le détail, prix exacts et liens dans « Mes Produits ».",
+      "💻 Les autres logiciels IBIG SOFT (tous 20% N1 le 1er mois, dégressif sur 4 mois) :\n\n• IBIG Fleet 360 — gestion de flotte (à partir de 19 900 FCFA/mois)\n• Lokativo — gestion immobilière pour agences (à partir de 9 900 FCFA/mois)\n• GESCOMXEL — gestion commerciale, stock et caisse (à partir de 5 000 FCFA/mois)\n• Zelivry — gestion de livraison (à partir de 4 900 FCFA/mois)\n• STOCKFLOW ERP — ERP commercial cloud (à partir de 5 000 FCFA/mois)\n\nRetrouvez le détail, prix exacts et liens dans « Mes Produits ».",
   },
   {
     keywords: ["produits ibig", "quels produits", "catalogue", "liste des produits", "que vend", "offres", "branches"],

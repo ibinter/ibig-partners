@@ -154,7 +154,7 @@ export default function GuideAffilie() {
       y = bullet(t("Support dédié : équipe disponible par email, WhatsApp et Coach IA 24h/24."),y);
       y += 4;
 
-      y = infoBox(t("EXEMPLE CONCRET : Si vous vendez Scolaby a 30 000 FCFA/mois, vous gagnez 6 000 FCFA (20%). Votre filleul vend aussi Scolaby : vous gagnez automatiquement 3 000 FCFA supplémentaires (10% N2) sans rien faire de plus."),y,[240,253,244]);
+      y = infoBox(t("EXEMPLE CONCRET : Si vous vendez Scolaby a partir de 10 000 FCFA/mois, vous gagnez 2 000 FCFA (20%). Votre filleul vend aussi Scolaby : vous gagnez automatiquement 1 000 FCFA supplémentaires (10% N2) sans rien faire de plus."),y,[240,253,244]);
       y += 3;
 
       y = sub(t("Les 9 Branches du Groupe IBIG SARL"),y);
@@ -310,18 +310,18 @@ export default function GuideAffilie() {
       y += 3;
 
       y = sub(t("Exemple concret - Jean et son réseau"),y);
-      y = infoBox(t("Jean recrute Marie (N1) et Paul (N1). Marie recrute Sophie (N2 de Jean). Sophie vend EDUFORM a 400 000 FCFA. Jean gagne : 400 000 x 2% (N2 EDUFORM) = 8 000 FCFA automatiquement, sans rien faire. Si Paul vend Scolaby a 30 000 FCFA : Jean gagne 30 000 x 10% (N2 SOFT) = 3 000 FCFA de plus."),y,[240,253,244]);
+      y = infoBox(t("Jean recrute Marie (N1) et Paul (N1). Marie recrute Sophie (N2 de Jean). Sophie vend EDUFORM a 400 000 FCFA. Jean gagne : 400 000 x 2% (N2 EDUFORM) = 8 000 FCFA automatiquement, sans rien faire. Si Paul vend Scolaby a 10 000 FCFA : Jean gagne 10 000 x 10% (N2 SOFT) = 1 000 FCFA de plus."),y,[240,253,244]);
       y += 3;
 
-      y = sub(t("Simulation : si je fais X ventes IBIG SOFT/mois (30 000 FCFA @ 20%)"),y);
+      y = sub(t("Simulation : si je fais X ventes IBIG SOFT/mois (10 000 FCFA @ 20%)"),y);
       // @ts-ignore
       autoTable(doc,{
         startY: y,
         head: [[t("Nb ventes/mois"),t("Gain N1 personnel"),t("+ 5 filleuls actifs (N2)"),t("Total mensuel estime")]],
         body: [
-          ["5 ventes",t("30 000 FCFA"),t("15 000 FCFA"),t("45 000 FCFA")],
-          ["10 ventes",t("60 000 FCFA"),t("30 000 FCFA"),t("90 000 FCFA")],
-          ["20 ventes",t("120 000 FCFA"),t("60 000 FCFA"),t("180 000 FCFA")],
+          ["5 ventes",t("10 000 FCFA"),t("5 000 FCFA"),t("15 000 FCFA")],
+          ["10 ventes",t("20 000 FCFA"),t("10 000 FCFA"),t("30 000 FCFA")],
+          ["20 ventes",t("40 000 FCFA"),t("20 000 FCFA"),t("60 000 FCFA")],
         ],
         headStyles: { fillColor: GOLD,textColor: DARK,fontStyle: "bold",fontSize: 9 },
         bodyStyles: { fontSize: 8.5,textColor: DARK,halign: "center"},
@@ -439,7 +439,7 @@ export default function GuideAffilie() {
       y += 3;
 
       y = sub(t("Projection motivante : votre réseau dans 6 mois"),y);
-      y = infoBox(t("Scénario : vous recrutez 4 filleuls actifs par mois. Au bout de 6 mois, vous avez 24 filleuls N1. Chacun fait en moyenne 2 ventes Scolaby/mois (30 000 FCFA). Vos commissions N2 : 24 x 2 x 3 000 FCFA = 144 000 FCFA/mois de revenus passifs, en plus de vos propres ventes."),y,[239,246,255]);
+      y = infoBox(t("Scénario : vous recrutez 4 filleuls actifs par mois. Au bout de 6 mois, vous avez 24 filleuls N1. Chacun fait en moyenne 2 ventes Scolaby/mois (10 000 FCFA). Vos commissions N2 : 24 x 2 x 1 000 FCFA = 48 000 FCFA/mois de revenus passifs, en plus de vos propres ventes."),y,[239,246,255]);
       y += 4;
 
       y = sub(t("Meilleures pratiques de gestion d'équipe"),y);
@@ -473,13 +473,13 @@ export default function GuideAffilie() {
         {
           branch: t("IBIG SOFT - Commissions : N1=20%, N2=10%, N3=5%"),
           items: [
-            t("Scolaby mensuel (gestion scolaire) - 30 000 FCFA/mois | N1=6 000, N2=3 000, N3=1 500 FCFA"),
-            t("Scolaby Annuel - 300 000 FCFA/an | N1=60 000, N2=30 000, N3=15 000 FCFA"),
-            t("IBIG Fleet 360 (gestion flotte) - 45 000 FCFA/mois | N1=9 000, N2=4 500, N3=2 250 FCFA"),
-            t("Zelivry (gestion livraison) - 25 000 FCFA/mois | N1=5 000, N2=2 500, N3=1 250 FCFA"),
-            t("Lokativo (gestion immobilière) - 35 000 FCFA/mois | N1=7 000, N2=3 500, N3=1 750 FCFA"),
-            t("GESCOMXEL (gestion commerciale) - 20 000 FCFA/mois | N1=4 000, N2=2 000, N3=1 000 FCFA"),
-            t("STOCKFLOW ERP - 40 000 FCFA/mois | N1=8 000, N2=4 000, N3=2 000 FCFA"),
+            t("Scolaby (a partir de, selon cycle/taille) - 10 000 FCFA/mois | N1=2 000, N2=1 000, N3=500 FCFA"),
+            t("Scolaby Annuel (a partir de) - 100 000 FCFA/an | N1=20 000, N2=8 000, N3=3 000 FCFA"),
+            t("IBIG Fleet 360 (gestion flotte, a partir de) - 19 900 FCFA/mois | N1=3 980, N2=1 990, N3=995 FCFA"),
+            t("Zelivry (gestion livraison, a partir de) - 4 900 FCFA/mois | N1=980, N2=490, N3=245 FCFA"),
+            t("Lokativo (gestion immobilière, a partir de) - 9 900 FCFA/mois | N1=1 980, N2=990, N3=495 FCFA"),
+            t("GESCOMXEL (gestion commerciale, a partir de) - 5 000 FCFA/mois | N1=1 000, N2=500, N3=250 FCFA"),
+            t("STOCKFLOW ERP (a partir de) - 5 000 FCFA/mois | N1=1 000, N2=500, N3=250 FCFA"),
           ],
         },
         {
@@ -779,7 +779,7 @@ export default function GuideAffilie() {
       y = (doc as any).lastAutoTable.finalY + 8;
 
       y = sub(t("Projection motivante : réseau de 20 filleuls actifs"),y);
-      y = infoBox(t("Scénario : un réseau de 20 filleuls actifs chacun realisant 2 ventes Scolaby/mois (30 000 FCFA). Vos commissions N2 : 20 x 2 x 3 000 FCFA = 120 000 FCFA/mois de revenus passifs. Si 5 de vos filleuls ont eux-mêmes des filleuls (N3) : +30 000 FCFA supplem. Soit 150 000 FCFA/mois sans compter vos propres ventes."),y,[240,253,244]);
+      y = infoBox(t("Scénario : un réseau de 20 filleuls actifs chacun realisant 2 ventes Scolaby/mois (10 000 FCFA). Vos commissions N2 : 20 x 2 x 1 000 FCFA = 40 000 FCFA/mois de revenus passifs. Si 5 de vos filleuls ont eux-mêmes des filleuls (N3) : +10 000 FCFA supplem. Soit 50 000 FCFA/mois sans compter vos propres ventes."),y,[240,253,244]);
       y += 4;
 
       y = sub(t("Meilleures pratiques pour votre équipe"),y);

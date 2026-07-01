@@ -370,7 +370,7 @@ export default async function HomePage() {
               <div className="card-premium overflow-hidden p-0">
                 <div className="bg-gradient-to-r from-brand-600 to-brand-700 px-5 py-4 text-white">
                   <h3 className="font-bold">Abonnements mensuels (IBIG SOFT)</h3>
-                  <p className="mt-0.5 text-xs text-brand-100">Dégressif sur 4 mois — exemple sur {fcfa(30000)}/mois</p>
+                  <p className="mt-0.5 text-xs text-brand-100">Dégressif sur 4 mois — exemple sur {fcfa(10000)}/mois</p>
                 </div>
                 <table className="w-full text-sm">
                   <thead className="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-muted">
@@ -445,7 +445,7 @@ export default async function HomePage() {
                 Combien puis-je gagner&nbsp;?
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-brand-200">
-                Scénarios réalistes sur IBIG SOFT (Scolaby à {fcfa(30000)}/mois).
+                Scénarios réalistes sur IBIG SOFT (Scolaby à partir de {fcfa(10000)}/mois).
               </p>
             </div>
           </ScrollReveal>
@@ -454,28 +454,28 @@ export default async function HomePage() {
             {[
               {
                 delay: 0, icon: "trending" as IconName, label: "Débutant", sub: "3 ventes directes",
-                rows: [{ text: `3 × ${fcfa(30000)} × 20%`, val: fcfa(18000), color: "text-emerald-400" }],
-                total: fcfa(18000), totalColor: "text-emerald-400",
+                rows: [{ text: `3 × ${fcfa(10000)} × 20%`, val: fcfa(6000), color: "text-emerald-400" }],
+                total: fcfa(6000), totalColor: "text-emerald-400",
                 border: "border-white/10 bg-white/5",
               },
               {
                 delay: 120, icon: "rocket" as IconName, label: "Actif Silver", sub: "5 ventes + 2 filleuls",
                 badge: "Populaire",
                 rows: [
-                  { text: `5 × ${fcfa(30000)} × 20%`, val: fcfa(30000), color: "text-emerald-400" },
-                  { text: `N2 : 4 ventes × 10%`,       val: fcfa(12000), color: "text-sky-400" },
+                  { text: `5 × ${fcfa(10000)} × 20%`, val: fcfa(10000), color: "text-emerald-400" },
+                  { text: `N2 : 4 ventes × 10%`,       val: fcfa(4000), color: "text-sky-400" },
                 ],
-                total: fcfa(42000), totalColor: "text-gold-400",
+                total: fcfa(14000), totalColor: "text-gold-400",
                 border: "border-gold-400/30 bg-gradient-to-br from-white/10 to-gold-500/5 ring-1 ring-gold-400/20",
               },
               {
                 delay: 240, icon: "trophy" as IconName, label: "Master Gold", sub: "10 ventes + réseau actif",
                 rows: [
-                  { text: `10 × ${fcfa(30000)} × 25%`, val: fcfa(75000), color: "text-emerald-400" },
-                  { text: `N2 : 10 ventes × 10%`,       val: fcfa(30000), color: "text-sky-400" },
-                  { text: `N3 : 6 ventes × 5%`,         val: fcfa(9000),  color: "text-violet-400" },
+                  { text: `10 × ${fcfa(10000)} × 25%`, val: fcfa(25000), color: "text-emerald-400" },
+                  { text: `N2 : 10 ventes × 10%`,       val: fcfa(10000), color: "text-sky-400" },
+                  { text: `N3 : 6 ventes × 5%`,         val: fcfa(3000),  color: "text-violet-400" },
                 ],
-                total: fcfa(114000), totalColor: "text-violet-400",
+                total: fcfa(38000), totalColor: "text-violet-400",
                 border: "border-violet-400/20 bg-white/5",
               },
             ].map((scenario) => (
