@@ -318,7 +318,8 @@ export default async function BranchesPage({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {branch.products.map((p) => (
+                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                    {branch.products.map((p: any) => (
                       <tr key={p.id} className={!p.active ? "opacity-50 bg-slate-50" : "hover:bg-slate-50/50"}>
                         <td className="px-4 py-2">
                           <div className="flex flex-wrap items-center gap-2">
