@@ -126,6 +126,7 @@ export default async function ProduitsPage() {
                           <p className="mt-0.5 font-bold text-ink">
                             {product.price > 0 ? fcfa(product.price) : "Sur devis"}
                             {product.pricingType === "MONTHLY_SUB" ? "/mois" : ""}
+                            {product.pricingType === "ANNUAL_SUB" ? "/an" : ""}
                           </p>
                         </div>
                         <div>
