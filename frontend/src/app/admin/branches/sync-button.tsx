@@ -88,6 +88,16 @@ export function SyncEduformButton() {
   );
 }
 
+export function SyncMultiservicesButton() {
+  return (
+    <SyncButton
+      label="Sync MULTISERVICES"
+      endpoint="/api/admin/sync-multiservices"
+      className="rounded-lg border border-orange-300 bg-orange-50 px-4 py-2 text-sm font-semibold text-orange-700 hover:bg-orange-100 disabled:opacity-50"
+    />
+  );
+}
+
 export function SyncPartnersButton() {
   return (
     <SyncButton
