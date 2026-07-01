@@ -20,7 +20,7 @@ async function main() {
     "conseil-plus",       // renommé ibig-conseil-plus
     "immo-trust",         // renommé ibig-immo-trust
     "ibig-immotrust",     // doublon seed dev
-    "ibig-digital",       // renommé ibig-digital-kits (site différent)
+    // "ibig-digital" conservé — branche officielle IBIG DIGITAL (intermark-business.com/digital)
     "multiservices",      // renommé ibig-multiservices
     "ibig-tv",            // supprimé (hors liste officielle)
     "intermark-business", // n'est pas une branche du programme
@@ -95,12 +95,26 @@ async function main() {
       ],
     },
     {
+      slug: "ibig-digital", name: "IBIG DIGITAL",
+      tagline: "Création digitale & Communication visuelle",
+      description: "IBIG DIGITAL est le pôle créatif et communication du groupe IBIG SARL : création de sites web vitrines, identité visuelle, community management, production de contenus digitaux, campagnes publicitaires en ligne et stratégie de marque. Des solutions créatives pour valoriser votre image.",
+      website: "https://intermark-business.com/digital",
+      offerType: "Service créatif & communication", commissionModel: "10% N1 • 5% N2 • 2% N3",
+      order: 5,
+      products: [
+        { slug: "site-vitrine-digital", name: "Site Vitrine Professionnel", pricingType: "PRODUCT", price: 400000, rate: 10 },
+        { slug: "identite-visuelle-digital", name: "Identité Visuelle & Logo", pricingType: "PRODUCT", price: 150000, rate: 10 },
+        { slug: "community-management-digital", name: "Community Management", pricingType: "MONTHLY_SUB", price: 80000, rate: 10 },
+        { slug: "campagne-pub-digital", name: "Campagne Publicitaire", pricingType: "SERVICE", price: 250000, rate: 10 },
+      ],
+    },
+    {
       slug: "ibig-digital-kits", name: "IBIG DIGITAL KITS",
       tagline: "Technologies & Transformation Numérique",
       description: "IBIG DIGITAL KITS accompagne les entreprises dans leur transformation numérique : intégration ERP (SAP, SAGE, Odoo), GED, développement web et mobile, intelligence artificielle, chatbots, kits numériques prêts à l'emploi et marketing digital. Des solutions technologiques clé en main pour digitaliser votre activité.",
       website: "https://kits.intermark-business.com/",
       offerType: "Service / Produit digital", commissionModel: "10% N1 • 5% N2 • 2% N3",
-      order: 5,
+      order: 6,
       products: [
         { slug: "site-vitrine", name: "Site Vitrine", pricingType: "PRODUCT", price: 400000, rate: 10 },
         { slug: "app-mobile", name: "Application Mobile", pricingType: "PRODUCT", price: 1500000, rate: 10 },
@@ -115,7 +129,7 @@ async function main() {
       description: "IBIG CONSEIL+ accompagne les entreprises, institutions et ONG dans leur structuration organisationnelle, la gestion administrative et financière, ainsi que la mise en conformité juridique. Audit organisationnel, conseil stratégique, comptabilité, fiscalité, études de marché et accompagnement à la création d'entreprise.",
       website: "https://intermark-business.com/conseil",
       offerType: "Service sur devis", commissionModel: "10% N1 • 5% N2 • 2% N3",
-      order: 6,
+      order: 7,
       products: [
         { slug: "audit-organisationnel", name: "Audit Organisationnel", pricingType: "SERVICE", price: 500000, rate: 10 },
         { slug: "etude-marche", name: "Étude de Marché", pricingType: "SERVICE", price: 300000, rate: 10 },
@@ -128,7 +142,7 @@ async function main() {
       description: "IBIG PARTNERS est le programme d'affiliation multi-niveaux du groupe IBIG SARL. Mise en relation B2B, campagnes de développement commercial, implantation régionale et gestion des réseaux de partenaires. Rejoignez le réseau et générez des commissions en promouvant les services du groupe.",
       website: "https://www.ibigpartners.com/",
       offerType: "Programme d'affiliation", commissionModel: "Variable selon branche & niveau",
-      order: 7,
+      order: 8,
       products: [],
     },
     {
@@ -137,7 +151,7 @@ async function main() {
       description: "IBIG MULTISERVICES propose une gamme étendue de services aux particuliers et entreprises : organisation événementielle, déménagement, maintenance et dépannage, accueil VIP, logistique, BTP, tourisme et transport. Une solution polyvalente pour tous vos besoins de services.",
       website: "https://intermark-business.com/multiservices",
       offerType: "Service / Produit", commissionModel: "10% N1 • 5% N2 • 2% N3",
-      order: 8,
+      order: 9,
       products: [
         { slug: "evenementiel", name: "Organisation Événementielle", pricingType: "SERVICE", price: 500000, rate: 10 },
         { slug: "demenagement", name: "Déménagement", pricingType: "SERVICE", price: 150000, rate: 10 },
