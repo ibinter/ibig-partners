@@ -8,6 +8,7 @@ import {
   createBranch, updateBranch, deleteBranch,
   createProduct, updateProduct, deleteProduct,
 } from "../actions";
+import { SyncBranchesButton } from "./sync-button";
 
 export const dynamic = "force-dynamic";
 
@@ -61,21 +62,7 @@ export default async function BranchesPage({
           subtitle={`${branches.length} branches · ${branches.reduce((a, b) => a + b.products.length, 0)} produits`}
         />
         <div className="flex gap-2">
-          <form action="/api/admin/sync-branches" method="POST">
-            <button
-              type="submit"
-              onClick={async (e) => {
-                e.preventDefault();
-                const r = await fetch("/api/admin/sync-branches", { method: "POST" });
-                const d = await r.json();
-                alert(d.message ?? (r.ok ? "Synchronisation OK" : "Erreur"));
-                location.reload();
-              }}
-              className="rounded-lg border border-brand-300 bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-700 hover:bg-brand-100"
-            >
-              Synchroniser les branches
-            </button>
-          </form>
+          <SyncBranchesButton />
           <a
             href="/admin/branches?action=new-branch"
             className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"
