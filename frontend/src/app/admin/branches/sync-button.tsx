@@ -88,6 +88,16 @@ export function SyncEduformButton() {
   );
 }
 
+export function SyncImmoButton() {
+  return (
+    <SyncButton
+      label="Sync IMMO TRUST"
+      endpoint="/api/admin/sync-immo"
+      className="rounded-lg border border-teal-300 bg-teal-50 px-4 py-2 text-sm font-semibold text-teal-700 hover:bg-teal-100 disabled:opacity-50"
+    />
+  );
+}
+
 export function SyncMultiservicesButton() {
   return (
     <SyncButton
