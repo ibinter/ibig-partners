@@ -11,7 +11,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 400000,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/comptabilite-et-finance-4-en-1",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Certificat 4 en 1 — Comptabilité Professionnelle, Finance et Gestion (65h). Programme formant des experts comptables et financiers immédiatement opérationnels avec 4 certificats distincts : Comptable Professionnel, Chef Comptable, Responsable Financier et Comptabilité ONG (SYCEBNL), avec initiation SAP FI & CO. Conforme SYSCOHADA. Idéal pour : comptables, responsables financiers, gestionnaires ONG, entrepreneurs. À partir de 400 000 FCFA en ligne.",
   },
   {
@@ -20,7 +20,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 450000,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/daf-dirigeant",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Certificat au Métier de Directeur Administratif & Financier (100h). Formation intensive transformant des profils comptables et financiers en DAF opérationnels, capables de piloter la fonction financière et d'accompagner la direction générale dans ses décisions stratégiques. 11 modules : vision DAF, reporting avancé, contrôle de gestion, analyse financière, trésorerie, droit des affaires, audit interne, outils numériques (ERP, Power BI), finance durable. Prérequis : Bac+3 et 3 ans d'expérience. À partir de 450 000 FCFA en ligne.",
   },
   {
@@ -29,7 +29,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 450000,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/grh-expert-3-en-1",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Programme certifiant 3 en 1 — RH, Paie & Data Analytics (55h). Trois certificats en un seul parcours : Gestion Stratégique des RH & Administration du Personnel, Paie & Droit du Travail avec Sage 100 Paie, et HR Analytics avec Power BI. Idéal pour : gestionnaires RH, responsables administratifs, gestionnaires de paie, entrepreneurs, cadres souhaitant évoluer vers les RH. À partir de 450 000 FCFA en ligne.",
   },
   {
@@ -38,7 +38,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 375000,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/audit-et-controle-de-gestion-4-en-1",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Programme certifiant 4 en 1 — Audit & Contrôle de Gestion (65h). Quatre certificats : Audit Interne (méthodologie IIA, COSO, détection fraudes), Contrôle de Gestion (budget, tableaux de bord, KPI), Audit Comptable & Financier (révision cycle par cycle, SYSCOHADA/IFRS) et Gestion des Risques (cartographie ISO 31000). Pour : comptables, contrôleurs de gestion, auditeurs, responsables financiers. À partir de 375 000 FCFA en ligne.",
   },
   {
@@ -47,7 +47,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 275000,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/passation-des-marches-publics-et-gestion-des-achats-3-en-1",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Programme certifiant 3 en 1 — Marchés Publics & Achats (55h). Trois certificats : Passation des Marchés Publics (procédures, réglementation), Gestion des Contrats et Achats & Approvisionnements (gestion des fournisseurs). Destiné aux responsables achats, acheteurs, agents de l'État et des collectivités, ONG et projets financés. À partir de 275 000 FCFA en ligne.",
   },
   {
@@ -56,7 +56,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 275000,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/gestion-et-management-de-projets-humanitaires-et-ong-3-en-1",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Programme certifiant 3 en 1 — Projets Humanitaires & ONG (55h). Trois certificats : Gestion de Projet Humanitaire, ONG & Développement et Management de Projet. Pour coordinateurs de projets, agents de développement, responsables de programmes ONG, associations et consultants en développement. À partir de 275 000 FCFA en ligne.",
   },
   {
@@ -65,7 +65,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 450000,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/immobilier-professionnel-3-en-1",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Parcours certifiant 3 en 1 — Immobilier Professionnel (65h). Trois niveaux progressifs : Praticien (Gestion Immobilière & Cadre Juridique OHADA, droit foncier, gestion locative), Opérateur (Transaction, Promotion & Montage d'Opérations, VEFA, commercialisation) et Expert (Expertise, Évaluation & Conseil en Investissement, due diligence). Pour agents immobiliers, courtiers, promoteurs, investisseurs, juristes. À partir de 450 000 FCFA en ligne.",
   },
   {
@@ -74,7 +74,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 425000,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/logistique-et-supply-chain-management-4-en-1",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Programme certifiant 4 en 1 — Logistique & Supply Chain (65h). Quatre certificats : Gestion des Stocks, Gestion des Entrepôts, Logistique et Approvisionnements. Pour gestionnaires de stocks, logisticiens, responsables entrepôts, responsables achats, supply chain managers et étudiants en logistique. À partir de 425 000 FCFA en ligne.",
   },
   {
@@ -83,7 +83,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 325000,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/qhse-expert-4-en-1",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Programme certifiant QHSE 4 en 1 (65h). Quatre certificats : Animateur HSE, Superviseur HSE, Responsable QHSE et Auditeur ISO. Spécialement conçu pour les secteurs BTP, industrie, mines et pétrole. Pour animateurs, superviseurs et responsables HSE, chefs de chantier, ingénieurs et techniciens souhaitant évoluer ou se spécialiser en qualité, hygiène, sécurité et environnement. À partir de 325 000 FCFA en ligne.",
   },
   {
@@ -92,7 +92,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 22500,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/intelligence-artificielle-pour-professionnels",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Formation Samedi Pro — IA pour Professionnels (7h). Maîtriser les principaux outils d'intelligence artificielle : Claude, ChatGPT, Gemini, Microsoft Copilot et l'automatisation des tâches. Avec bonus : support de cours, groupe d'entraide, accompagnement post-formation et attestation valorisable au CV. Pour tous professionnels, entrepreneurs, consultants et étudiants. À partir de 22 500 FCFA en ligne.",
   },
   {
@@ -101,7 +101,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 25000,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/sage-100-comptabilite",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Formation pratique Sage 100 Comptabilité (7h — 1 journée). Du paramétrage du dossier à la production des états financiers conformes SYSCOHADA. 100 % pratique, immédiatement opérationnel. Pour comptables, assistants comptables, chefs comptables, entrepreneurs gérant leur comptabilité sur Sage. Aucune connaissance préalable de Sage requise. À partir de 25 000 FCFA en ligne.",
   },
   {
@@ -110,7 +110,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 22500,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/sage-100-paie-et-rh",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Formation pratique Sage 100 Paie & RH (7h — 1 journée). Gérer la paie en toute autonomie : paramétrage du dossier de paie, édition de bulletins fiables et production des déclarations sociales conformes à la réglementation ivoirienne. Pour gestionnaires de paie, assistants RH, comptables, dirigeants de PME. À partir de 22 500 FCFA en ligne.",
   },
   {
@@ -119,7 +119,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 31500,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/microsoft-power-bi",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Formation Microsoft Power BI (14h) — Analyse de données, Dashboards & Reporting professionnel. Concevoir des tableaux de bord interactifs et des rapports visuels pour piloter l'activité. Pour analystes, contrôleurs de gestion, comptables, managers et consultants souhaitant exploiter leurs données efficacement. À partir de 31 500 FCFA en ligne.",
   },
   {
@@ -128,7 +128,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 22500,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/microsoft-project",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Formation Microsoft Project (7h — 1 journée). Planification de projets, création de diagrammes de Gantt et suivi opérationnel de projets avec Microsoft Project. Pour chefs de projet, coordinateurs et consultants souhaitant structurer et piloter leurs projets avec un outil professionnel. À partir de 22 500 FCFA en ligne.",
   },
   {
@@ -137,7 +137,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 36000,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/sap-fi-comptabilite-financiere",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Formation SAP FI — Comptabilité Financière (14h). Maîtriser la comptabilité générale, les comptes clients, les comptes fournisseurs et le reporting financier dans l'environnement SAP. Pour comptables, chefs comptables, responsables administratifs et financiers (RAF), et consultants SAP débutants. À partir de 36 000 FCFA en ligne.",
   },
   {
@@ -146,7 +146,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 22500,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/canva-pro-et-design-marketing",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Formation Samedi Pro — Canva Pro & Design Marketing (7h). Créer des flyers professionnels, des visuels pour les réseaux sociaux, des présentations percutantes et exploiter les fonctionnalités IA de Canva Pro. Pour community managers, marketeurs, communicants et entrepreneurs souhaitant produire des contenus visuels de qualité sans être graphiste. À partir de 22 500 FCFA en ligne.",
   },
   {
@@ -155,7 +155,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 27000,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/kobotoolbox-et-collecte-de-donnees",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Formation KoBoToolbox & Collecte de Données (14h). Maîtriser la conception d'enquêtes, la collecte de données sur mobile et l'analyse des résultats avec KoBoToolbox, l'outil de référence des ONG et organismes de recherche. Pour ONG, consultants, statisticiens, enquêteurs et chercheurs souhaitant digitaliser leur collecte terrain. Attestation IBIG EDUFORM incluse. À partir de 27 000 FCFA en ligne.",
   },
   {
@@ -164,7 +164,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 22500,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/sage-100-gescom",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Formation pratique Sage 100 GESCOM (7h — 1 journée). Maîtriser les achats, les ventes, la gestion des stocks et la facturation dans Sage 100. Formation 100 % pratique, opérationnelle dès la sortie. Pour commerciaux, gestionnaires de stocks et responsables commerciaux souhaitant automatiser leur gestion avec Sage. À partir de 22 500 FCFA en ligne.",
   },
   {
@@ -173,7 +173,7 @@ const EDUFORM_PRODUCTS = [
     pricingType: "COURSE",
     price: 22500,
     rate: 10,
-    siteUrl: "https://ibig-eduform.com/formation/sage-etats-comptables-et-fiscaux",
+    siteUrl: "https://ibig-eduform.com/preinscription-generale.php",
     description: "Formation Samedi Pro — Sage États Comptables & Fiscaux (7h). Maîtriser la production des états financiers et des déclarations fiscales avec le logiciel Sage. Formation pratique et directement applicable. Pour comptables, chefs comptables, responsables administratifs et financiers (RAF) et fiscalistes. À partir de 22 500 FCFA en ligne.",
   },
 ];
