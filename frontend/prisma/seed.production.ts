@@ -13,7 +13,7 @@ async function main() {
   const adminEmail = process.env.ADMIN_EMAIL ?? "admin@ibigpartners.com";
   const adminPassword = process.env.ADMIN_PASSWORD;
 
-  // Suppression des anciennes branches renommées ou retirées du groupe
+  // Désactivation des anciennes branches (au lieu de suppression pour éviter les FK constraints)
   console.log("→ Nettoyage anciennes branches…");
   const oldSlugs = [
     "eduform",            // renommé ibig-eduform
@@ -25,15 +25,12 @@ async function main() {
     "ibig-tv",            // supprimé (hors liste officielle)
     "intermark-business", // n'est pas une branche du programme
   ];
-  const oldBranches = await prisma.branch.findMany({
+  const deactivated = await prisma.branch.updateMany({
     where: { slug: { in: oldSlugs } },
-    select: { id: true },
+    data: { active: false },
   });
-  if (oldBranches.length > 0) {
-    const ids = oldBranches.map((b) => b.id);
-    await prisma.product.deleteMany({ where: { branchId: { in: ids } } });
-    await prisma.branch.deleteMany({ where: { id: { in: ids } } });
-    console.log(`   ${oldBranches.length} ancienne(s) branche(s) supprimée(s).`);
+  if (deactivated.count > 0) {
+    console.log(`   ${deactivated.count} ancienne(s) branche(s) désactivée(s).`);
   }
 
   console.log("→ Branches & produits…");
