@@ -157,13 +157,16 @@ export default function GuideAffilie() {
       y = infoBox(t("EXEMPLE CONCRET : Si vous vendez Scolaby a 30 000 FCFA/mois, vous gagnez 6 000 FCFA (20%). Votre filleul vend aussi Scolaby : vous gagnez automatiquement 3 000 FCFA supplémentaires (10% N2) sans rien faire de plus."),y,[240,253,244]);
       y += 3;
 
-      y = sub(t("Les 5 Branches du Groupe IBIG"),y);
+      y = sub(t("Les 8 Branches du Groupe IBIG SARL"),y);
       const branches = [
-        [t("IBIG SOFT"),t("Logiciels SaaS : Scolaby, Fleet 360, GESCOMXEL, Zelivry, Lokativo, StockFlow"),t("20%/10%/5%")],
-        [t("IBIG EDUFORM"),t("Formations certifiantes : comptabilité, RH, QHSE, Sage, SAP, IA..."),t("10%/5%/2%")],
-        [t("IBIG IMMOTRUST"),t("Immobilier, BTP, gestion locative, construction cle en main"),t("5%/2, 5%/1%")],
-        [t("IBIG MARKET"),t("Commerce, distribution, matériel informatique, mobilier, fournitures"),t("8%/4%/2%")],
-        [t("INTERMARK BUSINESS"),t("Conseil stratégique, ingénierie de projets, digitalisation, levée de fonds"),t("8%/4%/2%")],
+        [t("IBIG SOFT"),t("Logiciels SaaS : Scolaby, Fleet 360, GESCOMXEL, Zelivry, Lokativo, StockFlow — ibigsoft.com"),t("20%/10%/5%")],
+        [t("IBIG EDUFORM"),t("Formations certifiantes : comptabilité, RH, QHSE, Sage, SAP, IA... — ibig-eduform.com"),t("10%/5%/2%")],
+        [t("IBIG IMMO TRUST"),t("Immobilier sécurisé, BTP, gestion locative, transactions, diaspora — ibigimmotrust.com"),t("5%/2,5%/1%")],
+        [t("IBIG MARKET"),t("Vente physique et e-commerce : IT, mobilier, fournitures, livraison — ibig-market.com"),t("8%/4%/2%")],
+        [t("IBIG DIGITAL KITS"),t("Transformation numérique : ERP, site web, app mobile, IA, marketing digital — kits.intermark-business.com"),t("10%/5%/2%")],
+        [t("IBIG CONSEIL+"),t("Structuration, comptabilité, juridique, conseil stratégique, création d'entreprise"),t("10%/5%/2%")],
+        [t("IBIG PARTNERS"),t("Programme d'affiliation multi-niveaux, représentation commerciale, B2B — ibigpartners.com"),t("Variable")],
+        [t("IBIG MULTISERVICES"),t("Événementiel, déménagement, maintenance, accueil VIP, logistique, BTP, tourisme"),t("10%/5%/2%")],
       ];
       branches.forEach(([name,desc,comm]) => {
         y = checkPage(y,3);
@@ -286,9 +289,11 @@ export default function GuideAffilie() {
           [t("IBIG SOFT (mensuel)"),"20%","10%","5%"],
           [t("IBIG SOFT (annuel)"),"20%","8%","3%"],
           [t("IBIG EDUFORM"),"10%","5%","2%"],
-          [t("IBIG IMMOTRUST"),"5%","2, 5%","1%"],
+          [t("IBIG IMMO TRUST"),"5%","2,5%","1%"],
           [t("IBIG MARKET"),"8%","4%","2%"],
-          [t("INTERMARK BUSINESS"),"8%","4%","2%"],
+          [t("IBIG DIGITAL KITS"),"10%","5%","2%"],
+          [t("IBIG CONSEIL+"),"10%","5%","2%"],
+          [t("IBIG MULTISERVICES"),"10%","5%","2%"],
         ],
         headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 9 },
         bodyStyles: { fontSize: 8.5,textColor: DARK,halign: "center"},
@@ -488,32 +493,52 @@ export default function GuideAffilie() {
           ],
         },
         {
-          branch: t("IBIG IMMOTRUST - Commissions : N1=5%, N2=2, 5%, N3=1%"),
+          branch: t("IBIG IMMO TRUST - Commissions : N1=5%, N2=2,5%, N3=1% — ibigimmotrust.com"),
           items: [
             t("Achat / Vente Immobilière - commissions sur prix de transaction"),
             t("Gestion Locative Garantie - commissions sur honoraires annuels"),
             t("Construction Cle en Main - commissions sur devis total"),
-            t("Renovation & Rehabilitation"),
-            t("Service Diaspora - Suivi a Distance"),
+            t("Rénovation & Réhabilitation"),
+            t("Service Diaspora - Suivi à Distance"),
           ],
         },
         {
-          branch: t("IBIG MARKET - Commissions : N1=8%, N2=4%, N3=2%"),
+          branch: t("IBIG MARKET - Commissions : N1=8%, N2=4%, N3=2% — ibig-market.com"),
           items: [
             t("Ordinateurs et matériel informatique"),
             t("Canon PIXMA G3410 Multifonction"),
-            t("Mobilier & Amenagement Professionnel"),
+            t("Mobilier & Aménagement Professionnel"),
             t("Fournitures de Bureau - Pack PME"),
             t("Matériel BTP & Construction"),
           ],
         },
         {
-          branch: t("INTERMARK BUSINESS - Commissions : N1=8%, N2=4%, N3=2%"),
+          branch: t("IBIG DIGITAL KITS - Commissions : N1=10%, N2=5%, N3=2% — kits.intermark-business.com"),
+          items: [
+            t("Site Vitrine Professionnel"),
+            t("Application Mobile sur Mesure"),
+            t("Intégration ERP (SAP, SAGE, Odoo)"),
+            t("Chatbot & Intelligence Artificielle"),
+            t("Kit Marketing Digital (community management, SEO, emailing)"),
+          ],
+        },
+        {
+          branch: t("IBIG CONSEIL+ - Commissions : N1=10%, N2=5%, N3=2% — intermark-business.com/conseil"),
           items: [
             t("Conseil & Diagnostic Stratégique"),
-            t("Ingenierie Financière & Levee de Fonds"),
-            t("Digitalisation & Deploiement ERP"),
-            t("Developpement Commercial & Partenariats"),
+            t("Ingénierie Financière & Levée de Fonds"),
+            t("Accompagnement Création d'Entreprise"),
+            t("Étude de Marché & Analyse Sectorielle"),
+            t("Structuration organisationnelle et mise en conformité juridique"),
+          ],
+        },
+        {
+          branch: t("IBIG MULTISERVICES - Commissions : N1=10%, N2=5%, N3=2% — intermark-business.com/multiservices"),
+          items: [
+            t("Organisation Événementielle (conférences, séminaires, mariages)"),
+            t("Déménagement & Transport"),
+            t("Maintenance & Dépannage (plomberie, électricité, climatisation)"),
+            t("Accueil VIP & Conciergerie"),
           ],
         },
       ];

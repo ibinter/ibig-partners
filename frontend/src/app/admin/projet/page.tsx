@@ -191,9 +191,11 @@ export default function ProjetPage() {
         ["4.",t("Historique et Positionnement"),"6"],
         ["5.",t("IBIG SOFT - Logiciels SaaS de Gestion"),"7"],
         ["6.",t("IBIG EDUFORM - Formations Professionnelles Certifiantes"),"7"],
-        ["7.",t("IBIG IMMOTRUST - Immobilier et BTP"),"8"],
+        ["7.",t("IBIG IMMO TRUST - Immobilier et BTP"),"8"],
         ["8.",t("IBIG MARKET - Commerce et Distribution"),"8"],
-        ["9.",t("INTERMARK BUSINESS - Conseil et Ingénierie"),"9"],
+        ["9.",t("IBIG DIGITAL KITS - Technologies et Transformation Numérique"),"9"],
+        ["10.",t("IBIG CONSEIL+ - Structuration, Comptabilité et Juridique"),"9"],
+        ["11.",t("IBIG MULTISERVICES - Solutions Polyvalentes"),"10"],
         ["10.",t("Système de Commissions N1/N2/N3"),"10"],
         ["11.",t("Dégressivité commissions IBIG SOFT mensuel"),"11"],
         ["12.",t("Simulation de revenus passifs"),"11"],
@@ -410,8 +412,8 @@ export default function ProjetPage() {
       y += 4;
 
       y = checkPage(y,70);
-      // --- IBIG IMMOTRUST ---
-      y = subTitle(t("IBIG IMMOTRUST - Immobilier et BTP"),y);
+      // --- IBIG IMMO TRUST ---
+      y = subTitle(t("IBIG IMMO TRUST - Immobilier et BTP"),y);
       y = body(t("Division spécialisée dans les transactions immobilières, la gestion locative, la construction et la rénovation au profit des particuliers et des entreprises en Afrique de l'Ouest. Service diaspora inclus pour les Africains de l'étranger."),y);
       y += 3;
 
@@ -512,9 +514,9 @@ export default function ProjetPage() {
           [t("IBIG SOFT"),t("Scolaby annuel"),"300 000","20%","8%","3%","60 000","24 000","9 000"],
           [t("IBIG EDUFORM"),t("Comptabilité"),"400 000","10%","5%","2%","40 000","20 000","8 000"],
           [t("IBIG EDUFORM"),t("Expert RH"),"450 000","10%","5%","2%","45 000","22 500","9 000"],
-          [t("IBIG IMMOTRUST"),t("Terrain 50M"),"50 000 000","5%","2.5%","1%","2 500 000","1 250 000","500 000"],
+          [t("IBIG IMMO TRUST"),t("Terrain 50M"),"50 000 000","5%","2.5%","1%","2 500 000","1 250 000","500 000"],
           [t("IBIG MARKET"),t("PC portable"),"500 000","8%","4%","2%","40 000","20 000","10 000"],
-          [t("INTERMARK"),t("Mission conseil"),"2 000 000","8%","4%","2%","160 000","80 000","40 000"],
+          [t("IBIG CONSEIL+"),t("Mission conseil"),"2 000 000","10%","5%","2%","200 000","100 000","40 000"],
         ],
         headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7 },
         bodyStyles: { fontSize: 7,textColor: DARK },
@@ -1215,11 +1217,13 @@ export default function ProjetPage() {
  const sections = [
  { icon:"", title:"Résumé Exécutif", desc:"Vision,chiffres clés,objectifs 2026-2028"},
  { icon: "", title:"Groupe IBIG SARL", desc:"Présentation, vision, mission, valeurs"},
- { icon: "", title:"IBIG SOFT", desc:"6 logiciels SaaS de gestion,tarifs,commissions"},
- { icon: "", title:"IBIG EDUFORM", desc:"10 formations professionnelles certifiantes"},
- { icon: "", title:"IBIG IMMOTRUST", desc:"Immobilier,BTP,service diaspora"},
- { icon: "", title:"IBIG MARKET", desc:"Commerce B2B/B2C,materiel,equipements"},
- { icon: "", title:"INTERMARK BUSINESS", desc:"Conseil, ingénierie, digitalisation"},
+ { icon: "", title:"IBIG SOFT", desc:"6 logiciels SaaS de gestion, tarifs, commissions — ibigsoft.com"},
+ { icon: "", title:"IBIG EDUFORM", desc:"200+ formations professionnelles certifiantes — ibig-eduform.com"},
+ { icon: "", title:"IBIG IMMO TRUST", desc:"Immobilier sécurisé, BTP, service diaspora — ibigimmotrust.com"},
+ { icon: "", title:"IBIG MARKET", desc:"Commerce B2B/B2C, matériel IT, e-commerce — ibig-market.com"},
+ { icon: "", title:"IBIG DIGITAL KITS", desc:"ERP, site web, app mobile, IA, marketing digital — kits.intermark-business.com"},
+ { icon: "", title:"IBIG CONSEIL+", desc:"Structuration, comptabilité, juridique, conseil stratégique"},
+ { icon: "", title:"IBIG MULTISERVICES", desc:"Événementiel, déménagement, maintenance, logistique, tourisme"},
  { icon: "", title:"Système de commissions", desc:"Architecture N1/N2/N3, tableaux détaillés"},
  { icon: "", title:"Dégressivité commissions", desc:"Modèle 4 mois IBIG SOFT mensuel"},
  { icon: "", title:"Simulation revenus", desc:"4 scénarios de revenus passifs"},

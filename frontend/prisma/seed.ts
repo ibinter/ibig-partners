@@ -44,6 +44,7 @@ async function main() {
         "IBIG SOFT conçoit et commercialise des solutions SaaS et ERP adaptés aux réalités africaines. " +
         "De la gestion scolaire à la gestion de flotte en passant par le commerce et la livraison, " +
         "chaque logiciel est pensé pour les PME et institutions du continent.",
+      website: "https://ibigsoft.com/",
       offerType: "Abonnements mensuels & annuels",
       commissionModel: "20% N1 • 10% N2 • 5% N3 (dégressif sur 4 mois) | Annuel : 20% N1 • 8% N2 • 3% N3",
       order: 1,
@@ -125,6 +126,7 @@ async function main() {
         "IBIG EDUFORM propose des formations professionnelles certifiantes en présentiel et en ligne, " +
         "couvrant la comptabilité, les RH, l'audit, les logiciels de gestion (Sage, SAP), " +
         "la data, l'IA, la logistique et bien d'autres domaines. Sessions mensuelles avec places limitées.",
+      website: "https://ibig-eduform.com/",
       offerType: "Formations hybrides (en ligne & présentiel) — paiement unique par session",
       commissionModel: "10% N1 • 5% N2 • 2% N3 par inscription",
       order: 2,
@@ -317,12 +319,13 @@ async function main() {
     // ══════════════════════════════════════════════
     {
       slug: "ibig-immotrust",
-      name: "IBIG IMMOTRUST",
-      tagline: "Immobilier, BTP & sécurisation des investissements",
+      name: "IBIG IMMO TRUST",
+      tagline: "Immobilier sécurisé & rentable",
       description:
-        "IBIG IMMOTRUST accompagne particuliers, entreprises et diaspora dans tous leurs projets immobiliers en Côte d'Ivoire : " +
+        "IBIG IMMO TRUST accompagne particuliers, entreprises et diaspora dans tous leurs projets immobiliers en Côte d'Ivoire : " +
         "achat, vente, location, construction clé en main, rénovation et gestion locative garantie. " +
         "Zones couvertes : Abidjan, Bingerville, Grand Bassam, Yamoussoukro.",
+      website: "https://ibigimmotrust.com/",
       offerType: "Services immobiliers et BTP — commission sur opération",
       commissionModel: "5% N1 • 2,5% N2 • 1% N3 sur la valeur de l'opération",
       order: 3,
@@ -390,11 +393,12 @@ async function main() {
     {
       slug: "ibig-market",
       name: "IBIG MARKET",
-      tagline: "Commerce, distribution & e-commerce",
+      tagline: "Vente physique & numérique — boutique universelle",
       description:
         "IBIG MARKET est la plateforme e-commerce et de distribution du groupe IBIG SARL. " +
         "Matériel informatique, électronique, mobilier professionnel, fournitures de bureau et produits d'importation. " +
         "Livraison sur Abidjan, paiement Mobile Money, Wave et carte bancaire.",
+      website: "https://ibig-market.com/",
       offerType: "Produits physiques — achat unique",
       commissionModel: "8% N1 • 4% N2 • 2% N3 par vente réalisée",
       order: 4,
@@ -448,18 +452,19 @@ async function main() {
     },
 
     // ══════════════════════════════════════════════
-    // 5. INTERMARK BUSINESS — intermark-business.com
+    // 5. IBIG CONSEIL+ — intermark-business.com/conseil
     // ══════════════════════════════════════════════
     {
-      slug: "intermark-business",
-      name: "INTERMARK BUSINESS",
-      tagline: "Conseil stratégique, ingénierie de projets & structuration",
+      slug: "ibig-conseil-plus",
+      name: "IBIG CONSEIL+",
+      tagline: "Structuration, Comptabilité & Juridique",
       description:
-        "Intermark Business International est le pôle conseil et stratégie du groupe IBIG SARL. " +
-        "Accompagnement des entreprises et porteurs de projets en Afrique : diagnostic organisationnel, " +
-        "ingénierie financière, structuration de projets, digitalisation et développement commercial.",
+        "IBIG CONSEIL+ accompagne les entreprises, institutions et ONG dans leur structuration organisationnelle, " +
+        "la gestion administrative et financière, ainsi que la mise en conformité juridique. " +
+        "Audit organisationnel, conseil stratégique, comptabilité, fiscalité, études de marché et accompagnement à la création d'entreprise.",
+      website: "https://intermark-business.com/conseil",
       offerType: "Services de conseil et accompagnement — devis personnalisé",
-      commissionModel: "8% N1 • 4% N2 • 2% N3 sur la valeur de la mission",
+      commissionModel: "10% N1 • 5% N2 • 2% N3 sur la valeur de la mission",
       order: 5,
       products: [
         {
@@ -468,8 +473,8 @@ async function main() {
           description: "Analyse complète de la situation de votre entreprise : forces, faiblesses, opportunités, menaces. Plan d'action priorisé et recommandations de structuration.",
           price: 0,
           pricingType: "SERVICE",
-          rate: 8,
-          siteUrl: "https://intermark-business.com",
+          rate: 10,
+          siteUrl: "https://intermark-business.com/conseil",
         },
         {
           slug: "accompagnement-structuration-projets",
@@ -477,8 +482,8 @@ async function main() {
           description: "Accompagnement opérationnel sur mesure pour structurer votre projet de A à Z : business plan, montage financier, recherche de financement et mise en œuvre.",
           price: 0,
           pricingType: "SERVICE",
-          rate: 8,
-          siteUrl: "https://intermark-business.com",
+          rate: 10,
+          siteUrl: "https://intermark-business.com/conseil",
         },
         {
           slug: "ingenierie-financiere-levee-fonds",
@@ -486,26 +491,145 @@ async function main() {
           description: "Structuration financière de projets, préparation de dossiers bancaires, mobilisation de capitaux auprès d'investisseurs et réseau de partenaires financiers.",
           price: 0,
           pricingType: "SERVICE",
-          rate: 8,
-          siteUrl: "https://intermark-business.com",
+          rate: 10,
+          siteUrl: "https://intermark-business.com/conseil",
         },
         {
-          slug: "site-web-vitrine",
-          name: "Digitalisation & Déploiement ERP",
-          description: "Transformation digitale de votre organisation : audit des processus, sélection et déploiement d'ERP, formation des équipes et accompagnement au changement.",
-          price: 0,
+          slug: "accompagnement-creation-entreprise",
+          name: "Accompagnement Création d'Entreprise",
+          description: "Formalités légales, rédaction des statuts, domiciliation, immatriculation et ouverture de compte professionnel pour démarrer votre activité sereinement.",
+          price: 200000,
           pricingType: "SERVICE",
-          rate: 8,
-          siteUrl: "https://intermark-business.com",
+          rate: 10,
+          siteUrl: "https://intermark-business.com/conseil",
         },
         {
-          slug: "developpement-commercial-partenariats",
-          name: "Développement Commercial & Partenariats",
-          description: "Stratégie commerciale, développement de marchés, représentation commerciale et mise en relation avec des partenaires stratégiques en Afrique et dans la diaspora.",
-          price: 0,
+          slug: "etude-marche-conseil",
+          name: "Étude de Marché & Analyse Sectorielle",
+          description: "Enquêtes terrain, analyse de la concurrence, segmentation client et recommandations stratégiques pour positionner votre offre sur le marché africain.",
+          price: 300000,
           pricingType: "SERVICE",
-          rate: 8,
-          siteUrl: "https://intermark-business.com",
+          rate: 10,
+          siteUrl: "https://intermark-business.com/conseil",
+        },
+      ],
+    },
+
+    // ══════════════════════════════════════════════
+    // 6. IBIG DIGITAL KITS — kits.intermark-business.com
+    // ══════════════════════════════════════════════
+    {
+      slug: "ibig-digital-kits",
+      name: "IBIG DIGITAL KITS",
+      tagline: "Technologies & Transformation Numérique",
+      description:
+        "IBIG DIGITAL KITS accompagne les entreprises dans leur transformation numérique : " +
+        "intégration ERP (SAP, SAGE, Odoo), GED, développement web et mobile, intelligence artificielle, " +
+        "chatbots, kits numériques prêts à l'emploi et marketing digital. Solutions technologiques clé en main.",
+      website: "https://kits.intermark-business.com/",
+      offerType: "Service / Produit digital — devis ou forfait",
+      commissionModel: "10% N1 • 5% N2 • 2% N3",
+      order: 6,
+      products: [
+        {
+          slug: "site-vitrine-digital",
+          name: "Site Vitrine Professionnel",
+          description: "Conception et développement d'un site web vitrine moderne, responsive et optimisé SEO. Livraison en 15 jours avec formation à la prise en main.",
+          price: 400000,
+          pricingType: "PRODUCT",
+          rate: 10,
+          siteUrl: "https://kits.intermark-business.com",
+        },
+        {
+          slug: "app-mobile-digital",
+          name: "Application Mobile sur Mesure",
+          description: "Développement d'applications iOS et Android sur mesure pour digitaliser vos processus métiers, engager vos clients et optimiser vos opérations.",
+          price: 1500000,
+          pricingType: "PRODUCT",
+          rate: 10,
+          siteUrl: "https://kits.intermark-business.com",
+        },
+        {
+          slug: "integration-erp-digital",
+          name: "Intégration ERP (SAP / SAGE / Odoo)",
+          description: "Déploiement, paramétrage et formation sur les principales solutions ERP du marché. Audit préalable, plan de migration, accompagnement au changement.",
+          price: 800000,
+          pricingType: "SERVICE",
+          rate: 10,
+          siteUrl: "https://kits.intermark-business.com",
+        },
+        {
+          slug: "chatbot-ia-digital",
+          name: "Chatbot & Intelligence Artificielle",
+          description: "Développement de chatbots intelligents pour votre service client, vos ventes ou vos processus internes. Intégration WhatsApp, site web et CRM.",
+          price: 350000,
+          pricingType: "SERVICE",
+          rate: 10,
+          siteUrl: "https://kits.intermark-business.com",
+        },
+        {
+          slug: "marketing-digital-kit",
+          name: "Kit Marketing Digital",
+          description: "Stratégie et exécution marketing digital clé en main : community management, publicité réseaux sociaux, emailing, SEO et analytics. Formule mensuelle.",
+          price: 150000,
+          pricingType: "MONTHLY_SUB",
+          rate: 10,
+          siteUrl: "https://kits.intermark-business.com",
+        },
+      ],
+    },
+
+    // ══════════════════════════════════════════════
+    // 7. IBIG MULTISERVICES — intermark-business.com/multiservices
+    // ══════════════════════════════════════════════
+    {
+      slug: "ibig-multiservices",
+      name: "IBIG MULTISERVICES",
+      tagline: "Solutions polyvalentes — événementiel, logistique & services",
+      description:
+        "IBIG MULTISERVICES propose une gamme étendue de services aux particuliers et entreprises : " +
+        "organisation événementielle, déménagement, maintenance et dépannage, accueil VIP, " +
+        "logistique, BTP, tourisme et transport. Une solution polyvalente pour tous vos besoins.",
+      website: "https://intermark-business.com/multiservices",
+      offerType: "Services à la demande — devis personnalisé",
+      commissionModel: "10% N1 • 5% N2 • 2% N3",
+      order: 7,
+      products: [
+        {
+          slug: "evenementiel-multiservices",
+          name: "Organisation Événementielle",
+          description: "Planification et gestion complète d'événements professionnels et privés : conférences, séminaires, galas, mariages, soirées d'entreprise. Logistique, décoration et animation.",
+          price: 500000,
+          pricingType: "SERVICE",
+          rate: 10,
+          siteUrl: "https://intermark-business.com/multiservices",
+        },
+        {
+          slug: "demenagement-multiservices",
+          name: "Déménagement & Transport",
+          description: "Service professionnel de déménagement pour particuliers et entreprises à Abidjan et sur tout le territoire ivoirien. Emballage, transport sécurisé et installation.",
+          price: 150000,
+          pricingType: "SERVICE",
+          rate: 10,
+          siteUrl: "https://intermark-business.com/multiservices",
+        },
+        {
+          slug: "maintenance-multiservices",
+          name: "Maintenance & Dépannage",
+          description: "Interventions rapides pour la maintenance des locaux, équipements et installations : plomberie, électricité, climatisation, informatique et petits travaux.",
+          price: 80000,
+          pricingType: "SERVICE",
+          rate: 10,
+          siteUrl: "https://intermark-business.com/multiservices",
+        },
+        {
+          slug: "accueil-vip-multiservices",
+          name: "Accueil VIP & Conciergerie",
+          description: "Service d'accueil et d'accompagnement haut de gamme : transferts aéroport, réservations hôtels, organisation de séjours et assistance personnalisée pour dirigeants et délégations.",
+          price: 200000,
+          pricingType: "SERVICE",
+          rate: 10,
+          siteUrl: "https://intermark-business.com/multiservices",
         },
       ],
     },
@@ -520,6 +644,7 @@ async function main() {
         name: b.name,
         tagline: b.tagline,
         description: b.description,
+        website: (b as { website?: string }).website ?? null,
         offerType: b.offerType,
         commissionModel: b.commissionModel,
         order: b.order,
