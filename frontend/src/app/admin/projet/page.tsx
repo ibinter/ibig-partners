@@ -650,13 +650,13 @@ export default function ProjetPage() {
 
       autoTable(doc,{
         startY: y,
-        head: [[t("Statut"),t("CA requis"),t("Bonus"),t("Avantages exclusifs"),t("Support")]],
+        head: [[t("Statut"),t("Condition"),t("Bonus"),t("Avantages exclusifs"),t("Support")]],
         body: [
-          [t("STARTER"),"0 FCFA",t("Taux de base"),t("Accès plateforme, liens, kit marketing"),"Email/WhatsApp"],
-          [t("SILVER"),"500 000 FCFA","+1% sur tout",t("Statistiques avancées, objectifs"),t("Prioritaire")],
-          [t("GOLD"),"2 000 000 FCFA","+2% sur tout",t("Chat GOLD+, badge Gold, visibilite"),t("Dédié")],
-          [t("MASTER"),"5 000 000 FCFA","+3% sur tout",t("Webinaires exclusifs, co-branding IBIG"),t("Manager attitré")],
-          [t("ELITE"),"15 000 000 FCFA","+5% sur tout",t("Événements VIP, partenariat stratégique"),t("Directeur commercial")],
+          [t("STARTER"),"0 vente",t("Taux de base"),t("Accès plateforme, liens, kit marketing"),"Email/WhatsApp"],
+          [t("SILVER"),"10 ventes","+2% sur tout",t("Statistiques avancées, objectifs"),t("Prioritaire")],
+          [t("GOLD"),"25 ventes + 10 filleuls + 20 équipe","+5% sur tout",t("Chat GOLD+, badge Gold, visibilite"),t("Dédié")],
+          [t("MASTER"),"50 ventes + 25 filleuls + 50 équipe","+8% sur tout",t("Webinaires exclusifs, co-branding IBIG"),t("Manager attitré")],
+          [t("ELITE"),"100 ventes + 50 filleuls + 100 équipe","+12% sur tout",t("Événements VIP, partenariat stratégique"),t("Directeur commercial")],
         ],
         headStyles: { fillColor: DARK,textColor: WHITE,fontStyle: "bold",fontSize: 8 },
         bodyStyles: { fontSize: 8,textColor: DARK },
@@ -885,7 +885,7 @@ export default function ProjetPage() {
  t("Semaine 3 : Utiliser le Coach IA pour préparer ses 10 premiers argumentaires"),
  t("Semaine 4 : Prospecter 20 contacts, objectif 3 conversions minimum"),
  t("Mois 2 : Recruter ses 3 premiers filleuls directs et les former"),
- t("Mois 3 : Atteindre le statut SILVER (500 000 FCFA CA cumulé)"),
+ t("Mois 3 : Atteindre le statut SILVER (10 ventes confirmées)"),
  ];
  parcours.forEach((step, i) => {
  doc.setFillColor(...BLUE);
