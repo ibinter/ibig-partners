@@ -211,6 +211,62 @@ const MULTISERVICES_PRODUCTS = [
     siteUrl: BASE,
     description: "Services de gardiennage et de sécurité pour résidences, entreprises, chantiers et événements : agents de sécurité formés, rondes de surveillance, contrôle d'accès et intervention rapide. Pour particuliers et entreprises souhaitant sécuriser leurs biens et personnes. À partir de 80 000 FCFA/mois.",
   },
+
+  // ── Placement de Personnel & Intérim ─────────────────────────────────
+  {
+    slug: "multi-placement-ouvriers",
+    name: "Placement d'Ouvriers & Personnel de Chantier",
+    pricingType: "SERVICE",
+    price: 30000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Recrutement et placement d'ouvriers qualifiés et non qualifiés pour chantiers BTP, industries et sites de production : maçons, carreleurs, peintres, électriciens, plombiers, manœuvres et gardiens de chantier. Vérification des compétences, contrats et formalités inclus. Pour entreprises de BTP, promoteurs et maîtres d'ouvrage. À partir de 30 000 FCFA par placement.",
+  },
+  {
+    slug: "multi-placement-personnel-domestique",
+    name: "Placement Personnel Domestique",
+    pricingType: "SERVICE",
+    price: 25000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Recrutement et placement de personnel domestique vérifié : femmes de ménage, cuisiniers, nounous, jardiniers, gardiens et chauffeurs personnels. Vérification des antécédents, entretien de présélection et suivi post-placement. Pour familles et expatriés souhaitant un personnel de confiance et fiable. À partir de 25 000 FCFA par placement.",
+  },
+  {
+    slug: "multi-mise-a-disposition-personnel",
+    name: "Mise à Disposition de Personnel (Intérim)",
+    pricingType: "MONTHLY_SUB",
+    price: 80000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Mise à disposition de personnel temporaire pour renforcer vos équipes : agents de saisie, assistants administratifs, opérateurs de production, agents d'accueil, manutentionnaires et techniciens. Contrats gérés par IBIG MULTISERVICES, personnel disponible sous 48h. Pour entreprises en pic d'activité ou en remplacement d'effectifs. À partir de 80 000 FCFA/mois par agent.",
+  },
+  {
+    slug: "multi-placement-emplois-qualifies",
+    name: "Placement Emplois Qualifiés & Cadres",
+    pricingType: "SERVICE",
+    price: 100000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Recrutement et placement de profils qualifiés et cadres : comptables, gestionnaires, commerciaux, informaticiens, ingénieurs et responsables de département. Présélection rigoureuse, tests de compétences et accompagnement jusqu'à l'intégration. Pour entreprises et ONG cherchant des profils compétents rapidement. À partir de 100 000 FCFA par recrutement.",
+  },
+  {
+    slug: "multi-externalisation-rh",
+    name: "Externalisation RH & Gestion de la Paie",
+    pricingType: "MONTHLY_SUB",
+    price: 50000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Externalisation complète des fonctions RH et paie : établissement des bulletins de salaire, déclarations CNPS et DIPE, gestion des congés, suivi des contrats et conseil en droit du travail. Pour TPE et PME souhaitant déléguer leur RH à des professionnels sans recruter un DRH. À partir de 50 000 FCFA/mois.",
+  },
+  {
+    slug: "multi-formation-personnel",
+    name: "Formation & Renforcement de Capacités du Personnel",
+    pricingType: "SERVICE",
+    price: 75000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Conception et animation de formations sur mesure pour vos équipes : accueil et relation client, techniques de vente, gestion du temps, hygiène et sécurité au travail, informatique bureautique. En présentiel dans vos locaux ou en externe. Pour entreprises souhaitant monter en compétences leurs collaborateurs. À partir de 75 000 FCFA par session.",
+  },
 ];
 
 export async function POST() {
