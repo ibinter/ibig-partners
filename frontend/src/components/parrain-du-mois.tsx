@@ -47,16 +47,8 @@ export async function ParrainDuMois() {
     }
   }
 
-  // Fallback démo si pas de vrai parrain ce mois
-  if (!parrain) {
-    parrain = {
-      name: "Koffi A.",
-      city: "Abidjan, CI",
-      referrals: 12,
-      status: "MASTER",
-      avatar: "K",
-    };
-  }
+  // Pas de vrai parrain ce mois : on n'invente pas de fausses données.
+  if (!parrain) return null;
 
   const monthName = new Date().toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
 

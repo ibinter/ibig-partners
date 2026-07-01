@@ -37,18 +37,6 @@ export async function HallOfFame() {
   });
   const userMap = new Map(users.map((u) => [u.id, u]));
 
-  // Données réelles + démo (si pas assez)
-  const DEMO = [
-    { name: "Koffi A.", city: "Abidjan", earnings: 342000, status: "MASTER" },
-    { name: "Aya M.", city: "Cocody", earnings: 187000, status: "GOLD" },
-    { name: "Fatou S.", city: "Dakar", earnings: 215000, status: "GOLD" },
-    { name: "Moussa K.", city: "Yopougon", earnings: 98500, status: "SILVER" },
-    { name: "Yves B.", city: "Plateau", earnings: 142000, status: "SILVER" },
-    { name: "Sandrine L.", city: "Bouaké", earnings: 76000, status: "SILVER" },
-    { name: "Diallo M.", city: "Paris (FR)", earnings: 168000, status: "GOLD" },
-    { name: "Awa N.", city: "Marcory", earnings: 64000, status: "SILVER" },
-  ];
-
   const podium = topPerformers
     .map((p, i) => {
       const u = userMap.get(p.userId);
@@ -62,14 +50,10 @@ export async function HallOfFame() {
     })
     .filter((p) => p.earnings > 0);
 
-  // Compléter avec DEMO si moins de 8 vrais top
-  const final = [
-    ...podium,
-    ...DEMO.slice(0, Math.max(0, 8 - podium.length)).map((d, i) => ({
-      rank: podium.length + i + 1,
-      ...d,
-    })),
-  ].slice(0, 8);
+  // Moins de 3 vrais performers : pas de podium crédible, on n'invente rien.
+  if (podium.length < 3) return null;
+
+  const final = podium.slice(0, 8);
 
   const monthName = new Date().toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
 
