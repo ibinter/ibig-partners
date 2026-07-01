@@ -37,24 +37,24 @@ const KB: KbEntry[] = [
       "📚 Scolaby est la plateforme de gestion scolaire d'IBIG SOFT (à partir de 30 000 FCFA/mois).\n\nElle gère : élèves, inscriptions, notes, bulletins, absences, paiements de frais et communication parents-école.\n\n👉 Cible idéale : directeurs d'écoles, du préscolaire au supérieur.\n💰 Commission : 20% N1 le 1er mois (dégressif sur 4 mois). Un abonnement annuel existe aussi (20% N1 one-shot).\n\nConseil de vente : proposez une démo gratuite au directeur — c'est le meilleur déclencheur d'achat.",
   },
   {
+    keywords: ["fleet", "flotte", "gestion flotte", "lokativo", "gescomxel", "zelivry", "stockflow", "erp"],
+    answer:
+      "💻 Les autres logiciels IBIG SOFT (tous 20% N1 le 1er mois, dégressif sur 4 mois) :\n\n• IBIG Fleet 360 — gestion de flotte (45 000 FCFA/mois)\n• Lokativo — gestion immobilière pour agences (35 000 FCFA/mois)\n• GESCOMXEL — gestion commerciale, stock et caisse (20 000 FCFA/mois)\n• Zelivry — gestion de livraison (25 000 FCFA/mois)\n• STOCKFLOW ERP — ERP commercial cloud (40 000 FCFA/mois)\n\nRetrouvez le détail, prix exacts et liens dans « Mes Produits ».",
+  },
+  {
     keywords: ["produits ibig", "quels produits", "catalogue", "liste des produits", "que vend", "offres", "branches"],
     answer:
-      "🗂️ Le groupe IBIG SARL propose 5 grandes branches :\n\n• IBIG SOFT — logiciels SaaS (Scolaby, Fleet 360, RH…)\n• IBIG EDUFORM — formations professionnelles\n• IBIG IMMO TRUST — immobilier (vente, location, gérance)\n• IBIG MARKET — produits & e-commerce\n• INTERMARK BUSINESS — services aux entreprises\n\nActivez les produits qui vous intéressent dans « Mes Produits », puis partagez vos liens d'affiliation. Consultez l'onglet Produits pour le détail et les prix.",
+      "🗂️ Le groupe IBIG SARL propose 9 branches :\n\n• IBIG SOFT — logiciels SaaS (Scolaby, Fleet 360, Lokativo, GESCOMXEL, Zelivry, STOCKFLOW ERP)\n• IBIG EDUFORM — formations professionnelles certifiantes (catalogue + formats sur mesure, présentiel, international, individuel)\n• IBIG IMMO TRUST — immobilier (vente, location, gérance, diaspora, foncier)\n• IBIG MARKET — commerce en ligne et en magasin\n• IBIG DIGITAL — création digitale et communication visuelle\n• IBIG DIGITAL KITS — transformation numérique (ERP, apps, IA, chatbots)\n• IBIG CONSEIL+ — structuration, comptabilité, juridique\n• IBIG PARTNERS — le programme d'affiliation lui-même\n• IBIG MULTISERVICES — événementiel, logistique, BTP, placement\n\nActivez les produits qui vous intéressent dans « Mes Produits », puis partagez vos liens d'affiliation. Consultez l'onglet Produits pour le détail et les prix.",
   },
   {
     keywords: ["immo trust", "immobilier", "immo", "bien", "vente bien", "location", "gerance", "agence"],
     answer:
-      "🏠 IBIG IMMO TRUST couvre la vente, la location et la gérance immobilière.\n\n⚠️ IMPORTANT : vos commissions s'appliquent sur la COMMISSION DE L'AGENCE, PAS sur le prix de vente du bien.\n\nExemple : un bien à 50 M FCFA, commission agence = 1 M FCFA → vous touchez 25% = 250 000 FCFA (N1).\n\nTaux : 25% N1, 12,5% N2, pas de N3. Pour la gérance : 1 mois de commission agence, payé en 2×50%, N1 uniquement.",
-  },
-  {
-    keywords: ["hrm", "rh", "ressources humaines", "suite rh", "paie"],
-    answer:
-      "👥 La suite RH d'IBIG SOFT aide les entreprises à gérer leurs collaborateurs, contrats, congés et paie.\n\n👉 Cible : DRH, managers et PME.\n💰 Abonnement SaaS : 20% N1 le 1er mois (dégressif sur 4 mois).\n\nArgument clé : automatiser la paie et le suivi RH fait gagner un temps énorme aux PME.",
+      "🏠 IBIG IMMO TRUST couvre la vente, la location, le conseil, la diaspora et la gérance immobilière.\n\n⚠️ IMPORTANT : sur les produits de transaction (vente, achat, terrain, location commerciale), vos commissions s'appliquent sur le montant du produit affiché (souvent une commission d'agence), PAS sur le prix total du bien.\n\n💰 Taux : 10% N1, 5% N2, 2,5% N3 sur la majorité des services immobiliers.\n\nCas particulier — Gestion Locative Complète : la commission correspond à 1 mois de commission d'agence, versé à l'affilié en 2 fois (une vente enregistrée par mois de mandat).\n\nLes taux exacts par produit sont toujours visibles dans « Mes Produits ».",
   },
   {
     keywords: ["formation", "eduform", "cours", "catalogue formation"],
     answer:
-      "🎓 IBIG EDUFORM propose des formations professionnelles certifiantes.\n\n💰 Commission : 10% N1, 5% N2, 2% N3 (one-shot à la confirmation du paiement).\n\n👉 Cible : DRH, managers, professionnels en reconversion. Les entreprises forment souvent plusieurs employés à la fois — pensez aux ventes groupées.",
+      "🎓 IBIG EDUFORM propose des formations professionnelles certifiantes (comptabilité, RH, QHSE, Sage, SAP, IA…), ainsi que des formats sur mesure entreprise, présentiel, international/diaspora et individuel.\n\n💰 Commission : 10% N1, 5% N2, 2% N3 en général (one-shot à la confirmation du paiement) ; les formats sur mesure/entreprise/international/individuel suivent le taux propre à chaque offre.\n\n👉 Cible : DRH, managers, professionnels en reconversion. Les entreprises forment souvent plusieurs employés à la fois — pensez aux ventes groupées.",
   },
 
   // ── Commissions ────────────────────────────────────────────
@@ -105,7 +105,7 @@ const KB: KbEntry[] = [
   {
     keywords: ["paiement", "etre paye", "retrait", "toucher argent", "versement", "seuil", "minimum", "quand paye"],
     answer:
-      "🏦 Vos paiements :\n\n• Les commissions sont versées après encaissement confirmé du client (délai ~7 jours ouvrables).\n• Vous fixez votre seuil minimum de versement (par défaut 5 000 FCFA) dans « Mes Paiements ».\n• Quand le seuil est atteint, le paiement se déclenche.\n• Moyens : Orange Money, Wave, MTN MoMo, virement bancaire, PayPal, Western Union.\n• À l'international, les frais sont déduits des commissions.\n• Chaque paiement génère un reçu téléchargeable.\n\n⚠️ Votre compte doit être VÉRIFIÉ (KYC) pour toucher vos commissions.",
+      "🏦 Vos paiements :\n\n• Les commissions sont versées après encaissement confirmé du client (délai ~7 jours ouvrables).\n• Le seuil minimum de versement est de 5 000 FCFA.\n• Quand le seuil est atteint, le paiement se déclenche.\n• Moyens disponibles : Orange Money, Wave, MTN MoMo, virement bancaire.\n• Chaque paiement génère un reçu téléchargeable.\n\n⚠️ Votre compte doit être VÉRIFIÉ (KYC) pour toucher vos commissions.",
   },
   {
     keywords: ["verification", "verifier compte", "kyc", "valider compte", "piece identite", "documents"],
@@ -145,7 +145,7 @@ const KB: KbEntry[] = [
 
 // Réponse par défaut quand aucune correspondance fiable n'est trouvée
 const DEFAULT_ANSWER =
-  "Je suis l'assistant de formation IBIG PARTNERS. Je peux vous aider sur :\n\n• Les produits (Scolaby, RH, immobilier, formations…)\n• Les commissions sur 3 niveaux et les taux\n• Les statuts et comment progresser\n• Les paiements et la vérification du compte\n• Les techniques de vente et le recrutement de filleuls\n\nReformulez votre question avec un de ces sujets, ou consultez le « Guide Commissions » et l'Académie pour aller plus loin.";
+  "Je suis l'assistant de formation IBIG PARTNERS. Je peux vous aider sur :\n\n• Les produits des 9 branches (logiciels, formations, immobilier, digital, conseil, multiservices…)\n• Les commissions sur 3 niveaux et les taux\n• Les statuts et comment progresser\n• Les paiements et la vérification du compte\n• Les techniques de vente et le recrutement de filleuls\n\nReformulez votre question avec un de ces sujets, ou consultez le « Guide Commissions » et l'Académie pour aller plus loin.";
 
 const GREETING_ANSWER =
   "Bonjour 👋 Je suis votre assistant de formation IBIG PARTNERS. Posez-moi une question sur les produits, les commissions, les statuts, les paiements ou la vente — je vous réponds tout de suite !";
@@ -186,14 +186,14 @@ function findBestAnswer(message: string): string {
   return DEFAULT_ANSWER;
 }
 
-const SYSTEM_PROMPT = `Tu es l'assistant de formation officiel d'IBIG PARTNERS, le programme d'affiliation multi-niveaux d'INTERMARK BUSINESS INTERNATIONAL GROUP SARL (IBIG SARL), basé à Abidjan, Côte d'Ivoire.
+const SYSTEM_PROMPT = `Tu es l'assistant de formation officiel d'IBIG PARTNERS, le programme d'affiliation multi-niveaux panafricain et international d'INTERMARK BUSINESS INTERNATIONAL GROUP SARL (IBIG SARL), basé à Abidjan, Côte d'Ivoire — ouvert sans limite de pays, en Afrique comme dans la diaspora.
 
 Tu aides les partenaires affiliés à :
-- Comprendre les produits IBIG (Scolaby, Suite RH, IBIG IMMO TRUST, formations IBIG EDUFORM, IBIG MARKET)
-- Maîtriser les commissions sur 3 niveaux (N1, N2=50% de N1, N3=25% de N1)
-- Progresser dans les statuts : Starter → Silver (10 ventes) → Gold (25 ventes + 10 filleuls + 20 actifs) → Master (50 ventes + 25 filleuls + 50 actifs) → Elite (100 ventes + 50 filleuls + 100 actifs)
+- Comprendre les 9 branches et le catalogue de produits IBIG (IBIG SOFT, IBIG EDUFORM, IBIG IMMO TRUST, IBIG MARKET, IBIG DIGITAL, IBIG DIGITAL KITS, IBIG CONSEIL+, IBIG PARTNERS, IBIG MULTISERVICES) — le catalogue exact avec prix et taux réels t'est fourni ci-dessous, utilise-le en priorité
+- Maîtriser les commissions sur 3 niveaux (N1, N2=50% de N1, N3=25% de N1, sauf abonnements et formations qui suivent des barèmes dédiés)
+- Progresser dans les statuts : Starter → Silver (10 ventes, +2%) → Gold (25 ventes + 10 filleuls + 20 actifs, +5%) → Master (50 ventes + 25 filleuls + 50 actifs, +8%) → Elite (100 ventes + 50 filleuls + 100 actifs, +12%)
 - Vendre et recruter efficacement
-- Comprendre les paiements (seuil 5 000 FCFA, Orange Money, Wave, MTN MoMo, Virement)
+- Comprendre les paiements (seuil 5 000 FCFA, Orange Money, Wave, MTN MoMo, virement bancaire)
 
 Règles :
 - Réponds toujours en français
