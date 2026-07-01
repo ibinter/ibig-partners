@@ -1,5 +1,7 @@
 import { requireUser } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/ui";
+import type { PricingType } from "@/lib/constants";
 import { GainCalculator } from "./GainCalculator";
 
 export const dynamic = "force-dynamic";
@@ -19,7 +21,7 @@ const STRATEGIES = [
   },
   {
     title: "Expert immobilier IBIG IMMO TRUST",
-    steps: "2 transactions, commission agence 1 000 000 FCFA × 25%",
+    steps: "5 transactions, commission agence 1 000 000 FCFA × 10%",
     total: "500 000 FCFA",
     note: "Les taux s'appliquent sur la commission de l'agence, pas sur le prix du bien.",
   },
@@ -27,6 +29,19 @@ const STRATEGIES = [
 
 export default async function SimulateurPage() {
   const user = await requireUser();
+
+  const products = await prisma.product.findMany({
+    where: { active: true, branch: { active: true } },
+    select: {
+      slug: true,
+      name: true,
+      price: true,
+      pricingType: true,
+      rate: true,
+      branch: { select: { name: true } },
+    },
+    orderBy: [{ branch: { order: "asc" } }, { name: "asc" }],
+  });
 
   return (
     <div className="space-y-6">
@@ -56,7 +71,17 @@ export default async function SimulateurPage() {
       {/* Calculatrice interactive */}
       <div>
         <h2 className="mb-3 text-sm font-bold text-ink">Calculatrice personnalisée</h2>
-        <GainCalculator initialStatus={user.status} />
+        <GainCalculator
+          initialStatus={user.status}
+          products={products.map((p) => ({
+            slug: p.slug,
+            name: p.name,
+            branchName: p.branch.name,
+            price: p.price,
+            pricingType: p.pricingType as PricingType,
+            rate: p.rate,
+          }))}
+        />
       </div>
     </div>
   );

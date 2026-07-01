@@ -27,12 +27,12 @@ export async function SocialProofBar() {
     return `${n} FCFA`;
   };
 
-  // Valeurs minimales pour ne pas afficher "0" sur landing publique
+  // Valeurs réelles issues de la base de données — aucune amplification.
   const display = {
-    partners: Math.max(partnersCount, 8) * 50, // amplificateur visuel raisonnable
-    sales: Math.max(salesCount, 12) * 30,
-    paid: Math.max(paidTotal._sum.amount ?? 0, 250_000) * 5,
-    recent: Math.max(recentJoins, 3) * 18,
+    partners: partnersCount,
+    sales: salesCount,
+    paid: paidTotal._sum.amount ?? 0,
+    recent: recentJoins,
   };
 
   const stats = [

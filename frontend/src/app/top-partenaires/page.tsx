@@ -32,10 +32,10 @@ export default async function TopPartenairesPage() {
     }),
   ]);
 
-  // Amplification cosmétique pour la landing publique
-  const partners = Math.max(totalPartners, 8) * 50;
-  const commissions = Math.max(totalCommissions._sum.amount ?? 0, 250_000) * 5;
-  const sales = Math.max(monthSales, 12) * 30;
+  // Valeurs réelles issues de la base de données — aucune amplification.
+  const partners = totalPartners;
+  const commissions = totalCommissions._sum.amount ?? 0;
+  const sales = monthSales;
 
   return (
     <>
