@@ -106,7 +106,7 @@ export function CoachChat({ partnerName, partnerStatus, partnerCity, partnerCode
             🤖
           </div>
           <div className="flex-1">
-            <p className="font-bold text-ink text-sm">Coach IBIG</p>
+            <p className="font-bold text-ink text-sm">Coach IBIG — GPT-5.4 Mini</p>
             <p className="text-xs text-emerald-600 flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
               En ligne · Réponses en temps réel
