@@ -193,9 +193,10 @@ export default function ProjetPage() {
         ["6.",t("IBIG EDUFORM - Formations Professionnelles Certifiantes"),"7"],
         ["7.",t("IBIG IMMO TRUST - Immobilier et BTP"),"8"],
         ["8.",t("IBIG MARKET - Commerce et Distribution"),"8"],
-        ["9.",t("IBIG DIGITAL KITS - Technologies et Transformation Numérique"),"9"],
-        ["10.",t("IBIG CONSEIL+ - Structuration, Comptabilité et Juridique"),"9"],
-        ["11.",t("IBIG MULTISERVICES - Solutions Polyvalentes"),"10"],
+        ["9.",t("IBIG DIGITAL - Création Digitale et Communication Visuelle"),"9"],
+        ["10.",t("IBIG DIGITAL KITS - Technologies et Transformation Numérique"),"9"],
+        ["11.",t("IBIG CONSEIL+ - Structuration, Comptabilité et Juridique"),"10"],
+        ["12.",t("IBIG MULTISERVICES - Solutions Polyvalentes"),"10"],
         ["10.",t("Système de Commissions N1/N2/N3"),"10"],
         ["11.",t("Dégressivité commissions IBIG SOFT mensuel"),"11"],
         ["12.",t("Simulation de revenus passifs"),"11"],
@@ -464,21 +465,19 @@ export default function ProjetPage() {
       y += 4;
 
       y = checkPage(y,70);
-      // --- INTERMARK BUSINESS ---
-      y = subTitle(t("INTERMARK BUSINESS - Conseil et Ingénierie de Projets"),y);
-      y = body(t("Cabinet de conseil en stratégie, ingénierie financière, développement commercial et digitalisation. Accompagne les PME, ETI et institutions dans leur structuration, croissance et transformation digitale."),y);
+      // --- IBIG DIGITAL ---
+      y = subTitle(t("IBIG DIGITAL - Création Digitale et Communication Visuelle"),y);
+      y = body(t("Pôle créatif et communication du groupe IBIG SARL : création de sites web vitrines, identité visuelle, community management, production de contenus digitaux et campagnes publicitaires en ligne. Des solutions créatives pour valoriser l'image de vos clients."),y);
       y += 3;
 
       autoTable(doc,{
         startY: y,
         head: [[t("Service"),t("Description"),t("Tarif indicatif")]],
         body: [
-          [t("Diagnostic Stratégique"),t("Audit complet + recommandations"),"500 000 - 2 000 000 FCFA"],
-          [t("Ingénierie Financière"),t("Levée de fonds, business plan, credit"),"1 000 000 - 5 000 000 FCFA"],
-          [t("Digitalisation ERP"),t("Déploiement logiciels, formation équipes"),"500 000 - 10 000 000 FCFA"],
-          [t("Developpement Commercial"),t("Prospection, partenariats, contrats"),t("Commission sur CA généré")],
-          [t("Accompagnement RH"),t("Recrutement, manuel, processus"),"300 000 - 1 500 000 FCFA"],
-          [t("Conformité et Audit"),t("OHADA, fiscalité, procédures internes"),"500 000 - 3 000 000 FCFA"],
+          [t("Site Vitrine Professionnel"),t("Design, développement, hébergement"),"300 000 - 800 000 FCFA"],
+          [t("Identité Visuelle & Logo"),t("Charte graphique, logo, supports"),"100 000 - 400 000 FCFA"],
+          [t("Community Management"),t("Gestion réseaux sociaux, contenus"),"50 000 - 150 000 FCFA/mois"],
+          [t("Campagne Publicitaire"),t("Facebook Ads, Google Ads, Instagram"),"150 000 - 500 000 FCFA"],
         ],
         headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 8 },
         bodyStyles: { fontSize: 8,textColor: DARK },
@@ -487,7 +486,60 @@ export default function ProjetPage() {
         theme: "grid",
       });
       y = (doc as any).lastAutoTable.finalY + 3;
-      y = body(t("Commissions : N1=8%, N2=4%, N3=2% sur le montant de la mission"),y);
+      y = body(t("Site officiel : intermark-business.com/digital — Commissions : N1=10%, N2=5%, N3=2%"),y);
+      y += 4;
+
+      y = checkPage(y,70);
+      // --- IBIG DIGITAL KITS ---
+      y = subTitle(t("IBIG DIGITAL KITS - Technologies et Transformation Numérique"),y);
+      y = body(t("Accompagnement des entreprises dans leur transformation numérique : intégration ERP (SAP, SAGE, Odoo), GED, développement d'applications mobiles, intelligence artificielle, chatbots et kits numériques prêts à l'emploi."),y);
+      y += 3;
+
+      autoTable(doc,{
+        startY: y,
+        head: [[t("Service"),t("Description"),t("Tarif indicatif")]],
+        body: [
+          [t("Intégration ERP (SAP/SAGE/Odoo)"),t("Déploiement, paramétrage, formation"),"800 000 - 10 000 000 FCFA"],
+          [t("Application Mobile sur Mesure"),t("iOS et Android, développement complet"),"1 000 000 - 5 000 000 FCFA"],
+          [t("Chatbot & Intelligence Artificielle"),t("Chatbot WhatsApp, site web, CRM"),"300 000 - 1 000 000 FCFA"],
+          [t("Kit Marketing Digital"),t("SEO, emailing, analytics, stratégie"),"100 000 - 300 000 FCFA/mois"],
+          [t("GED & Digitalisation Processus"),t("Dématérialisation, archivage numérique"),"500 000 - 3 000 000 FCFA"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 8 },
+        bodyStyles: { fontSize: 8,textColor: DARK },
+        alternateRowStyles: { fillColor: [248,250,252] },
+        margin: { left: 14,right: 14 },
+        theme: "grid",
+      });
+      y = (doc as any).lastAutoTable.finalY + 3;
+      y = body(t("Site officiel : kits.intermark-business.com — Commissions : N1=10%, N2=5%, N3=2%"),y);
+      y += 4;
+
+      y = checkPage(y,70);
+      // --- IBIG CONSEIL+ ---
+      y = subTitle(t("IBIG CONSEIL+ - Structuration, Comptabilité et Juridique"),y);
+      y = body(t("Accompagnement des entreprises, institutions et ONG dans leur structuration organisationnelle, gestion administrative et financière, et mise en conformité juridique. Audit, conseil stratégique, comptabilité, fiscalité, études de marché et création d'entreprise."),y);
+      y += 3;
+
+      autoTable(doc,{
+        startY: y,
+        head: [[t("Service"),t("Description"),t("Tarif indicatif")]],
+        body: [
+          [t("Audit Organisationnel"),t("Diagnostic complet, recommandations"),"500 000 - 2 000 000 FCFA"],
+          [t("Conseil Stratégique"),t("Positionnement, plan d'action, croissance"),"500 000 - 3 000 000 FCFA"],
+          [t("Ingénierie Financière"),t("Levée de fonds, business plan, banque"),"1 000 000 - 5 000 000 FCFA"],
+          [t("Création d'Entreprise"),t("Statuts, immatriculation, domiciliation"),"150 000 - 500 000 FCFA"],
+          [t("Étude de Marché"),t("Enquête terrain, analyse concurrence"),"300 000 - 1 500 000 FCFA"],
+          [t("Conformité Juridique"),t("OHADA, fiscalité, procédures internes"),"500 000 - 3 000 000 FCFA"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 8 },
+        bodyStyles: { fontSize: 8,textColor: DARK },
+        alternateRowStyles: { fillColor: [248,250,252] },
+        margin: { left: 14,right: 14 },
+        theme: "grid",
+      });
+      y = (doc as any).lastAutoTable.finalY + 3;
+      y = body(t("Site officiel : intermark-business.com/conseil — Commissions : N1=10%, N2=5%, N3=2%"),y);
 
       // ═══════════════════════════════════════════════════════════
       // PAGE 10-11 — SYSTEME DE COMMISSIONS DETAILLE
@@ -516,7 +568,9 @@ export default function ProjetPage() {
           [t("IBIG EDUFORM"),t("Expert RH"),"450 000","10%","5%","2%","45 000","22 500","9 000"],
           [t("IBIG IMMO TRUST"),t("Terrain 50M"),"50 000 000","5%","2.5%","1%","2 500 000","1 250 000","500 000"],
           [t("IBIG MARKET"),t("PC portable"),"500 000","8%","4%","2%","40 000","20 000","10 000"],
-          [t("IBIG CONSEIL+"),t("Mission conseil"),"2 000 000","10%","5%","2%","200 000","100 000","40 000"],
+          [t("IBIG DIGITAL"),t("Site vitrine"),"400 000","10%","5%","2%","40 000","20 000","8 000"],
+          [t("IBIG DIGITAL KITS"),t("Intégration ERP"),"2 000 000","10%","5%","2%","200 000","100 000","40 000"],
+          [t("IBIG CONSEIL+"),t("Mission audit"),"1 500 000","10%","5%","2%","150 000","75 000","30 000"],
         ],
         headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7 },
         bodyStyles: { fontSize: 7,textColor: DARK },
@@ -1221,9 +1275,11 @@ export default function ProjetPage() {
  { icon: "", title:"IBIG EDUFORM", desc:"200+ formations professionnelles certifiantes — ibig-eduform.com"},
  { icon: "", title:"IBIG IMMO TRUST", desc:"Immobilier sécurisé, BTP, service diaspora — ibigimmotrust.com"},
  { icon: "", title:"IBIG MARKET", desc:"Commerce B2B/B2C, matériel IT, e-commerce — ibig-market.com"},
- { icon: "", title:"IBIG DIGITAL KITS", desc:"ERP, site web, app mobile, IA, marketing digital — kits.intermark-business.com"},
- { icon: "", title:"IBIG CONSEIL+", desc:"Structuration, comptabilité, juridique, conseil stratégique"},
- { icon: "", title:"IBIG MULTISERVICES", desc:"Événementiel, déménagement, maintenance, logistique, tourisme"},
+ { icon: "", title:"IBIG DIGITAL", desc:"Création digitale, communication visuelle, site vitrine, identité visuelle — intermark-business.com/digital"},
+ { icon: "", title:"IBIG DIGITAL KITS", desc:"ERP, app mobile, IA, chatbots, kits numériques — kits.intermark-business.com"},
+ { icon: "", title:"IBIG CONSEIL+", desc:"Structuration, comptabilité, juridique, conseil stratégique — intermark-business.com/conseil"},
+ { icon: "", title:"IBIG PARTNERS", desc:"Programme d'affiliation multi-niveaux, B2B — ibigpartners.com"},
+ { icon: "", title:"IBIG MULTISERVICES", desc:"Événementiel, déménagement, maintenance, logistique, tourisme — intermark-business.com/multiservices"},
  { icon: "", title:"Système de commissions", desc:"Architecture N1/N2/N3, tableaux détaillés"},
  { icon: "", title:"Dégressivité commissions", desc:"Modèle 4 mois IBIG SOFT mensuel"},
  { icon: "", title:"Simulation revenus", desc:"4 scénarios de revenus passifs"},

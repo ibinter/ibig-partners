@@ -157,16 +157,17 @@ export default function GuideAffilie() {
       y = infoBox(t("EXEMPLE CONCRET : Si vous vendez Scolaby a 30 000 FCFA/mois, vous gagnez 6 000 FCFA (20%). Votre filleul vend aussi Scolaby : vous gagnez automatiquement 3 000 FCFA supplémentaires (10% N2) sans rien faire de plus."),y,[240,253,244]);
       y += 3;
 
-      y = sub(t("Les 8 Branches du Groupe IBIG SARL"),y);
+      y = sub(t("Les 9 Branches du Groupe IBIG SARL"),y);
       const branches = [
         [t("IBIG SOFT"),t("Logiciels SaaS : Scolaby, Fleet 360, GESCOMXEL, Zelivry, Lokativo, StockFlow — ibigsoft.com"),t("20%/10%/5%")],
         [t("IBIG EDUFORM"),t("Formations certifiantes : comptabilité, RH, QHSE, Sage, SAP, IA... — ibig-eduform.com"),t("10%/5%/2%")],
         [t("IBIG IMMO TRUST"),t("Immobilier sécurisé, BTP, gestion locative, transactions, diaspora — ibigimmotrust.com"),t("5%/2,5%/1%")],
         [t("IBIG MARKET"),t("Vente physique et e-commerce : IT, mobilier, fournitures, livraison — ibig-market.com"),t("8%/4%/2%")],
-        [t("IBIG DIGITAL KITS"),t("Transformation numérique : ERP, site web, app mobile, IA, marketing digital — kits.intermark-business.com"),t("10%/5%/2%")],
-        [t("IBIG CONSEIL+"),t("Structuration, comptabilité, juridique, conseil stratégique, création d'entreprise"),t("10%/5%/2%")],
+        [t("IBIG DIGITAL"),t("Création digitale, communication visuelle, site vitrine, identité visuelle, community management — intermark-business.com/digital"),t("10%/5%/2%")],
+        [t("IBIG DIGITAL KITS"),t("Transformation numérique : ERP, app mobile, IA, chatbots, kits prêts à l'emploi — kits.intermark-business.com"),t("10%/5%/2%")],
+        [t("IBIG CONSEIL+"),t("Structuration, comptabilité, juridique, conseil stratégique, création d'entreprise — intermark-business.com/conseil"),t("10%/5%/2%")],
         [t("IBIG PARTNERS"),t("Programme d'affiliation multi-niveaux, représentation commerciale, B2B — ibigpartners.com"),t("Variable")],
-        [t("IBIG MULTISERVICES"),t("Événementiel, déménagement, maintenance, accueil VIP, logistique, BTP, tourisme"),t("10%/5%/2%")],
+        [t("IBIG MULTISERVICES"),t("Événementiel, déménagement, maintenance, accueil VIP, logistique, BTP, tourisme — intermark-business.com/multiservices"),t("10%/5%/2%")],
       ];
       branches.forEach(([name,desc,comm]) => {
         y = checkPage(y,3);
@@ -291,6 +292,7 @@ export default function GuideAffilie() {
           [t("IBIG EDUFORM"),"10%","5%","2%"],
           [t("IBIG IMMO TRUST"),"5%","2,5%","1%"],
           [t("IBIG MARKET"),"8%","4%","2%"],
+          [t("IBIG DIGITAL"),"10%","5%","2%"],
           [t("IBIG DIGITAL KITS"),"10%","5%","2%"],
           [t("IBIG CONSEIL+"),"10%","5%","2%"],
           [t("IBIG MULTISERVICES"),"10%","5%","2%"],
@@ -510,6 +512,15 @@ export default function GuideAffilie() {
             t("Mobilier & Aménagement Professionnel"),
             t("Fournitures de Bureau - Pack PME"),
             t("Matériel BTP & Construction"),
+          ],
+        },
+        {
+          branch: t("IBIG DIGITAL - Commissions : N1=10%, N2=5%, N3=2% — intermark-business.com/digital"),
+          items: [
+            t("Site Vitrine Professionnel"),
+            t("Identité Visuelle & Logo"),
+            t("Community Management (réseaux sociaux)"),
+            t("Campagne Publicitaire en ligne"),
           ],
         },
         {
