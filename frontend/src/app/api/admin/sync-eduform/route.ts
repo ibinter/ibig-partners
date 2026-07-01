@@ -190,6 +190,19 @@ export async function POST() {
     return NextResponse.json({ error: "Branche IBIG EDUFORM introuvable. Synchronisez d'abord les branches." }, { status: 404 });
   }
 
+  const knownSlugs = EDUFORM_PRODUCTS.map((p) => p.slug);
+
+  // Supprimer tous les produits de la branche qui ne sont pas dans notre liste officielle
+  // (évite les doublons créés manuellement avec des slugs différents)
+  const deleted = await prisma.product.deleteMany({
+    where: {
+      branchId: branch.id,
+      slug: { notIn: knownSlugs },
+      // Ne supprimer que ceux sans ventes enregistrées
+      sales: { none: {} },
+    },
+  });
+
   let upserted = 0;
   for (const p of EDUFORM_PRODUCTS) {
     await prisma.product.upsert({
@@ -222,6 +235,7 @@ export async function POST() {
   return NextResponse.json({
     ok: true,
     upserted,
-    message: `${upserted} formations IBIG EDUFORM synchronisées avec liens et descriptions.`,
+    deleted: deleted.count,
+    message: `${upserted} formations synchronisées, ${deleted.count} doublon(s) supprimé(s).`,
   });
 }
