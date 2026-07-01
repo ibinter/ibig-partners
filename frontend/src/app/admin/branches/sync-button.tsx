@@ -39,18 +39,18 @@ export function MigrateButton() {
   );
 }
 
-export function SyncBranchesButton() {
+function SyncButton({ label, endpoint, className }: { label: string; endpoint: string; className: string }) {
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
 
-  async function handleSync() {
+  async function handle() {
     setLoading(true);
     setMsg("");
     try {
-      const r = await fetch("/api/admin/sync-branches", { method: "POST" });
+      const r = await fetch(endpoint, { method: "POST" });
       const d = await r.json();
-      setMsg(d.message ?? (r.ok ? "Synchronisation OK" : "Erreur"));
-      if (r.ok) window.location.reload();
+      setMsg(d.message ?? (r.ok ? "OK" : d.error ?? "Erreur"));
+      if (r.ok) setTimeout(() => window.location.reload(), 1200);
     } catch {
       setMsg("Erreur réseau");
     } finally {
@@ -60,14 +60,30 @@ export function SyncBranchesButton() {
 
   return (
     <div className="flex flex-col items-end gap-1">
-      <button
-        onClick={handleSync}
-        disabled={loading}
-        className="rounded-lg border border-brand-300 bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-700 hover:bg-brand-100 disabled:opacity-50"
-      >
-        {loading ? "Synchronisation…" : "Synchroniser les branches"}
+      <button onClick={handle} disabled={loading} className={className}>
+        {loading ? "En cours…" : label}
       </button>
-      {msg && <p className="text-xs text-slate-500">{msg}</p>}
+      {msg && <p className="text-xs text-slate-500 max-w-[220px] text-right">{msg}</p>}
     </div>
+  );
+}
+
+export function SyncBranchesButton() {
+  return (
+    <SyncButton
+      label="Synchroniser les branches"
+      endpoint="/api/admin/sync-branches"
+      className="rounded-lg border border-brand-300 bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-700 hover:bg-brand-100 disabled:opacity-50"
+    />
+  );
+}
+
+export function SyncEduformButton() {
+  return (
+    <SyncButton
+      label="Sync formations EDUFORM"
+      endpoint="/api/admin/sync-eduform"
+      className="rounded-lg border border-emerald-300 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-100 disabled:opacity-50"
+    />
   );
 }
