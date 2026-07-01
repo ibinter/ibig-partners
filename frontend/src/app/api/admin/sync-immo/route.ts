@@ -11,11 +11,11 @@ const IMMO_PRODUCTS = [
   {
     slug: "immo-gestion-locative",
     name: "Gestion Locative Complète",
-    pricingType: "MONTHLY_SUB",
+    pricingType: "SERVICE",
     price: 30000,
-    rate: 10,
+    rate: 50,
     siteUrl: BASE,
-    description: "Gestion locative intégrale de votre bien immobilier : recherche et sélection du locataire, rédaction du bail, état des lieux d'entrée et de sortie, encaissement des loyers, suivi des réparations et reversement mensuel au propriétaire. Pour propriétaires bailleurs souhaitant valoriser leur patrimoine sans contrainte de gestion. À partir de 30 000 FCFA/mois ou 8% du loyer.",
+    description: "Gestion locative intégrale de votre bien immobilier : recherche et sélection du locataire, rédaction du bail, état des lieux d'entrée et de sortie, encaissement des loyers, suivi des réparations et reversement mensuel au propriétaire. Pour propriétaires bailleurs souhaitant valoriser leur patrimoine sans contrainte de gestion. À partir de 30 000 FCFA/mois ou 8% du loyer. Commission affilié : 1 mois de commission d'agence, versé en 2 fois (une vente à enregistrer par mois de mandat, 50% du mois à chaque fois).",
   },
   {
     slug: "immo-recherche-locataire",
