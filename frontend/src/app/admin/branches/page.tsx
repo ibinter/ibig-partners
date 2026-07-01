@@ -32,13 +32,8 @@ export default async function BranchesPage({
   await requireAdmin();
   const { action, branchId, productId } = await searchParams;
 
-  let branches: Awaited<ReturnType<typeof prisma.branch.findMany<{
-    orderBy: { order: "asc" },
-    include: {
-      products: { orderBy: { name: "asc" }, include: { _count: { select: { sales: true, links: true } } } },
-      _count: { select: { products: true } }
-    }
-  }>>> = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let branches: any[] = [];
   let dbError: string | null = null;
 
   try {
@@ -288,7 +283,7 @@ export default async function BranchesPage({
                   </button>
                 </form>
                 {branch._count.products === 0 && (
-                  <form action={deleteBranch} onSubmit={(e) => { if (!confirm("Supprimer cette branche ?")) e.preventDefault(); }}>
+                  <form action={deleteBranch}>
                     <input type="hidden" name="id" value={branch.id} />
                     <button type="submit" className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-100 transition-colors">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" /></svg>
