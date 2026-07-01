@@ -17,7 +17,7 @@ const BRANCHES_DATA = [
   {
     slug: "ibig-eduform", name: "IBIG EDUFORM",
     tagline: "Formation professionnelle & insertion certifiante",
-    description: "IBIG EDUFORM accompagne les particuliers et professionnels à travers des formations certifiantes (200+ programmes), du coaching, de l'e-learning et des services d'insertion professionnelle. Formations en présentiel et à distance couvrant la comptabilité, le digital, la gestion, le BTP, la santé et bien d'autres domaines.",
+    description: "IBIG EDUFORM accompagne les particuliers et professionnels à travers des formations certifiantes (25+ programmes, dont des formats sur mesure entreprise, présentiel, international et individuel), du coaching, de l'e-learning et des services d'insertion professionnelle. Formations en présentiel et à distance couvrant la comptabilité, le digital, la gestion, le BTP, la santé et bien d'autres domaines.",
     website: "https://ibig-eduform.com/",
     offerType: "Formations courtes & certifiantes",
     commissionModel: "10% N1 • 5% N2 • 2% N3",
