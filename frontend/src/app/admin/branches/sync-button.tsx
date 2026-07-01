@@ -88,6 +88,16 @@ export function SyncEduformButton() {
   );
 }
 
+export function SyncPartnersButton() {
+  return (
+    <SyncButton
+      label="Sync IBIG PARTNERS"
+      endpoint="/api/admin/sync-partners"
+      className="rounded-lg border border-brand-300 bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-700 hover:bg-brand-100 disabled:opacity-50"
+    />
+  );
+}
+
 export function SyncConseilButton() {
   return (
     <SyncButton
