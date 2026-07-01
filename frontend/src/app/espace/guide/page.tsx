@@ -492,6 +492,12 @@ export default function GuideAffilie() {
             t("Logistique & Supply Chain - 450 000 FCFA | N1=45 000, N2=22 500, N3=9 000 FCFA"),
             t("Sage 100 (Compta, Paie, GESCOM) - 22 500 a 25 000 FCFA"),
             t("Power BI, SAP FI, IA Professionnels, Canva Pro..."),
+            t("Formation Sur Mesure Entreprise - des 500 000 FCFA (sur devis)"),
+            t("Formation Intra-Entreprise en Présentiel - des 350 000 FCFA/session"),
+            t("Formation a Distance - International & Diaspora - 450 000 FCFA"),
+            t("Coaching Individuel & Formation Particulier - des 150 000 FCFA"),
+            t("Formation Individuelle pour Particulier - des 100 000 FCFA"),
+            t("Déplacement Formateur a l'International - entierement sur devis"),
           ],
         },
         {
