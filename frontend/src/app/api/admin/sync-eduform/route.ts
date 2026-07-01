@@ -214,6 +214,24 @@ const EDUFORM_PRODUCTS = [
     siteUrl: "https://ibig-eduform.com",
     description: "Accompagnement individuel personnalisé (1 à 1) sur une compétence précise : comptabilité, bureautique, Sage, gestion, préparation d'entretien ou de concours. Rythme et contenu adaptés au niveau et aux disponibilités de l'apprenant, en présentiel ou à distance. Pour particuliers, étudiants et professionnels souhaitant progresser rapidement sur un besoin ciblé sans suivre un programme de groupe. À partir de 150 000 FCFA.",
   },
+  {
+    slug: "eduform-formation-individuelle-particulier",
+    name: "Formation Individuelle pour Particulier",
+    pricingType: "COURSE",
+    price: 100000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Inscription en solo à l'un des modules du catalogue IBIG EDUFORM (comptabilité, RH, Sage, bureautique, IA, etc.), sans intégrer un groupe classique : dates de démarrage flexibles, rythme individuel, suivi personnalisé du formateur. Pour un particulier qui souhaite se former seul, à son propre rythme, sans attendre l'ouverture d'une session collective. À partir de 100 000 FCFA selon le module choisi.",
+  },
+  {
+    slug: "eduform-deplacement-formateur-international",
+    name: "Déplacement Formateur à l'International",
+    pricingType: "SERVICE",
+    price: 0,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com/entreprise",
+    description: "Déplacement d'un formateur IBIG EDUFORM hors de Côte d'Ivoire pour animer une session en présentiel chez le client (autre pays d'Afrique, Europe ou ailleurs) : billet d'avion, hébergement et frais de mission inclus dans le devis. Pour entreprises, institutions et organisations internationales souhaitant une formation en présentiel réalisée sur leur propre site à l'étranger. Entièrement sur devis, selon destination, durée et effectif.",
+  },
 ];
 
 export async function POST() {
