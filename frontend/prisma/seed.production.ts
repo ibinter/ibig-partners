@@ -12,9 +12,6 @@ import { prisma } from "../src/lib/prisma";
 async function main() {
   const adminEmail = process.env.ADMIN_EMAIL ?? "admin@ibigpartners.com";
   const adminPassword = process.env.ADMIN_PASSWORD;
-  if (!adminPassword) {
-    throw new Error("ADMIN_PASSWORD manquant. Définissez la variable d'environnement.");
-  }
 
   console.log("→ Branches & produits…");
 
@@ -140,6 +137,11 @@ async function main() {
         create: { ...p, branchId: branch.id },
       });
     }
+  }
+
+  if (!adminPassword) {
+    console.log("→ ADMIN_PASSWORD absent — création SuperAdmin ignorée.");
+    return;
   }
 
   console.log("→ Compte SuperAdmin…");
