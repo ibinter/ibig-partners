@@ -176,6 +176,44 @@ const EDUFORM_PRODUCTS = [
     siteUrl: "https://ibig-eduform.com/formation/sage-etats-comptables-et-fiscaux",
     description: "Formation Samedi Pro — Sage États Comptables & Fiscaux (7h). Maîtriser la production des états financiers et des déclarations fiscales avec le logiciel Sage. Formation pratique et directement applicable. Pour comptables, chefs comptables, responsables administratifs et financiers (RAF) et fiscalistes. À partir de 22 500 FCFA en ligne.",
   },
+
+  // ── Formats complémentaires (entreprise, présentiel, international) ──────
+  {
+    slug: "eduform-sur-mesure-entreprise",
+    name: "Formation Sur Mesure Entreprise",
+    pricingType: "SERVICE",
+    price: 500000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com/entreprise",
+    description: "Programme de formation conçu sur mesure pour répondre aux besoins spécifiques d'une entreprise, d'une administration ou d'une ONG : diagnostic des besoins, choix des modules et intervenants, adaptation du contenu et du rythme au contexte métier. Pour directions RH, dirigeants et responsables de formation souhaitant former une équipe sur une problématique précise plutôt qu'un programme standard. Sur devis, à partir de 500 000 FCFA.",
+  },
+  {
+    slug: "eduform-intra-entreprise-presentiel",
+    name: "Formation Intra-Entreprise en Présentiel",
+    pricingType: "SERVICE",
+    price: 350000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com/entreprise",
+    description: "Session de formation dispensée en présentiel directement dans les locaux de l'entreprise (ou dans une salle dédiée), pour un groupe de collaborateurs. Formateur dédié, supports adaptés, mises en situation pratiques sur les outils et process de l'entreprise. Pour les entreprises souhaitant former plusieurs collaborateurs en même temps sans les déplacer. Sur devis selon effectif et durée, à partir de 350 000 FCFA par session.",
+  },
+  {
+    slug: "eduform-formation-internationale-diaspora",
+    name: "Formation à Distance — International & Diaspora",
+    pricingType: "COURSE",
+    price: 450000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Accès à l'ensemble du catalogue de formations certifiantes IBIG EDUFORM en 100 % à distance (visioconférence en direct + replay), pensé pour les Ivoiriens et Africains de la diaspora ou les professionnels basés hors de Côte d'Ivoire. Fuseaux horaires aménagés, paiement international (carte bancaire, virement, Mobile Money), certificat envoyé numériquement. Pour la diaspora et les clients internationaux souhaitant se former à distance sans contrainte de présence physique. À partir de 450 000 FCFA.",
+  },
+  {
+    slug: "eduform-coaching-particulier",
+    name: "Coaching Individuel & Formation Particulier",
+    pricingType: "SERVICE",
+    price: 150000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Accompagnement individuel personnalisé (1 à 1) sur une compétence précise : comptabilité, bureautique, Sage, gestion, préparation d'entretien ou de concours. Rythme et contenu adaptés au niveau et aux disponibilités de l'apprenant, en présentiel ou à distance. Pour particuliers, étudiants et professionnels souhaitant progresser rapidement sur un besoin ciblé sans suivre un programme de groupe. À partir de 150 000 FCFA.",
+  },
 ];
 
 export async function POST() {
