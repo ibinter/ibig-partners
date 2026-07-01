@@ -1,12 +1,19 @@
 import { prisma } from "@/lib/prisma";
 
+// Seuil en dessous duquel les stats de traction ne sont pas encore
+// crédibles pour du social proof — on affiche alors un bandeau
+// "lancement" basé sur des faits vérifiables (branches, catalogue).
+const MIN_PARTNERS_FOR_PROOF = 25;
+
 /**
  * Bandeau de social proof avec STATS RÉELLES tirées de la DB.
- * Affiché juste après le hero — booster massif de confiance + conversion.
+ * Affiché juste après le hero — booster de confiance + conversion.
+ * Sous le seuil MIN_PARTNERS_FOR_PROOF, bascule sur un message de
+ * lancement honnête plutôt que d'afficher des chiffres proches de zéro.
  */
 export async function SocialProofBar() {
   // Stats en parallèle pour performance
-  const [partnersCount, salesCount, paidTotal, recentJoins] = await Promise.all([
+  const [partnersCount, salesCount, paidTotal, recentJoins, branchesCount, productsCount] = await Promise.all([
     prisma.user.count({ where: { role: "PARTNER", active: true } }),
     prisma.sale.count({ where: { status: "CONFIRMED" } }),
     prisma.payout.aggregate({
@@ -19,7 +26,32 @@ export async function SocialProofBar() {
         createdAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
       },
     }),
+    prisma.branch.count({ where: { active: true } }),
+    prisma.product.count({ where: { active: true } }),
   ]);
+
+  if (partnersCount < MIN_PARTNERS_FOR_PROOF) {
+    return (
+      <section
+        data-testid="social-proof-bar"
+        className="relative bg-gradient-to-b from-white via-slate-50/50 to-white py-12"
+      >
+        <div className="mx-auto max-w-4xl px-4 text-center">
+          <span className="label-caps inline-block rounded-full bg-brand-50 px-4 py-1.5 text-brand-700">
+            🚀 Programme en phase de lancement
+          </span>
+          <p className="mt-4 text-lg font-bold text-ink sm:text-xl">
+            Rejoignez les tout premiers partenaires IBIG PARTNERS
+          </p>
+          <p className="mx-auto mt-2 max-w-2xl text-sm text-muted">
+            {branchesCount} branches actives et {productsCount} produits/services déjà disponibles à la vente.
+            Les premiers partenaires inscrits bénéficient d&apos;un accès prioritaire aux meilleures opportunités
+            de commission avant que le réseau ne grandisse.
+          </p>
+        </div>
+      </section>
+    );
+  }
 
   const fmtFcfa = (n: number) => {
     if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M FCFA`;
