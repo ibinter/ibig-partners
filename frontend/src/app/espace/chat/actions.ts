@@ -12,7 +12,8 @@ async function hasFilleul(userId: string): Promise<boolean> {
 
 export async function startConversation(formData: FormData) {
   const user = await requireUser();
-  if (!(await hasFilleul(user.id))) {
+  const isAdmin = user.role === "ADMIN" || user.role === "SUPERADMIN";
+  if (!isAdmin && !(await hasFilleul(user.id))) {
     redirect("/espace/chat");
   }
 
@@ -64,7 +65,8 @@ export async function startConversation(formData: FormData) {
 
 export async function sendMessage(formData: FormData) {
   const user = await requireUser();
-  if (!(await hasFilleul(user.id))) return;
+  const isAdmin = user.role === "ADMIN" || user.role === "SUPERADMIN";
+  if (!isAdmin && !(await hasFilleul(user.id))) return;
 
   const conversationId = String(formData.get("conversationId") || "").trim();
   const body = String(formData.get("body") || "").trim();
