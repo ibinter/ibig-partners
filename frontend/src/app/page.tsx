@@ -15,6 +15,10 @@ import { Testimonials } from "@/components/testimonials";
 import { HallOfFame } from "@/components/hall-of-fame";
 import { ParrainDuMois } from "@/components/parrain-du-mois";
 
+import { SoftwareCatalog } from "@/components/software-catalog";
+import { MarketingKitPacks } from "@/components/marketing-kit-packs";
+import { AffiliateTraining } from "@/components/affiliate-training";
+import { CommissionDetails } from "@/components/commission-details";
 export const dynamic = "force-dynamic";
 
 const HERO_SLIDES: HeroSlide[] = [
@@ -341,6 +345,13 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+
+      {/* ═══════════ CATALOGUE LOGICIELS (NEW) ═══════════ */}
+      <SoftwareCatalog />
+
+      {/* ═══════════ COMMISSIONS PAR PRODUIT (NEW) ═══════════ */}
+      <CommissionDetails />
 
       {/* ═══════════ COMMISSIONS ═══════════ */}
       <section id="commissions" className="bg-slate-50 py-24">
@@ -703,12 +714,10 @@ export default async function HomePage() {
 
           <ScrollReveal animation="fade-up" delay={300}>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-3 text-sm">
-              {["Starter", "Silver", "Gold", "Master", "Elite"].map((label, i, arr) => (
-                <span key={label} className="flex items-center gap-3">
-                  <span className={`font-semibold ${i === arr.length - 1 ? "text-gold-500" : i >= 2 ? "text-brand-700" : "text-slate-500"}`}>
-                    {label}
-                  </span>
-                  {i < arr.length - 1 && <Icon name="trending" className="h-4 w-4 text-brand-300" />}
+              {["Starter", "Silver", "Gold", "Master Partner", "Elite Représentant"].map((label) => (
+                <span key={label} className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 font-semibold text-slate-600">
+                  <Icon name="check" className="h-3 w-3 text-brand-500" />
+                  {label}
                 </span>
               ))}
             </div>
@@ -716,126 +725,65 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════ ESPACE PARTENAIRE ═══════════ */}
-      <section id="espace" className="bg-white py-24">
-        <div className="mx-auto max-w-6xl px-4">
+      {/* ═══════════ KITS MARKETING (NEW) ═══════════ */}
+      <MarketingKitPacks />
+
+      {/* ═══════════ FORMATION (NEW) ═══════════ */}
+      <AffiliateTraining />
+
+      {/* ═══════════ FAQ ═══════════ */}
+      <section id="faq" className="bg-white py-24">
+        <div className="mx-auto max-w-3xl px-4">
           <ScrollReveal animation="fade-up">
             <div className="text-center">
-              <SectionEyebrow className="bg-indigo-50 text-indigo-600">Votre espace dédié</SectionEyebrow>
-              <h2 className="mt-4 text-3xl font-extrabold text-ink sm:text-4xl">
-                Tout ce qu&apos;il vous faut pour réussir
-              </h2>
-              <p className="mx-auto mt-3 max-w-2xl text-muted">
-                Gérez l&apos;intégralité de votre activité en totale autonomie, directement
-                depuis votre téléphone.
-              </p>
+              <SectionEyebrow className="bg-brand-50 text-brand-600">Foire aux questions</SectionEyebrow>
+              <h2 className="mt-4 text-3xl font-extrabold text-ink sm:text-4xl">Questions fréquentes</h2>
             </div>
           </ScrollReveal>
 
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {PARTNER_MODULES.map(({ icon, title, desc }, i) => (
-              <ScrollReveal key={title} animation="scale-in" delay={i * 60}>
-                <div className="card-premium group h-full p-5">
-                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 transition-transform group-hover:scale-110">
-                    <Icon name={icon} className="h-5 w-5" />
-                  </div>
-                  <h3 className="mt-3 font-bold text-ink transition-colors group-hover:text-brand-700">{title}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-muted">{desc}</p>
-                </div>
-              </ScrollReveal>
-            ))}
-            <ScrollReveal animation="scale-in" delay={PARTNER_MODULES.length * 60}>
-              <div className="flex h-full flex-col items-center justify-center rounded-[20px] border border-dashed border-brand-200 bg-brand-50/50 p-5 text-center">
-                <Icon name="sparkles" className="h-6 w-6 text-brand-500" />
-                <p className="mt-2 font-bold text-brand-700">Et bien plus</p>
-                <p className="mt-1 text-sm text-brand-500">Analytics, classement, chat GOLD+, badges…</p>
-              </div>
-            </ScrollReveal>
+          <div className="mt-12">
+            <FaqAccordion />
           </div>
         </div>
       </section>
 
-      {/* ═══════════ PARRAIN DU MOIS (NEW) ═══════════ */}
-      <ParrainDuMois />
-
-      {/* ═══════════ HALL OF FAME (NEW) ═══════════ */}
+      {/* ═══════════ HALL OF FAME & TESTIMONIALS ═══════════ */}
       <HallOfFame />
-
-      {/* ═══════════ TÉMOIGNAGES (NEW) ═══════════ */}
+      <ParrainDuMois />
       <Testimonials />
 
-      {/* ═══════════ FAQ ═══════════ */}
-      <section id="faq" className="bg-slate-50 py-24">
-        <div className="mx-auto max-w-3xl px-4">
-          <ScrollReveal animation="fade-up">
-            <div className="text-center">
-              <SectionEyebrow className="bg-teal-50 text-teal-600">Vos questions</SectionEyebrow>
-              <h2 className="mt-4 text-3xl font-extrabold text-ink sm:text-4xl">
-                Questions fréquentes
-              </h2>
-              <p className="mx-auto mt-3 max-w-xl text-muted">
-                Tout ce que vous devez savoir avant de rejoindre IBIG PARTNERS.
-              </p>
-            </div>
-          </ScrollReveal>
-          <ScrollReveal animation="fade-up" delay={150}>
-            <div className="mt-10"><FaqAccordion /></div>
-            <p className="mt-8 text-center text-sm text-muted">
-              Une autre question ?{" "}
-              <Link href="/connexion" className="font-semibold text-brand-600 hover:underline">
-                Connectez-vous et ouvrez un ticket support →
-              </Link>
-            </p>
-          </ScrollReveal>
-        </div>
-      </section>
-
       {/* ═══════════ CTA FINAL ═══════════ */}
-      <section className="gradient-cta relative overflow-hidden py-28">
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="animate-float absolute -right-24 -top-24 h-80 w-80 rounded-full bg-white/5" />
-          <div className="animate-float absolute -bottom-16 -left-16 h-64 w-64 rounded-full bg-white/5" style={{ animationDelay: "1.5s" }} />
-          <div className="animate-float absolute left-1/3 top-1/4 h-40 w-40 rounded-full bg-white/5" style={{ animationDelay: "0.7s" }} />
-        </div>
-        <div className="relative mx-auto max-w-3xl px-4 text-center text-white">
-          <ScrollReveal animation="scale-in">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm">
-              <Icon name="rocket" className="h-8 w-8 text-gold-400" />
-            </div>
-            <h2 className="mt-6 text-3xl font-extrabold sm:text-4xl">
-              Prêt à rejoindre IBIG PARTNERS&nbsp;?
+      <section className="bg-slate-50 py-24">
+        <div className="mx-auto max-w-4xl px-4 text-center">
+          <ScrollReveal animation="fade-up">
+            <h2 className="text-3xl font-extrabold text-ink sm:text-5xl">
+              Prêt à bâtir votre <br className="hidden sm:block" /> succès avec nous ?
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-brand-100">
-              Inscription gratuite. Aucun investissement. Commencez à générer des revenus
-              dès aujourd&apos;hui en promouvant ce que vous aimez.
+            <p className="mt-6 text-lg text-muted sm:text-xl">
+              Rejoignez des centaines de partenaires qui génèrent déjà des revenus
+              avec l&apos;écosystème IBIG.
             </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-4">
+            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/rejoindre"
-                className="rounded-xl bg-white px-8 py-4 text-lg font-bold text-brand-700 shadow-xl transition-all duration-200 hover:-translate-y-1 hover:bg-brand-50 hover:shadow-2xl"
+                className="w-full rounded-xl bg-brand-600 px-8 py-4 font-bold text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-brand-700 hover:shadow-xl sm:w-auto"
               >
-                Créer mon compte — Gratuit
+                Créer mon compte maintenant
               </Link>
               <Link
-                href="/connexion"
-                className="rounded-xl border-2 border-white/30 px-8 py-4 text-lg font-semibold text-white transition-all duration-200 hover:bg-white/10"
+                href="/contact"
+                className="w-full rounded-xl border border-slate-200 bg-white px-8 py-4 font-bold text-ink shadow-sm transition-all hover:-translate-y-1 hover:bg-slate-50 sm:w-auto"
               >
-                Déjà partenaire ? Se connecter
+                Parler à un conseiller
               </Link>
             </div>
-            <div className="mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-brand-200">
-              {["Sans engagement", "Aucune carte bancaire requise", "Activez vos produits en 2 minutes"].map((t) => (
-                <span key={t} className="flex items-center gap-1.5">
-                  <Icon name="check" className="h-4 w-4 text-gold-400" /> {t}
-                </span>
-              ))}
-            </div>
+            <p className="mt-6 text-sm text-muted">Aucun frais caché · Sans engagement · Support 7j/7</p>
           </ScrollReveal>
         </div>
       </section>
 
-      <SiteFooter />
       <StickyMobileCta />
+      <SiteFooter />
     </>
   );
 }

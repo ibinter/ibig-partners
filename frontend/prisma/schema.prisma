@@ -159,6 +159,7 @@ model Product {
   links           AffiliateLink[]
   sales           Sale[]
   kits            MarketingKit[]
+  commissionRates ProductCommissionRate[]
   trainingModules TrainingModule[]
 }
 
@@ -457,4 +458,17 @@ model UserBadge {
   earnedAt  DateTime @default(now())
 
   @@unique([userId, badgeId])
+}
+
+// ─── Taux de commission par produit (grille détaillée) ─────────────────────
+model ProductCommissionRate {
+  id          String  @id @default(cuid())
+  productId   String
+  product     Product @relation(fields: [productId], references: [id])
+  level       Int     // 1 | 2 | 3
+  monthIndex  Int     @default(1) // 1..4 pour mensuel, 1 pour one-shot
+  rate        Float   // pourcentage ex: 20.0 pour 20%
+  description String? // ex: "Mois 1, Niveau 1"
+
+  @@unique([productId, level, monthIndex])
 }
