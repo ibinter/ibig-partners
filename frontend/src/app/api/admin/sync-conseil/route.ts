@@ -1,13 +1,14 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 const BASE = "https://intermark-business.com/conseil";
 
 const CONSEIL_PRODUCTS = [
-  // ── Comptabilité & Gestion Financière ─────────────────────────────────
+  // â”€â”€ ComptabilitÃ© & Gestion FinanciÃ¨re â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     slug: "conseil-compta-tpe-pme",
     name: "Gestion Comptable TPE/PME",
@@ -15,7 +16,7 @@ const CONSEIL_PRODUCTS = [
     price: 50000,
     rate: 10,
     siteUrl: BASE,
-    description: "Externalisation de la comptabilité pour TPE et PME : saisie des pièces comptables, rapprochements bancaires, états financiers mensuels conformes SYSCOHADA, suivi de trésorerie et préparation de la déclaration fiscale annuelle. Pour dirigeants souhaitant une comptabilité fiable sans recruter un comptable à plein temps. À partir de 50 000 FCFA/mois.",
+    description: "Externalisation de la comptabilitÃ© pour TPE et PME : saisie des piÃ¨ces comptables, rapprochements bancaires, Ã©tats financiers mensuels conformes SYSCOHADA, suivi de trÃ©sorerie et prÃ©paration de la dÃ©claration fiscale annuelle. Pour dirigeants souhaitant une comptabilitÃ© fiable sans recruter un comptable Ã  plein temps. Ã€ partir de 50 000 FCFA/mois.",
   },
   {
     slug: "conseil-compta-ong",
@@ -24,16 +25,16 @@ const CONSEIL_PRODUCTS = [
     price: 60000,
     rate: 10,
     siteUrl: BASE,
-    description: "Tenue de la comptabilité spécifique aux ONG et associations : comptabilité par projet (SYCEBNL), rapports financiers bailleurs, suivi des subventions, justification des dépenses et préparation des audits. Pour coordinateurs et directeurs d'ONG souhaitant des comptes transparents et conformes aux exigences des bailleurs. À partir de 60 000 FCFA/mois.",
+    description: "Tenue de la comptabilitÃ© spÃ©cifique aux ONG et associations : comptabilitÃ© par projet (SYCEBNL), rapports financiers bailleurs, suivi des subventions, justification des dÃ©penses et prÃ©paration des audits. Pour coordinateurs et directeurs d'ONG souhaitant des comptes transparents et conformes aux exigences des bailleurs. Ã€ partir de 60 000 FCFA/mois.",
   },
   {
     slug: "conseil-bilan-fiscal",
-    name: "Bilan Annuel & Déclarations Fiscales",
+    name: "Bilan Annuel & DÃ©clarations Fiscales",
     pricingType: "SERVICE",
     price: 120000,
     rate: 10,
     siteUrl: BASE,
-    description: "Établissement du bilan annuel et des déclarations fiscales obligatoires : états financiers SYSCOHADA, liasse fiscale, déclaration de résultat, déclarations TVA et autres impôts. Pour toute entreprise souhaitant être en règle avec le fisc et éviter les pénalités. À partir de 120 000 FCFA selon la taille de la structure.",
+    description: "Ã‰tablissement du bilan annuel et des dÃ©clarations fiscales obligatoires : Ã©tats financiers SYSCOHADA, liasse fiscale, dÃ©claration de rÃ©sultat, dÃ©clarations TVA et autres impÃ´ts. Pour toute entreprise souhaitant Ãªtre en rÃ¨gle avec le fisc et Ã©viter les pÃ©nalitÃ©s. Ã€ partir de 120 000 FCFA selon la taille de la structure.",
   },
   {
     slug: "conseil-tableau-bord-financier",
@@ -42,18 +43,18 @@ const CONSEIL_PRODUCTS = [
     price: 80000,
     rate: 10,
     siteUrl: BASE,
-    description: "Conception et suivi d'un tableau de bord financier personnalisé : indicateurs clés (CA, marges, trésorerie, dettes), alertes et rapports mensuels de pilotage. Pour dirigeants souhaitant suivre leur performance financière en temps réel et prendre de meilleures décisions. À partir de 80 000 FCFA.",
+    description: "Conception et suivi d'un tableau de bord financier personnalisÃ© : indicateurs clÃ©s (CA, marges, trÃ©sorerie, dettes), alertes et rapports mensuels de pilotage. Pour dirigeants souhaitant suivre leur performance financiÃ¨re en temps rÃ©el et prendre de meilleures dÃ©cisions. Ã€ partir de 80 000 FCFA.",
   },
 
-  // ── Création & Structuration d'Entreprise ─────────────────────────────
+  // â”€â”€ CrÃ©ation & Structuration d'Entreprise â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     slug: "conseil-creation-entreprise",
-    name: "Création d'Entreprise Clé en Main",
+    name: "CrÃ©ation d'Entreprise ClÃ© en Main",
     pricingType: "SERVICE",
     price: 150000,
     rate: 12,
     siteUrl: BASE,
-    description: "Accompagnement complet à la création d'entreprise : choix du statut juridique (SARL, SAS, SA, EI…), rédaction des statuts, immatriculation au RCCM, obtention du compte contribuable, NCC, CNPS et compte bancaire professionnel. Pour porteurs de projets souhaitant créer leur entreprise rapidement et en toute légalité. À partir de 150 000 FCFA.",
+    description: "Accompagnement complet Ã  la crÃ©ation d'entreprise : choix du statut juridique (SARL, SAS, SA, EIâ€¦), rÃ©daction des statuts, immatriculation au RCCM, obtention du compte contribuable, NCC, CNPS et compte bancaire professionnel. Pour porteurs de projets souhaitant crÃ©er leur entreprise rapidement et en toute lÃ©galitÃ©. Ã€ partir de 150 000 FCFA.",
   },
   {
     slug: "conseil-structuration-entreprise",
@@ -62,7 +63,7 @@ const CONSEIL_PRODUCTS = [
     price: 200000,
     rate: 10,
     siteUrl: BASE,
-    description: "Diagnostic et restructuration de votre organisation : définition des fonctions, rédaction des fiches de poste, élaboration des procédures internes, organigramme, manuel de procédures et règlement intérieur. Pour entreprises en croissance souhaitant formaliser leur fonctionnement et préparer une montée en puissance. À partir de 200 000 FCFA.",
+    description: "Diagnostic et restructuration de votre organisation : dÃ©finition des fonctions, rÃ©daction des fiches de poste, Ã©laboration des procÃ©dures internes, organigramme, manuel de procÃ©dures et rÃ¨glement intÃ©rieur. Pour entreprises en croissance souhaitant formaliser leur fonctionnement et prÃ©parer une montÃ©e en puissance. Ã€ partir de 200 000 FCFA.",
   },
   {
     slug: "conseil-audit-organisationnel",
@@ -71,57 +72,57 @@ const CONSEIL_PRODUCTS = [
     price: 250000,
     rate: 10,
     siteUrl: BASE,
-    description: "Diagnostic complet du fonctionnement de votre entreprise : analyse des processus, identification des dysfonctionnements, évaluation des risques organisationnels, benchmarking et plan d'action correctif. Livré sous forme de rapport d'audit avec recommandations priorisées. Pour dirigeants souhaitant optimiser leur organisation et améliorer leur performance. À partir de 250 000 FCFA.",
+    description: "Diagnostic complet du fonctionnement de votre entreprise : analyse des processus, identification des dysfonctionnements, Ã©valuation des risques organisationnels, benchmarking et plan d'action correctif. LivrÃ© sous forme de rapport d'audit avec recommandations priorisÃ©es. Pour dirigeants souhaitant optimiser leur organisation et amÃ©liorer leur performance. Ã€ partir de 250 000 FCFA.",
   },
   {
     slug: "conseil-modification-statuts",
-    name: "Modification de Statuts & Formalités Juridiques",
+    name: "Modification de Statuts & FormalitÃ©s Juridiques",
     pricingType: "SERVICE",
     price: 100000,
     rate: 10,
     siteUrl: BASE,
-    description: "Gestion des modifications statutaires et formalités juridiques : changement de dénomination, transfert de siège, augmentation de capital, cession de parts, nomination de gérant et dépôt au RCCM. Pour entreprises devant effectuer des changements juridiques sans se perdre dans les démarches administratives. À partir de 100 000 FCFA.",
+    description: "Gestion des modifications statutaires et formalitÃ©s juridiques : changement de dÃ©nomination, transfert de siÃ¨ge, augmentation de capital, cession de parts, nomination de gÃ©rant et dÃ©pÃ´t au RCCM. Pour entreprises devant effectuer des changements juridiques sans se perdre dans les dÃ©marches administratives. Ã€ partir de 100 000 FCFA.",
   },
 
-  // ── Études & Conseil Stratégique ──────────────────────────────────────
+  // â”€â”€ Ã‰tudes & Conseil StratÃ©gique â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     slug: "conseil-etude-marche",
-    name: "Étude de Marché",
+    name: "Ã‰tude de MarchÃ©",
     pricingType: "SERVICE",
     price: 300000,
     rate: 10,
     siteUrl: BASE,
-    description: "Réalisation d'une étude de marché professionnelle : analyse de la demande, étude de la concurrence, segmentation, analyse SWOT, opportunités et recommandations stratégiques. Livrée avec rapport complet et présentation. Pour porteurs de projets, investisseurs et entreprises souhaitant valider un marché avant de se lancer. À partir de 300 000 FCFA.",
+    description: "RÃ©alisation d'une Ã©tude de marchÃ© professionnelle : analyse de la demande, Ã©tude de la concurrence, segmentation, analyse SWOT, opportunitÃ©s et recommandations stratÃ©giques. LivrÃ©e avec rapport complet et prÃ©sentation. Pour porteurs de projets, investisseurs et entreprises souhaitant valider un marchÃ© avant de se lancer. Ã€ partir de 300 000 FCFA.",
   },
   {
     slug: "conseil-business-plan",
-    name: "Rédaction de Business Plan",
+    name: "RÃ©daction de Business Plan",
     pricingType: "SERVICE",
     price: 200000,
     rate: 10,
     siteUrl: BASE,
-    description: "Élaboration d'un business plan complet et finançable : résumé exécutif, présentation du projet, étude de marché, stratégie commerciale, plan opérationnel, projections financières sur 3 ans et analyse de rentabilité. Adapté aux exigences des banques et investisseurs. Pour porteurs de projets en recherche de financement. À partir de 200 000 FCFA.",
+    description: "Ã‰laboration d'un business plan complet et finanÃ§able : rÃ©sumÃ© exÃ©cutif, prÃ©sentation du projet, Ã©tude de marchÃ©, stratÃ©gie commerciale, plan opÃ©rationnel, projections financiÃ¨res sur 3 ans et analyse de rentabilitÃ©. AdaptÃ© aux exigences des banques et investisseurs. Pour porteurs de projets en recherche de financement. Ã€ partir de 200 000 FCFA.",
   },
   {
     slug: "conseil-redaction-projet",
-    name: "Rédaction de Projets & Dossiers Techniques",
+    name: "RÃ©daction de Projets & Dossiers Techniques",
     pricingType: "SERVICE",
     price: 150000,
     rate: 10,
     siteUrl: BASE,
-    description: "Rédaction professionnelle de projets, dossiers de candidature et documents techniques : notes conceptuelles, propositions de projets ONG, dossiers d'appels d'offres, rapports d'activités et plans stratégiques. Pour organisations et entrepreneurs devant produire des documents convaincants pour des bailleurs, partenaires ou clients. À partir de 150 000 FCFA.",
+    description: "RÃ©daction professionnelle de projets, dossiers de candidature et documents techniques : notes conceptuelles, propositions de projets ONG, dossiers d'appels d'offres, rapports d'activitÃ©s et plans stratÃ©giques. Pour organisations et entrepreneurs devant produire des documents convaincants pour des bailleurs, partenaires ou clients. Ã€ partir de 150 000 FCFA.",
   },
   {
     slug: "conseil-strategie-developpement",
-    name: "Conseil Stratégique & Plan de Développement",
+    name: "Conseil StratÃ©gique & Plan de DÃ©veloppement",
     pricingType: "SERVICE",
     price: 350000,
     rate: 10,
     siteUrl: BASE,
-    description: "Accompagnement stratégique pour définir la vision, les objectifs et la feuille de route de votre entreprise : diagnostic stratégique, analyse PESTEL/SWOT, définition des axes de développement et plan d'action sur 3 ans. Pour dirigeants souhaitant prendre du recul et construire une stratégie claire et actionnable. À partir de 350 000 FCFA.",
+    description: "Accompagnement stratÃ©gique pour dÃ©finir la vision, les objectifs et la feuille de route de votre entreprise : diagnostic stratÃ©gique, analyse PESTEL/SWOT, dÃ©finition des axes de dÃ©veloppement et plan d'action sur 3 ans. Pour dirigeants souhaitant prendre du recul et construire une stratÃ©gie claire et actionnable. Ã€ partir de 350 000 FCFA.",
   },
 
-  // ── Recherche de Financement ──────────────────────────────────────────
+  // â”€â”€ Recherche de Financement â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     slug: "conseil-accompagnement-financement",
     name: "Accompagnement Recherche de Financement",
@@ -129,28 +130,28 @@ const CONSEIL_PRODUCTS = [
     price: 175000,
     rate: 10,
     siteUrl: BASE,
-    description: "Accompagnement complet pour l'obtention d'un financement : identification des sources adaptées (banques, fonds, subventions, investisseurs), constitution du dossier de financement, préparation du pitch, mise en relation et suivi des négociations. Pour porteurs de projets et PME en besoin de financement (crédit, capital, subvention). À partir de 175 000 FCFA.",
+    description: "Accompagnement complet pour l'obtention d'un financement : identification des sources adaptÃ©es (banques, fonds, subventions, investisseurs), constitution du dossier de financement, prÃ©paration du pitch, mise en relation et suivi des nÃ©gociations. Pour porteurs de projets et PME en besoin de financement (crÃ©dit, capital, subvention). Ã€ partir de 175 000 FCFA.",
   },
   {
     slug: "conseil-dossier-credit-bancaire",
-    name: "Montage Dossier de Crédit Bancaire",
+    name: "Montage Dossier de CrÃ©dit Bancaire",
     pricingType: "SERVICE",
     price: 100000,
     rate: 10,
     siteUrl: BASE,
-    description: "Préparation et montage de votre dossier de demande de crédit bancaire : business plan financier, garanties, projections de remboursement et présentation aux établissements bancaires partenaires. Pour entrepreneurs et PME souhaitant obtenir un financement bancaire avec un dossier solide et convaincant. À partir de 100 000 FCFA.",
+    description: "PrÃ©paration et montage de votre dossier de demande de crÃ©dit bancaire : business plan financier, garanties, projections de remboursement et prÃ©sentation aux Ã©tablissements bancaires partenaires. Pour entrepreneurs et PME souhaitant obtenir un financement bancaire avec un dossier solide et convaincant. Ã€ partir de 100 000 FCFA.",
   },
   {
     slug: "conseil-recherche-subventions",
-    name: "Recherche de Subventions & Appels à Projets",
+    name: "Recherche de Subventions & Appels Ã  Projets",
     pricingType: "SERVICE",
     price: 120000,
     rate: 10,
     siteUrl: BASE,
-    description: "Veille et accompagnement pour l'obtention de subventions et financements non remboursables : identification des appels à projets, rédaction des candidatures, suivi et relances. Pour ONG, startups et PME souhaitant accéder à des fonds publics, programmes internationaux (AFD, Banque Mondiale, UE) et concours entrepreneuriaux. À partir de 120 000 FCFA.",
+    description: "Veille et accompagnement pour l'obtention de subventions et financements non remboursables : identification des appels Ã  projets, rÃ©daction des candidatures, suivi et relances. Pour ONG, startups et PME souhaitant accÃ©der Ã  des fonds publics, programmes internationaux (AFD, Banque Mondiale, UE) et concours entrepreneuriaux. Ã€ partir de 120 000 FCFA.",
   },
 
-  // ── Coaching & Développement ──────────────────────────────────────────
+  // â”€â”€ Coaching & DÃ©veloppement â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     slug: "conseil-coaching-dirigeant",
     name: "Coaching de Dirigeant",
@@ -158,16 +159,16 @@ const CONSEIL_PRODUCTS = [
     price: 75000,
     rate: 12,
     siteUrl: BASE,
-    description: "Accompagnement personnalisé du dirigeant : clarification de la vision, prise de décision, gestion du temps, leadership, équilibre vie pro/perso et dépassement des blocages. Séances individuelles d'1h30 avec plan d'action personnalisé. Pour entrepreneurs, cadres dirigeants et managers souhaitant progresser dans leur rôle et atteindre leurs objectifs. 75 000 FCFA/séance.",
+    description: "Accompagnement personnalisÃ© du dirigeant : clarification de la vision, prise de dÃ©cision, gestion du temps, leadership, Ã©quilibre vie pro/perso et dÃ©passement des blocages. SÃ©ances individuelles d'1h30 avec plan d'action personnalisÃ©. Pour entrepreneurs, cadres dirigeants et managers souhaitant progresser dans leur rÃ´le et atteindre leurs objectifs. 75 000 FCFA/sÃ©ance.",
   },
   {
     slug: "conseil-coaching-equipe",
-    name: "Coaching d'Équipe & Team Building",
+    name: "Coaching d'Ã‰quipe & Team Building",
     pricingType: "SERVICE",
     price: 150000,
     rate: 10,
     siteUrl: BASE,
-    description: "Accompagnement collectif de votre équipe : cohésion, communication interne, résolution de conflits, clarification des rôles et amélioration de la performance collective. Atelier d'une journée ou programme sur mesure. Pour managers et dirigeants souhaitant souder leur équipe et améliorer la collaboration. À partir de 150 000 FCFA.",
+    description: "Accompagnement collectif de votre Ã©quipe : cohÃ©sion, communication interne, rÃ©solution de conflits, clarification des rÃ´les et amÃ©lioration de la performance collective. Atelier d'une journÃ©e ou programme sur mesure. Pour managers et dirigeants souhaitant souder leur Ã©quipe et amÃ©liorer la collaboration. Ã€ partir de 150 000 FCFA.",
   },
   {
     slug: "conseil-coaching-entrepreneurial",
@@ -176,47 +177,47 @@ const CONSEIL_PRODUCTS = [
     price: 60000,
     rate: 12,
     siteUrl: BASE,
-    description: "Accompagnement mensuel de l'entrepreneur dans le développement de son activité : validation de l'idée, structuration du modèle économique, premiers clients, gestion des difficultés et montée en compétences. Idéal pour les entrepreneurs en démarrage ou en phase de croissance souhaitant être guidés pas à pas. 60 000 FCFA/mois.",
+    description: "Accompagnement mensuel de l'entrepreneur dans le dÃ©veloppement de son activitÃ© : validation de l'idÃ©e, structuration du modÃ¨le Ã©conomique, premiers clients, gestion des difficultÃ©s et montÃ©e en compÃ©tences. IdÃ©al pour les entrepreneurs en dÃ©marrage ou en phase de croissance souhaitant Ãªtre guidÃ©s pas Ã  pas. 60 000 FCFA/mois.",
   },
 
-  // ── CV, Lettre de Motivation & Emploi ─────────────────────────────────
+  // â”€â”€ CV, Lettre de Motivation & Emploi â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     slug: "conseil-redaction-cv",
-    name: "Rédaction CV Professionnel",
+    name: "RÃ©daction CV Professionnel",
     pricingType: "SERVICE",
     price: 15000,
     rate: 15,
     siteUrl: BASE,
-    description: "Création ou refonte de votre CV professionnel : mise en page soignée, mise en valeur de vos compétences et expériences, optimisation pour les recruteurs et les systèmes ATS. Livré en Word et PDF, prêt à envoyer. Pour tout professionnel souhaitant un CV percutant qui décroche des entretiens. 15 000 FCFA.",
+    description: "CrÃ©ation ou refonte de votre CV professionnel : mise en page soignÃ©e, mise en valeur de vos compÃ©tences et expÃ©riences, optimisation pour les recruteurs et les systÃ¨mes ATS. LivrÃ© en Word et PDF, prÃªt Ã  envoyer. Pour tout professionnel souhaitant un CV percutant qui dÃ©croche des entretiens. 15 000 FCFA.",
   },
   {
     slug: "conseil-redaction-lettre-motivation",
-    name: "Rédaction Lettre de Motivation",
+    name: "RÃ©daction Lettre de Motivation",
     pricingType: "SERVICE",
     price: 10000,
     rate: 15,
     siteUrl: BASE,
-    description: "Rédaction d'une lettre de motivation personnalisée et percutante, adaptée à l'offre et à l'entreprise ciblée. Mise en avant de votre valeur ajoutée et de votre motivation. Pour candidats souhaitant se démarquer dès la lecture de leur dossier. 10 000 FCFA.",
+    description: "RÃ©daction d'une lettre de motivation personnalisÃ©e et percutante, adaptÃ©e Ã  l'offre et Ã  l'entreprise ciblÃ©e. Mise en avant de votre valeur ajoutÃ©e et de votre motivation. Pour candidats souhaitant se dÃ©marquer dÃ¨s la lecture de leur dossier. 10 000 FCFA.",
   },
   {
     slug: "conseil-pack-candidature",
-    name: "Pack Candidature Complet (CV + Lettre + Préparation entretien)",
+    name: "Pack Candidature Complet (CV + Lettre + PrÃ©paration entretien)",
     pricingType: "SERVICE",
     price: 35000,
     rate: 15,
     siteUrl: BASE,
-    description: "Pack complet pour maximiser vos chances d'embauche : CV professionnel, lettre de motivation personnalisée et séance de préparation aux entretiens (questions fréquentes, posture, pitch de présentation). Pour candidats souhaitant mettre toutes les chances de leur côté. 35 000 FCFA.",
+    description: "Pack complet pour maximiser vos chances d'embauche : CV professionnel, lettre de motivation personnalisÃ©e et sÃ©ance de prÃ©paration aux entretiens (questions frÃ©quentes, posture, pitch de prÃ©sentation). Pour candidats souhaitant mettre toutes les chances de leur cÃ´tÃ©. 35 000 FCFA.",
   },
 
-  // ── Insertion Professionnelle & Accompagnement Emploi ─────────────────
+  // â”€â”€ Insertion Professionnelle & Accompagnement Emploi â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     slug: "conseil-assistance-recherche-emploi",
-    name: "Assistance à la Recherche d'Emploi",
+    name: "Assistance Ã  la Recherche d'Emploi",
     pricingType: "SERVICE",
     price: 30000,
     rate: 15,
     siteUrl: BASE,
-    description: "Accompagnement mensuel dans votre recherche d'emploi : stratégie de candidature, activation du réseau, veille des offres, relecture des candidatures, préparation aux entretiens et suivi hebdomadaire. Pour demandeurs d'emploi souhaitant accélérer leur retour à l'emploi avec un accompagnement professionnel. 30 000 FCFA/mois.",
+    description: "Accompagnement mensuel dans votre recherche d'emploi : stratÃ©gie de candidature, activation du rÃ©seau, veille des offres, relecture des candidatures, prÃ©paration aux entretiens et suivi hebdomadaire. Pour demandeurs d'emploi souhaitant accÃ©lÃ©rer leur retour Ã  l'emploi avec un accompagnement professionnel. 30 000 FCFA/mois.",
   },
   {
     slug: "conseil-insertion-professionnelle",
@@ -225,56 +226,56 @@ const CONSEIL_PRODUCTS = [
     price: 75000,
     rate: 12,
     siteUrl: BASE,
-    description: "Programme complet d'insertion professionnelle sur 3 mois : bilan de compétences, définition du projet professionnel, CV et lettre de motivation, préparation aux entretiens, mise en réseau et accompagnement jusqu'au placement. Pour jeunes diplômés, reconvertis et demandeurs d'emploi souhaitant une insertion rapide et durable. 75 000 FCFA.",
+    description: "Programme complet d'insertion professionnelle sur 3 mois : bilan de compÃ©tences, dÃ©finition du projet professionnel, CV et lettre de motivation, prÃ©paration aux entretiens, mise en rÃ©seau et accompagnement jusqu'au placement. Pour jeunes diplÃ´mÃ©s, reconvertis et demandeurs d'emploi souhaitant une insertion rapide et durable. 75 000 FCFA.",
   },
   {
     slug: "conseil-bilan-competences",
-    name: "Bilan de Compétences",
+    name: "Bilan de CompÃ©tences",
     pricingType: "SERVICE",
     price: 50000,
     rate: 12,
     siteUrl: BASE,
-    description: "Bilan approfondi de vos compétences, aptitudes et motivations : identification de vos points forts, axes de développement et pistes d'évolution professionnelle. Livré avec un rapport de synthèse et un plan d'action personnalisé. Pour salariés en reconversion, cadres en transition et professionnels souhaitant évoluer. 50 000 FCFA.",
+    description: "Bilan approfondi de vos compÃ©tences, aptitudes et motivations : identification de vos points forts, axes de dÃ©veloppement et pistes d'Ã©volution professionnelle. LivrÃ© avec un rapport de synthÃ¨se et un plan d'action personnalisÃ©. Pour salariÃ©s en reconversion, cadres en transition et professionnels souhaitant Ã©voluer. 50 000 FCFA.",
   },
   {
     slug: "conseil-orientation-professionnelle",
-    name: "Conseil en Orientation & Évolution Professionnelle",
+    name: "Conseil en Orientation & Ã‰volution Professionnelle",
     pricingType: "SERVICE",
     price: 25000,
     rate: 12,
     siteUrl: BASE,
-    description: "Séance d'orientation professionnelle : clarification de vos objectifs de carrière, identification des secteurs porteurs, conseils sur les formations à suivre et stratégie de montée en compétences. Pour étudiants, jeunes professionnels et personnes en questionnement sur leur avenir professionnel. 25 000 FCFA.",
+    description: "SÃ©ance d'orientation professionnelle : clarification de vos objectifs de carriÃ¨re, identification des secteurs porteurs, conseils sur les formations Ã  suivre et stratÃ©gie de montÃ©e en compÃ©tences. Pour Ã©tudiants, jeunes professionnels et personnes en questionnement sur leur avenir professionnel. 25 000 FCFA.",
   },
 
-  // ── Recommandation & Réseau ───────────────────────────────────────────
+  // â”€â”€ Recommandation & RÃ©seau â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     slug: "conseil-lettre-recommandation",
-    name: "Rédaction Lettre de Recommandation",
+    name: "RÃ©daction Lettre de Recommandation",
     pricingType: "SERVICE",
     price: 15000,
     rate: 15,
     siteUrl: BASE,
-    description: "Rédaction d'une lettre de recommandation professionnelle percutante valorisant les compétences, le sérieux et les réalisations du candidat. Adaptée aux candidatures à l'emploi, aux admissions universitaires ou aux appels à projets. 15 000 FCFA.",
+    description: "RÃ©daction d'une lettre de recommandation professionnelle percutante valorisant les compÃ©tences, le sÃ©rieux et les rÃ©alisations du candidat. AdaptÃ©e aux candidatures Ã  l'emploi, aux admissions universitaires ou aux appels Ã  projets. 15 000 FCFA.",
   },
   {
     slug: "conseil-mise-en-reseau",
-    name: "Mise en Réseau & Recommandation Professionnelle",
+    name: "Mise en RÃ©seau & Recommandation Professionnelle",
     pricingType: "SERVICE",
     price: 20000,
     rate: 15,
     siteUrl: BASE,
-    description: "Activation du réseau professionnel IBIG PARTNERS pour faciliter la mise en relation avec des employeurs, partenaires, investisseurs ou donneurs d'ordre. Recommandation directe auprès des entreprises partenaires du groupe. Pour professionnels et entrepreneurs souhaitant bénéficier d'introductions à fort potentiel. 20 000 FCFA.",
+    description: "Activation du rÃ©seau professionnel IBIG PARTNERS pour faciliter la mise en relation avec des employeurs, partenaires, investisseurs ou donneurs d'ordre. Recommandation directe auprÃ¨s des entreprises partenaires du groupe. Pour professionnels et entrepreneurs souhaitant bÃ©nÃ©ficier d'introductions Ã  fort potentiel. 20 000 FCFA.",
   },
 
-  // ── Services Complémentaires ──────────────────────────────────────────
+  // â”€â”€ Services ComplÃ©mentaires â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     slug: "conseil-accompagnement-marches-publics",
-    name: "Accompagnement Marchés Publics",
+    name: "Accompagnement MarchÃ©s Publics",
     pricingType: "SERVICE",
     price: 150000,
     rate: 10,
     siteUrl: BASE,
-    description: "Assistance complète pour soumissionner aux marchés publics : veille des appels d'offres, constitution et vérification du dossier administratif, rédaction de l'offre technique et financière, dépôt et suivi. Pour entreprises souhaitant accéder à la commande publique en Côte d'Ivoire. À partir de 150 000 FCFA.",
+    description: "Assistance complÃ¨te pour soumissionner aux marchÃ©s publics : veille des appels d'offres, constitution et vÃ©rification du dossier administratif, rÃ©daction de l'offre technique et financiÃ¨re, dÃ©pÃ´t et suivi. Pour entreprises souhaitant accÃ©der Ã  la commande publique en CÃ´te d'Ivoire. Ã€ partir de 150 000 FCFA.",
   },
   {
     slug: "conseil-domiciliation-entreprise",
@@ -283,23 +284,23 @@ const CONSEIL_PRODUCTS = [
     price: 20000,
     rate: 10,
     siteUrl: BASE,
-    description: "Domiciliation légale de votre entreprise à une adresse professionnelle reconnue : réception du courrier, attestation de domiciliation fournie pour les formalités administratives. Pour entrepreneurs souhaitant créer leur entreprise sans local propre ou désirant une adresse professionnelle à moindre coût. 20 000 FCFA/mois.",
+    description: "Domiciliation lÃ©gale de votre entreprise Ã  une adresse professionnelle reconnue : rÃ©ception du courrier, attestation de domiciliation fournie pour les formalitÃ©s administratives. Pour entrepreneurs souhaitant crÃ©er leur entreprise sans local propre ou dÃ©sirant une adresse professionnelle Ã  moindre coÃ»t. 20 000 FCFA/mois.",
   },
   {
     slug: "conseil-mediation-contentieux",
-    name: "Médiation & Gestion de Contentieux",
+    name: "MÃ©diation & Gestion de Contentieux",
     pricingType: "SERVICE",
     price: 100000,
     rate: 10,
     siteUrl: BASE,
-    description: "Accompagnement dans la résolution amiable de litiges commerciaux, sociaux ou partenariaux : médiation, négociation, rédaction de protocoles d'accord et suivi de l'exécution. Pour entreprises souhaitant régler leurs différends rapidement et sans recours judiciaire coûteux. À partir de 100 000 FCFA.",
+    description: "Accompagnement dans la rÃ©solution amiable de litiges commerciaux, sociaux ou partenariaux : mÃ©diation, nÃ©gociation, rÃ©daction de protocoles d'accord et suivi de l'exÃ©cution. Pour entreprises souhaitant rÃ©gler leurs diffÃ©rends rapidement et sans recours judiciaire coÃ»teux. Ã€ partir de 100 000 FCFA.",
   },
 ];
 
 export async function POST() {
   const user = await getCurrentUser();
   if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN")) {
-    return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+    return NextResponse.json({ error: "Non autorisÃ©" }, { status: 403 });
   }
 
   const branch = await prisma.branch.findUnique({ where: { slug: "ibig-conseil-plus" } });
@@ -353,6 +354,7 @@ export async function POST() {
     ok: true,
     upserted,
     deleted: deleted.count,
-    message: `${upserted} services IBIG CONSEIL+ synchronisés, ${deleted.count} doublon(s) supprimé(s).`,
+    message: `${upserted} services IBIG CONSEIL+ synchronisÃ©s, ${deleted.count} doublon(s) supprimÃ©(s).`,
   });
 }
+
