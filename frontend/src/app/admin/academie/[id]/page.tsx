@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Card, Field, PageHeader } from "@/components/ui";
-import { updateModule, deleteModule } from "../actions";
+import { updateModule } from "../actions";
+import { DeleteModuleButton } from "./DeleteModuleButton";
 
 export const dynamic = "force-dynamic";
 
@@ -260,20 +261,7 @@ export default async function EditModulePage({
         <p className="text-sm text-slate-500 mb-4">
           La suppression de ce module est définitive et ne peut pas être annulée.
         </p>
-        <form action={deleteModule}>
-          <input type="hidden" name="id" value={module.id} />
-          <button
-            type="submit"
-            className="rounded-xl border border-red-200 bg-red-50 px-5 py-2.5 text-sm font-semibold text-red-700 hover:bg-red-100 transition-colors"
-            onClick={(e) => {
-              if (!confirm(`Supprimer définitivement "${module.title}" ?`)) {
-                e.preventDefault();
-              }
-            }}
-          >
-            Supprimer ce module
-          </button>
-        </form>
+        <DeleteModuleButton id={module.id} title={module.title} />
       </Card>
     </div>
   );
