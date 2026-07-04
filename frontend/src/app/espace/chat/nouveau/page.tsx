@@ -3,7 +3,7 @@ import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Badge, PageHeader } from "@/components/ui";
 import { STATUS_LABELS } from "@/lib/constants";
-import { startConversation } from "../actions";
+import { StartConversationButton } from "./StartConversationButton";
 
 export const dynamic = "force-dynamic";
 
@@ -103,15 +103,7 @@ export default async function NouvelleConversationPage() {
                 <p className="mt-1 text-xs text-muted">📍 {p.city}</p>
               )}
 
-              <form action={startConversation} className="mt-4 w-full">
-                <input type="hidden" name="targetUserId" value={p.id} />
-                <button
-                  type="submit"
-                  className="w-full rounded-xl bg-blue-600 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition"
-                >
-                  Démarrer une conversation
-                </button>
-              </form>
+              <StartConversationButton targetUserId={p.id} />
             </div>
           ))}
         </div>

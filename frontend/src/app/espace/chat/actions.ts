@@ -10,7 +10,10 @@ async function hasFilleul(userId: string): Promise<boolean> {
   return count > 0;
 }
 
-export async function startConversation(formData: FormData) {
+export async function startConversation(
+  _prev: string | null,
+  formData: FormData
+): Promise<string | null> {
   const user = await requireUser();
   const isAdmin = user.role === "ADMIN" || user.role === "SUPERADMIN";
   if (!isAdmin && !(await hasFilleul(user.id))) {
@@ -18,49 +21,39 @@ export async function startConversation(formData: FormData) {
   }
 
   const targetUserId = String(formData.get("targetUserId") || "").trim();
-  if (!targetUserId || targetUserId === user.id) return;
+  if (!targetUserId || targetUserId === user.id) return "Utilisateur invalide.";
 
-  // Look for an existing DIRECT conversation between these two users
-  const existing = await (prisma as any).chatConversation.findFirst({
-    where: {
-      type: "DIRECT",
-      participants: {
-        some: { userId: user.id },
+  try {
+    // Look for an existing DIRECT conversation between these two users
+    const existing = await (prisma as any).chatConversation.findFirst({
+      where: {
+        type: "DIRECT",
+        participants: { some: { userId: user.id } },
+        AND: [{ participants: { some: { userId: targetUserId } } }],
       },
-      AND: [
-        {
-          participants: {
-            some: { userId: targetUserId },
-          },
-        },
-      ],
-    },
-    include: {
-      participants: true,
-    },
-  });
+      include: { participants: true },
+    });
 
-  if (existing) {
-    // Verify it only has 2 participants (truly DIRECT)
-    if (existing.participants.length === 2) {
+    if (existing && existing.participants.length === 2) {
       redirect(`/espace/chat/${existing.id}`);
     }
-  }
 
-  // Create new DIRECT conversation
-  const conversation = await (prisma as any).chatConversation.create({
-    data: {
-      type: "DIRECT",
-      participants: {
-        create: [
-          { userId: user.id },
-          { userId: targetUserId },
-        ],
+    // Create new DIRECT conversation
+    const conversation = await (prisma as any).chatConversation.create({
+      data: {
+        type: "DIRECT",
+        participants: {
+          create: [{ userId: user.id }, { userId: targetUserId }],
+        },
       },
-    },
-  });
+    });
 
-  redirect(`/espace/chat/${conversation.id}`);
+    redirect(`/espace/chat/${conversation.id}`);
+  } catch (e: any) {
+    if (e?.digest?.startsWith?.("NEXT_REDIRECT")) throw e;
+    console.error("[startConversation]", e);
+    return `Erreur : ${e?.message ?? String(e)}`;
+  }
 }
 
 export async function sendMessage(formData: FormData) {
