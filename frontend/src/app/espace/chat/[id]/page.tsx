@@ -7,8 +7,6 @@ import { ChatMessages, type ChatMessageData } from "./ChatMessages";
 
 export const dynamic = "force-dynamic";
 
-const GOLD_STATUSES = ["GOLD", "MASTER", "ELITE"];
-
 function initials(first: string, last: string) {
   return `${first?.[0] ?? ""}${last?.[0] ?? ""}`.toUpperCase();
 }
@@ -19,7 +17,8 @@ export default async function ConversationPage({
   params: Promise<{ id: string }>;
 }) {
   const user = await requireUser();
-  if (!GOLD_STATUSES.includes(user.status)) redirect("/espace/chat");
+  const filleulCount = await prisma.user.count({ where: { sponsorId: user.id } });
+  if (filleulCount === 0) redirect("/espace/chat");
 
   const { id } = await params;
 

@@ -5,11 +5,14 @@ import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-const GOLD_STATUSES = ["GOLD", "MASTER", "ELITE"];
+async function hasFilleul(userId: string): Promise<boolean> {
+  const count = await prisma.user.count({ where: { sponsorId: userId } });
+  return count > 0;
+}
 
 export async function startConversation(formData: FormData) {
   const user = await requireUser();
-  if (!GOLD_STATUSES.includes(user.status)) {
+  if (!(await hasFilleul(user.id))) {
     redirect("/espace/chat");
   }
 
@@ -61,7 +64,7 @@ export async function startConversation(formData: FormData) {
 
 export async function sendMessage(formData: FormData) {
   const user = await requireUser();
-  if (!GOLD_STATUSES.includes(user.status)) return;
+  if (!(await hasFilleul(user.id))) return;
 
   const conversationId = String(formData.get("conversationId") || "").trim();
   const body = String(formData.get("body") || "").trim();

@@ -6,8 +6,6 @@ import { STATUS_LABELS, STATUS_COLORS } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
-const GOLD_STATUSES = ["GOLD", "MASTER", "ELITE"];
-
 function formatRelative(date: Date | null): string {
   if (!date) return "";
   const diff = Date.now() - new Date(date).getTime();
@@ -36,24 +34,26 @@ function getConversationName(conv: any, currentUserId: string): string {
 export default async function ChatPage() {
   const user = await requireUser();
 
-  if (!GOLD_STATUSES.includes(user.status)) {
+  const filleulCount = await prisma.user.count({ where: { sponsorId: user.id } });
+
+  if (filleulCount === 0) {
     return (
       <div>
         <PageHeader
-          title="Chat GOLD+"
-          subtitle="Messagerie réservée aux partenaires Gold, Master et Elite"
+          title="Messages"
+          subtitle="Échangez en direct avec vos filleuls"
         />
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-8 text-center">
-          <p className="text-4xl mb-4">🔒</p>
-          <h2 className="font-bold text-ink text-lg mb-2">Accès réservé aux partenaires GOLD+</h2>
+        <div className="rounded-2xl border border-blue-100 bg-blue-50 p-8 text-center">
+          <p className="text-4xl mb-4">💬</p>
+          <h2 className="font-bold text-ink text-lg mb-2">La messagerie se débloque avec votre premier filleul</h2>
           <p className="text-sm text-muted mb-4">
-            La messagerie est disponible à partir du statut Gold. Continuez à développer votre réseau pour débloquer cette fonctionnalité.
+            Recrutez votre premier affilié et vous pourrez échanger des messages, partager des conseils, des documents et des ressources directement depuis cette interface.
           </p>
           <Link
-            href="/espace/classement"
-            className="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-amber-600 transition"
+            href="/espace/reseau"
+            className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition"
           >
-            Voir ma progression →
+            Voir mon réseau →
           </Link>
         </div>
       </div>
@@ -81,7 +81,7 @@ export default async function ChatPage() {
     <div>
       <PageHeader
         title="Messages"
-        subtitle="Échangez avec les partenaires de la communauté GOLD+"
+        subtitle="Échangez avec vos filleuls et votre réseau"
       />
 
       <div className="mb-5 flex items-center justify-between">
