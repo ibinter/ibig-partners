@@ -193,8 +193,8 @@ export function ChatMessages({ initialMessages, conversationId, currentUserId }:
       const formData = new FormData();
       formData.append("file", file);
       const res = await fetch("/api/chat/upload", { method: "POST", body: formData });
-      if (!res.ok) { setError("Échec de l'envoi du fichier."); return; }
       const data = await res.json();
+      if (!res.ok) { setError(data?.error ?? "Échec de l'envoi du fichier."); return; }
       if (data.url) await sendBody(data.url);
     } catch {
       setError("Impossible d'envoyer le fichier.");
