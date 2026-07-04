@@ -34,7 +34,8 @@ function getConversationName(conv: any, currentUserId: string): string {
 export default async function ChatPage() {
   const user = await requireUser();
 
-  const filleulCount = await prisma.user.count({ where: { sponsorId: user.id } });
+  const isAdmin = user.role === "ADMIN" || user.role === "SUPERADMIN";
+  const filleulCount = isAdmin ? 1 : await prisma.user.count({ where: { sponsorId: user.id } });
 
   if (filleulCount === 0) {
     return (

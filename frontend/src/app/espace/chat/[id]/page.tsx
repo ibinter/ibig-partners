@@ -17,7 +17,8 @@ export default async function ConversationPage({
   params: Promise<{ id: string }>;
 }) {
   const user = await requireUser();
-  const filleulCount = await prisma.user.count({ where: { sponsorId: user.id } });
+  const isAdmin = user.role === "ADMIN" || user.role === "SUPERADMIN";
+  const filleulCount = isAdmin ? 1 : await prisma.user.count({ where: { sponsorId: user.id } });
   if (filleulCount === 0) redirect("/espace/chat");
 
   const { id } = await params;

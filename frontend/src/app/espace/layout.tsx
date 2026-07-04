@@ -37,7 +37,7 @@ export default async function EspaceLayout({
     { href: "/espace/paiements",    label: "Mes Paiements",   icon: "🏦",  group: "Revenus" },
     { href: "/espace/academie",     label: "Académie IBIG",   icon: "🎓",  group: "Formation & Communauté" },
     { href: "/espace/coach",        label: "Coach IA",        icon: "✨",  group: "Formation & Communauté" },
-    { href: "/espace/chat",         label: "Chat GOLD+",      icon: "💬",  group: "Formation & Communauté" },
+    { href: "/espace/chat",         label: "Messages",        icon: "💬",  group: "Formation & Communauté" },
     { href: "/espace/badges",       label: "Mes Badges",      icon: "🏅",  group: "Formation & Communauté" },
     { href: "/espace/verification", label: "Vérifier mon compte", icon: "🔐", group: "Compte" },
     { href: "/espace/formation",    label: "Guide Commissions", icon: "📚",  group: "Ressources" },

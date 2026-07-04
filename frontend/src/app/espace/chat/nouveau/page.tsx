@@ -14,7 +14,8 @@ function getInitials(firstName: string, lastName: string) {
 export default async function NouvelleConversationPage() {
   const user = await requireUser();
 
-  const filleulCount = await prisma.user.count({ where: { sponsorId: user.id } });
+  const isAdmin = user.role === "ADMIN" || user.role === "SUPERADMIN";
+  const filleulCount = isAdmin ? 1 : await prisma.user.count({ where: { sponsorId: user.id } });
 
   if (filleulCount === 0) {
     return (
@@ -33,12 +34,11 @@ export default async function NouvelleConversationPage() {
     );
   }
 
-  // Filleuls directs (N1) de cet affilié
+  // Admins voient tous les affiliés, les autres voient leurs filleuls directs
   const filleuls = await prisma.user.findMany({
-    where: {
-      sponsorId: user.id,
-      active: true,
-    },
+    where: isAdmin
+      ? { active: true, id: { not: user.id } }
+      : { sponsorId: user.id, active: true },
     orderBy: [{ status: "desc" }, { firstName: "asc" }],
     select: {
       id: true,
@@ -63,7 +63,7 @@ export default async function NouvelleConversationPage() {
 
       <PageHeader
         title="Nouvelle conversation"
-        subtitle={`${filleuls.length} filleul${filleuls.length !== 1 ? "s" : ""} direct${filleuls.length !== 1 ? "s" : ""}`}
+        subtitle={isAdmin ? `${filleuls.length} affilié(s)` : `${filleuls.length} filleul${filleuls.length !== 1 ? "s" : ""} direct${filleuls.length !== 1 ? "s" : ""}`}
       />
 
       {filleuls.length === 0 ? (
