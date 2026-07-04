@@ -138,6 +138,26 @@ export function SyncConseilButton() {
   );
 }
 
+export function SyncKitsButton() {
+  return (
+    <SyncButton
+      label="Sync Kit Marketing"
+      endpoint="/api/admin/sync-kits"
+      className="rounded-lg border border-pink-300 bg-pink-50 px-4 py-2 text-sm font-semibold text-pink-700 hover:bg-pink-100 disabled:opacity-50"
+    />
+  );
+}
+
+export function SyncAcademieButton() {
+  return (
+    <SyncButton
+      label="Sync Académie"
+      endpoint="/api/admin/sync-academie"
+      className="rounded-lg border border-cyan-300 bg-cyan-50 px-4 py-2 text-sm font-semibold text-cyan-700 hover:bg-cyan-100 disabled:opacity-50"
+    />
+  );
+}
+
 export function SyncDigitalButton() {
   return (
     <SyncButton

@@ -8,7 +8,7 @@ import {
   createBranch, updateBranch, deleteBranch,
   createProduct, updateProduct, deleteProduct,
 } from "../actions";
-import { SyncBranchesButton, SyncSoftButton, SyncEduformButton, SyncDigitalKitsButton, SyncDigitalButton, SyncConseilButton, SyncPartnersButton, SyncMultiservicesButton, SyncImmoButton, MigrateButton } from "./sync-button";
+import { SyncBranchesButton, SyncSoftButton, SyncEduformButton, SyncDigitalKitsButton, SyncDigitalButton, SyncConseilButton, SyncPartnersButton, SyncMultiservicesButton, SyncImmoButton, SyncKitsButton, SyncAcademieButton, MigrateButton } from "./sync-button";
 
 export const dynamic = "force-dynamic";
 
@@ -91,6 +91,8 @@ export default async function BranchesPage({
           <SyncDigitalButton />
           <SyncDigitalKitsButton />
           <SyncEduformButton />
+          <SyncKitsButton />
+          <SyncAcademieButton />
           <SyncBranchesButton />
           <a
             href="/admin/branches?action=new-branch"
