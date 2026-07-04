@@ -257,6 +257,7 @@ export async function POST() {
       slug: { notIn: knownSlugs },
       // Ne supprimer que ceux sans ventes enregistrÃ©es
       sales: { none: {} },
+        links: { none: {} },
     },
   });
 

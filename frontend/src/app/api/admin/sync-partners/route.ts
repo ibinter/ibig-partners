@@ -148,6 +148,7 @@ export async function POST() {
       branchId: branch.id,
       slug: { notIn: knownSlugs },
       sales: { none: {} },
+        links: { none: {} },
     },
   });
 
