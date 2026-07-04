@@ -249,7 +249,7 @@ export default function ProjetPage() {
       y += 3;
       y = body(t("Le programme permet a toute personne physique ou morale de devenir Partenaire Affilié et de percevoir des commissions sur les ventes de produits et services IBIG qu'elle généré directement (N1) ou via son réseau de filleuls (N2, N3). Aucun investissement initial n'est requis pour rejoindre le programme."),y);
       y += 3;
-      y = body(t("Chiffres clés : 5 branches d'activité, 30+ produits au catalogue, commissions jusqu'à 20% N1, système 3 niveaux de profondeur, statuts évolutifs de STARTER a ELITE, paiements via 10+ méthodes panafricaines."),y);
+      y = body(t("Chiffres clés : 9 branches d'activité, 270+ produits au catalogue, commissions jusqu'à 20% N1, système 3 niveaux de profondeur, statuts évolutifs de STARTER a ELITE, paiements via Orange Money, Wave, MTN MoMo et virement bancaire."),y);
       y += 3;
       y = body(t("Objectif 2026 : 500 partenaires actifs, 50M FCFA de commissions versées, couverture Afrique de l'Ouest."),y);
       y += 5;
@@ -265,7 +265,7 @@ export default function ProjetPage() {
           [t("CA généré réseau"),"250M FCFA","1 Md FCFA","4 Mds FCFA"],
           [t("Commissions versées"),"50M FCFA","200M FCFA","800M FCFA"],
           [t("Pays couverts"),"1 (CI)","6","15"],
-          [t("Branches activées"),"5","5","7"],
+          [t("Branches activées"),"9","9","9"],
         ],
         headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 9 },
         bodyStyles: { fontSize: 9,textColor: DARK },
@@ -279,10 +279,10 @@ export default function ProjetPage() {
       y = subTitle(t("Proposition de valeur unique"),y);
       y = bullet(t("Zéro investissement requis : inscription 100% gratuite, aucun stock a acheter"),y);
       y = bullet(t("Commissions sur 3 niveaux de profondeur (N1, N2, N3)"),y);
-      y = bullet(t("5 branches d'activité : technologie, formation, immobilier, commerce, conseil"),y);
+      y = bullet(t("9 branches d'activité : logiciels, formation, immobilier, commerce, digital, conseil, affiliation, multiservices"),y);
       y = bullet(t("Revenus récurrents sur abonnements logiciels mensuels"),y);
       y = bullet(t("Académie IBIG intégrée + Coach IA 24h/24 pour maximiser les performances"),y);
-      y = bullet(t("12 méthodes de paiement dont mobile money panafricain"),y);
+      y = bullet(t("4 méthodes de paiement : Orange Money, Wave, MTN MoMo, virement bancaire"),y);
       y = bullet(t("Statuts évolutifs STARTER > SILVER > GOLD > MASTER > ELITE avec bonus"),y);
       y += 5;
 
@@ -346,29 +346,29 @@ export default function ProjetPage() {
       y = body(t("Le programme IBIG PARTNERS prolonge naturellement cette vision en transformant les clients satisfaits et les professionnels connectés en ambassadeurs rémunérés, créant ainsi un réseau de distribution organique et panafricain."),y);
 
       // ═══════════════════════════════════════════════════════════
-      // PAGE 7-9 — LES 5 BRANCHES DU GROUPE
+      // PAGE 7-9 — LES 9 BRANCHES DU GROUPE
       // ═══════════════════════════════════════════════════════════
       newPage();
       header(pageNum,TOTAL_PAGES);
       footer();
       y = 22;
-      y = sectionTitle(t("Les 5 Branches du Groupe IBIG"),y);
+      y = sectionTitle(t("Les 9 Branches du Groupe IBIG"),y);
 
       // --- IBIG SOFT ---
       y = subTitle(t("IBIG SOFT - Logiciels SaaS de Gestion"),y);
-      y = body(t("Division technologique d'IBIG SARL, IBIG SOFT développe et distribue des logiciels SaaS (Software as a Service) de gestion sur abonnement mensuel ou annuel. Les solutions couvrent la gestion scolaire, la flotte de véhicules, le commerce, la livraison, la gestion immobilière et la gestion des stocks."),y);
+      y = body(t("Division technologique d'IBIG SARL, IBIG SOFT développe et distribue des logiciels SaaS (Software as a Service) de gestion sur abonnement mensuel ou annuel. Les solutions couvrent la gestion scolaire, la flotte de véhicules, le commerce, la livraison, la gestion immobilière et la gestion des stocks. Chaque logiciel propose plusieurs formules (Starter à Entreprise) — 46 produits au total dans cette branche."),y);
       y += 3;
 
       autoTable(doc,{
         startY: y,
-        head: [[t("Logiciel"),t("Prix/mois"),t("Prix/an"),t("Cible")],],
+        head: [[t("Logiciel"),t("Dès (mois)"),t("Dès (an)"),t("Cible")],],
         body: [
-          [t("Scolaby"),"30 000 FCFA","300 000 FCFA",t("Écoles, lycées, universités")],
-          [t("IBIG Fleet 360"),"45 000 FCFA","450 000 FCFA",t("Transporteurs, flottes entreprises")],
-          [t("GESCOMXEL"),"20 000 FCFA","200 000 FCFA",t("PME, commerçants, distributeurs")],
-          [t("Zelivry"),"25 000 FCFA","250 000 FCFA",t("Sociétés de livraison, coursiers")],
-          [t("Lokativo"),"35 000 FCFA","350 000 FCFA",t("Agences immobilières, bailleurs")],
-          [t("StockFlow ERP"),"40 000 FCFA","400 000 FCFA",t("Industries, grandes surfaces")],
+          [t("Scolaby"),"10 000 FCFA","99 600 FCFA",t("Écoles, lycées, universités")],
+          [t("IBIG Fleet 360"),"19 900 FCFA","199 000 FCFA",t("Transporteurs, flottes entreprises")],
+          [t("GESCOMXEL"),"5 000 FCFA","50 000 FCFA",t("PME, commerçants, distributeurs")],
+          [t("Zelivry"),"4 900 FCFA","49 000 FCFA",t("Sociétés de livraison, coursiers")],
+          [t("Lokativo"),"9 900 FCFA","99 900 FCFA",t("Agences immobilières, bailleurs")],
+          [t("StockFlow ERP"),"5 000 FCFA","50 000 FCFA",t("Industries, grandes surfaces")],
         ],
         headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 8 },
         bodyStyles: { fontSize: 8,textColor: DARK },
@@ -422,11 +422,11 @@ export default function ProjetPage() {
         startY: y,
         head: [[t("Service"),t("Base de commission"),t("N1"),t("N2"),t("N3")]],
         body: [
-          [t("Achat/Vente Immobilière"),t("Prix de vente"),"5%","2.5%","1%"],
-          [t("Gestion Locative Garantie"),t("Loyers annuels"),"5%","2.5%","1%"],
-          [t("Construction Clé en Main"),t("Budget construction"),"5%","2.5%","1%"],
-          [t("Rénovation et Réhabilitation"),t("Budget travaux"),"5%","2.5%","1%"],
-          [t("Service Diaspora"),t("Valeur projet"),"5%","2.5%","1%"],
+          [t("Achat/Vente Immobilière"),t("Commission agence"),"10%","5%","2.5%"],
+          [t("Gestion Locative Garantie"),t("1 mois d'agence (2 versements)"),"10%","5%","2.5%"],
+          [t("Construction Clé en Main"),t("Budget construction"),"10%","5%","2.5%"],
+          [t("Rénovation et Réhabilitation"),t("Budget travaux"),"10%","5%","2.5%"],
+          [t("Service Diaspora"),t("Valeur projet"),"10%","5%","2.5%"],
         ],
         headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 8 },
         bodyStyles: { fontSize: 8,textColor: DARK },
@@ -561,15 +561,15 @@ export default function ProjetPage() {
         startY: y,
         head: [[t("Branche"),t("Produit"),t("Prix"),t("N1"),t("N2"),t("N3"),t("Gain N1"),t("Gain N2"),t("Gain N3")]],
         body: [
-          [t("IBIG SOFT"),t("Scolaby mensuel"),"30 000","20%","10%","5%","6 000","3 000","1 500"],
-          [t("IBIG SOFT"),t("Fleet 360 mensuel"),"45 000","20%","10%","5%","9 000","4 500","2 250"],
-          [t("IBIG SOFT"),t("Scolaby annuel"),"300 000","20%","8%","3%","60 000","24 000","9 000"],
+          [t("IBIG SOFT"),t("Scolaby mensuel (Starter)"),"10 000","20%","10%","5%","2 000","1 000","500"],
+          [t("IBIG SOFT"),t("Fleet 360 mensuel (Starter)"),"19 900","20%","10%","5%","3 980","1 990","995"],
+          [t("IBIG SOFT"),t("Scolaby annuel (Starter)"),"99 600","20%","8%","3%","19 920","7 968","2 988"],
           [t("IBIG EDUFORM"),t("Comptabilité"),"400 000","10%","5%","2%","40 000","20 000","8 000"],
           [t("IBIG EDUFORM"),t("Expert RH"),"450 000","10%","5%","2%","45 000","22 500","9 000"],
-          [t("IBIG IMMO TRUST"),t("Terrain 50M"),"50 000 000","5%","2.5%","1%","2 500 000","1 250 000","500 000"],
+          [t("IBIG IMMO TRUST"),t("Vente — commission agence 1M"),"1 000 000","10%","5%","2.5%","100 000","50 000","25 000"],
           [t("IBIG MARKET"),t("PC portable"),"500 000","8%","4%","2%","40 000","20 000","10 000"],
           [t("IBIG DIGITAL"),t("Site vitrine"),"400 000","10%","5%","2%","40 000","20 000","8 000"],
-          [t("IBIG DIGITAL KITS"),t("Intégration ERP"),"2 000 000","10%","5%","2%","200 000","100 000","40 000"],
+          [t("IBIG DIGITAL KITS"),t("Intégration ERP"),"2 000 000","15%","7.5%","3.75%","300 000","150 000","75 000"],
           [t("IBIG CONSEIL+"),t("Mission audit"),"1 500 000","10%","5%","2%","150 000","75 000","30 000"],
         ],
         headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7 },
@@ -654,7 +654,7 @@ export default function ProjetPage() {
         body: [
           [t("STARTER"),"0 vente",t("Taux de base"),t("Accès plateforme, liens, kit marketing"),"Email/WhatsApp"],
           [t("SILVER"),"10 ventes","+2% sur tout",t("Statistiques avancées, objectifs"),t("Prioritaire")],
-          [t("GOLD"),"25 ventes + 10 filleuls + 20 équipe","+5% sur tout",t("Chat GOLD+, badge Gold, visibilite"),t("Dédié")],
+          [t("GOLD"),"25 ventes + 10 filleuls + 20 équipe","+5% sur tout",t("Badge Gold, visibilite"),t("Dédié")],
           [t("MASTER"),"50 ventes + 25 filleuls + 50 équipe","+8% sur tout",t("Webinaires exclusifs, co-branding IBIG"),t("Manager attitré")],
           [t("ELITE"),"100 ventes + 50 filleuls + 100 équipe","+12% sur tout",t("Événements VIP, partenariat stratégique"),t("Directeur commercial")],
         ],
@@ -817,18 +817,10 @@ export default function ProjetPage() {
  startY: y,
  head: [[t("Methode"), t("Zone géographique"), t("Délai"), t("Frais"), t("Minimum")]],
  body: [
- [t("Orange Money"), t("CI, Burkina, Mali, Sénégal, Cameroun"), t("Instantané"),"0%","5 000 FCFA"],
- [t("Wave"), t("CI, Sénégal, Burkina, Mali"), t("Instantané"),"0%","5 000 FCFA"],
- [t("MTN MoMo"), t("CI, Ghana, Cameroun, Uganda, Rwanda"),"24h","0%","5 000 FCFA"],
- [t("Moov Money"), t("CI, Togo, Bénin, Niger"),"24h","0%","5 000 FCFA"],
- [t("Airtel Money"), t("Kenya, Tanzania, Zambie, RDC"),"24h","0-1%","5 000 FCFA"],
- [t("M-Pesa"), t("Kenya, Tanzania, Mozambique"),"24h","0-1%","5 000 FCFA"],
- [t("CinetPay"), t("Panafricain (20 pays)"),"48h","1-2%","10 000 FCFA"],
- [t("PayPal"), t("International"),"3-5 jours","3-4%","50 000 FCFA"],
- [t("Virement bancaire IBAN"), t("International"),"5-7 jours", t("Frais SWIFT"),"100 000 FCFA"],
- [t("Western Union"), t("Mondial (200 pays)"),"24h", t("Variable"),"50 000 FCFA"],
- [t("Wise / WorldRemit"), t("Europe, Amériques, Asie"),"1-3 jours","0.5-2%","50 000 FCFA"],
- [t("Juba Express / RIA"), t("Afrique, diaspora"),"24h", t("Variable"),"30 000 FCFA"],
+ [t("Orange Money"), t("Panafricain"), t("Instantané"),"0%","5 000 FCFA"],
+ [t("Wave"), t("Panafricain"), t("Instantané"),"0%","5 000 FCFA"],
+ [t("MTN MoMo"), t("Panafricain"),"24h","0%","5 000 FCFA"],
+ [t("Virement bancaire"), t("International"),"5-7 jours", t("Frais bancaires"),"5 000 FCFA"],
  ],
  headStyles: { fillColor: BLUE, textColor: WHITE, fontStyle: "bold", fontSize: 7 },
  bodyStyles: { fontSize: 7, textColor: DARK },
@@ -837,7 +829,7 @@ export default function ProjetPage() {
  theme: "grid",
  });
  y = (doc as any).lastAutoTable.finalY + 5;
- y = infoBox(t("Seuil minimum de versement : 5 000 FCFA pour les mobile money locaux. Les commissions inférieures au seuil s'accumulént jusqu'à dépasser le minimum. Les frais de transfert internationaux sont à la charge du bénéficiaire."), y);
+ y = infoBox(t("Seuil minimum de versement : 5 000 FCFA. Les commissions inférieures au seuil s'accumulént jusqu'à dépasser le minimum."), y);
 
  // 
  // PAGE 17-18 — ACADÉMIE IBIG
@@ -972,11 +964,11 @@ export default function ProjetPage() {
  startY: y,
  head: [[t("Avantage"), t("Description"), t("Impact")]],
  body: [
- [t("Modèle intégré"), t("5 branches couvrant besoins essentiels PME/particuliers"), t("Ventes croisees,client captif")],
+ [t("Modèle intégré"), t("9 branches couvrant besoins essentiels PME/particuliers"), t("Ventes croisees,client captif")],
  [t("Commissions attractives"), t("Jusqu'a 20% N1, système 3 niveaux"), t("ROI partenaire exceptionnel")],
  [t("Plateforme technologique"), t("Dashboard temps réel, tracking automatique"), t("Transparence et confiance")],
  [t("Formation intégrée"), t("Académie + Coach IA 24/7"), t("Autonomie et performance partenaires")],
- [t("Diversité paiements"), t("12 méthodes dont mobile money pan-africain"), t("Accessibilité maximale")],
+ [t("Diversité paiements"), t("Orange Money, Wave, MTN MoMo, virement bancaire"), t("Accessibilité panafricaine")],
  [t("Produits SaaS récurrents"), t("Commissions récurrentes sur abonnements mensuels"), t("Revenu passif stable")],
  [t("Ancrage local"), t("Équipe et support bases en Côte d'Ivoire"), t("Reactivite et confiance")],
  [t("Programme gamifié"), t("Badges,statuts,classements,competitions"), t("Engagement et retention")],
@@ -1007,7 +999,7 @@ export default function ProjetPage() {
  [t("Commissions récurrentes"), t("Oui (SaaS)"), t("Rarement"),"Non", t("Non (fixe)")],
  [t("Risque financier"),"Nul", t("Moyen à élevé"), t("Faible"),"Nul"],
  [t("Plafond de revenus"), t("Illimite"), t("Illimite"), t("Limite"), t("Plafonné")],
- [t("Produits reels"),"Oui (5 branches)", t("Parfois douteux"),"Oui", t("Selon employeur")],
+ [t("Produits reels"),"Oui (9 branches)", t("Parfois douteux"),"Oui", t("Selon employeur")],
  [t("Formation Intégrée"), t("Oui (Academie IBIG)"), t("Rarement"),"Non", t("Variable")],
  [t("Support dedie"),"Oui", t("Variable"),"Non","RH"],
  ],
@@ -1133,7 +1125,7 @@ export default function ProjetPage() {
  },
  {
  q: t("Peut-on s'inscrire depuis un pays hors Côte d'Ivoire ?"),
- r: t("Oui. IBIG PARTNERS est ouvert à toute l'Afrique subsaharienne et à la diaspora africaine mondiale. Les commissions sont versées via Wave, MTN MoMo, Western Union, virement bancaire, PayPal et d'autres méthodes internationales."),
+ r: t("Oui. IBIG PARTNERS est un programme panafricain et international, ouvert à toute l'Afrique et à la diaspora mondiale, sans limite de pays. Les commissions sont versées via Orange Money, Wave, MTN MoMo ou virement bancaire."),
  },
  {
  q: t("Quel est le potentiel de revenus maximum ?"),
@@ -1149,7 +1141,7 @@ export default function ProjetPage() {
  },
  {
  q: t("Est-il possible de cumulér les commissions de plusieurs branches ?"),
- r: t("Absolument. Un partenaire peut promouvoir simultanément les 5 branches et cumulér des commissions sur toutes. Un client peut acheter un logiciel IBIG SOFT,s'inscrire en formation EDUFORM et commander du matériel IBIG MARKET - le partenaire perçoit une commission sur chacune de ces transactions."),
+ r: t("Absolument. Un partenaire peut promouvoir simultanément les 9 branches et cumulér des commissions sur toutes. Un client peut acheter un logiciel IBIG SOFT,s'inscrire en formation EDUFORM et commander du matériel IBIG MARKET - le partenaire perçoit une commission sur chacune de ces transactions."),
  },
  {
  q: t("Comment rejoindre IBIG PARTNERS en tant qu'entreprise ?"),
@@ -1272,7 +1264,7 @@ export default function ProjetPage() {
  { icon:"", title:"Résumé Exécutif", desc:"Vision,chiffres clés,objectifs 2026-2028"},
  { icon: "", title:"Groupe IBIG SARL", desc:"Présentation, vision, mission, valeurs"},
  { icon: "", title:"IBIG SOFT", desc:"6 logiciels SaaS de gestion, tarifs, commissions — ibigsoft.com"},
- { icon: "", title:"IBIG EDUFORM", desc:"200+ formations professionnelles certifiantes — ibig-eduform.com"},
+ { icon: "", title:"IBIG EDUFORM", desc:"25+ formations professionnelles certifiantes — ibig-eduform.com"},
  { icon: "", title:"IBIG IMMO TRUST", desc:"Immobilier sécurisé, BTP, service diaspora — ibigimmotrust.com"},
  { icon: "", title:"IBIG MARKET", desc:"Commerce B2B/B2C, matériel IT, e-commerce — ibig-market.com"},
  { icon: "", title:"IBIG DIGITAL", desc:"Création digitale, communication visuelle, site vitrine, identité visuelle — intermark-business.com/digital"},
@@ -1288,7 +1280,7 @@ export default function ProjetPage() {
  { icon: "", title:"Plateforme technologique", desc:"Stack Next.js, modules, sécurité"},
  { icon: "", title:"Sécurité et conformité", desc:"KYC,JWT,HTTPS,audit log"},
  { icon: "", title:"Processus d'affiliation", desc: "12 étapes inscription > premier paiement"},
- { icon: "", title: "Méthodes de paiement", desc: "12 méthodes dont mobile money africain"},
+ { icon: "", title: "Méthodes de paiement", desc: "Orange Money, Wave, MTN MoMo, virement bancaire"},
  { icon: "", title: "Académie IBIG", desc: "Videos, PDF, quiz, Coach IA, kit marketing"},
  { icon: "", title: "Coach IA IBIG", desc: "GPT entraîné sur produits IBIG 24/7"},
  { icon: "", title: "Stratégie 2026-2028", desc: "3 phases d'expansion panafricaine"},

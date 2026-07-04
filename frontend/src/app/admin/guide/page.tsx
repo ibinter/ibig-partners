@@ -233,7 +233,7 @@ export default function GuidePage() {
       const branches = [
         ["IBIG SOFT","Logiciels SaaS de gestion (Scolaby, Fleet 360, GESCOMXEL, Zelivry, Lokativo, StockFlow) — ibigsoft.com","Commission : 20% N1 - 10% N2 - 5% N3 (dégressive sur 4 mois)"],
         ["IBIG EDUFORM","Formations professionnelles certifiantes (comptabilité, RH, QHSE, Sage, SAP, IA...) — ibig-eduform.com","Commission : 10% N1 - 5% N2 - 2% N3 par inscription"],
-        ["IBIG IMMO TRUST","Immobilier sécurisé, BTP, gestion locative, construction clé en main, diaspora — ibigimmotrust.com","Commission : 5% N1 - 2,5% N2 - 1% N3 sur la valeur"],
+        ["IBIG IMMO TRUST","Immobilier sécurisé, BTP, gestion locative, construction clé en main, diaspora — ibigimmotrust.com","Commission : 10% N1 - 5% N2 - 2,5% N3 (modèle spécial pour la Gestion Locative)"],
         ["IBIG MARKET","Vente physique et e-commerce : IT, mobilier, fournitures, logistique — ibig-market.com","Commission : 8% N1 - 4% N2 - 2% N3 par vente"],
         ["IBIG DIGITAL","Création digitale, communication visuelle, site vitrine, identité visuelle, community management — intermark-business.com/digital","Commission : 10% N1 - 5% N2 - 2% N3"],
         ["IBIG DIGITAL KITS","Transformation numérique : ERP, app mobile, IA, chatbots, kits prêts à l'emploi — kits.intermark-business.com","Commission : 10% N1 - 5% N2 - 2% N3"],
@@ -345,7 +345,7 @@ export default function GuidePage() {
         ["Badges","Collection de vos badges gagnés : 1ère vente, 10 ventes, statut Gold, équipe de 10..."],
         ["Académie","Modules de formation IBIG : articles, vidéos, quiz et assistant IA pour progresser."],
         ["Coach IA","Assistant intelligent formé sur les produits IBIG pour répondre à toutes vos questions."],
-        ["Communication","Chat avec l'équipe IBIG et les autrès partenaires Gold+."],
+        ["Communication","Chat avec l'équipe IBIG et les autres partenaires, dès le 1er filleul parrainé."],
         ["Paramètrès","Modification du profil, méthode de paiement, mot de passe, préférences."],
         ["Vérification KYC","Soumission de votre dossier de vérification pour activér les paiements de commissions."],
       ];
@@ -489,7 +489,7 @@ export default function GuidePage() {
         ["Accéder","Dans votre espace partenaire, cliquez sur « Vérification » dans le menu gauche."],
         ["Choisir votre profil","Particulier ou Entreprise/Organisation - le formulaire s'adapte automatiquement."],
         ["Remplir le formulaire","Particulier : Nom état civil, pièce d'identité, profession, contacts, CV. | Entreprise : Raison sociale, RCCM, NIF, représentant légal, adresse siège."],
-        ["Coordonnées de paiement","Indiquez comment vous souhaitez recevoir vos commissions : Orange Money, Wave, MTN MoMo, virement bancaire, PayPal ou Western Union."],
+        ["Coordonnées de paiement","Indiquez comment vous souhaitez recevoir vos commissions : Orange Money, Wave, MTN MoMo ou virement bancaire."],
         ["Soumettre","Cliquez sur « Soumettre mon dossier ». L'équipe IBIG examine votre dossier sous 24-48h."],
         ["Confirmation","Vous recevez une notification et un email dès que votre dossier est approuvé. Vos commissions en attente sont débloquées."],
       ];
@@ -587,21 +587,15 @@ export default function GuidePage() {
 
       py = subTitle("Méthodes de paiement disponibles",py);
       const payments = [
-        ["Orange Money","Virement mobile instantané (Côte d'Ivoire)"],
-        ["Wave","Paiement mobile Wave (Côte d'Ivoire, Sénégal)"],
-        ["MTN MoMo","MTN Mobile Money (CI, Ghana, Cameroun...)"],
-        ["Moov Money / Airtel Money","Mobile money Moov et Airtel"],
-        ["M-Pesa","Mobile money (Kenya, Tanzanie, RDC...)"],
-        ["CinetPay","Agrégateur panafricain"],
-        ["Virement bancaire (IBAN/SWIFT)","Transfert bancaire international"],
-        ["Western Union / MoneyGram","Transfert physique international"],
-        ["Wise / WorldRemit / Remitly","Transfert en ligne international"],
-        ["Juba Express / RIA Money Transfer","Transfert de fonds panafricain"],
+        ["Orange Money","Virement mobile instantané"],
+        ["Wave","Paiement mobile Wave"],
+        ["MTN MoMo","MTN Mobile Money"],
+        ["Virement bancaire","Transfert bancaire"],
       ];
       let col1y = py,col2y = py;
       payments.forEach(([method,desc],i) => {
-        const ycur = i < 5 ? col1y : col2y;
-        const xcur = i < 5 ? 14 : W / 2 + 3;
+        const ycur = i < 2 ? col1y : col2y;
+        const xcur = i < 2 ? 14 : W / 2 + 3;
         doc.setFillColor(...GOLD);
         doc.circle(xcur + 2,ycur - 1.5,1,"F");
         doc.setFontSize(9);
@@ -612,11 +606,11 @@ export default function GuidePage() {
         doc.setFontSize(8);
         doc.setTextColor(...GRAY);
         doc.text(desc,xcur + 5,ycur + 5);
-        if (i < 5) col1y += 13; else col2y += 13;
+        if (i < 2) col1y += 13; else col2y += 13;
       });
       py = Math.max(col1y,col2y) + 5;
 
-      py = infoBox("Seuil minimum de versement : 5 000 FCFA. Les commissions inférieures à ce seuil s'accumulent jusqu'à atteindre le minimum requis. Les frais de transfert international sont déduits du montant versé.",py,[255,251,235]);
+      py = infoBox("Seuil minimum de versement : 5 000 FCFA. Les commissions inférieures à ce seuil s'accumulent jusqu'à atteindre le minimum requis.",py,[255,251,235]);
 
       // ═══════════════════════════════════════════════════════════
       // PAGE 9 — RÉSEAU + ACADÉMIE

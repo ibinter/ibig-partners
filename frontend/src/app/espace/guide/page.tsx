@@ -377,7 +377,7 @@ export default function GuideAffilie() {
 
       y = sub(t("Script de prospection WhatsApp personnalisable"),y);
       y = infoBox(
-        t("Bonjour [Prenom], je pense a vous car je suis partenaire d'IBIG PARTNERS, un groupe ivoirien qui propose des logiciels de gestion, formations certifiantes et bien plus. Je connais [votre secteur] et je pense que [produit X] pourrait vraiment vous aider a [benefice concret]. Est-ce que vous avez 5 minutes cette semaine pour que je vous fasse une rapide démonstration ? Vous ne payéz rien pour découvrir. Cordialement,[Votre prenom]."),
+        t("Bonjour [Prenom], je pense a vous car je suis partenaire d'IBIG PARTNERS, un groupe panafricain qui propose des logiciels de gestion, formations certifiantes et bien plus. Je connais [votre secteur] et je pense que [produit X] pourrait vraiment vous aider a [benefice concret]. Est-ce que vous avez 5 minutes cette semaine pour que je vous fasse une rapide démonstration ? Vous ne payéz rien pour découvrir. Cordialement,[Votre prenom]."),
         y,[239,246,255]
       ); y += 3;
 
@@ -677,20 +677,18 @@ export default function GuideAffilie() {
 
       y = sub(t("Methodes de paiement disponibles"),y);
       const payments = [
-        t("Orange Money (Côte d'Ivoire)"),t("Wave (CI, Senegal)"),t("MTN MoMo (multi-pays)"),
-        t("Moov Money / Airtel Money"),t("M-Pesa (Kenya, Tanzanie, RDC...)"),t("CinetPay (panafricain)"),
-        t("Virement bancaire IBAN/SWIFT"),t("Western Union / MoneyGram"),
-        t("Wise / WorldRemit / Remitly"),t("Juba Express / RIA Money Transfer"),
+        t("Orange Money"),t("Wave"),
+        t("MTN MoMo"),t("Virement bancaire"),
       ];
       let py2 = y;
       payments.forEach((p,i) => {
-        const xi = i < 5 ? 14 : W / 2 + 3,yi = i < 5 ? py2 + (i * 12) : py2 + ((i - 5) * 12);
+        const xi = i < 2 ? 14 : W / 2 + 3,yi = i < 2 ? py2 + (i * 12) : py2 + ((i - 2) * 12);
         doc.setFillColor(...GOLD); doc.circle(xi + 2,yi - 1.5,1,"F");
         doc.setFontSize(9); doc.setFont("helvetica","normal"); doc.setTextColor(...DARK);
         doc.text(p,xi + 5,yi);
       });
-      y = py2 + 5 * 12 + 5;
-      y = infoBox(t("Seuil minimum de versement : 5 000 FCFA. Les commissions inferieures s'accumulent jusqu'a atteindre ce seuil. Les frais de transfert international (Western Union, virement SWIFT) sont déduits du montant verse. Delai de versement : 7 jours ouvrables après validation."),y,[255,251,235]);
+      y = py2 + 2 * 12 + 5;
+      y = infoBox(t("Seuil minimum de versement : 5 000 FCFA. Les commissions inferieures s'accumulent jusqu'a atteindre ce seuil. Delai de versement : 7 jours ouvrables après validation."),y,[255,251,235]);
 
       // ══════════════════════════════════════════════════════════════════════
       // PAGE 11 : OUTILS DISPONIBLES
@@ -984,7 +982,7 @@ export default function GuideAffilie() {
       y = sub(t("Communaute IBIG PARTNERS"),y);
       y = bullet(t("Groupe WhatsApp officiel : demandez le lien a support@ibigpartners.com après validation KYC."),y);
       y = bullet(t("Page Facebook IBIG PARTNERS : suivez pour les actualités, nouveaux produits et offrès speciales."),y);
-      y = bullet(t("Chat interne : disponible dans votre espace pour les partenaires GOLD et au-dessus."),y);
+      y = bullet(t("Chat interne : disponible dans votre espace dès votre 1er filleul parrainé."),y);
       y = bullet(t("Événements mensuels : webinaires de formation et sessions Q&A avec l'équipe IBIG."),y);
 
       // ══════════════════════════════════════════════════════════════════════
