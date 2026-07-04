@@ -30,7 +30,7 @@ const TRAINING_TIPS: TrainingTip[] = [
   {
     icon: "target",
     title: "Proposez une démo, pas un achat",
-    description: "Ne vendez pas directement. Invitez à découvrir le logiciel gratuitement. Un prospect qui teste achète dans 70% des cas.",
+    description: "Ne vendez pas directement. Invitez à découvrir le logiciel via une démonstration gratuite — c'est souvent le meilleur déclencheur d'achat.",
     level: "Intermédiaire",
     levelColor: "bg-amber-100 text-amber-700",
   },
@@ -65,12 +65,12 @@ interface ModulePreview {
 }
 
 const ACADEMY_MODULES: ModulePreview[] = [
-  { icon: "graduation", title: "Les bases de l'affiliation IBIG", duration: "15 min", type: "Vidéo" },
-  { icon: "puzzle", title: "Maîtriser les argumentaires de vente", duration: "20 min", type: "Article" },
-  { icon: "network", title: "Construire et animer son réseau", duration: "25 min", type: "Vidéo" },
-  { icon: "coins", title: "Comprendre les commissions multi-niveaux", duration: "10 min", type: "Article" },
-  { icon: "target", title: "Techniques de prospection WhatsApp", duration: "30 min", type: "Vidéo" },
-  { icon: "chart", title: "Analyser ses performances et optimiser", duration: "20 min", type: "Article" },
+  { icon: "graduation", title: "Bienvenue dans le programme IBIG PARTNERS", duration: "5 min", type: "Article" },
+  { icon: "coins", title: "Comprendre les commissions sur 3 niveaux", duration: "8 min", type: "Article" },
+  { icon: "target", title: "Techniques de vente : conclure efficacement", duration: "10 min", type: "Article" },
+  { icon: "puzzle", title: "Comment vendre les logiciels IBIG SOFT", duration: "10 min", type: "Article" },
+  { icon: "network", title: "Comment recruter son premier filleul ?", duration: "10 min", type: "Article" },
+  { icon: "chart", title: "Gérer les objections courantes tous produits confondus", duration: "8 min", type: "Article" },
 ];
 
 export function AffiliateTraining() {

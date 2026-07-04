@@ -590,8 +590,8 @@ export default async function HomePage() {
                 tag: "Forte valeur",
                 title: "L'expert immobilier IBIG IMMO TRUST",
                 lines: [
-                  ["2 transactions immobilières", "—"],
-                  ["Commission agence 1 000 000 × 25%", "250 000 FCFA"],
+                  ["5 transactions immobilières", "—"],
+                  ["Commission agence 1 000 000 × 10%", "100 000 FCFA"],
                 ],
                 total: "500 000 FCFA",
                 foot: "Le taux s'applique sur la commission agence, pas le prix du bien.",

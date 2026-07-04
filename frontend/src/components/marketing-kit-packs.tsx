@@ -27,10 +27,9 @@ const PRODUCT_KITS: ProductKit[] = [
     color: "from-brand-500 to-brand-700",
     activeColor: "bg-brand-600 text-white",
     kits: [
-      { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"Cher directeur, Scolaby automatise les bulletins, la gestion des inscriptions et la communication avec les parents. Fini les fichiers Excel ! Essai gratuit de 14 jours.\"" },
-      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Bonjour ! Je représente Scolaby, le logiciel de gestion scolaire N°1. Plus de 200 écoles l'utilisent déjà. Voulez-vous une démo gratuite ? 👉 [votre lien affilié]\"" },
+      { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"Cher directeur, Scolaby automatise les bulletins, la gestion des inscriptions et la communication avec les parents. Fini les fichiers Excel !\"" },
+      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Bonjour ! Je représente Scolaby, le logiciel de gestion scolaire d'IBIG SOFT. Voulez-vous une démo gratuite ? 👉 [votre lien affilié]\"" },
       { type: "VISUAL", title: "Visuel réseaux sociaux", description: "Bannière Facebook/Instagram mettant en avant les fonctionnalités clés : gestion des notes, emploi du temps et paiement scolarité en ligne." },
-      { type: "VIDEO", title: "Vidéo démo 2 min", description: "Présentation rapide de l'interface Scolaby : tableau de bord, saisie de notes, génération de bulletins PDF." },
     ],
   },
   {
@@ -40,10 +39,9 @@ const PRODUCT_KITS: ProductKit[] = [
     color: "from-emerald-500 to-teal-600",
     activeColor: "bg-emerald-600 text-white",
     kits: [
-      { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"Gérez toutes vos livraisons depuis une seule app. Zelivry offre le suivi GPS en temps réel, la notification automatique aux clients et l'optimisation des tournées.\"" },
-      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Salut ! Tu fais de la livraison ? Zelivry te permet de suivre tes colis en temps réel et tes clients reçoivent un SMS automatique. Teste gratuitement 👉 [lien]\"" },
+      { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"Gérez toutes vos livraisons depuis une seule app. Zelivry offre le suivi en temps réel, la notification automatique aux clients et l'optimisation des tournées.\"" },
+      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Salut ! Tu fais de la livraison ? Zelivry te permet de suivre tes colis en temps réel et tes clients reçoivent un SMS automatique. Découvre ici 👉 [lien]\"" },
       { type: "VISUAL", title: "Visuel avant/après", description: "Infographie comparant la gestion manuelle vs Zelivry : gain de temps, réduction des erreurs, satisfaction client." },
-      { type: "VIDEO", title: "Témoignage client", description: "Un restaurateur explique comment Zelivry a réduit ses retards de livraison de 60%." },
     ],
   },
   {
@@ -53,10 +51,9 @@ const PRODUCT_KITS: ProductKit[] = [
     color: "from-violet-500 to-purple-700",
     activeColor: "bg-violet-600 text-white",
     kits: [
-      { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"StockFlow est l'ERP pensé pour les PME africaines. Stock, factures, comptabilité et rapports dans un seul outil cloud accessible depuis votre téléphone.\"" },
-      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Tu perds de l'argent avec les ruptures de stock ? StockFlow te prévient avant la rupture et génère tes factures en 1 clic. Démo gratuite ici 👉 [lien]\"" },
-      { type: "VISUAL", title: "Fiche produit PDF", description: "Document A4 professionnel listant toutes les fonctionnalités, les tarifs et les témoignages clients vérifiés." },
-      { type: "VIDEO", title: "Tutoriel premiers pas", description: "Guide vidéo de 3 minutes pour créer son premier article, enregistrer une entrée en stock et générer une facture." },
+      { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"STOCKFLOW est l'ERP pensé pour les PME africaines. Stock, factures, comptabilité et rapports dans un seul outil cloud accessible depuis votre téléphone.\"" },
+      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Tu perds de l'argent avec les ruptures de stock ? STOCKFLOW te prévient avant la rupture et génère tes factures en 1 clic. Découvre ici 👉 [lien]\"" },
+      { type: "VISUAL", title: "Fiche produit", description: "Document listant les fonctionnalités clés et les tarifs, à présenter à un prospect." },
     ],
   },
   {
@@ -67,9 +64,8 @@ const PRODUCT_KITS: ProductKit[] = [
     activeColor: "bg-amber-600 text-white",
     kits: [
       { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"Lokativo simplifie la gestion locative : publiez vos annonces, gérez les baux, envoyez les quittances et suivez les impayés automatiquement.\"" },
-      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Tu gères des biens immobiliers ? Lokativo automatise tes quittances, relances et calculs de loyer. Plus de 150 agences l'utilisent. Essaie ici 👉 [lien]\"" },
-      { type: "VISUAL", title: "Carrousel Instagram", description: "5 slides montrant le parcours : publier une annonce → recevoir des candidatures → signer le bail → encaisser le loyer." },
-      { type: "VIDEO", title: "Vidéo pitch 90s", description: "Présentation dynamique du problème (gestion manuelle) et de la solution Lokativo avec chiffres clés." },
+      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Tu gères des biens immobiliers ? Lokativo automatise tes quittances, relances et calculs de loyer. Découvre ici 👉 [lien]\"" },
+      { type: "VISUAL", title: "Carrousel Instagram", description: "Slides montrant le parcours : publier une annonce → recevoir des candidatures → signer le bail → encaisser le loyer." },
     ],
   },
   {
@@ -79,10 +75,9 @@ const PRODUCT_KITS: ProductKit[] = [
     color: "from-indigo-500 to-blue-700",
     activeColor: "bg-indigo-600 text-white",
     kits: [
-      { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"Gescomxel gère tout votre cycle commercial : devis, commandes, livraisons et factures. Suivi clients et statistiques de ventes en temps réel.\"" },
-      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Tu fais des devis sur Word ? Gescomxel les génère en 30 secondes avec suivi automatique. Tes stats de vente en un clic. Teste ici 👉 [lien]\"" },
-      { type: "VISUAL", title: "Comparatif fonctionnalités", description: "Tableau comparant Gescomxel aux solutions concurrentes sur le marché africain : prix, fonctionnalités, support." },
-      { type: "VIDEO", title: "Webinaire enregistré", description: "Session de 15 minutes expliquant comment un commerce de Douala a multiplié par 3 son suivi client avec Gescomxel." },
+      { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"GESCOMXEL gère tout votre cycle commercial : devis, commandes, livraisons et factures. Suivi clients et statistiques de ventes en temps réel.\"" },
+      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Tu fais des devis sur Word ? GESCOMXEL les génère en quelques secondes avec suivi automatique. Découvre ici 👉 [lien]\"" },
+      { type: "VISUAL", title: "Fiche comparatif fonctionnalités", description: "Support présentant les fonctionnalités de GESCOMXEL, à adapter selon le secteur du prospect (boutique, pharmacie, supermarché)." },
     ],
   },
   {
@@ -92,10 +87,9 @@ const PRODUCT_KITS: ProductKit[] = [
     color: "from-rose-500 to-pink-600",
     activeColor: "bg-rose-600 text-white",
     kits: [
-      { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"IBIG Fleet 360 vous donne le contrôle total de votre flotte : GPS en temps réel, alertes maintenance, suivi carburant et gestion des assurances.\"" },
-      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Tu gères des véhicules ? Fleet 360 te montre où ils sont en temps réel, te prévient pour la maintenance et suit la conso carburant. Démo 👉 [lien]\"" },
-      { type: "VISUAL", title: "Infographie ROI", description: "Visuel montrant les économies réalisées : -30% carburant, -50% pannes imprévues, +20% productivité flotte." },
-      { type: "VIDEO", title: "Démo live dashboard", description: "Visite guidée du tableau de bord Fleet 360 : carte GPS, alertes, planning maintenance et rapport mensuel." },
+      { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"IBIG Fleet 360 vous donne le contrôle total de votre flotte : suivi des véhicules, alertes maintenance, suivi carburant et coûts d'exploitation.\"" },
+      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Tu gères des véhicules ? Fleet 360 te montre où ils sont, te prévient pour la maintenance et suit la conso carburant. Découvre ici 👉 [lien]\"" },
+      { type: "VISUAL", title: "Fiche produit", description: "Support présentant le tableau de bord et les bénéfices clés de Fleet 360, à adapter selon la taille de la flotte du prospect." },
     ],
   },
 ];
@@ -122,7 +116,7 @@ export function MarketingKitPacks() {
               Kits Marketing par logiciel
             </h2>
             <p className="mx-auto mt-3 max-w-2xl text-muted">
-              Pour chaque logiciel, recevez des argumentaires, visuels et vidéos prêts à partager.
+              Pour chaque logiciel, recevez des argumentaires et visuels prêts à partager.
               Copiez, personnalisez et envoyez à vos prospects.
             </p>
           </div>
@@ -184,7 +178,7 @@ export function MarketingKitPacks() {
               Tous ces kits sont disponibles dans votre espace partenaire dès l&apos;inscription
             </p>
             <p className="mt-1 text-sm text-brand-100">
-              Visuels HD, argumentaires personnalisables et vidéos de démonstration inclus gratuitement.
+              Argumentaires et visuels personnalisables inclus gratuitement dès l&apos;inscription.
             </p>
           </div>
         </ScrollReveal>
