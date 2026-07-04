@@ -91,7 +91,7 @@ export function CommissionDetails() {
         <ScrollReveal animation="fade-up">
           <div className="text-center">
             <span className="label-caps inline-block rounded-full px-4 py-1.5 bg-emerald-50 text-emerald-600">
-              Commissions par produit
+              Commissions IBIG SOFT
             </span>
             <h2 className="mt-4 text-3xl font-extrabold text-ink sm:text-4xl">
               Combien gagnez-vous par logiciel ?
@@ -99,6 +99,8 @@ export function CommissionDetails() {
             <p className="mx-auto mt-3 max-w-2xl text-muted">
               Chaque vente vous rapporte des commissions sur 3 niveaux. Les taux sont
               dégressifs sur 4 mois pour les abonnements mensuels (récurrence totale cumulée : 50% N1).
+              Les 8 autres branches (formations, immobilier, digital, conseil...) ont leurs propres
+              taux, détaillés plus bas dans la grille complète des commissions.
             </p>
           </div>
         </ScrollReveal>

@@ -4,7 +4,6 @@ import { useState, useMemo } from "react";
 /**
  * Calculateur LIVE de gains — à intégrer dans la landing.
  * L'utilisateur joue avec les sliders, voit son revenu mensuel ESTIMÉ se mettre à jour en temps réel.
- * Effet "wow" + conversion énorme : 30% en plus d'inscriptions selon les benchmarks.
  */
 export function LiveCalculator() {
   const [sales, setSales] = useState(5);
@@ -15,7 +14,7 @@ export function LiveCalculator() {
   const bonus = { STARTER: 0, SILVER: 0.02, GOLD: 0.05, MASTER: 0.08 }[status];
 
   const result = useMemo(() => {
-    const avgPrice = 30000; // Scolaby ref
+    const avgPrice = 10000; // Scolaby Starter, prix réel à partir de 10 000 FCFA/mois
     const ownIncome = sales * avgPrice * (0.20 + bonus);
     const teamIncome = team * teamSales * avgPrice * (0.10 + bonus * 0.5);
     const total = ownIncome + teamIncome;
@@ -142,7 +141,7 @@ export function LiveCalculator() {
               Atteindre ce revenu → Inscription gratuite
             </a>
             <p className="mt-2 text-center text-[10px] text-brand-300">
-              * Estimation basée sur prix moyen Scolaby (30k FCFA/mois). Réseau N2/N3 non inclus.
+              * Estimation basée sur le prix Scolaby Starter (10k FCFA/mois). Réseau N2/N3 non inclus.
             </p>
           </div>
         </div>

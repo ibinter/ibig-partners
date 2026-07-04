@@ -43,6 +43,7 @@ const SOFTWARES: Software[] = [
     price: "4 900 FCFA/mois",
     commission: "20% N1 (mois 1, dégressif)",
     features: ["Suivi temps réel", "Optimisation tournées", "Notifications SMS", "Gestion livreurs"],
+    siteUrl: "https://zelivry.com",
   },
   {
     name: "STOCKFLOW",
@@ -55,6 +56,7 @@ const SOFTWARES: Software[] = [
     price: "5 000 FCFA/mois",
     commission: "20% N1 (mois 1, dégressif)",
     features: ["Gestion de stock", "Facturation", "Comptabilité", "Rapports avancés"],
+    siteUrl: "https://stockflow.ibigsoft.com",
   },
   {
     name: "LOKATIVO",
@@ -67,6 +69,7 @@ const SOFTWARES: Software[] = [
     price: "9 900 FCFA/mois",
     commission: "20% N1 (mois 1, dégressif)",
     features: ["Annonces immobilières", "Gestion baux", "Quittances auto", "Suivi impayés"],
+    siteUrl: "https://lokativo.com",
   },
   {
     name: "GESCOMXEL",
@@ -79,6 +82,7 @@ const SOFTWARES: Software[] = [
     price: "5 000 FCFA/mois",
     commission: "20% N1 (mois 1, dégressif)",
     features: ["Devis & factures", "Gestion clients", "Suivi commercial", "Statistiques ventes"],
+    siteUrl: "https://ibigsoft.com/gescomxel.php",
   },
   {
     name: "IBIG FLEET 360",
@@ -91,6 +95,7 @@ const SOFTWARES: Software[] = [
     price: "19 900 FCFA/mois",
     commission: "20% N1 (mois 1, dégressif)",
     features: ["Tracking GPS", "Maintenance préventive", "Conso carburant", "Alertes temps réel"],
+    siteUrl: "https://ibigfleet360.com",
   },
 ];
 
@@ -107,8 +112,9 @@ export function SoftwareCatalog() {
               6 logiciels SaaS à promouvoir
             </h2>
             <p className="mx-auto mt-3 max-w-2xl text-muted">
-              Chaque logiciel répond à un besoin métier spécifique en Afrique.
-              Promouvez ceux qui correspondent à votre réseau et gagnez des commissions récurrentes.
+              Chaque logiciel répond à un besoin métier spécifique en Afrique, avec plusieurs formules
+              mensuelles et annuelles selon la taille du client. Promouvez ceux qui correspondent à votre
+              réseau et gagnez des commissions récurrentes.
             </p>
           </div>
         </ScrollReveal>
