@@ -10,7 +10,7 @@ const PRODUCT_RATES = [
     category: "Logiciels SaaS (abonnements mensuels)",
     icon: "💻",
     color: "blue",
-    products: ["Scolaby", "HRM Suite", "Gestion stock", "..."],
+    products: ["Scolaby", "IBIG Fleet 360", "Lokativo", "GESCOMXEL", "Zelivry", "STOCKFLOW ERP"],
     rows: [
       { label: "Mois 1", n1: "20%", n2: "10%", n3: "5%" },
       { label: "Mois 2", n1: "15%", n2: "8%",  n3: "3%" },
@@ -43,11 +43,11 @@ const PRODUCT_RATES = [
     category: "Formations sur mesure / Contrats entreprises",
     icon: "🤝",
     color: "amber",
-    products: ["Formations intra-entreprise", "Contrats ONG/société"],
+    products: ["Formation Sur Mesure Entreprise", "Intra-entreprise en Présentiel", "Déplacement Formateur International"],
     rows: [
-      { label: "Unique", n1: "15%", n2: "7,5%", n3: "—" },
+      { label: "Unique", n1: "10%", n2: "5%", n3: "2,5%" },
     ],
-    note: "N1 = 15% du coût du marché. N2 = 7,5%. Pas de niveau 3.",
+    note: "N1 = 10% du montant du devis. N2 = 5%. N3 = 2,5%.",
   },
   {
     category: "IBIG SOFT — Développement sur mesure",
@@ -63,12 +63,12 @@ const PRODUCT_RATES = [
     category: "Immobilier — Vente / Location",
     icon: "🏠",
     color: "teal",
-    products: ["Vente de biens", "Location"],
+    products: ["Vente de biens", "Location", "Transaction foncière"],
     rows: [
-      { label: "Vente", n1: "25%*", n2: "12,5%*", n3: "—" },
-      { label: "Location", n1: "25%*", n2: "12,5%*", n3: "—" },
+      { label: "Vente", n1: "10%*", n2: "5%*", n3: "2,5%*" },
+      { label: "Location", n1: "10%*", n2: "5%*", n3: "2,5%*" },
     ],
-    note: "⚠️ Les taux s'appliquent sur la COMMISSION de l'agence IBIG IMMO TRUST, PAS sur le prix de vente du bien. Ex : bien à 50 M FCFA, commission agence = 1 M FCFA → vous touchez 25% = 250 000 FCFA.",
+    note: "⚠️ Les taux s'appliquent sur le montant du produit IBIG IMMO TRUST (souvent une commission d'agence), PAS sur le prix de vente du bien. Ex : commission agence de 1 M FCFA → vous touchez 10% = 100 000 FCFA.",
   },
   {
     category: "Immobilier — Gérance d'immeuble",
@@ -81,14 +81,14 @@ const PRODUCT_RATES = [
     note: "** 1 mois de commission d'agence, versé en 2 fois (50% + 50%).",
   },
   {
-    category: "Digital Kit IBIG",
+    category: "IBIG DIGITAL KITS",
     icon: "📦",
     color: "indigo",
-    products: ["Kit complet marketing digital"],
+    products: ["Kits numériques", "Intégration ERP", "Chatbot & IA"],
     rows: [
-      { label: "Unique", n1: "25%", n2: "10%", n3: "5%" },
+      { label: "Unique", n1: "15%", n2: "7,5%", n3: "3,75%" },
     ],
-    note: "Taux fixes sur le prix de vente du kit.",
+    note: "Taux fixes sur le prix de vente du produit.",
   },
   {
     category: "Construction / Opportunités / Investissements",
@@ -105,14 +105,14 @@ const PRODUCT_RATES = [
 // ─── Exemples concrets ────────────────────────────────────────────────────────
 const EXAMPLES = [
   {
-    title: "Scolaby — Abonnement 30 000 FCFA/mois",
+    title: "Scolaby — Abonnement 10 000 FCFA/mois",
     color: "blue",
     icon: "💻",
     type: "SaaS mensuel",
     lines: [
-      { who: "Vous vendez (N1)", mois1: 6000, mois2: 4500, mois3: 3000, mois4: 1500, total: 15000 },
-      { who: "Votre filleul vend (N2)", mois1: 3000, mois2: 2400, mois3: 1500, mois4: 900, total: 7800 },
-      { who: "Son filleul vend (N3)", mois1: 1500, mois2: 900, mois3: 600, mois4: 300, total: 3300 },
+      { who: "Vous vendez (N1)", mois1: 2000, mois2: 1500, mois3: 1000, mois4: 500, total: 5000 },
+      { who: "Votre filleul vend (N2)", mois1: 1000, mois2: 800, mois3: 500, mois4: 300, total: 2600 },
+      { who: "Son filleul vend (N3)", mois1: 500, mois2: 300, mois3: 200, mois4: 100, total: 1100 },
     ],
     recurring: true,
   },
@@ -141,16 +141,17 @@ const EXAMPLES = [
     note: "Pas de niveau 3 pour les prestations sur mesure.",
   },
   {
-    title: "Immobilier — Vente d'un bien à 50 000 000 FCFA",
+    title: "Immobilier — Vente d'un bien, commission agence 1 000 000 FCFA",
     color: "teal",
     icon: "🏠",
     type: "Commission agence IBIG IMMO TRUST",
     lines: [
-      { who: "Vous apportez l'acheteur (N1)", mois1: 250000, mois2: 0, mois3: 0, mois4: 0, total: 250000 },
-      { who: "Votre filleul apporte (N2)", mois1: 125000, mois2: 0, mois3: 0, mois4: 0, total: 125000 },
+      { who: "Vous apportez l'acheteur (N1)", mois1: 100000, mois2: 0, mois3: 0, mois4: 0, total: 100000 },
+      { who: "Votre filleul apporte (N2)", mois1: 50000, mois2: 0, mois3: 0, mois4: 0, total: 50000 },
+      { who: "Son filleul apporte (N3)", mois1: 25000, mois2: 0, mois3: 0, mois4: 0, total: 25000 },
     ],
     recurring: false,
-    note: "⚠️ Les taux s'appliquent sur la commission de l'agence IBIG IMMO TRUST (ex: 2% du prix = 1 000 000 FCFA de commission agence → vous touchez 25% = 250 000 FCFA). PAS sur le prix de vente du bien. Pas de niveau 3.",
+    note: "⚠️ Les taux s'appliquent sur le montant du produit IBIG IMMO TRUST (souvent une commission d'agence), PAS sur le prix de vente du bien. Ex : commission agence de 1 000 000 FCFA → vous touchez 10% = 100 000 FCFA.",
   },
 ];
 

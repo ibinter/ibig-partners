@@ -83,7 +83,7 @@ function buildPdfHtml(): string {
 <div class="section">
 <h2>📋 Grille complète des taux</h2>
 
-<h3>💻 SaaS mensuels (Scolaby, HRM…)</h3>
+<h3>💻 SaaS mensuels (Scolaby, Fleet 360, Lokativo, GESCOMXEL, Zelivry, STOCKFLOW…)</h3>
 <table>
 <thead><tr><th>Période</th><th>N1</th><th>N2</th><th>N3</th></tr></thead>
 <tbody>
@@ -110,7 +110,7 @@ function buildPdfHtml(): string {
 <h3>🤝 Formations sur mesure / Contrats entreprises</h3>
 <table>
 <thead><tr><th>Type</th><th>N1</th><th>N2</th><th>N3</th></tr></thead>
-<tbody><tr><td>% du coût du marché</td><td>15%</td><td>7,5%</td><td>—</td></tr></tbody>
+<tbody><tr><td>% du devis</td><td>10%</td><td>5%</td><td>2,5%</td></tr></tbody>
 </table>
 
 <h3>⚙️ IBIG SOFT — Développement sur mesure</h3>
@@ -123,11 +123,11 @@ function buildPdfHtml(): string {
 <table>
 <thead><tr><th>Type</th><th>N1</th><th>N2</th><th>N3</th></tr></thead>
 <tbody>
-<tr><td>Vente de bien</td><td>25%*</td><td>12,5%*</td><td>—</td></tr>
-<tr><td>Location</td><td>25%*</td><td>12,5%*</td><td>—</td></tr>
+<tr><td>Vente de bien</td><td>10%*</td><td>5%*</td><td>2,5%*</td></tr>
+<tr><td>Location</td><td>10%*</td><td>5%*</td><td>2,5%*</td></tr>
 </tbody>
 </table>
-<p class="note">* % de la commission d'agence IBIG IMMO TRUST — PAS sur le prix de vente du bien. Ex: bien à 50M, commission agence 1M → vous = 250 000 FCFA.</p>
+<p class="note">* % du montant du produit IBIG IMMO TRUST (souvent une commission d'agence) — PAS sur le prix de vente du bien. Ex: commission agence 1M → vous = 100 000 FCFA.</p>
 
 <h3>🏢 Gérance d'immeuble</h3>
 <table>
@@ -136,10 +136,10 @@ function buildPdfHtml(): string {
 </table>
 <p class="note">** 1 mois de commission d'agence versé en 2 fois (50% + 50%).</p>
 
-<h3>📦 Digital Kit IBIG</h3>
+<h3>📦 IBIG DIGITAL KITS</h3>
 <table>
 <thead><tr><th>Type</th><th>N1</th><th>N2</th><th>N3</th></tr></thead>
-<tbody><tr><td>Prix de vente du kit</td><td>25%</td><td>10%</td><td>5%</td></tr></tbody>
+<tbody><tr><td>Prix de vente du produit</td><td>15%</td><td>7,5%</td><td>3,75%</td></tr></tbody>
 </table>
 
 <h3>🔨 Construction / Opportunités</h3>
@@ -167,7 +167,7 @@ function buildPdfHtml(): string {
 </div>
 
 <div class="footer">
-<p>IBIG PARTNERS — Guide commissions officiel · ibig-partners.vercel.app · Document généré depuis votre espace partenaire</p>
+<p>IBIG PARTNERS — Guide commissions officiel · ibigpartners.com · Document généré depuis votre espace partenaire</p>
 </div>
 </body>
 </html>`;
