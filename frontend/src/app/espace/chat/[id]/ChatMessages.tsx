@@ -33,7 +33,7 @@ function initials(first: string, last: string) {
 }
 
 function isImageUrl(url: string) {
-  return /\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(url);
+  return /^data:image\//i.test(url) || /\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(url);
 }
 
 function isVideoLink(text: string) {
@@ -41,7 +41,7 @@ function isVideoLink(text: string) {
 }
 
 function isPdfUrl(url: string) {
-  return /\.pdf(\?.*)?$/i.test(url);
+  return /^data:application\/pdf/i.test(url) || /\.pdf(\?.*)?$/i.test(url);
 }
 
 function MessageBubble({ m, mine }: { m: ChatMessageData; mine: boolean }) {
@@ -190,14 +190,21 @@ export function ChatMessages({ initialMessages, conversationId, currentUserId }:
     setUploadingFile(true);
     setError(null);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await fetch("/api/chat/upload", { method: "POST", body: formData });
-      const data = await res.json();
-      if (!res.ok) { setError(data?.error ?? "Échec de l'envoi du fichier."); return; }
-      if (data.url) await sendBody(data.url);
+      // Limite 3 Mo pour le base64 inline
+      if (file.size > 3 * 1024 * 1024) {
+        setError("Fichier trop volumineux (max 3 Mo). Partagez un lien Google Drive ou Dropbox dans le message.");
+        return;
+      }
+      // Convertir en data URL base64 et envoyer directement comme message
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+      await sendBody(dataUrl);
     } catch {
-      setError("Impossible d'envoyer le fichier.");
+      setError("Impossible de lire le fichier.");
     } finally {
       setUploadingFile(false);
       if (fileRef.current) fileRef.current.value = "";
