@@ -243,7 +243,7 @@ export default function GuideAffilie() {
         [t("Badges"),t("Vos badges gagnes et objectifs en cours. Les badges debloquent des formations avancees et améliorent votre classement."),t("Conseil : l'objectif 'Première vente'est prioritaire.")],
         [t("Académie"),t("Modules de formation, videos, PDFs, quiz et ressources marketing. Completez un module par semaine pour progresser rapidement."),t("Conseil : commencez par le module 'Argumentaire Scolaby'.")],
         [t("Coach IA"),t("Assistant intelligent disponible 24h/24 pour toutes vos questions sur les produits, commissions, techniques de vente et gestion du réseau."),t("Conseil : préparez vos rendez-vous clients avec le Coach IA.")],
-        [t("Communication"),t("Chat avec l'équipe IBIG (partenaires Gold+ et au-dessus). Posez vos questions directement a l'équipe pour des réponses personnalisees."),t("Conseil : accèssible des le statut GOLD.")],
+        [t("Communication"),t("Chat avec l'équipe IBIG et les autres affilies. Posez vos questions directement pour des réponses personnalisees. Accessible des votre premier filleul parrainé."),t("Conseil : accessible des le 1er filleul dans votre réseau.")],
         [t("Verification KYC"),t("Soumission et suivi de votre dossier de vérification. Indispensable pour recevoir vos commissions."),t("Conseil : soumettez votre KYC des la première semaine.")],
       ];
       dash.forEach(([name,desc,tip]) => {
@@ -340,7 +340,7 @@ export default function GuideAffilie() {
         body: [
           [t("STARTER"),t("Inscription validee"),t("Taux de base")],
           [t("SILVER"),t("10 ventes confirmees"),t("+2% sur toutes les commissions")],
-          [t("GOLD"),t("25 ventes + 10 filleuls directs + 20 equipe active"),t("+5% + Accès au Chat IBIG")],
+          [t("GOLD"),t("25 ventes + 10 filleuls directs + 20 equipe active"),t("+5% + Formation avancée + priorité support")],
           [t("MASTER"),t("50 ventes + 25 filleuls directs + 50 equipe active"),t("+8% + Accès formation avancee")],
           [t("ELITE"),t("100 ventes + 50 filleuls directs + 100 equipe active"),t("+12% Avantages exclusifs")],
         ],
