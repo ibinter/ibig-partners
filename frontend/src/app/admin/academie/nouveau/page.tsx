@@ -19,8 +19,8 @@ export default async function NouveauModulePage() {
   await requireAdmin();
 
   const [branches, products] = await Promise.all([
-    (prisma as any).branch.findMany({ orderBy: { name: "asc" } }).catch(() => []),
-    (prisma as any).product.findMany({ orderBy: { name: "asc" } }).catch(() => []),
+    (prisma as any).branch.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }).catch(() => []),
+    (prisma as any).product.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }).catch(() => []),
   ]);
 
   return (

@@ -16,8 +16,8 @@ export default async function EditModulePage({
 
   const [module, branches, products] = await Promise.all([
     (prisma as any).trainingModule.findUnique({ where: { id } }),
-    (prisma as any).branch.findMany({ orderBy: { name: "asc" } }).catch(() => []),
-    (prisma as any).product.findMany({ orderBy: { name: "asc" } }).catch(() => []),
+    (prisma as any).branch.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }).catch(() => []),
+    (prisma as any).product.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }).catch(() => []),
   ]);
 
   if (!module) notFound();
