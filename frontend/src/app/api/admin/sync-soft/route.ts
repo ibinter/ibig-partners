@@ -457,36 +457,42 @@ export async function POST() {
     },
   });
 
-  // Écritures en parallèle — un for...await séquentiel sur 40+ produits
-  // dépasse le délai d'exécution de la fonction serverless.
-  await Promise.all(
-    SOFT_PRODUCTS.map((p) =>
-      prisma.product.upsert({
-        where: { slug: p.slug },
-        update: {
-          name: p.name,
-          pricingType: p.pricingType,
-          price: p.price,
-          rate: p.rate,
-          siteUrl: p.siteUrl,
-          description: p.description,
-          branchId: branch.id,
-          active: true,
-        },
-        create: {
-          slug: p.slug,
-          name: p.name,
-          pricingType: p.pricingType,
-          price: p.price,
-          rate: p.rate,
-          siteUrl: p.siteUrl,
-          description: p.description,
-          branchId: branch.id,
-          active: true,
-        },
-      })
-    )
-  );
+  // Écritures par petits lots parallèles — un Promise.all sur 40+ upserts
+  // d'un coup sature le pool de connexions Postgres (Supabase pooler).
+  // Un for...await purement séquentiel dépasse, lui, le délai d'exécution
+  // de la fonction serverless. Compromis : lots de 8 en parallèle.
+  const BATCH_SIZE = 8;
+  for (let i = 0; i < SOFT_PRODUCTS.length; i += BATCH_SIZE) {
+    const batch = SOFT_PRODUCTS.slice(i, i + BATCH_SIZE);
+    await Promise.all(
+      batch.map((p) =>
+        prisma.product.upsert({
+          where: { slug: p.slug },
+          update: {
+            name: p.name,
+            pricingType: p.pricingType,
+            price: p.price,
+            rate: p.rate,
+            siteUrl: p.siteUrl,
+            description: p.description,
+            branchId: branch.id,
+            active: true,
+          },
+          create: {
+            slug: p.slug,
+            name: p.name,
+            pricingType: p.pricingType,
+            price: p.price,
+            rate: p.rate,
+            siteUrl: p.siteUrl,
+            description: p.description,
+            branchId: branch.id,
+            active: true,
+          },
+        })
+      )
+    );
+  }
   const upserted = SOFT_PRODUCTS.length;
 
   return NextResponse.json({
