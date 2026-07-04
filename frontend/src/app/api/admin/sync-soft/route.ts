@@ -434,72 +434,71 @@ const SOFT_PRODUCTS = [
 ];
 
 export async function POST() {
-  try {
-    const user = await getCurrentUser();
-    if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN")) {
-      return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
-    }
-
-    const branch = await prisma.branch.findUnique({ where: { slug: "ibig-soft" } });
-    if (!branch) {
-      return NextResponse.json(
-        { error: "Branche IBIG SOFT introuvable. Synchronisez d'abord les branches." },
-        { status: 404 }
-      );
-    }
-
-    const knownSlugs = SOFT_PRODUCTS.map((p) => p.slug);
-
-    const deleted = await prisma.product.deleteMany({
-      where: {
-        branchId: branch.id,
-        slug: { notIn: knownSlugs },
-        sales: { none: {} },
-      },
-    });
-
-    const BATCH_SIZE = 5;
-    for (let i = 0; i < SOFT_PRODUCTS.length; i += BATCH_SIZE) {
-      const batch = SOFT_PRODUCTS.slice(i, i + BATCH_SIZE);
-      await Promise.all(
-        batch.map((p: any) =>
-          prisma.product.upsert({
-            where: { slug: p.slug },
-            update: {
-              name: p.name,
-              pricingType: p.pricingType,
-              price: p.price,
-              rate: p.rate,
-              siteUrl: p.siteUrl,
-              description: p.description,
-              branchId: branch.id,
-              active: true,
-            },
-            create: {
-              slug: p.slug,
-              name: p.name,
-              pricingType: p.pricingType,
-              price: p.price,
-              rate: p.rate,
-              siteUrl: p.siteUrl,
-              description: p.description,
-              branchId: branch.id,
-              active: true,
-            },
-          })
-        )
-      );
-    }
-    const upserted = SOFT_PRODUCTS.length;
-
-    return NextResponse.json({
-      ok: true,
-      upserted,
-      deleted: deleted.count,
-      message: `${upserted} logiciels IBIG SOFT synchronisés, ${deleted.count} doublon(s) supprimé(s).`,
-    });
-  } catch (err: any) {
-    console.error("sync-soft error:", err);
-    return NextResponse.json({ error: err?.message ?? "Erreur serveur" }, { status: 500 });
+  const user = await getCurrentUser();
+  if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN")) {
+    return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
   }
+
+  const branch = await prisma.branch.findUnique({ where: { slug: "ibig-soft" } });
+  if (!branch) {
+    return NextResponse.json(
+      { error: "Branche IBIG SOFT introuvable. Synchronisez d'abord les branches." },
+      { status: 404 }
+    );
+  }
+
+  const knownSlugs = SOFT_PRODUCTS.map((p) => p.slug);
+
+  const deleted = await prisma.product.deleteMany({
+    where: {
+      branchId: branch.id,
+      slug: { notIn: knownSlugs },
+      sales: { none: {} },
+    },
+  });
+
+  // Écritures par petits lots parallèles — un Promise.all sur 40+ upserts
+  // d'un coup sature le pool de connexions Postgres (Supabase pooler).
+  // Un for...await purement séquentiel dépasse, lui, le délai d'exécution
+  // de la fonction serverless. Compromis : lots de 8 en parallèle.
+  const BATCH_SIZE = 8;
+  for (let i = 0; i < SOFT_PRODUCTS.length; i += BATCH_SIZE) {
+    const batch = SOFT_PRODUCTS.slice(i, i + BATCH_SIZE);
+    await Promise.all(
+      batch.map((p) =>
+        prisma.product.upsert({
+          where: { slug: p.slug },
+          update: {
+            name: p.name,
+            pricingType: p.pricingType,
+            price: p.price,
+            rate: p.rate,
+            siteUrl: p.siteUrl,
+            description: p.description,
+            branchId: branch.id,
+            active: true,
+          },
+          create: {
+            slug: p.slug,
+            name: p.name,
+            pricingType: p.pricingType,
+            price: p.price,
+            rate: p.rate,
+            siteUrl: p.siteUrl,
+            description: p.description,
+            branchId: branch.id,
+            active: true,
+          },
+        })
+      )
+    );
+  }
+  const upserted = SOFT_PRODUCTS.length;
+
+  return NextResponse.json({
+    ok: true,
+    upserted,
+    deleted: deleted.count,
+    message: `${upserted} logiciels IBIG SOFT synchronisés, ${deleted.count} doublon(s) supprimé(s).`,
+  });
 }

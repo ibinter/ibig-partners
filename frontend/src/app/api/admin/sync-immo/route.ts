@@ -183,7 +183,7 @@ const IMMO_PRODUCTS = [
   },
 ];
 
-export async function POST() {`n  try {
+export async function POST() {
   const user = await getCurrentUser();
   if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN")) {
     return NextResponse.json({ error: "Non autorisÃ©" }, { status: 403 });
@@ -242,8 +242,5 @@ export async function POST() {`n  try {
     deleted: deleted.count,
     message: `${upserted} services IBIG IMMO TRUST synchronisÃ©s, ${deleted.count} doublon(s) supprimÃ©(s).`,
   });
-  } catch (err: any) {
-    console.error("sync-immo error:", err);
-    return NextResponse.json({ error: err?.message ?? "Erreur serveur" }, { status: 500 });
-  }
 }
+
