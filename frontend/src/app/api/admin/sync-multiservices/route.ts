@@ -270,7 +270,7 @@ const MULTISERVICES_PRODUCTS = [
   },
 ];
 
-export async function POST() {
+export async function POST() {`n  try {
   const user = await getCurrentUser();
   if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN")) {
     return NextResponse.json({ error: "Non autorisÃ©" }, { status: 403 });
@@ -329,5 +329,8 @@ export async function POST() {
     deleted: deleted.count,
     message: `${upserted} services IBIG MULTISERVICES synchronisÃ©s, ${deleted.count} doublon(s) supprimÃ©(s).`,
   });
+  } catch (err: any) {
+    console.error("sync-multiservices error:", err);
+    return NextResponse.json({ error: err?.message ?? "Erreur serveur" }, { status: 500 });
+  }
 }
-
