@@ -27,7 +27,7 @@ export default function ConfidentialitePage() {
             <ul className="mt-2 list-disc space-y-1 pl-5">
               <li><strong>Données d'identification</strong> : nom, prénom, date de naissance, numéro de pièce d'identité.</li>
               <li><strong>Données de contact</strong> : adresse email, numéro de téléphone, adresse postale.</li>
-              <li><strong>Données financières</strong> : coordonnées mobile money, IBAN, informations PayPal.</li>
+              <li><strong>Données financières</strong> : coordonnées mobile money (Orange Money, Wave, MTN MoMo), IBAN.</li>
               <li><strong>Données professionnelles</strong> : statut, type de partenaire (particulier/entreprise), RCCM pour les entreprises.</li>
               <li><strong>Données d'utilisation</strong> : historique de connexion, ventes, commissions, clics sur les liens d'affiliation.</li>
               <li><strong>Données techniques</strong> : adresse IP, type de navigateur, appareil utilisé.</li>

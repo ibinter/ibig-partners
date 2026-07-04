@@ -20,7 +20,7 @@ export function ViralShare({
   productName,
   affiliateCode,
   partnerName,
-  baseUrl = "https://ibig-affiliate-boost.preview.emergentagent.com",
+  baseUrl = "https://ibigpartners.com",
   pricingType = "PRODUCT",
   price,
 }: Props) {

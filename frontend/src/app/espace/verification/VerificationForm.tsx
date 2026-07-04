@@ -92,27 +92,17 @@ function PaymentSection({ existing }: { existing: Existing }) {
             <option value="WAVE">Wave</option>
             <option value="MTN_MOMO">MTN MoMo</option>
             <option value="BANK">Virement bancaire</option>
-            <option value="PAYPAL">PayPal</option>
-            <option value="WESTERN_UNION">Western Union / MoneyGram</option>
           </select>
         </div>
 
         {isMobile && <F label="Numéro Mobile Money" name="mobileMoneyNum" defaultValue={existing?.mobileMoneyNum} required placeholder="+225 07 00 00 00 00" />}
-        {method === "PAYPAL" && <F label="Email PayPal" name="paypalEmail" defaultValue={existing?.paypalEmail} required type="email" placeholder="votre@paypal.com" />}
-        {method === "WESTERN_UNION" && <F label="Nom complet (Western Union / MoneyGram)" name="westernUnionName" defaultValue={existing?.westernUnionName} required placeholder="Nom exact sur pièce d'identité" />}
         {method === "BANK" && (
           <div className="grid gap-4 sm:grid-cols-2">
             <F label="RIB complet" name="rib" defaultValue={existing?.rib} />
             <F label="Nom de la banque" name="bankName" defaultValue={existing?.bankName} />
             <F label="Pays de la banque" name="bankCountry" defaultValue={existing?.bankCountry} />
-            <F label="Code SWIFT / BIC" name="swift" defaultValue={existing?.swift} placeholder="XXXXXXXX" />
-            <div className="sm:col-span-2"><F label="IBAN (virement international)" name="iban" defaultValue={existing?.iban} placeholder="FR76 XXXX XXXX XXXX XXXX XXXX XXX" /></div>
           </div>
         )}
-
-        <p className="text-xs text-amber-700 bg-amber-50 rounded-xl px-3 py-2">
-          ⚠️ Pour les paiements internationaux (PayPal, Western Union, virement SWIFT), les frais de transfert seront déduits de vos commissions.
-        </p>
       </div>
     </div>
   );

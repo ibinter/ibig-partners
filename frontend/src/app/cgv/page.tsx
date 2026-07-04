@@ -44,21 +44,10 @@ export default function CgvPage() {
               Les paiements s&apos;effectuent via les moyens suivants :
             </p>
             <ul className="mt-2 list-disc space-y-1 pl-5">
-              <li><strong>Orange Money</strong> — CI, Sénégal, Cameroun, Mali, Burkina Faso, Guinée, Niger, RDC…</li>
-              <li><strong>Wave</strong> — CI, Sénégal, Mali, Burkina Faso, Guinée, Ouganda</li>
-              <li><strong>MTN Mobile Money (MoMo)</strong> — CI, Cameroun, Ghana, Bénin, Congo, Zambie…</li>
-              <li><strong>Moov Money / Flooz</strong> — CI, Bénin, Togo, Burkina Faso, Niger, Tchad, Gabon</li>
-              <li><strong>Airtel Money</strong> — RDC, Gabon, Congo-Brazzaville, Rwanda, Zambie…</li>
-              <li><strong>M-Pesa</strong> — Afrique de l&apos;Est et Centrale (Kenya, Tanzania, RDC, Mozambique…)</li>
-              <li><strong>Virement bancaire</strong> — zones UEMOA, CEMAC et international</li>
-              <li><strong>CinetPay</strong> — agrégateur panafricain (carte, mobile money, virement)</li>
-              <li><strong>Western Union</strong> — transfert international depuis la diaspora</li>
-              <li><strong>MoneyGram</strong> — transfert international depuis la diaspora</li>
-              <li><strong>Wise (ex-TransferWise)</strong> — virement international low-cost</li>
-              <li><strong>WorldRemit</strong> — envoi vers mobile money ou compte bancaire africain</li>
-              <li><strong>Remitly</strong> — transfert international vers l&apos;Afrique</li>
-              <li><strong>RIA Money Transfer</strong> — transfert international, présent dans +160 pays</li>
-              <li><strong>Juba Express</strong> — transfert diaspora africaine vers l&apos;Afrique de l&apos;Ouest</li>
+              <li><strong>Orange Money</strong></li>
+              <li><strong>Wave</strong></li>
+              <li><strong>MTN Mobile Money (MoMo)</strong></li>
+              <li><strong>Virement bancaire</strong></li>
             </ul>
             <p className="mt-3">
               Toute commande est ferme et définitive dès réception du paiement complet. Une confirmation

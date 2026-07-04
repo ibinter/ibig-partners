@@ -267,11 +267,8 @@ export default async function VerificationDetailPage({
         <Section title="💰 Coordonnées de paiement">
           <Row label="Méthode" value={req.payoutMethod ?? undefined} />
           <Row label="Mobile Money" value={req.mobileMoneyNum ?? undefined} />
-          <Row label="PayPal" value={req.paypalEmail ?? undefined} />
-          <Row label="Western Union" value={req.westernUnionName ?? undefined} />
           <Row label="Banque" value={req.bankName ?? undefined} />
           <Row label="IBAN" value={req.iban ?? undefined} />
-          <Row label="SWIFT" value={req.swift ?? undefined} />
         </Section>
       )}
     </div>

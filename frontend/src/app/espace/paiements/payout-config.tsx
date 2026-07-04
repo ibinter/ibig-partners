@@ -47,8 +47,6 @@ export default function PayoutConfigForm({
             <option value="WAVE">Wave</option>
             <option value="MTN_MOMO">MTN MoMo</option>
             <option value="BANK">Virement bancaire</option>
-            <option value="PAYPAL">PayPal</option>
-            <option value="WESTERN_UNION">Western Union / MoneyGram</option>
           </select>
         </div>
 
@@ -58,22 +56,10 @@ export default function PayoutConfigForm({
             <input type="text" name="payoutDetail" defaultValue={currentDetail} placeholder="+225 07 00 00 00 00" className={inputCls} />
           </div>
         )}
-        {method === "PAYPAL" && (
-          <div className="sm:col-span-2">
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Email PayPal</label>
-            <input type="email" name="payoutDetail" defaultValue={currentDetail} placeholder="votre@paypal.com" className={inputCls} />
-          </div>
-        )}
         {method === "BANK" && (
           <div className="sm:col-span-2">
             <label className="block text-xs font-semibold text-slate-600 mb-1">IBAN / RIB</label>
-            <input type="text" name="payoutDetail" defaultValue={currentDetail} placeholder="FR76 XXXX..." className={inputCls} />
-          </div>
-        )}
-        {method === "WESTERN_UNION" && (
-          <div className="sm:col-span-2">
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Nom de réception (Western Union)</label>
-            <input type="text" name="payoutDetail" defaultValue={currentDetail} placeholder="Nom exact sur pièce d'identité" className={inputCls} />
+            <input type="text" name="payoutDetail" defaultValue={currentDetail} placeholder="CI05 XXXX..." className={inputCls} />
           </div>
         )}
       </div>

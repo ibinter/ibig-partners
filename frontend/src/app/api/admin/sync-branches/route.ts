@@ -29,7 +29,7 @@ const BRANCHES_DATA = [
     description: "IBIG IMMO TRUST propose des solutions immobilières complètes : gestion locative, transactions immobilières, conseil en investissement, assistance diaspora, régularisation foncière et BTP. Tous les services pour sécuriser et rentabiliser votre patrimoine immobilier en Côte d'Ivoire et en Afrique.",
     website: "https://ibigimmotrust.com/",
     offerType: "Service / Produit immobilier",
-    commissionModel: "10% N1 • 5% N2 • 2,5% N3 (jusqu'à 50%/25%/12,5% pour la Gestion Locative)",
+    commissionModel: "10% N1 • 5% N2 • 2,5% N3 sur la commission d'agence (Gérance d'immeuble : 1 mois de commission, versé 50%+50%)",
     order: 3, active: true,
   },
   {

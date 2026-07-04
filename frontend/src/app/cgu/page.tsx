@@ -36,7 +36,7 @@ export default function CguPage() {
             <h2 className="text-lg font-bold text-ink">2. Conditions d'adhésion</h2>
             <ul className="mt-3 list-disc space-y-2 pl-5">
               <li>Être une personne physique majeure (18 ans ou plus).</li>
-              <li>Résider en Côte d'Ivoire ou dans la diaspora africaine.</li>
+              <li>Résider n'importe où dans le monde — le programme est panafricain et international, sans limite de pays.</li>
               <li>Fournir des informations exactes et à jour lors de l'inscription.</li>
               <li>Disposer d'un compte mobile money ou bancaire actif pour la réception des commissions.</li>
               <li>L'inscription est <strong>entièrement gratuite</strong> et sans engagement minimum.</li>
@@ -56,7 +56,7 @@ export default function CguPage() {
             </p>
             <p className="mt-3">
               Le versement s'effectue via les moyens suivants selon votre préférence renseignée dans votre profil :
-              Orange Money, Wave, MTN MoMo, Moov Money ou virement bancaire.
+              Orange Money, Wave, MTN MoMo ou virement bancaire.
             </p>
           </section>
 
