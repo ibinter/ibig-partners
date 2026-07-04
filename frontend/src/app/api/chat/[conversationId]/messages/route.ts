@@ -2,9 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-const GOLD_STATUSES = ["GOLD", "MASTER", "ELITE"];
-
 type RouteContext = { params: Promise<{ conversationId: string }> };
+
+async function canAccessChat(user: { id: string; role: string }): Promise<boolean> {
+  if (user.role === "ADMIN" || user.role === "SUPERADMIN") return true;
+  const count = await prisma.user.count({ where: { sponsorId: user.id } });
+  return count > 0;
+}
 
 // ──────────────────────────────────────────────────────────────────────────────
 // GET /api/chat/[conversationId]/messages
@@ -15,7 +19,7 @@ export async function GET(
   context: RouteContext,
 ): Promise<NextResponse> {
   const user = await getCurrentUser();
-  if (!user || !GOLD_STATUSES.includes(user.status)) {
+  if (!user || !(await canAccessChat(user))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -57,7 +61,7 @@ export async function POST(
   context: RouteContext,
 ): Promise<NextResponse> {
   const user = await getCurrentUser();
-  if (!user || !GOLD_STATUSES.includes(user.status)) {
+  if (!user || !(await canAccessChat(user))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

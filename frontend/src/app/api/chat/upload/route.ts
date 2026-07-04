@@ -10,9 +10,11 @@ export async function POST(request: Request) {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
 
-    // Vérifier que l'utilisateur a au moins 1 filleul
-    const filleulCount = await prisma.user.count({ where: { sponsorId: user.id } });
-    if (filleulCount === 0) return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+    const isAdmin = user.role === "ADMIN" || user.role === "SUPERADMIN";
+    if (!isAdmin) {
+      const filleulCount = await prisma.user.count({ where: { sponsorId: user.id } });
+      if (filleulCount === 0) return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+    }
 
     const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
     const uploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET;
