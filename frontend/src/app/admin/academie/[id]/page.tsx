@@ -11,14 +11,24 @@ export default async function EditModulePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireAdmin();
+  try {
+    await requireAdmin();
+  } catch (e: any) {
+    return <div className="p-8 text-red-600 font-mono text-sm">requireAdmin error: {e?.message ?? String(e)}</div>;
+  }
+
   const { id } = await params;
 
-  const [module, branches, products] = await Promise.all([
-    (prisma as any).trainingModule.findUnique({ where: { id } }),
-    (prisma as any).branch.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }).catch(() => []),
-    (prisma as any).product.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }).catch(() => []),
-  ]);
+  let module: any, branches: any[], products: any[];
+  try {
+    [module, branches, products] = await Promise.all([
+      (prisma as any).trainingModule.findUnique({ where: { id } }),
+      (prisma as any).branch.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }).catch(() => []),
+      (prisma as any).product.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }).catch(() => []),
+    ]);
+  } catch (e: any) {
+    return <div className="p-8 text-red-600 font-mono text-sm">DB error: {e?.message ?? String(e)}</div>;
+  }
 
   if (!module) notFound();
 
