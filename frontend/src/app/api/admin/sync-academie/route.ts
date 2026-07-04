@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 type ModuleSeed = {
   slug: string;
@@ -126,37 +127,38 @@ export async function POST() {
   const branches = await prisma.branch.findMany({ select: { id: true, slug: true } });
   const branchIdBySlug = new Map(branches.map((b) => [b.slug, b.id]));
 
-  let upserted = 0;
-  for (const m of MODULES) {
-    const branchId = m.branchSlug ? branchIdBySlug.get(m.branchSlug) : undefined;
-    await prisma.trainingModule.upsert({
-      where: { slug: m.slug },
-      update: {
-        title: m.title,
-        description: m.description,
-        type: "ARTICLE",
-        content: m.content,
-        duration: m.duration,
-        tags: m.tags,
-        order: m.order,
-        branchId: branchId ?? null,
-        active: true,
-      },
-      create: {
-        slug: m.slug,
-        title: m.title,
-        description: m.description,
-        type: "ARTICLE",
-        content: m.content,
-        duration: m.duration,
-        tags: m.tags,
-        order: m.order,
-        branchId: branchId ?? null,
-        active: true,
-      },
-    });
-    upserted++;
-  }
+  await Promise.all(
+    MODULES.map((m) => {
+      const branchId = m.branchSlug ? branchIdBySlug.get(m.branchSlug) : undefined;
+      return prisma.trainingModule.upsert({
+        where: { slug: m.slug },
+        update: {
+          title: m.title,
+          description: m.description,
+          type: "ARTICLE",
+          content: m.content,
+          duration: m.duration,
+          tags: m.tags,
+          order: m.order,
+          branchId: branchId ?? null,
+          active: true,
+        },
+        create: {
+          slug: m.slug,
+          title: m.title,
+          description: m.description,
+          type: "ARTICLE",
+          content: m.content,
+          duration: m.duration,
+          tags: m.tags,
+          order: m.order,
+          branchId: branchId ?? null,
+          active: true,
+        },
+      });
+    })
+  );
+  const upserted = MODULES.length;
 
   return NextResponse.json({
     ok: true,

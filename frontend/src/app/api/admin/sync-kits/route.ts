@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 type KitSeed = {
   branchSlug: string;
@@ -144,25 +145,26 @@ export async function POST() {
   // On repart d'une base propre pour éviter les doublons entre synchronisations successives.
   await prisma.marketingKit.deleteMany({});
 
-  let created = 0;
   const skipped: string[] = [];
-  for (const k of KITS) {
-    const branchId = branchIdBySlug.get(k.branchSlug);
-    if (!branchId) {
-      skipped.push(k.branchSlug);
-      continue;
-    }
-    await prisma.marketingKit.create({
-      data: {
-        branchId,
-        title: k.title,
-        type: k.type,
-        content: k.content,
-        minStatus: k.minStatus ?? "STARTER",
-      },
-    });
-    created++;
-  }
+  const toCreate = KITS.filter((k) => {
+    const ok = branchIdBySlug.has(k.branchSlug);
+    if (!ok) skipped.push(k.branchSlug);
+    return ok;
+  });
+  await Promise.all(
+    toCreate.map((k) =>
+      prisma.marketingKit.create({
+        data: {
+          branchId: branchIdBySlug.get(k.branchSlug)!,
+          title: k.title,
+          type: k.type,
+          content: k.content,
+          minStatus: k.minStatus ?? "STARTER",
+        },
+      })
+    )
+  );
+  const created = toCreate.length;
 
   return NextResponse.json({
     ok: true,

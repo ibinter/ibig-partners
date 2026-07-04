@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 const SOFT_PRODUCTS = [
   // ── SCOLABY (scolaby.com) — tarifs par cycle et taille d'établissement ──
@@ -456,34 +457,37 @@ export async function POST() {
     },
   });
 
-  let upserted = 0;
-  for (const p of SOFT_PRODUCTS) {
-    await prisma.product.upsert({
-      where: { slug: p.slug },
-      update: {
-        name: p.name,
-        pricingType: p.pricingType,
-        price: p.price,
-        rate: p.rate,
-        siteUrl: p.siteUrl,
-        description: p.description,
-        branchId: branch.id,
-        active: true,
-      },
-      create: {
-        slug: p.slug,
-        name: p.name,
-        pricingType: p.pricingType,
-        price: p.price,
-        rate: p.rate,
-        siteUrl: p.siteUrl,
-        description: p.description,
-        branchId: branch.id,
-        active: true,
-      },
-    });
-    upserted++;
-  }
+  // Écritures en parallèle — un for...await séquentiel sur 40+ produits
+  // dépasse le délai d'exécution de la fonction serverless.
+  await Promise.all(
+    SOFT_PRODUCTS.map((p) =>
+      prisma.product.upsert({
+        where: { slug: p.slug },
+        update: {
+          name: p.name,
+          pricingType: p.pricingType,
+          price: p.price,
+          rate: p.rate,
+          siteUrl: p.siteUrl,
+          description: p.description,
+          branchId: branch.id,
+          active: true,
+        },
+        create: {
+          slug: p.slug,
+          name: p.name,
+          pricingType: p.pricingType,
+          price: p.price,
+          rate: p.rate,
+          siteUrl: p.siteUrl,
+          description: p.description,
+          branchId: branch.id,
+          active: true,
+        },
+      })
+    )
+  );
+  const upserted = SOFT_PRODUCTS.length;
 
   return NextResponse.json({
     ok: true,
