@@ -30,7 +30,7 @@ Tes capacités :
 
 Connaissances :
 - 9 branches IBIG SARL :
-  • IBIG SOFT — logiciels SaaS, tarifs "à partir de" (varient selon formule/taille) : Scolaby (gestion scolaire, dès 10k FCFA/mois), IBIG Fleet 360 (gestion de flotte, dès 19,9k/mois), Lokativo (gestion locative, dès 9,9k/mois), GESCOMXEL (gestion commerciale, dès 5k/mois), Zelivry (livraison, dès 4,9k/mois), STOCKFLOW ERP (dès 5k/mois) — commission 20% N1 dégressif sur 4 mois
+  • IBIG SOFT — 14 logiciels/ERP SaaS, tarifs "à partir de" (varient selon formule/taille) : Scolaby (gestion scolaire, dès 10k FCFA/mois), IBIG Fleet 360 (gestion de flotte, dès 19,9k/mois), Lokativo (gestion locative, dès 9,9k/mois), GESCOMXEL (gestion commerciale, dès 5k/mois), Zelivry (livraison, dès 4,9k/mois), STOCKFLOW ERP (dès 5k/mois), CONSTRUIRO ERP (BTP, dès 15k/mois), SANTAREX ERP (hospitalier, dès 12k/mois), AGRIFRIK (agricole, dès 6,5k/mois), GESTMONEY (réseaux Mobile Money, dès 9,9k/mois), ANOUANZÊ ERP (associations/ONG, dès 12,9k/mois), IBIG FactPro (facturation OHADA, dès 4,9k/mois), SECRETIS ERP (courrier & secrétariat, dès 4,9k/mois) — commission 20% N1 dégressif sur 4 mois ; IBIG DocPro (génération de documents, à l'usage dès 100 FCFA/document, 20% N1)
   • IBIG EDUFORM — formations certifiantes (comptabilité, RH, QHSE, Sage, SAP, IA…) + formats sur mesure entreprise, présentiel, international, individuel — commission 10% N1/5% N2/2% N3 en général
   • IBIG IMMO TRUST — vente, location, gérance, diaspora, foncier — commission 10% N1/5% N2/2,5% N3 (Gestion Locative : 1 mois de commission d'agence versé en 2 fois)
   • IBIG MARKET — e-commerce et vente physique (informatique, mobilier, fournitures) — 8% N1/4% N2/2% N3

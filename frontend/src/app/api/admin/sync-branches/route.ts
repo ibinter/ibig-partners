@@ -8,7 +8,7 @@ const BRANCHES_DATA = [
   {
     slug: "ibig-soft", name: "IBIG SOFT",
     tagline: "Édition logicielle, SaaS & applications métiers",
-    description: "IBIG SOFT conçoit et commercialise des solutions SaaS et ERP adaptés aux réalités africaines : gestion scolaire (Scolaby), gestion de flotte (IBIG Fleet 360), gestion locative (Lokativo), gestion commerciale (GESCOMXEL), livraison (Zelivry) et bien d'autres logiciels métiers pour PME et institutions.",
+    description: "IBIG SOFT conçoit et commercialise 14 logiciels/ERP SaaS adaptés aux réalités africaines : gestion scolaire (Scolaby), gestion de flotte (IBIG Fleet 360), gestion locative (Lokativo), gestion commerciale (GESCOMXEL), livraison (Zelivry), stock (STOCKFLOW), BTP (CONSTRUIRO), santé (SANTAREX), agriculture (AGRIFRIK), Mobile Money (GESTMONEY), associations/ONG (ANOUANZÊ), facturation (IBIG FactPro), courrier & secrétariat (SECRETIS) et génération de documents (IBIG DocPro) pour PME et institutions.",
     website: "https://ibigsoft.com/",
     offerType: "Abonnements mensuels & annuels",
     commissionModel: "20% N1 • 10% N2 • 5% N3 (dégressif sur 4 mois) | Annuel : 20% N1 • 8% N2 • 3% N3",

@@ -10,7 +10,7 @@ const PRODUCT_RATES = [
     category: "Logiciels SaaS (abonnements mensuels)",
     icon: "💻",
     color: "blue",
-    products: ["Scolaby", "IBIG Fleet 360", "Lokativo", "GESCOMXEL", "Zelivry", "STOCKFLOW ERP"],
+    products: ["Scolaby", "IBIG Fleet 360", "Lokativo", "GESCOMXEL", "Zelivry", "STOCKFLOW ERP", "CONSTRUIRO ERP", "SANTAREX ERP", "AGRIFRIK", "GESTMONEY", "ANOUANZÊ ERP", "IBIG FactPro", "SECRETIS ERP", "IBIG DocPro (à l'usage)"],
     rows: [
       { label: "Mois 1", n1: "20%", n2: "10%", n3: "5%" },
       { label: "Mois 2", n1: "15%", n2: "8%",  n3: "3%" },

@@ -1,8 +1,24 @@
 import type { NextConfig } from "next";
+import path from "path";
+import fs from "fs";
+
+// Détecte le dossier racine où `node_modules/next` est réellement installé.
+// Dans certains déploiements, les dépendances sont hissées au dossier parent :
+// on remonte l'arborescence jusqu'à trouver `next` plutôt que de supposer cwd.
+function resolveTurbopackRoot(start: string): string {
+  let dir = start;
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    if (fs.existsSync(path.join(dir, "node_modules", "next"))) return dir;
+    const parent = path.dirname(dir);
+    if (parent === dir) return start; // racine atteinte : on garde cwd par défaut
+    dir = parent;
+  }
+}
 
 const nextConfig: NextConfig = {
   turbopack: {
-    root: process.cwd(),
+    root: resolveTurbopackRoot(process.cwd()),
   },
   // Cluster Emergent : autoriser les origines cross-cluster en dev
   allowedDevOrigins: [

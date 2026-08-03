@@ -231,7 +231,7 @@ export default function GuidePage() {
       py = subTitle("Les 9 Branches du Groupe IBIG SARL",py);
 
       const branches = [
-        ["IBIG SOFT","Logiciels SaaS de gestion (Scolaby, Fleet 360, GESCOMXEL, Zelivry, Lokativo, StockFlow) — ibigsoft.com","Commission : 20% N1 - 10% N2 - 5% N3 (dégressive sur 4 mois)"],
+        ["IBIG SOFT","14 logiciels/ERP SaaS (Scolaby, Fleet 360, GESCOMXEL, Zelivry, Lokativo, StockFlow, CONSTRUIRO, SANTAREX, AGRIFRIK, GESTMONEY, ANOUANZÊ, FactPro, SECRETIS, DocPro) — ibigsoft.com","Commission : 20% N1 - 10% N2 - 5% N3 (dégressive sur 4 mois)"],
         ["IBIG EDUFORM","Formations professionnelles certifiantes (comptabilité, RH, QHSE, Sage, SAP, IA...) — ibig-eduform.com","Commission : 10% N1 - 5% N2 - 2% N3 par inscription"],
         ["IBIG IMMO TRUST","Immobilier sécurisé, BTP, gestion locative, construction clé en main, diaspora — ibigimmotrust.com","Commission : 10% N1 - 5% N2 - 2,5% N3 (modèle spécial pour la Gestion Locative)"],
         ["IBIG MARKET","Vente physique et e-commerce : IT, mobilier, fournitures, logistique — ibig-market.com","Commission : 8% N1 - 4% N2 - 2% N3 par vente"],

@@ -159,7 +159,7 @@ export default function GuideAffilie() {
 
       y = sub(t("Les 9 Branches du Groupe IBIG SARL"),y);
       const branches = [
-        [t("IBIG SOFT"),t("Logiciels SaaS : Scolaby, Fleet 360, GESCOMXEL, Zelivry, Lokativo, StockFlow — ibigsoft.com"),t("20%/10%/5%")],
+        [t("IBIG SOFT"),t("14 logiciels/ERP SaaS : Scolaby, Fleet 360, GESCOMXEL, Zelivry, Lokativo, StockFlow, CONSTRUIRO, SANTAREX, AGRIFRIK, GESTMONEY, ANOUANZÊ, FactPro, SECRETIS, DocPro — ibigsoft.com"),t("20%/10%/5%")],
         [t("IBIG EDUFORM"),t("Formations certifiantes : comptabilité, RH, QHSE, Sage, SAP, IA... — ibig-eduform.com"),t("10%/5%/2%")],
         [t("IBIG IMMO TRUST"),t("Immobilier sécurisé, BTP, gestion locative, transactions, diaspora — ibigimmotrust.com"),t("5%/2,5%/1%")],
         [t("IBIG MARKET"),t("Vente physique et e-commerce : IT, mobilier, fournitures, livraison — ibig-market.com"),t("8%/4%/2%")],

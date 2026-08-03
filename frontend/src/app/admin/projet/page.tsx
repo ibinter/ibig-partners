@@ -1263,7 +1263,7 @@ export default function ProjetPage() {
  const sections = [
  { icon:"", title:"Résumé Exécutif", desc:"Vision,chiffres clés,objectifs 2026-2028"},
  { icon: "", title:"Groupe IBIG SARL", desc:"Présentation, vision, mission, valeurs"},
- { icon: "", title:"IBIG SOFT", desc:"6 logiciels SaaS de gestion, tarifs, commissions — ibigsoft.com"},
+ { icon: "", title:"IBIG SOFT", desc:"14 logiciels/ERP SaaS de gestion, tarifs, commissions — ibigsoft.com"},
  { icon: "", title:"IBIG EDUFORM", desc:"25+ formations professionnelles certifiantes — ibig-eduform.com"},
  { icon: "", title:"IBIG IMMO TRUST", desc:"Immobilier sécurisé, BTP, service diaspora — ibigimmotrust.com"},
  { icon: "", title:"IBIG MARKET", desc:"Commerce B2B/B2C, matériel IT, e-commerce — ibig-market.com"},

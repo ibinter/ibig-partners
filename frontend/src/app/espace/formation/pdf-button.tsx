@@ -83,7 +83,7 @@ function buildPdfHtml(): string {
 <div class="section">
 <h2>📋 Grille complète des taux</h2>
 
-<h3>💻 SaaS mensuels (Scolaby, Fleet 360, Lokativo, GESCOMXEL, Zelivry, STOCKFLOW…)</h3>
+<h3>💻 SaaS mensuels (14 logiciels : Scolaby, Fleet 360, Lokativo, GESCOMXEL, Zelivry, STOCKFLOW, CONSTRUIRO, SANTAREX, AGRIFRIK, GESTMONEY, ANOUANZÊ, FactPro, SECRETIS…)</h3>
 <table>
 <thead><tr><th>Période</th><th>N1</th><th>N2</th><th>N3</th></tr></thead>
 <tbody>
