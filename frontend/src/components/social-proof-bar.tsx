@@ -50,7 +50,8 @@ export async function SocialProofBar() {
             Vous seriez le partenaire n°{nextRank} du réseau
           </p>
           <p className="mx-auto mt-3 max-w-2xl text-brand-100">
-            {branchesCount} branches et {productsCount}+ produits/services déjà actifs et prêts à être vendus.
+            {branchesCount} branches et {productsCount}+ produits/services déjà actifs et prêts à être vendus,
+            couvrant 14 secteurs métiers — BTP, santé, agriculture, Mobile Money, ONG, facturation, secrétariat et plus.
             Avec un réseau qui démarre à peine, la concurrence entre partenaires pour approcher les mêmes
             prospects est quasi nulle — un avantage qui se réduit à mesure que le réseau grandit.
           </p>
@@ -139,7 +140,7 @@ export async function SocialProofBar() {
 
         <div className="mt-6 flex items-center justify-center gap-3 text-xs text-muted">
           <span className="flex h-2 w-2 animate-pulse rounded-full bg-emerald-500" />
-          <span>Données mises à jour en temps réel · La communauté IBIG grandit chaque jour</span>
+          <span>Données mises à jour en temps réel · La communauté IBIG grandit chaque jour, dans 14 secteurs métiers</span>
         </div>
       </div>
     </section>

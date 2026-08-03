@@ -249,7 +249,7 @@ export default function ProjetPage() {
       y += 3;
       y = body(t("Le programme permet a toute personne physique ou morale de devenir Partenaire Affilié et de percevoir des commissions sur les ventes de produits et services IBIG qu'elle généré directement (N1) ou via son réseau de filleuls (N2, N3). Aucun investissement initial n'est requis pour rejoindre le programme."),y);
       y += 3;
-      y = body(t("Chiffres clés : 9 branches d'activité, 270+ produits au catalogue, commissions jusqu'à 20% N1, système 3 niveaux de profondeur, statuts évolutifs de STARTER a ELITE, paiements via Orange Money, Wave, MTN MoMo et virement bancaire."),y);
+      y = body(t("Chiffres clés : 9 branches d'activité, 330+ produits au catalogue (dont 14 logiciels/ERP IBIG SOFT), commissions jusqu'à 20% N1, système 3 niveaux de profondeur, statuts évolutifs de STARTER a ELITE, paiements via Orange Money, Wave, MTN MoMo et virement bancaire."),y);
       y += 3;
       y = body(t("Objectif 2026 : 500 partenaires actifs, 50M FCFA de commissions versées, couverture Afrique de l'Ouest."),y);
       y += 5;
@@ -356,7 +356,7 @@ export default function ProjetPage() {
 
       // --- IBIG SOFT ---
       y = subTitle(t("IBIG SOFT - Logiciels SaaS de Gestion"),y);
-      y = body(t("Division technologique d'IBIG SARL, IBIG SOFT développe et distribue des logiciels SaaS (Software as a Service) de gestion sur abonnement mensuel ou annuel. Les solutions couvrent la gestion scolaire, la flotte de véhicules, le commerce, la livraison, la gestion immobilière et la gestion des stocks. Chaque logiciel propose plusieurs formules (Starter à Entreprise) — 46 produits au total dans cette branche."),y);
+      y = body(t("Division technologique d'IBIG SARL, IBIG SOFT développe et distribue des logiciels SaaS (Software as a Service) de gestion sur abonnement mensuel ou annuel. Les 14 solutions/ERP couvrent désormais la gestion scolaire, la flotte de véhicules, l'immobilier locatif, le commerce, la livraison, la gestion des stocks, le BTP, la santé, l'agriculture, le Mobile Money, les ONG, la facturation, le secrétariat et la gestion documentaire. Chaque logiciel propose plusieurs formules (Starter à Entreprise) — 110+ produits au total dans cette branche."),y);
       y += 3;
 
       autoTable(doc,{
@@ -365,10 +365,18 @@ export default function ProjetPage() {
         body: [
           [t("Scolaby"),"10 000 FCFA","99 600 FCFA",t("Écoles, lycées, universités")],
           [t("IBIG Fleet 360"),"19 900 FCFA","199 000 FCFA",t("Transporteurs, flottes entreprises")],
+          [t("Lokativo"),"9 900 FCFA","99 900 FCFA",t("Agences immobilières, bailleurs")],
           [t("GESCOMXEL"),"5 000 FCFA","50 000 FCFA",t("PME, commerçants, distributeurs")],
           [t("Zelivry"),"4 900 FCFA","49 000 FCFA",t("Sociétés de livraison, coursiers")],
-          [t("Lokativo"),"9 900 FCFA","99 900 FCFA",t("Agences immobilières, bailleurs")],
-          [t("StockFlow ERP"),"5 000 FCFA","50 000 FCFA",t("Industries, grandes surfaces")],
+          [t("STOCKFLOW ERP"),"5 000 FCFA","50 000 FCFA",t("Industries, grandes surfaces")],
+          [t("CONSTRUIRO ERP"),"15 000 FCFA","150 000 FCFA",t("BTP, entreprises de construction")],
+          [t("SANTAREX ERP"),"12 000 FCFA","120 000 FCFA",t("Cliniques, cabinets, pharmacies")],
+          [t("AGRIFRIK"),"6 500 FCFA","65 000 FCFA",t("Exploitations agricoles, coopératives")],
+          [t("GESTMONEY"),"9 900 FCFA","99 000 FCFA",t("Agents Mobile Money, kiosques")],
+          [t("ANOUANZÊ ERP"),"12 900 FCFA","129 000 FCFA",t("ONG, associations, projets")],
+          [t("IBIG FactPro"),"4 900 FCFA","49 000 FCFA",t("TPE, indépendants, facturation")],
+          [t("SECRETIS ERP"),"4 900 FCFA","49 000 FCFA",t("Secrétariats, cabinets, bureaux")],
+          [t("IBIG DocPro"),"Dès 100 F/doc",t("À l'usage"),t("Génération de documents")],
         ],
         headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 8 },
         bodyStyles: { fontSize: 8,textColor: DARK },

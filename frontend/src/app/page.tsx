@@ -26,7 +26,7 @@ const HERO_SLIDES: HeroSlide[] = [
     eyebrow: "IBIG SARL — Intermark Business International Group",
     titleLead: "Une seule plateforme,",
     titleHighlight: "tout l'écosystème IBIG",
-    desc: "IBIG PARTNERS réunit l'ensemble des produits et services du groupe IBIG SARL dans un programme d'affiliation unique. Un compte, des dizaines d'opportunités, des revenus à la clé.",
+    desc: "IBIG PARTNERS réunit l'ensemble des produits et services du groupe IBIG SARL dans un programme d'affiliation unique : 14 logiciels métiers, formations, immobilier et services. Un compte, des dizaines d'opportunités, des revenus à la clé.",
   },
   {
     eyebrow: "Notre mission en Afrique",
@@ -51,7 +51,7 @@ const POSITIONING: { icon: IconName; title: string; desc: string }[] = [
 
 const MISSION: { icon: IconName; title: string; desc: string }[] = [
   { icon: "globe",     title: "Démocratiser le revenu",   desc: "Offrir à chaque Africain, urbain ou rural, salarié ou indépendant, une source de revenu accessible sans capital de départ." },
-  { icon: "store",     title: "Valoriser le local",       desc: "Promouvoir des solutions conçues en Afrique pour l'Afrique : logiciels, formations, immobilier et services adaptés à nos réalités." },
+  { icon: "store",     title: "Valoriser le local",       desc: "Promouvoir des solutions conçues en Afrique pour l'Afrique : 14 logiciels métiers couvrant plus de 17 secteurs (scolaire, BTP, santé, agriculture, Mobile Money, commerce, immobilier, ONG…), des formations et des services adaptés à nos réalités." },
   { icon: "users",     title: "Créer des entrepreneurs",  desc: "Transformer chaque partenaire en chef d'entreprise de son réseau, avec les outils et la formation pour réussir." },
   { icon: "handshake", title: "Inclure la diaspora",      desc: "Connecter la diaspora aux opportunités du continent et permettre à chacun d'investir son énergie dans l'économie africaine." },
 ];
@@ -292,7 +292,8 @@ export default async function HomePage() {
               </h2>
               <p className="mx-auto mt-3 max-w-2xl text-muted">
                 Chaque branche dispose de sa ligne de produits et de son propre modèle
-                de commissions — tout géré depuis un seul espace partenaire.
+                de commissions — tout géré depuis un seul espace partenaire. À elle seule,
+                la branche IBIG SOFT compte 14 logiciels métiers couvrant plus de 17 secteurs.
               </p>
             </div>
           </ScrollReveal>
@@ -456,7 +457,7 @@ export default async function HomePage() {
                 Combien puis-je gagner&nbsp;?
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-brand-200">
-                Scénarios réalistes sur IBIG SOFT (Scolaby à partir de {fcfa(10000)}/mois).
+                Scénarios réalistes sur IBIG SOFT — 14 logiciels métiers, de Scolaby (dès {fcfa(10000)}/mois) à IBIG FactPro (dès {fcfa(4900)}/mois).
               </p>
             </div>
           </ScrollReveal>

@@ -85,7 +85,7 @@ export default function CgvPage() {
           <section>
             <h2 className="text-lg font-bold text-ink">5. Rétractation et remboursements</h2>
             <p className="mt-3">
-              Pour les produits numériques (logiciels SaaS, formations en ligne), le Client dispose d&apos;un
+              Pour les produits numériques (logiciels SaaS et ERP, formations en ligne, documents générés à l&apos;unité), le Client dispose d&apos;un
               délai de <strong>7 jours calendaires</strong> à compter de la date d&apos;accès pour exercer son
               droit de rétractation, sous réserve que le service n&apos;ait pas été pleinement utilisé.
             </p>

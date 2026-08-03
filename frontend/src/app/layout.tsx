@@ -13,9 +13,23 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "IBIG PARTNERS — Programme d'Affiliation Multi-Niveaux",
+  title: "IBIG PARTNERS — Programme d'Affiliation Panafricain",
   description:
-    "La plateforme centrale d'affiliation du Groupe IBIG SARL. Un seul compte, tous les produits, des commissions transparentes versées rapidement.",
+    "Programme d'affiliation panafricain : un seul compte pour accéder à 14 logiciels et ERP SaaS, formations, immobilier et services des 9 branches IBIG SARL.",
+  openGraph: {
+    title: "IBIG PARTNERS — Programme d'Affiliation Panafricain",
+    description:
+      "Un seul compte pour promouvoir 14 logiciels et ERP SaaS, formations, immobilier et services des 9 branches d'IBIG SARL, avec des commissions transparentes.",
+    siteName: "IBIG PARTNERS",
+    locale: "fr_FR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "IBIG PARTNERS — Programme d'Affiliation Panafricain",
+    description:
+      "Un seul compte pour promouvoir 14 logiciels et ERP SaaS, formations, immobilier et services des 9 branches d'IBIG SARL.",
+  },
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,

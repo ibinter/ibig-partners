@@ -72,7 +72,8 @@ export async function HallOfFame() {
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-muted">
             La transparence est notre force. Voici les partenaires qui gagnent le
-            plus en ce moment. Rejoignez le classement !
+            plus en ce moment, en vendant dans 14 secteurs métiers — du BTP à la santé,
+            de l&apos;agriculture au Mobile Money. Rejoignez le classement !
           </p>
         </div>
 

@@ -15,8 +15,21 @@ export async function Testimonials() {
   const facts = [
     { icon: "🏢", value: `${branchesCount}`, label: "Branches actives à promouvoir" },
     { icon: "🧩", value: `${productsCount}+`, label: "Produits & services au catalogue" },
-    { icon: "🔗", value: "90 jours", label: "Durée de tracking de vos liens" },
+    { icon: "🗂️", value: "14 secteurs", label: "Secteurs métiers couverts" },
     { icon: "⚡", value: "7 jours", label: "Délai de versement des commissions" },
+  ];
+
+  // Profils de prospects génériques (rôle · secteur · ville) illustrant la
+  // diversité des clients à approcher — pas des témoignages, aucun nom réel.
+  const sectors = [
+    { icon: "🏗️", persona: "Chef de chantier", sector: "BTP", city: "Abidjan" },
+    { icon: "🏥", persona: "Gérante de clinique", sector: "Santé", city: "Bouaké" },
+    { icon: "🌾", persona: "Coopérative agricole", sector: "Agriculture", city: "Korhogo" },
+    { icon: "📱", persona: "Gérant de kiosque", sector: "Mobile Money", city: "Yamoussoukro" },
+    { icon: "🤝", persona: "Coordinateur de projet", sector: "ONG & Association", city: "San-Pédro" },
+    { icon: "🧾", persona: "Comptable", sector: "Facturation", city: "Daloa" },
+    { icon: "🗂️", persona: "Office manager", sector: "Secrétariat", city: "Abidjan" },
+    { icon: "🏪", persona: "Gérant de PME", sector: "Commerce & Stock", city: "Man" },
   ];
 
   return (
@@ -49,7 +62,32 @@ export async function Testimonials() {
           ))}
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-sm text-muted">
+        <div className="mt-16 text-center">
+          <span className="label-caps inline-block rounded-full bg-brand-50 px-4 py-1.5 text-brand-600">
+            14 secteurs métiers
+          </span>
+          <h3 className="mt-4 text-2xl font-extrabold text-ink sm:text-3xl">
+            Des prospects à convaincre dans tous les secteurs
+          </h3>
+          <p className="mx-auto mt-3 max-w-2xl text-muted">
+            Le catalogue IBIG SOFT couvre désormais 14 secteurs métiers : chaque partenaire peut
+            prospecter partout, du chantier à la clinique. Exemples de profils à cibler :
+          </p>
+        </div>
+
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {sectors.map((s) => (
+            <div key={`${s.persona}-${s.sector}`} className="card-premium flex items-center gap-3 p-4 text-left">
+              <span className="shrink-0 text-2xl">{s.icon}</span>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-bold text-ink">{s.persona}</p>
+                <p className="truncate text-xs text-muted">{s.sector} · {s.city}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-muted">
           <span className="flex items-center gap-2">
             <span className="text-emerald-500">✓</span>
             <span>Paiements via Orange Money, Wave, MTN MoMo, virement bancaire</span>

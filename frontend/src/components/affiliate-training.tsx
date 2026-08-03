@@ -16,7 +16,7 @@ const TRAINING_TIPS: TrainingTip[] = [
   {
     icon: "users",
     title: "Identifiez votre cible",
-    description: "Commencez par votre entourage : écoles pour Scolaby, commerçants pour Gescomxel, agences immo pour Lokativo. Chaque logiciel a son public naturel.",
+    description: "Commencez par votre entourage : écoles pour Scolaby, commerçants pour Gescomxel, agences immo pour Lokativo, entreprises de BTP pour Construiro, cliniques pour Santarex, points Mobile Money pour Gestmoney. Chacun des 14 logiciels a son public naturel.",
     level: "Débutant",
     levelColor: "bg-emerald-100 text-emerald-700",
   },
@@ -51,7 +51,7 @@ const TRAINING_TIPS: TrainingTip[] = [
   {
     icon: "trophy",
     title: "Spécialisez-vous sur 2 produits max",
-    description: "Les meilleurs affiliés maîtrisent 1 ou 2 logiciels à fond. Devenez l'expert de votre niche et vos prospects vous feront confiance.",
+    description: "Avec 14 logiciels au catalogue (scolaire, BTP, santé, agriculture, Mobile Money, ONG, facturation, secrétariat, documents…), les meilleurs affiliés en maîtrisent 1 ou 2 à fond. Devenez l'expert de votre niche et vos prospects vous feront confiance.",
     level: "Avancé",
     levelColor: "bg-violet-100 text-violet-700",
   },
@@ -68,7 +68,8 @@ const ACADEMY_MODULES: ModulePreview[] = [
   { icon: "graduation", title: "Bienvenue dans le programme IBIG PARTNERS", duration: "5 min", type: "Article" },
   { icon: "coins", title: "Comprendre les commissions sur 3 niveaux", duration: "8 min", type: "Article" },
   { icon: "target", title: "Techniques de vente : conclure efficacement", duration: "10 min", type: "Article" },
-  { icon: "puzzle", title: "Comment vendre les logiciels IBIG SOFT", duration: "10 min", type: "Article" },
+  { icon: "puzzle", title: "Comment vendre les 14 logiciels et ERP IBIG SOFT", duration: "10 min", type: "Article" },
+  { icon: "briefcase", title: "Panorama des secteurs : BTP, santé, agriculture, Mobile Money, ONG…", duration: "9 min", type: "Article" },
   { icon: "network", title: "Comment recruter son premier filleul ?", duration: "10 min", type: "Article" },
   { icon: "chart", title: "Gérer les objections courantes tous produits confondus", duration: "8 min", type: "Article" },
 ];

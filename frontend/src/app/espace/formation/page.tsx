@@ -439,7 +439,7 @@ export default function FormationPage() {
             { icon: "🔗", title: "Partagez vos liens partout", desc: "WhatsApp, Facebook, email — chaque clic est tracé 90 jours. La commission vous revient même si le client achète 2 mois plus tard." },
             { icon: "👥", title: "Recrutez des partenaires actifs", desc: "Un filleul actif vous rapporte N2 sur chaque vente. Avec 10 filleuls actifs, vos revenus passifs peuvent dépasser vos ventes directes." },
             { icon: "📦", title: "Activez tous les produits", desc: "Plus vous avez de liens, plus vous multipliez les chances. Un client peut acheter Scolaby ET une formation dans les 90 jours." },
-            { icon: "🎯", title: "Ciblez les bons prospects", desc: "Scolaby → directeurs d'école. Formations → DRH et managers. Immobilier → investisseurs. Personnalisez votre approche." },
+            { icon: "🎯", title: "Ciblez les bons prospects", desc: "Chaque ERP a sa cible : Scolaby → écoles, Fleet 360 → transporteurs, SANTAREX → cliniques, CONSTRUIRO → BTP, AGRIFRIK → coopératives agricoles, GESTMONEY → agents Mobile Money, ANOUANZÊ → ONG. Formations → DRH. Immobilier → investisseurs." },
             { icon: "♻️", title: "Misez sur les abonnements", desc: "Un client SaaS paie chaque mois. 5 clients Scolaby = commissions récurrentes chaque mois pendant 4 mois. Puis reconvertissez-les en annuel." },
             { icon: "🏆", title: "Montez en statut rapidement", desc: "Gold (+5%) transforme 10 000 FCFA en 10 500 FCFA. Sur un réseau actif de 50 personnes, la différence est massive sur une année." },
           ].map((tip) => (

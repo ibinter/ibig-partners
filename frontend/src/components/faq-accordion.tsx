@@ -24,6 +24,18 @@ const FAQS = [
     a: "Non. Dans votre espace partenaire, vous activez librement les branches et produits que vous souhaitez promouvoir. Vous pouvez vous spécialiser sur une branche ou tout couvrir.",
   },
   {
+    q: "Quels logiciels IBIG SOFT puis-je promouvoir ?",
+    a: "IBIG SOFT propose désormais 14 logiciels et ERP couvrant de nombreux secteurs : Scolaby (gestion scolaire, à partir de 10 000), IBIG Fleet 360 (gestion de flotte, à partir de 19 900), Lokativo (immobilier, à partir de 9 900), GESCOMXEL (commerce, à partir de 5 000), Zelivry (livraison, à partir de 4 900), STOCKFLOW ERP (gestion de stock, à partir de 5 000), CONSTRUIRO ERP (BTP, à partir de 15 000), SANTAREX ERP (santé, à partir de 12 000), AGRIFRIK (agricole, à partir de 6 500), GESTMONEY (Mobile Money, à partir de 9 900), ANOUANZÊ ERP (ONG, à partir de 12 900), IBIG FactPro (facturation, à partir de 4 900), SECRETIS ERP (secrétariat, à partir de 4 900) et IBIG DocPro (génération de documents, dès 100 F/document à l'usage). Vous pouvez promouvoir tout le catalogue ou vous concentrer sur les secteurs qui vous parlent le plus.",
+  },
+  {
+    q: "Y a-t-il un logiciel pour mon secteur ?",
+    a: "Très probablement. Le catalogue IBIG SOFT couvre l'éducation (Scolaby), le transport et la flotte (IBIG Fleet 360), l'immobilier (Lokativo), le commerce (GESCOMXEL), la livraison (Zelivry), la gestion de stock (STOCKFLOW ERP), le BTP (CONSTRUIRO ERP), la santé (SANTAREX ERP), l'agriculture (AGRIFRIK), le Mobile Money (GESTMONEY), les ONG et associations (ANOUANZÊ ERP), la facturation (IBIG FactPro), le secrétariat (SECRETIS ERP) et la génération de documents (IBIG DocPro). Identifiez le besoin de votre prospect, puis proposez-lui le logiciel adapté à son métier.",
+  },
+  {
+    q: "Combien je gagne en vendant un logiciel IBIG SOFT ?",
+    a: "La commission logiciels est de 20% au Niveau 1, dégressive sur 4 mois. Pour IBIG DocPro, facturé à l'usage (dès 100 F/document), vous touchez 20% au Niveau 1 sur la consommation. Les taux exacts et les niveaux de parrainage sont détaillés dans votre espace partenaire.",
+  },
+  {
     q: "Y a-t-il un minimum de ventes requis ?",
     a: "Aucun minimum. Chaque vente génère des commissions immédiatement. Plus vous vendez et développez votre réseau de filleuls, plus vous progressez dans les statuts et augmentez vos taux.",
   },

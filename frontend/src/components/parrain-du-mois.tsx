@@ -73,6 +73,8 @@ export async function ParrainDuMois() {
           <p className="mx-auto mt-3 max-w-xl text-muted">
             Chaque mois, le partenaire qui recrute le plus de nouveaux filleuls actifs gagne un{" "}
             <strong className="text-amber-700">bonus +5% sur toutes ses commissions pendant 30 jours</strong>.
+            Recrutez des vendeurs partout : BTP, santé, agriculture, Mobile Money, ONG, facturation,
+            secrétariat — 14 secteurs métiers, autant d&apos;opportunités.
           </p>
         </div>
 

@@ -10,7 +10,39 @@ export interface HeroSlide {
   desc: string;
 }
 
-export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
+/**
+ * Slides mettant en avant le catalogue élargi d'IBIG SOFT (14 logiciels/ERP,
+ * nouveaux secteurs). Utilisées par défaut si aucun tableau `slides` n'est passé.
+ * Prix indiqués « à partir de ».
+ */
+export const CATALOG_HERO_SLIDES: HeroSlide[] = [
+  {
+    eyebrow: "IBIG SOFT — 14 logiciels métiers",
+    titleLead: "14 ERP & logiciels métiers,",
+    titleHighlight: "un seul programme d'affiliation",
+    desc: "Scolaire, immobilier, commerce, stock, livraison, BTP, santé, agriculture, Mobile Money, ONG, facturation, secrétariat et génération de documents : un catalogue complet à promouvoir avec un seul compte partenaire.",
+  },
+  {
+    eyebrow: "6 nouveaux secteurs, plus d'opportunités",
+    titleLead: "Le catalogue passe de 6 à",
+    titleHighlight: "14 solutions métiers",
+    desc: "CONSTRUIRO ERP (BTP, dès 15 000 F), SANTAREX ERP (santé, dès 12 000 F), AGRIFRIK (agriculture, dès 6 500 F), GESTMONEY (Mobile Money, dès 9 900 F), ANOUANZÊ ERP (ONG, dès 12 900 F) : autant de marchés qui s'ouvrent à votre réseau.",
+  },
+  {
+    eyebrow: "Des solutions pour chaque métier",
+    titleLead: "Du scolaire à la flotte,",
+    titleHighlight: "un logiciel pour chaque besoin",
+    desc: "Scolaby (dès 10 000 F/mois), IBIG Fleet 360 (dès 19 900 F), Lokativo (dès 9 900 F), GESCOMXEL (dès 5 000 F), Zelivry (dès 4 900 F), STOCKFLOW ERP (dès 5 000 F) : des outils éprouvés, faciles à recommander.",
+  },
+  {
+    eyebrow: "Facturation, secrétariat & documents",
+    titleLead: "Gérez, facturez, documentez",
+    titleHighlight: "sans vous ruiner",
+    desc: "IBIG FactPro (facturation, dès 4 900 F), SECRETIS ERP (secrétariat, dès 4 900 F) et IBIG DocPro (génération de documents, dès 100 F/doc à l'usage) : des tarifs accessibles qui séduisent chaque entrepreneur.",
+  },
+];
+
+export function HeroSlider({ slides = CATALOG_HERO_SLIDES }: { slides?: HeroSlide[] }) {
   const [index, setIndex] = useState(0);
   const count = slides.length;
 

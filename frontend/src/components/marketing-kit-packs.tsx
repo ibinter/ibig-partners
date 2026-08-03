@@ -92,6 +92,102 @@ const PRODUCT_KITS: ProductKit[] = [
       { type: "VISUAL", title: "Fiche produit", description: "Support présentant le tableau de bord et les bénéfices clés de Fleet 360, à adapter selon la taille de la flotte du prospect." },
     ],
   },
+  {
+    name: "CONSTRUIRO ERP",
+    slug: "construiro",
+    icon: "building",
+    color: "from-orange-500 to-amber-700",
+    activeColor: "bg-orange-600 text-white",
+    kits: [
+      { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"CONSTRUIRO ERP est l'outil des professionnels du BTP : gestion des chantiers, devis, suivi des coûts et des équipes, le tout centralisé. À partir de 15 000 FCFA/mois.\"" },
+      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Tu gères des chantiers ? CONSTRUIRO ERP suit tes coûts, tes équipes et tes devis BTP au même endroit. Découvre ici 👉 [lien]\"" },
+      { type: "VISUAL", title: "Fiche produit", description: "Support présentant les modules chantier de CONSTRUIRO, à adapter selon la taille de l'entreprise de construction du prospect." },
+    ],
+  },
+  {
+    name: "SANTAREX ERP",
+    slug: "santarex",
+    icon: "shield",
+    color: "from-red-500 to-rose-600",
+    activeColor: "bg-red-600 text-white",
+    kits: [
+      { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"SANTAREX ERP digitalise cliniques, cabinets et pharmacies : dossiers patients, rendez-vous, facturation et gestion des soins dans un seul outil. À partir de 12 000 FCFA/mois.\"" },
+      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Vous dirigez une clinique ou un cabinet ? SANTAREX ERP centralise les dossiers patients, les rendez-vous et la facturation. Découvrez ici 👉 [lien]\"" },
+      { type: "VISUAL", title: "Fiche produit", description: "Support présentant les bénéfices de SANTAREX pour le secteur de la santé, à adapter au type d'établissement (clinique, cabinet, pharmacie)." },
+    ],
+  },
+  {
+    name: "AGRIFRIK",
+    slug: "agrifrik",
+    icon: "globe",
+    color: "from-green-500 to-emerald-700",
+    activeColor: "bg-green-600 text-white",
+    kits: [
+      { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"AGRIFRIK accompagne coopératives et exploitations agricoles : suivi des productions, gestion des récoltes, stocks et ventes. À partir de 6 500 FCFA/mois.\"" },
+      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Tu es dans l'agriculture ? AGRIFRIK t'aide à suivre tes productions, tes stocks et tes ventes de récoltes. Découvre ici 👉 [lien]\"" },
+      { type: "VISUAL", title: "Visuel réseaux sociaux", description: "Bannière mettant en avant AGRIFRIK pour les coopératives et exploitations agricoles." },
+    ],
+  },
+  {
+    name: "GESTMONEY",
+    slug: "gestmoney",
+    icon: "wallet",
+    color: "from-cyan-500 to-blue-600",
+    activeColor: "bg-cyan-600 text-white",
+    kits: [
+      { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"GESTMONEY est pensé pour les points Mobile Money : suivi des transactions, gestion de la caisse et des commissions au quotidien. À partir de 9 900 FCFA/mois.\"" },
+      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Tu tiens un point Mobile Money ? GESTMONEY suit tes transactions, ta caisse et tes commissions. Découvre ici 👉 [lien]\"" },
+      { type: "VISUAL", title: "Fiche produit", description: "Support présentant GESTMONEY pour les gérants de points Mobile Money." },
+    ],
+  },
+  {
+    name: "ANOUANZÊ ERP",
+    slug: "anouanze",
+    icon: "handshake",
+    color: "from-teal-500 to-cyan-700",
+    activeColor: "bg-teal-600 text-white",
+    kits: [
+      { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"ANOUANZÊ ERP est dédié aux ONG et associations : gestion des projets, des membres, des dons et reporting aux bailleurs. À partir de 12 900 FCFA/mois.\"" },
+      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Vous gérez une ONG ou une association ? ANOUANZÊ ERP centralise vos projets, vos membres et vos dons. Découvrez ici 👉 [lien]\"" },
+      { type: "VISUAL", title: "Fiche produit", description: "Support présentant ANOUANZÊ pour les responsables d'ONG et d'associations." },
+    ],
+  },
+  {
+    name: "IBIG FACTPRO",
+    slug: "ibig-factpro",
+    icon: "card",
+    color: "from-sky-500 to-indigo-600",
+    activeColor: "bg-sky-600 text-white",
+    kits: [
+      { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"IBIG FactPro simplifie la facturation de toute entreprise : devis, factures et suivi des paiements en quelques clics. À partir de 4 900 FCFA/mois.\"" },
+      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Tu fais encore tes factures à la main ? IBIG FactPro génère devis et factures en 1 clic. Découvre ici 👉 [lien]\"" },
+      { type: "VISUAL", title: "Fiche produit", description: "Support présentant IBIG FactPro, adapté à tout entrepreneur ayant besoin de facturer." },
+    ],
+  },
+  {
+    name: "SECRETIS ERP",
+    slug: "secretis",
+    icon: "briefcase",
+    color: "from-purple-500 to-fuchsia-700",
+    activeColor: "bg-purple-600 text-white",
+    kits: [
+      { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"SECRETIS ERP outille les services de secrétariat : gestion du courrier, des agendas, des tâches et du classement documentaire. À partir de 4 900 FCFA/mois.\"" },
+      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Vous gérez un secrétariat ? SECRETIS ERP organise courrier, agendas et documents au même endroit. Découvrez ici 👉 [lien]\"" },
+      { type: "VISUAL", title: "Fiche produit", description: "Support présentant SECRETIS pour les cabinets et services de secrétariat." },
+    ],
+  },
+  {
+    name: "IBIG DOCPRO",
+    slug: "ibig-docpro",
+    icon: "layers",
+    color: "from-slate-500 to-slate-700",
+    activeColor: "bg-slate-600 text-white",
+    kits: [
+      { type: "ARGUMENT", title: "Argumentaire de vente", description: "\"IBIG DocPro génère vos documents professionnels à la demande — sans abonnement, dès 100 F par document. Idéal pour ceux qui facturent ou éditent ponctuellement.\"" },
+      { type: "ARGUMENT", title: "Message WhatsApp prêt à envoyer", description: "\"Besoin de générer un document pro rapidement ? Avec IBIG DocPro, tu paies à l'usage, dès 100 F le document. Découvre ici 👉 [lien]\"" },
+      { type: "VISUAL", title: "Visuel avant/après", description: "Infographie montrant la génération d'un document propre en quelques secondes avec IBIG DocPro." },
+    ],
+  },
 ];
 
 const TYPE_ICONS: Record<string, { icon: IconName; label: string; color: string }> = {
@@ -116,8 +212,10 @@ export function MarketingKitPacks() {
               Kits Marketing par logiciel
             </h2>
             <p className="mx-auto mt-3 max-w-2xl text-muted">
-              Pour chaque logiciel, recevez des argumentaires et visuels prêts à partager.
-              Copiez, personnalisez et envoyez à vos prospects.
+              Pour chacun des 14 logiciels et ERP d&apos;IBIG SOFT — du scolaire au BTP,
+              en passant par la santé, l&apos;agriculture, le Mobile Money, les ONG,
+              la facturation, le secrétariat et la génération de documents — recevez des
+              argumentaires et visuels prêts à partager. Copiez, personnalisez et envoyez à vos prospects.
             </p>
           </div>
         </ScrollReveal>
