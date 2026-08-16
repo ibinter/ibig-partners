@@ -39,6 +39,43 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ===================== FLUIDITÉ & RESPONSIVE ===================== */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%; /* évite le gonflement auto des polices sur iOS */
+  text-size-adjust: 100%;
+}
+
+/* Les ancres (#branches, #software, #faq…) ne sont plus masquées par le header
+   sticky quand on y navigue. */
+:target {
+  scroll-margin-top: 5.5rem;
+}
+
+/* Défilement fluide et sans à-coups sur les zones scrollables (tables, listes). */
+.overflow-x-auto,
+.overflow-y-auto,
+.overflow-auto {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+/* Accessibilité : respecte le choix « réduire les animations » du système. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Le chat commercial Tawk.to est réservé aux pages publiques. */
