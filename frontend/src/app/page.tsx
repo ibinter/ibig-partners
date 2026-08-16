@@ -167,12 +167,22 @@ export default async function HomePage() {
                   Devenir Partenaire — c&apos;est gratuit
                 </Link>
                 <a
-                  href="#mission"
+                  href="#simulateur"
                   className="rounded-xl border-2 border-white/30 px-6 py-3.5 text-center font-semibold text-white transition-all duration-200 hover:bg-white/10 sm:px-7"
                 >
-                  Découvrir notre mission
+                  Simuler mes gains
                 </a>
               </div>
+
+              {/* Réassurance au point de décision — réduit la friction juste sous le CTA */}
+              <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-brand-100">
+                {["Gratuit", "Inscription en 2 min", "Sans carte bancaire", "Sans engagement"].map((t) => (
+                  <li key={t} className="flex items-center gap-1.5">
+                    <Icon name="check" className="h-3.5 w-3.5 shrink-0 text-gold-400" />
+                    {t}
+                  </li>
+                ))}
+              </ul>
             </div>
 
             {/* Colonne illustration */}
@@ -213,7 +223,7 @@ export default async function HomePage() {
       <SocialProofBar />
 
       {/* ═══════════ CALCULATEUR LIVE (NEW) ═══════════ */}
-      <section className="bg-slate-50 py-20">
+      <section id="simulateur" className="scroll-mt-20 bg-slate-50 py-20">
         <div className="mx-auto max-w-6xl px-4">
           <ScrollReveal animation="fade-up">
             <div className="text-center mb-10">
