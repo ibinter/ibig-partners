@@ -3,7 +3,13 @@ import { prisma } from "@/lib/prisma";
 import { fcfa, formatDate } from "@/lib/format";
 import { Badge, Button, Card, PageHeader, statusTone } from "@/components/ui";
 import { STATUS_LABELS, STATUS_COLORS } from "@/lib/constants";
-import { approvePartner, setPartnerActive, setPartnerRole } from "../actions";
+import {
+  approvePartner,
+  setPartnerActive,
+  setPartnerRole,
+  sendVerificationReminder,
+  sendVerificationReminderToAll,
+} from "../actions";
 import { adminContact } from "../messages/actions";
 
 export const dynamic = "force-dynamic";
@@ -26,12 +32,24 @@ export default async function PartenairesPage() {
   const paidOf = (id: string) => paidByUser.find((p) => p.userId === id)?._sum.amount ?? 0;
 
   const pending = partners.filter((p) => !p.approved && p.role === "PARTNER");
+  const unverified = partners.filter(
+    (p) => p.role === "PARTNER" && p.verificationStatus !== "VERIFIED",
+  );
 
   return (
     <div>
       <PageHeader
         title="Gestion des partenaires"
-        subtitle={`${partners.length} comptes · ${pending.length} en attente de validation`}
+        subtitle={`${partners.length} comptes · ${pending.length} en attente de validation · ${unverified.length} non vérifiés`}
+        action={
+          unverified.length > 0 ? (
+            <form action={sendVerificationReminderToAll}>
+              <Button type="submit" variant="secondary" size="sm">
+                🔐 Rappeler la vérif à tous ({unverified.length})
+              </Button>
+            </form>
+          ) : undefined
+        }
       />
 
       <Card className="p-0">
@@ -79,13 +97,26 @@ export default async function PartenairesPage() {
                   <td className="text-center">{p._count.referrals}</td>
                   <td className="font-semibold text-ink">{fcfa(paidOf(p.id))}</td>
                   <td>
-                    {!p.approved ? (
-                      <Badge tone="amber">En validation</Badge>
-                    ) : p.active ? (
-                      <Badge tone="green">Actif</Badge>
-                    ) : (
-                      <Badge tone="red">Suspendu</Badge>
-                    )}
+                    <div className="flex flex-col items-start gap-1">
+                      {!p.approved ? (
+                        <Badge tone="amber">En validation</Badge>
+                      ) : p.active ? (
+                        <Badge tone="green">Actif</Badge>
+                      ) : (
+                        <Badge tone="red">Suspendu</Badge>
+                      )}
+                      {p.role === "PARTNER" && (
+                        p.verificationStatus === "VERIFIED" ? (
+                          <Badge tone="green">🔐 Vérifié</Badge>
+                        ) : p.verificationStatus === "SUBMITTED" ? (
+                          <Badge tone="amber">🔐 Dossier reçu</Badge>
+                        ) : p.verificationStatus === "REJECTED" ? (
+                          <Badge tone="red">🔐 Refusé</Badge>
+                        ) : (
+                          <Badge tone="red">🔐 Non vérifié</Badge>
+                        )
+                      )}
+                    </div>
                   </td>
                   <td className="text-xs text-muted">{formatDate(p.createdAt)}</td>
                   <td>
@@ -94,6 +125,12 @@ export default async function PartenairesPage() {
                         <form action={adminContact}>
                           <input type="hidden" name="targetUserId" value={p.id} />
                           <Button type="submit" variant="ghost" size="sm">💬 Contacter</Button>
+                        </form>
+                      )}
+                      {p.role === "PARTNER" && p.verificationStatus !== "VERIFIED" && (
+                        <form action={sendVerificationReminder}>
+                          <input type="hidden" name="id" value={p.id} />
+                          <Button type="submit" variant="ghost" size="sm">🔐 Rappel vérif</Button>
                         </form>
                       )}
                       {!p.approved && (

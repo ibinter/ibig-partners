@@ -35,6 +35,47 @@ export async function setPartnerActive(formData: FormData) {
   revalidatePath("/admin/partenaires");
 }
 
+// --- Rappels de vérification (KYC) ---
+const VERIF_REMINDER = {
+  title: "🔐 Vérifiez votre compte pour l'activer",
+  body:
+    "Bonjour ! Pour profiter pleinement d'IBIG PARTNERS — vendre, débloquer toutes les " +
+    "fonctionnalités et percevoir vos commissions — votre compte doit être vérifié. " +
+    "Merci d'envoyer vos documents depuis « Vérifier mon compte ». C'est rapide et sécurisé. " +
+    "— L'équipe IBIG PARTNERS",
+  url: "/espace/verification",
+};
+
+/** Envoie le rappel de vérification à un affilié précis. */
+export async function sendVerificationReminder(formData: FormData) {
+  const admin = await requireAdmin();
+  const id = String(formData.get("id") || "").trim();
+  if (!id) return;
+  await prisma.notification.create({ data: { userId: id, ...VERIF_REMINDER } });
+  void logAction({ userId: admin.id, action: "VERIF_REMINDER", target: id });
+  revalidatePath("/admin/partenaires");
+}
+
+/** Envoie le rappel à TOUS les affiliés non encore vérifiés. */
+export async function sendVerificationReminderToAll() {
+  const admin = await requireAdmin();
+  const targets = await prisma.user.findMany({
+    where: { role: "PARTNER", verificationStatus: { not: "VERIFIED" } },
+    select: { id: true },
+  });
+  if (targets.length > 0) {
+    await prisma.notification.createMany({
+      data: targets.map((u) => ({ userId: u.id, ...VERIF_REMINDER })),
+    });
+  }
+  void logAction({
+    userId: admin.id,
+    action: "VERIF_REMINDER_BULK",
+    detail: `${targets.length} affiliés`,
+  });
+  revalidatePath("/admin/partenaires");
+}
+
 export async function setPartnerRole(formData: FormData) {
   const admin = await requireAdmin();
   if (admin.role !== "SUPERADMIN") return; // seul le SuperAdmin gere les roles

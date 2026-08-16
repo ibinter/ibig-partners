@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { DashboardShell, type NavItem } from "@/components/dashboard-shell";
@@ -48,8 +49,55 @@ export default async function EspaceLayout({
     { href: "/espace/profil",       label: "Mon Profil",      icon: "⚙️",  group: "Compte" },
   ];
 
+  // Bandeau persistant tant que le compte n'est pas vérifié (affiliés uniquement).
+  const needsVerification =
+    user.role === "PARTNER" && user.verificationStatus !== "VERIFIED";
+  const verifRejected = user.verificationStatus === "REJECTED";
+  const verifPending = user.verificationStatus === "SUBMITTED";
+
   return (
     <DashboardShell nav={NAV} user={user} variant="partner">
+      {needsVerification && (
+        <Link
+          href="/espace/verification"
+          className={`mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border px-4 py-3 transition-colors ${
+            verifRejected
+              ? "border-rose-200 bg-rose-50 hover:bg-rose-100"
+              : "border-amber-200 bg-amber-50 hover:bg-amber-100"
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">{verifRejected ? "❌" : "🔐"}</span>
+            <div>
+              <p
+                className={`text-sm font-semibold ${
+                  verifRejected ? "text-rose-900" : "text-amber-900"
+                }`}
+              >
+                {verifRejected
+                  ? "Votre dossier a été refusé — corrigez et renvoyez vos documents."
+                  : verifPending
+                    ? "Dossier en cours d'examen — suivez son avancement."
+                    : "Votre compte n'est pas encore vérifié."}
+              </p>
+              <p
+                className={`text-xs ${
+                  verifRejected ? "text-rose-800" : "text-amber-800"
+                }`}
+              >
+                Activez les paiements de commissions en envoyant vos documents (rapide et sécurisé).
+              </p>
+            </div>
+          </div>
+          <span
+            className={`shrink-0 rounded-xl px-4 py-2 text-sm font-bold text-white ${
+              verifRejected ? "bg-rose-500" : "bg-amber-500"
+            }`}
+          >
+            {verifPending ? "Voir mon dossier →" : "Vérifier mon compte →"}
+          </span>
+        </Link>
+      )}
       {children}
       <CelebrationToaster />
       <OnboardingTourWrapper isNewUser={isNewUser} />

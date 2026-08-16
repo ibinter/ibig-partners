@@ -139,17 +139,21 @@ export async function registerAction(_prev: unknown, formData: FormData) {
       orgName: orgName || null,
       sponsorId,
       approved: false,
-      verificationStatus: "SUBMITTED",
+      // Le compte démarre NON vérifié : l'affilié doit soumettre ses documents
+      // depuis « Vérifier mon compte » pour activer les paiements de commissions.
+      verificationStatus: "NONE",
     },
   });
 
-  // Créer automatiquement un dossier KYC pré-rempli pour que l'admin le voie
-  await prisma.verificationRequest.create({
+  // Notification d'accueil incitant à la vérification (cloche + lien direct).
+  await prisma.notification.create({
     data: {
       userId: user.id,
-      type: partnerType === "INDIVIDUAL" ? "INDIVIDUAL" : "COMPANY",
-      companyName: orgName || null,
-      status: "PENDING",
+      title: "🔐 Activez votre compte — vérification requise",
+      body:
+        "Bienvenue chez IBIG PARTNERS ! Pour vendre et percevoir vos commissions, " +
+        "votre compte doit être vérifié. Envoyez vos documents dès maintenant, c'est rapide et sécurisé.",
+      url: "/espace/verification",
     },
   });
 
