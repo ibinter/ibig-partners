@@ -8,6 +8,7 @@ const SITE_URL =
 // Routes publiques indexables (les espaces /admin et /espace sont privés).
 const ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"] }[] = [
   { path: "/", priority: 1.0, changeFrequency: "weekly" },
+  { path: "/en", priority: 0.9, changeFrequency: "weekly" },
   { path: "/rejoindre", priority: 0.9, changeFrequency: "monthly" },
   { path: "/partenaires", priority: 0.7, changeFrequency: "monthly" },
   { path: "/top-partenaires", priority: 0.6, changeFrequency: "weekly" },

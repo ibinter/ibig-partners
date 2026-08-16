@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
@@ -46,6 +47,18 @@ const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL && process.env.NEXT_PUBLIC_SITE_URL.startsWith("https://")
     ? process.env.NEXT_PUBLIC_SITE_URL
     : "https://ibigpartners.com";
+
+// hreflang : signale la version anglaise /en aux moteurs de recherche.
+export const metadata: Metadata = {
+  alternates: {
+    canonical: `${SITE_URL}/`,
+    languages: {
+      fr: `${SITE_URL}/`,
+      en: `${SITE_URL}/en`,
+      "x-default": `${SITE_URL}/`,
+    },
+  },
+};
 
 const POSITIONING: { icon: IconName; title: string; desc: string }[] = [
   { icon: "key",     title: "Un seul compte",        desc: "Accédez à l'ensemble du portefeuille IBIG SARL avec un seul identifiant partenaire." },

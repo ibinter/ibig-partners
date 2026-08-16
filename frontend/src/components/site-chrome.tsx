@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MobileMenu } from "./mobile-menu";
+import { LangSwitcher } from "./lang-switcher";
 
 export function Logo({ light = false }: { light?: boolean }) {
   return (
@@ -80,6 +81,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <LangSwitcher />
           <Link
             href="/connexion"
             className="hidden rounded-lg px-3.5 py-2 text-sm font-semibold text-brand-700 hover:bg-brand-50 transition-colors sm:inline-flex"
