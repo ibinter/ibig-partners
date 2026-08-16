@@ -73,7 +73,7 @@ export default async function InstitutionalPartnersPage() {
                       <div className="flex items-center gap-3">
                         {p.logoUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img src={p.logoUrl} alt={p.name} className="h-9 w-9 rounded-lg object-contain border border-slate-100 bg-slate-50 p-0.5 shrink-0" />
+                          <img src={p.logoUrl} alt={p.name} loading="lazy" decoding="async" className="h-9 w-9 rounded-lg object-contain border border-slate-100 bg-slate-50 p-0.5 shrink-0" />
                         ) : (
                           <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center text-white text-xs font-bold shrink-0">
                             {p.name[0]?.toUpperCase()}

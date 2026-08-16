@@ -142,7 +142,7 @@ export default async function ClassementPage() {
                     <img
                       src={partner.photoUrl}
                       alt={`${partner.firstName} ${partner.lastName}`}
-                      className="h-14 w-14 rounded-full object-cover ring-2 ring-white/60"
+                      loading="lazy" decoding="async" className="h-14 w-14 rounded-full object-cover ring-2 ring-white/60"
                     />
                   ) : (
                     <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/25 ring-2 ring-white/60 text-lg font-bold">
@@ -232,7 +232,7 @@ export default async function ClassementPage() {
                             <img
                               src={partner.photoUrl}
                               alt=""
-                              className="h-8 w-8 rounded-full object-cover shrink-0"
+                              loading="lazy" decoding="async" className="h-8 w-8 rounded-full object-cover shrink-0"
                             />
                           ) : (
                             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-600 shrink-0">
@@ -285,6 +285,8 @@ export default async function ClassementPage() {
               <img
                 src={currentUser.photoUrl}
                 alt=""
+                loading="lazy"
+                decoding="async"
                 className="h-10 w-10 rounded-full object-cover"
               />
             ) : (

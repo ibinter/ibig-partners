@@ -115,7 +115,7 @@ export default async function PartenairesPage() {
                     <div className="flex items-start gap-4 mb-4">
                       {p.logoUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={p.logoUrl} alt={p.name} className="h-14 w-14 rounded-xl object-contain border border-slate-100 bg-slate-50 p-1 shrink-0" />
+                        <img src={p.logoUrl} alt={p.name} loading="lazy" decoding="async" className="h-14 w-14 rounded-xl object-contain border border-slate-100 bg-slate-50 p-1 shrink-0" />
                       ) : (
                         <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center text-xl shrink-0">
                           {CATEGORY_ICON[p.category] ?? "🌐"}
@@ -173,7 +173,7 @@ export default async function PartenairesPage() {
                       <div className="flex items-start gap-4 mb-4">
                         {p.photoUrl ? (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img src={p.photoUrl} alt={v?.companyName ?? p.firstName} className="h-14 w-14 rounded-xl object-contain border border-slate-100 bg-slate-50 p-1 shrink-0" />
+                          <img src={p.photoUrl} alt={v?.companyName ?? p.firstName} loading="lazy" decoding="async" className="h-14 w-14 rounded-xl object-contain border border-slate-100 bg-slate-50 p-1 shrink-0" />
                         ) : (
                           <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white font-bold text-lg shrink-0">
                             {(v?.companyName ?? p.firstName)[0].toUpperCase()}
@@ -228,7 +228,7 @@ export default async function PartenairesPage() {
                     <div key={p.id} className="card-premium hover:shadow-md transition-shadow p-5 text-center">
                       {p.photoUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={p.photoUrl} alt={`${p.firstName} ${p.lastName}`} className="h-20 w-20 rounded-full object-cover border-2 border-slate-200 mx-auto mb-3" />
+                        <img src={p.photoUrl} alt={`${p.firstName} ${p.lastName}`} loading="lazy" decoding="async" className="h-20 w-20 rounded-full object-cover border-2 border-slate-200 mx-auto mb-3" />
                       ) : (
                         <div className="h-20 w-20 rounded-full bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white text-xl font-bold mx-auto mb-3">
                           {initials(p.firstName, p.lastName)}

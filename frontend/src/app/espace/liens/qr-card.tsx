@@ -18,7 +18,7 @@ export default function QrCard({ url, slug }: { url: string; slug: string }) {
     <div className="flex items-center gap-3">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       {qr ? (
-        <img src={qr} alt="QR code" className="h-20 w-20 rounded-xl border border-slate-100 shadow-sm shrink-0" />
+        <img src={qr} alt="QR code" loading="lazy" decoding="async" className="h-20 w-20 rounded-xl border border-slate-100 shadow-sm shrink-0" />
       ) : (
         <div className="h-20 w-20 rounded-xl border border-slate-100 bg-slate-50 animate-pulse shrink-0" />
       )}

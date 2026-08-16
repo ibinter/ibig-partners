@@ -219,6 +219,8 @@ export default async function AcademiePage({
                     <img
                       src={mod.thumbnail}
                       alt={mod.title}
+                      loading="lazy"
+                      decoding="async"
                       className="h-full w-full object-cover"
                     />
                   ) : (

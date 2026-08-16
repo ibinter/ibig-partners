@@ -82,7 +82,7 @@ function MessageBubble({ m, mine }: { m: ChatMessageData; mine: boolean }) {
         {isImage ? (
           <div className={`rounded-2xl overflow-hidden border ${mine ? "border-blue-300" : "border-slate-200"}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={body} alt="image partagée" className="max-w-[260px] max-h-[300px] object-cover block" />
+            <img src={body} alt="image partagée" loading="lazy" decoding="async" className="max-w-[260px] max-h-[300px] object-cover block" />
           </div>
         ) : isPdf ? (
           <a

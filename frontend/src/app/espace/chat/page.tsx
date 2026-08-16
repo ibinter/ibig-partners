@@ -153,7 +153,7 @@ export default async function ChatPage() {
                   <img
                     src={otherParticipant.user.photoUrl}
                     alt={name}
-                    className="h-12 w-12 shrink-0 rounded-full object-cover shadow-sm"
+                    loading="lazy" decoding="async" className="h-12 w-12 shrink-0 rounded-full object-cover shadow-sm"
                   />
                 ) : (
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white font-bold text-sm shadow">

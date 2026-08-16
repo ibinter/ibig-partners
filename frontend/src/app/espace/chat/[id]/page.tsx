@@ -96,7 +96,7 @@ export default async function ConversationPage({
         {conversation.type === "DIRECT" && other ? (
           other.photoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={other.photoUrl} alt={title} className="h-10 w-10 rounded-full object-cover border border-slate-200" />
+            <img src={other.photoUrl} alt={title} loading="lazy" decoding="async" className="h-10 w-10 rounded-full object-cover border border-slate-200" />
           ) : (
             <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white text-sm font-bold">
               {initials(other.firstName, other.lastName)}

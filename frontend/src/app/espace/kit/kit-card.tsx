@@ -93,7 +93,7 @@ export default function KitCard({ kit, affiliate }: { kit: Kit; affiliate: Affil
         <div className="mt-3 px-5 pb-5 space-y-3">
           <div className="aspect-video w-full overflow-hidden rounded-xl border border-slate-100 bg-slate-50">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={kit.content} alt={kit.title} className="h-full w-full object-contain" />
+            <img src={kit.content} alt={kit.title} loading="lazy" decoding="async" className="h-full w-full object-contain" />
           </div>
           <div className="flex gap-2">
             <a

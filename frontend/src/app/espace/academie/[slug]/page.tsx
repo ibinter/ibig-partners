@@ -238,7 +238,7 @@ export default async function ModulePage({
               <img
                 src={mod.content}
                 alt={mod.title}
-                className="mx-auto max-h-[70vh] w-full object-contain"
+                loading="lazy" decoding="async" className="mx-auto max-h-[70vh] w-full object-contain"
               />
             </div>
             <div className="flex gap-3">
