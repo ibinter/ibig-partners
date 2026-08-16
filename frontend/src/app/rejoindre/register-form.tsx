@@ -120,9 +120,18 @@ export default function RegisterForm({
       </div>
       <Field label={t.email} name="email" type="email" required />
 
-      {/* Pays (avec indicatif) */}
-      <Field label={t.country}>
+      {/* Pays (avec indicatif) — NB : le <select> ne doit PAS être imbriqué dans
+          un <label>, sinon Chrome ouvre puis referme aussitôt la liste. On rend
+          donc un <div>/<span> au lieu du composant Field (qui rend un <label>). */}
+      <div className="block">
+        <label
+          htmlFor="country"
+          className="block text-xs font-semibold uppercase tracking-wide text-muted mb-1.5"
+        >
+          {t.country}
+        </label>
         <select
+          id="country"
           name="country"
           required
           value={country}
@@ -140,7 +149,7 @@ export default function RegisterForm({
             </option>
           ))}
         </select>
-      </Field>
+      </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         {/* Numéro WhatsApp avec indicatif */}
