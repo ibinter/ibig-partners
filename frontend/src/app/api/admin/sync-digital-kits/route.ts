@@ -1,6 +1,6 @@
 ﻿import { NextResponse } from "next/server";
 import { isSyncAuthorized } from "@/lib/sync-auth";
-import { syncBranchCatalog } from "@/lib/catalog-sync";
+import { syncBranchWithFeed } from "@/lib/catalog-feed";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -788,7 +788,7 @@ export async function POST() {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
 
-    const result = await syncBranchCatalog("ibig-digital-kits", "IBIG DIGITAL KITS", KITS_PRODUCTS, { notify: true });
+    const result = await syncBranchWithFeed("ibig-digital-kits", "IBIG DIGITAL KITS", KITS_PRODUCTS, { notify: true });
     if (!result.ok) {
       return NextResponse.json({ error: result.error }, { status: result.status });
     }
