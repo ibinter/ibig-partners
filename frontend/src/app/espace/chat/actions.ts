@@ -104,5 +104,27 @@ export async function sendMessage(formData: FormData) {
     data: { lastReadAt: new Date() },
   });
 
+  // Notifier les autres participants (cloche), sauf ceux déjà actifs dans le
+  // chat (lu il y a moins de 60 s) pour éviter le spam pendant un échange en direct.
+  const others = await (prisma as any).chatParticipant.findMany({
+    where: { conversationId, userId: { not: user.id } },
+    select: { userId: true, lastReadAt: true },
+  });
+  const cutoff = Date.now() - 60_000;
+  const toNotify = others.filter(
+    (o: any) => !o.lastReadAt || new Date(o.lastReadAt).getTime() < cutoff
+  );
+  if (toNotify.length > 0) {
+    const senderName = `${user.firstName} ${user.lastName}`.trim() || "IBIG PARTNERS";
+    const preview = body.length > 140 ? `${body.slice(0, 140)}…` : body;
+    await prisma.notification.createMany({
+      data: toNotify.map((o: any) => ({
+        userId: o.userId,
+        title: `💬 Nouveau message de ${senderName}`,
+        body: preview,
+      })),
+    });
+  }
+
   revalidatePath(`/espace/chat/${conversationId}`);
 }
