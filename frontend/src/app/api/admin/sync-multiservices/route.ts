@@ -8,36 +8,36 @@ export const maxDuration = 60;
 const BASE = "https://intermark-business.com/multiservices";
 
 const MULTISERVICES_PRODUCTS = [
-  // â”€â”€ Ã‰vÃ©nementiel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Événementiel ──────────────────────────────────────────────────────
   {
     slug: "multi-evenement-corporate",
-    name: "Organisation Ã‰vÃ©nement Corporate",
+    name: "Organisation Événement Corporate",
     pricingType: "SERVICE",
     price: 300000,
     rate: 10,
     siteUrl: BASE,
-    description: "Organisation complÃ¨te d'Ã©vÃ©nements d'entreprise : sÃ©minaires, confÃ©rences, assemblÃ©es gÃ©nÃ©rales, team buildings, lancements de produits et galas. Prise en charge intÃ©grale : lieu, logistique, traiteur, dÃ©coration, animation, technique son/lumiÃ¨re et coordination le jour J. Pour entreprises et institutions souhaitant marquer leurs Ã©vÃ©nements. Sur devis Ã  partir de 300 000 FCFA.",
+    description: "Organisation complète d'événements d'entreprise : séminaires, conférences, assemblées générales, team buildings, lancements de produits et galas. Prise en charge intégrale : lieu, logistique, traiteur, décoration, animation, technique son/lumière et coordination le jour J. Pour entreprises et institutions souhaitant marquer leurs événements. Sur devis à partir de 300 000 FCFA.",
   },
   {
     slug: "multi-evenement-prive",
-    name: "Organisation Ã‰vÃ©nement PrivÃ©",
+    name: "Organisation Événement Privé",
     pricingType: "SERVICE",
     price: 150000,
     rate: 10,
     siteUrl: BASE,
-    description: "Organisation d'Ã©vÃ©nements privÃ©s haut de gamme : mariages, baptÃªmes, anniversaires, soirÃ©es de gala et cÃ©rÃ©monies. Coordination complÃ¨te de A Ã  Z : dÃ©coration, traiteur, DJ/animation, photographe, vidÃ©aste et accueil des invitÃ©s. Pour particuliers et familles souhaitant un Ã©vÃ©nement inoubliable sans stress. Sur devis Ã  partir de 150 000 FCFA.",
+    description: "Organisation d'événements privés haut de gamme : mariages, baptêmes, anniversaires, soirées de gala et cérémonies. Coordination complète de A à Z : décoration, traiteur, DJ/animation, photographe, vidéaste et accueil des invités. Pour particuliers et familles souhaitant un événement inoubliable sans stress. Sur devis à partir de 150 000 FCFA.",
   },
   {
     slug: "multi-location-materiel-evenementiel",
-    name: "Location MatÃ©riel Ã‰vÃ©nementiel",
+    name: "Location Matériel Événementiel",
     pricingType: "SERVICE",
     price: 50000,
     rate: 10,
     siteUrl: BASE,
-    description: "Location de matÃ©riel pour Ã©vÃ©nements : tentes, tables, chaises, nappes, podiums, sono, vidÃ©oprojecteurs, Ã©clairages et mobilier de rÃ©ception. Livraison, installation et reprise incluses. Pour organisateurs d'Ã©vÃ©nements, entreprises et particuliers. Ã€ partir de 50 000 FCFA selon le matÃ©riel.",
+    description: "Location de matériel pour événements : tentes, tables, chaises, nappes, podiums, sono, vidéoprojecteurs, éclairages et mobilier de réception. Livraison, installation et reprise incluses. Pour organisateurs d'événements, entreprises et particuliers. À partir de 50 000 FCFA selon le matériel.",
   },
 
-  // â”€â”€ Accueil VIP & Protocol â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Accueil VIP & Protocol ────────────────────────────────────────────
   {
     slug: "multi-accueil-vip",
     name: "Accueil VIP & Services Protocolaires",
@@ -45,36 +45,36 @@ const MULTISERVICES_PRODUCTS = [
     price: 75000,
     rate: 10,
     siteUrl: BASE,
-    description: "Services d'accueil VIP pour dignitaires, dÃ©lÃ©gations et personnalitÃ©s : hÃ´tesses protocolaires, assistance aÃ©roport, coordination des arrivÃ©es, gestion du carnet d'adresses et accompagnement personnalisÃ© tout au long du sÃ©jour. Pour entreprises, ambassades et organisateurs d'Ã©vÃ©nements recevant des invitÃ©s de marque. Ã€ partir de 75 000 FCFA.",
+    description: "Services d'accueil VIP pour dignitaires, délégations et personnalités : hôtesses protocolaires, assistance aéroport, coordination des arrivées, gestion du carnet d'adresses et accompagnement personnalisé tout au long du séjour. Pour entreprises, ambassades et organisateurs d'événements recevant des invités de marque. À partir de 75 000 FCFA.",
   },
   {
     slug: "multi-hotesses-accueil",
-    name: "HÃ´tesses d'Accueil & Animation",
+    name: "Hôtesses d'Accueil & Animation",
     pricingType: "SERVICE",
     price: 35000,
     rate: 10,
     siteUrl: BASE,
-    description: "Mise Ã  disposition d'hÃ´tesses et hÃ´tes professionnels pour salons, foires, confÃ©rences, stands et Ã©vÃ©nements corporates : accueil, orientation, remise de badges, distribution de supports et reprÃ©sentation de marque. Formation et briefing inclus. Pour entreprises participant Ã  des salons ou organisant des Ã©vÃ©nements. Ã€ partir de 35 000 FCFA/jour.",
+    description: "Mise à disposition d'hôtesses et hôtes professionnels pour salons, foires, conférences, stands et événements corporates : accueil, orientation, remise de badges, distribution de supports et représentation de marque. Formation et briefing inclus. Pour entreprises participant à des salons ou organisant des événements. À partir de 35 000 FCFA/jour.",
   },
 
-  // â”€â”€ DÃ©mÃ©nagement & Transport â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Déménagement & Transport ──────────────────────────────────────────
   {
     slug: "multi-demenagement-particuliers",
-    name: "DÃ©mÃ©nagement Particuliers",
+    name: "Déménagement Particuliers",
     pricingType: "SERVICE",
     price: 80000,
     rate: 10,
     siteUrl: BASE,
-    description: "Service de dÃ©mÃ©nagement complet pour particuliers : emballage soigneux des effets personnels, dÃ©montage et remontage des meubles, chargement, transport sÃ©curisÃ© et dÃ©chargement dans votre nouveau logement. Ã‰quipe professionnelle, vÃ©hicules adaptÃ©s et assurance des biens incluse. Ã€ partir de 80 000 FCFA selon le volume.",
+    description: "Service de déménagement complet pour particuliers : emballage soigneux des effets personnels, démontage et remontage des meubles, chargement, transport sécurisé et déchargement dans votre nouveau logement. Équipe professionnelle, véhicules adaptés et assurance des biens incluse. À partir de 80 000 FCFA selon le volume.",
   },
   {
     slug: "multi-demenagement-entreprises",
-    name: "DÃ©mÃ©nagement & Transfert de Bureaux",
+    name: "Déménagement & Transfert de Bureaux",
     pricingType: "SERVICE",
     price: 200000,
     rate: 10,
     siteUrl: BASE,
-    description: "DÃ©mÃ©nagement professionnel de bureaux, entrepÃ´ts et locaux commerciaux : dÃ©montage et remontage du mobilier de bureau, transport sÃ©curisÃ© du matÃ©riel informatique, archivage et rÃ©installation complÃ¨te dans les nouveaux locaux. Intervention en dehors des heures ouvrables possible. Sur devis Ã  partir de 200 000 FCFA.",
+    description: "Déménagement professionnel de bureaux, entrepôts et locaux commerciaux : démontage et remontage du mobilier de bureau, transport sécurisé du matériel informatique, archivage et réinstallation complète dans les nouveaux locaux. Intervention en dehors des heures ouvrables possible. Sur devis à partir de 200 000 FCFA.",
   },
   {
     slug: "multi-transport-marchandises",
@@ -83,27 +83,27 @@ const MULTISERVICES_PRODUCTS = [
     price: 30000,
     rate: 10,
     siteUrl: BASE,
-    description: "Transport et livraison de marchandises, colis et Ã©quipements en CÃ´te d'Ivoire et dans la sous-rÃ©gion : camionnettes, camions et vÃ©hicules frigorifiques disponibles. Livraison express possible. Pour entreprises, commerÃ§ants et particuliers ayant des besoins ponctuels ou rÃ©guliers de transport. Ã€ partir de 30 000 FCFA.",
+    description: "Transport et livraison de marchandises, colis et équipements en Côte d'Ivoire et dans la sous-région : camionnettes, camions et véhicules frigorifiques disponibles. Livraison express possible. Pour entreprises, commerçants et particuliers ayant des besoins ponctuels ou réguliers de transport. À partir de 30 000 FCFA.",
   },
 
-  // â”€â”€ Maintenance & DÃ©pannage â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Maintenance & Dépannage ───────────────────────────────────────────
   {
     slug: "multi-maintenance-batiment",
-    name: "Maintenance & Entretien de BÃ¢timent",
+    name: "Maintenance & Entretien de Bâtiment",
     pricingType: "SERVICE",
     price: 60000,
     rate: 10,
     siteUrl: BASE,
-    description: "Contrat de maintenance mensuel pour bureaux, locaux commerciaux et rÃ©sidences : plomberie, Ã©lectricitÃ©, peinture, menuiserie, vitrerie et petits travaux d'entretien courant. Intervention rapide en cas de panne ou dÃ©gradation. Pour entreprises et propriÃ©taires souhaitant un bÃ¢timent toujours en bon Ã©tat. Ã€ partir de 60 000 FCFA/mois.",
+    description: "Contrat de maintenance mensuel pour bureaux, locaux commerciaux et résidences : plomberie, électricité, peinture, menuiserie, vitrerie et petits travaux d'entretien courant. Intervention rapide en cas de panne ou dégradation. Pour entreprises et propriétaires souhaitant un bâtiment toujours en bon état. À partir de 60 000 FCFA/mois.",
   },
   {
     slug: "multi-depannage-urgence",
-    name: "DÃ©pannage d'Urgence",
+    name: "Dépannage d'Urgence",
     pricingType: "SERVICE",
     price: 25000,
     rate: 10,
     siteUrl: BASE,
-    description: "Intervention d'urgence 24h/24 pour pannes et sinistres : fuite d'eau, panne Ã©lectrique, serrurerie, vitre brisÃ©e, clim en panne. Techniciens qualifiÃ©s disponibles rapidement pour remettre en Ã©tat votre habitation ou local professionnel. Pour particuliers et entreprises. Ã€ partir de 25 000 FCFA par intervention.",
+    description: "Intervention d'urgence 24h/24 pour pannes et sinistres : fuite d'eau, panne électrique, serrurerie, vitre brisée, clim en panne. Techniciens qualifiés disponibles rapidement pour remettre en état votre habitation ou local professionnel. Pour particuliers et entreprises. À partir de 25 000 FCFA par intervention.",
   },
   {
     slug: "multi-nettoyage-locaux",
@@ -112,7 +112,7 @@ const MULTISERVICES_PRODUCTS = [
     price: 40000,
     rate: 10,
     siteUrl: BASE,
-    description: "Service de nettoyage professionnel pour bureaux, commerces, rÃ©sidences et sites industriels : nettoyage quotidien, hebdomadaire ou mensuel, entretien des sols, sanitaires et espaces communs, nettoyage de vitres et faÃ§ades. Personnel formÃ©, produits fournis. Pour entreprises et particuliers souhaitant un cadre propre et sain. Ã€ partir de 40 000 FCFA/mois.",
+    description: "Service de nettoyage professionnel pour bureaux, commerces, résidences et sites industriels : nettoyage quotidien, hebdomadaire ou mensuel, entretien des sols, sanitaires et espaces communs, nettoyage de vitres et façades. Personnel formé, produits fournis. Pour entreprises et particuliers souhaitant un cadre propre et sain. À partir de 40 000 FCFA/mois.",
   },
   {
     slug: "multi-jardinage-espaces-verts",
@@ -121,47 +121,47 @@ const MULTISERVICES_PRODUCTS = [
     price: 30000,
     rate: 10,
     siteUrl: BASE,
-    description: "Entretien rÃ©gulier de jardins, cours et espaces verts : tonte de pelouse, taille des haies et arbustes, dÃ©sherbage, arrosage et plantations. Pour particuliers, rÃ©sidences et entreprises souhaitant des espaces extÃ©rieurs soignÃ©s toute l'annÃ©e. Ã€ partir de 30 000 FCFA/mois.",
+    description: "Entretien régulier de jardins, cours et espaces verts : tonte de pelouse, taille des haies et arbustes, désherbage, arrosage et plantations. Pour particuliers, résidences et entreprises souhaitant des espaces extérieurs soignés toute l'année. À partir de 30 000 FCFA/mois.",
   },
 
-  // â”€â”€ BTP & Travaux â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── BTP & Travaux ─────────────────────────────────────────────────────
   {
     slug: "multi-travaux-renovation",
-    name: "Travaux de RÃ©novation & AmÃ©nagement",
+    name: "Travaux de Rénovation & Aménagement",
     pricingType: "SERVICE",
     price: 200000,
     rate: 10,
     siteUrl: BASE,
-    description: "RÃ©alisation de travaux de rÃ©novation et d'amÃ©nagement intÃ©rieur : peinture, carrelage, faux plafonds, cloisons, revÃªtements de sol, Ã©lectricitÃ© et plomberie. Pour particuliers et entreprises souhaitant rÃ©nover ou amÃ©nager leur espace de vie ou de travail. Sur devis Ã  partir de 200 000 FCFA selon l'ampleur des travaux.",
+    description: "Réalisation de travaux de rénovation et d'aménagement intérieur : peinture, carrelage, faux plafonds, cloisons, revêtements de sol, électricité et plomberie. Pour particuliers et entreprises souhaitant rénover ou aménager leur espace de vie ou de travail. Sur devis à partir de 200 000 FCFA selon l'ampleur des travaux.",
   },
   {
     slug: "multi-construction-batiment",
-    name: "Construction & GÃ©nie Civil",
+    name: "Construction & Génie Civil",
     pricingType: "SERVICE",
     price: 1000000,
     rate: 8,
     siteUrl: BASE,
-    description: "RÃ©alisation de projets de construction : maisons individuelles, immeubles, locaux commerciaux, entrepÃ´ts et infrastructures. Gestion complÃ¨te du chantier : plans, permis de construire, approvisionnement en matÃ©riaux, main-d'Å“uvre qualifiÃ©e et suivi des travaux jusqu'Ã  la rÃ©ception. Sur devis Ã  partir de 1 000 000 FCFA.",
+    description: "Réalisation de projets de construction : maisons individuelles, immeubles, locaux commerciaux, entrepôts et infrastructures. Gestion complète du chantier : plans, permis de construire, approvisionnement en matériaux, main-d'œuvre qualifiée et suivi des travaux jusqu'à la réception. Sur devis à partir de 1 000 000 FCFA.",
   },
   {
     slug: "multi-amenagement-bureau",
-    name: "AmÃ©nagement & DÃ©coration de Bureaux",
+    name: "Aménagement & Décoration de Bureaux",
     pricingType: "SERVICE",
     price: 150000,
     rate: 10,
     siteUrl: BASE,
-    description: "Conception et amÃ©nagement de vos espaces de travail : plan d'amÃ©nagement, choix du mobilier, dÃ©coration intÃ©rieure, signalÃ©tique et mise en place complÃ¨te. Pour entreprises emmÃ©nageant dans de nouveaux locaux ou souhaitant moderniser leur espace de travail. Sur devis Ã  partir de 150 000 FCFA.",
+    description: "Conception et aménagement de vos espaces de travail : plan d'aménagement, choix du mobilier, décoration intérieure, signalétique et mise en place complète. Pour entreprises emménageant dans de nouveaux locaux ou souhaitant moderniser leur espace de travail. Sur devis à partir de 150 000 FCFA.",
   },
 
-  // â”€â”€ Logistique â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Logistique ────────────────────────────────────────────────────────
   {
     slug: "multi-gestion-stock-logistique",
-    name: "Gestion de Stock & Logistique ExternalisÃ©e",
+    name: "Gestion de Stock & Logistique Externalisée",
     pricingType: "SERVICE",
     price: 100000,
     rate: 10,
     siteUrl: BASE,
-    description: "Externalisation de votre logistique : rÃ©ception et stockage des marchandises, gestion des inventaires, prÃ©paration des commandes, expÃ©dition et retours. Pour e-commerces, importateurs et distributeurs souhaitant se concentrer sur leur cÅ“ur de mÃ©tier sans gÃ©rer d'entrepÃ´t. Ã€ partir de 100 000 FCFA/mois selon le volume.",
+    description: "Externalisation de votre logistique : réception et stockage des marchandises, gestion des inventaires, préparation des commandes, expédition et retours. Pour e-commerces, importateurs et distributeurs souhaitant se concentrer sur leur cœur de métier sans gérer d'entrepôt. À partir de 100 000 FCFA/mois selon le volume.",
   },
   {
     slug: "multi-coursier-express",
@@ -170,18 +170,18 @@ const MULTISERVICES_PRODUCTS = [
     price: 5000,
     rate: 10,
     siteUrl: BASE,
-    description: "Livraison express de documents, colis et courriers en ville : prise en charge sous 30 minutes, livraison dans la journÃ©e, accusÃ© de rÃ©ception et suivi en temps rÃ©el. Pour entreprises, cabinets d'avocats, administrations et particuliers ayant des envois urgents. Ã€ partir de 5 000 FCFA par livraison.",
+    description: "Livraison express de documents, colis et courriers en ville : prise en charge sous 30 minutes, livraison dans la journée, accusé de réception et suivi en temps réel. Pour entreprises, cabinets d'avocats, administrations et particuliers ayant des envois urgents. À partir de 5 000 FCFA par livraison.",
   },
 
-  // â”€â”€ Tourisme & Hospitality â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Tourisme & Hospitality ────────────────────────────────────────────
   {
     slug: "multi-organisation-voyage",
-    name: "Organisation de Voyages & SÃ©jours",
+    name: "Organisation de Voyages & Séjours",
     pricingType: "SERVICE",
     price: 50000,
     rate: 10,
     siteUrl: BASE,
-    description: "Planification et organisation complÃ¨te de voyages : billets d'avion, hÃ´tels, transferts, visas, assurance voyage et itinÃ©raire personnalisÃ©. Pour particuliers, familles et entreprises organisant des dÃ©placements professionnels ou touristiques en Afrique et Ã  l'international. Frais d'agence Ã  partir de 50 000 FCFA.",
+    description: "Planification et organisation complète de voyages : billets d'avion, hôtels, transferts, visas, assurance voyage et itinéraire personnalisé. Pour particuliers, familles et entreprises organisant des déplacements professionnels ou touristiques en Afrique et à l'international. Frais d'agence à partir de 50 000 FCFA.",
   },
   {
     slug: "multi-tourisme-affaires",
@@ -190,30 +190,30 @@ const MULTISERVICES_PRODUCTS = [
     price: 200000,
     rate: 10,
     siteUrl: BASE,
-    description: "Organisation de voyages d'affaires et d'Ã©vÃ©nements MICE (Meetings, Incentives, Conferences, Exhibitions) : billets, hÃ´tels, salles de confÃ©rence, activitÃ©s de team building, gala dÃ®ners et transferts VIP. Pour entreprises organisant des dÃ©placements d'Ã©quipes ou des Ã©vÃ©nements professionnels Ã  l'Ã©tranger. Sur devis Ã  partir de 200 000 FCFA.",
+    description: "Organisation de voyages d'affaires et d'événements MICE (Meetings, Incentives, Conferences, Exhibitions) : billets, hôtels, salles de conférence, activités de team building, gala dîners et transferts VIP. Pour entreprises organisant des déplacements d'équipes ou des événements professionnels à l'étranger. Sur devis à partir de 200 000 FCFA.",
   },
   {
     slug: "multi-chauffeur-prive",
-    name: "Chauffeur PrivÃ© & Transport VIP",
+    name: "Chauffeur Privé & Transport VIP",
     pricingType: "SERVICE",
     price: 30000,
     rate: 10,
     siteUrl: BASE,
-    description: "Mise Ã  disposition de chauffeurs privÃ©s professionnels pour transferts aÃ©roport, dÃ©placements en ville, mise Ã  disposition Ã  la journÃ©e et occasions spÃ©ciales. VÃ©hicules climatisÃ©s, chauffeurs en tenue, ponctualitÃ© garantie. Pour particuliers, hommes d'affaires et entreprises accueillant des dÃ©lÃ©gations. Ã€ partir de 30 000 FCFA.",
+    description: "Mise à disposition de chauffeurs privés professionnels pour transferts aéroport, déplacements en ville, mise à disposition à la journée et occasions spéciales. Véhicules climatisés, chauffeurs en tenue, ponctualité garantie. Pour particuliers, hommes d'affaires et entreprises accueillant des délégations. À partir de 30 000 FCFA.",
   },
 
-  // â”€â”€ SÃ©curitÃ© & Gardiennage â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Sécurité & Gardiennage ────────────────────────────────────────────
   {
     slug: "multi-gardiennage-securite",
-    name: "Gardiennage & SÃ©curitÃ©",
+    name: "Gardiennage & Sécurité",
     pricingType: "SERVICE",
     price: 80000,
     rate: 10,
     siteUrl: BASE,
-    description: "Services de gardiennage et de sÃ©curitÃ© pour rÃ©sidences, entreprises, chantiers et Ã©vÃ©nements : agents de sÃ©curitÃ© formÃ©s, rondes de surveillance, contrÃ´le d'accÃ¨s et intervention rapide. Pour particuliers et entreprises souhaitant sÃ©curiser leurs biens et personnes. Ã€ partir de 80 000 FCFA/mois.",
+    description: "Services de gardiennage et de sécurité pour résidences, entreprises, chantiers et événements : agents de sécurité formés, rondes de surveillance, contrôle d'accès et intervention rapide. Pour particuliers et entreprises souhaitant sécuriser leurs biens et personnes. À partir de 80 000 FCFA/mois.",
   },
 
-  // â”€â”€ Placement de Personnel & IntÃ©rim â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Placement de Personnel & Intérim ─────────────────────────────────
   {
     slug: "multi-placement-ouvriers",
     name: "Placement d'Ouvriers & Personnel de Chantier",
@@ -221,7 +221,7 @@ const MULTISERVICES_PRODUCTS = [
     price: 30000,
     rate: 10,
     siteUrl: BASE,
-    description: "Recrutement et placement d'ouvriers qualifiÃ©s et non qualifiÃ©s pour chantiers BTP, industries et sites de production : maÃ§ons, carreleurs, peintres, Ã©lectriciens, plombiers, manÅ“uvres et gardiens de chantier. VÃ©rification des compÃ©tences, contrats et formalitÃ©s inclus. Pour entreprises de BTP, promoteurs et maÃ®tres d'ouvrage. Ã€ partir de 30 000 FCFA par placement.",
+    description: "Recrutement et placement d'ouvriers qualifiés et non qualifiés pour chantiers BTP, industries et sites de production : maçons, carreleurs, peintres, électriciens, plombiers, manœuvres et gardiens de chantier. Vérification des compétences, contrats et formalités inclus. Pour entreprises de BTP, promoteurs et maîtres d'ouvrage. À partir de 30 000 FCFA par placement.",
   },
   {
     slug: "multi-placement-personnel-domestique",
@@ -230,25 +230,25 @@ const MULTISERVICES_PRODUCTS = [
     price: 25000,
     rate: 10,
     siteUrl: BASE,
-    description: "Recrutement et placement de personnel domestique vÃ©rifiÃ© : femmes de mÃ©nage, cuisiniers, nounous, jardiniers, gardiens et chauffeurs personnels. VÃ©rification des antÃ©cÃ©dents, entretien de prÃ©sÃ©lection et suivi post-placement. Pour familles et expatriÃ©s souhaitant un personnel de confiance et fiable. Ã€ partir de 25 000 FCFA par placement.",
+    description: "Recrutement et placement de personnel domestique vérifié : femmes de ménage, cuisiniers, nounous, jardiniers, gardiens et chauffeurs personnels. Vérification des antécédents, entretien de présélection et suivi post-placement. Pour familles et expatriés souhaitant un personnel de confiance et fiable. À partir de 25 000 FCFA par placement.",
   },
   {
     slug: "multi-mise-a-disposition-personnel",
-    name: "Mise Ã  Disposition de Personnel (IntÃ©rim)",
+    name: "Mise à Disposition de Personnel (Intérim)",
     pricingType: "SERVICE",
     price: 80000,
     rate: 10,
     siteUrl: BASE,
-    description: "Mise Ã  disposition de personnel temporaire pour renforcer vos Ã©quipes : agents de saisie, assistants administratifs, opÃ©rateurs de production, agents d'accueil, manutentionnaires et techniciens. Contrats gÃ©rÃ©s par IBIG MULTISERVICES, personnel disponible sous 48h. Pour entreprises en pic d'activitÃ© ou en remplacement d'effectifs. Ã€ partir de 80 000 FCFA/mois par agent.",
+    description: "Mise à disposition de personnel temporaire pour renforcer vos équipes : agents de saisie, assistants administratifs, opérateurs de production, agents d'accueil, manutentionnaires et techniciens. Contrats gérés par IBIG MULTISERVICES, personnel disponible sous 48h. Pour entreprises en pic d'activité ou en remplacement d'effectifs. À partir de 80 000 FCFA/mois par agent.",
   },
   {
     slug: "multi-placement-emplois-qualifies",
-    name: "Placement Emplois QualifiÃ©s & Cadres",
+    name: "Placement Emplois Qualifiés & Cadres",
     pricingType: "SERVICE",
     price: 100000,
     rate: 10,
     siteUrl: BASE,
-    description: "Recrutement et placement de profils qualifiÃ©s et cadres : comptables, gestionnaires, commerciaux, informaticiens, ingÃ©nieurs et responsables de dÃ©partement. PrÃ©sÃ©lection rigoureuse, tests de compÃ©tences et accompagnement jusqu'Ã  l'intÃ©gration. Pour entreprises et ONG cherchant des profils compÃ©tents rapidement. Ã€ partir de 100 000 FCFA par recrutement.",
+    description: "Recrutement et placement de profils qualifiés et cadres : comptables, gestionnaires, commerciaux, informaticiens, ingénieurs et responsables de département. Présélection rigoureuse, tests de compétences et accompagnement jusqu'à l'intégration. Pour entreprises et ONG cherchant des profils compétents rapidement. À partir de 100 000 FCFA par recrutement.",
   },
   {
     slug: "multi-externalisation-rh",
@@ -257,16 +257,16 @@ const MULTISERVICES_PRODUCTS = [
     price: 50000,
     rate: 10,
     siteUrl: BASE,
-    description: "Externalisation complÃ¨te des fonctions RH et paie : Ã©tablissement des bulletins de salaire, dÃ©clarations CNPS et DIPE, gestion des congÃ©s, suivi des contrats et conseil en droit du travail. Pour TPE et PME souhaitant dÃ©lÃ©guer leur RH Ã  des professionnels sans recruter un DRH. Ã€ partir de 50 000 FCFA/mois.",
+    description: "Externalisation complète des fonctions RH et paie : établissement des bulletins de salaire, déclarations CNPS et DIPE, gestion des congés, suivi des contrats et conseil en droit du travail. Pour TPE et PME souhaitant déléguer leur RH à des professionnels sans recruter un DRH. À partir de 50 000 FCFA/mois.",
   },
   {
     slug: "multi-formation-personnel",
-    name: "Formation & Renforcement de CapacitÃ©s du Personnel",
+    name: "Formation & Renforcement de Capacités du Personnel",
     pricingType: "SERVICE",
     price: 75000,
     rate: 10,
     siteUrl: BASE,
-    description: "Conception et animation de formations sur mesure pour vos Ã©quipes : accueil et relation client, techniques de vente, gestion du temps, hygiÃ¨ne et sÃ©curitÃ© au travail, informatique bureautique. En prÃ©sentiel dans vos locaux ou en externe. Pour entreprises souhaitant monter en compÃ©tences leurs collaborateurs. Ã€ partir de 75 000 FCFA par session.",
+    description: "Conception et animation de formations sur mesure pour vos équipes : accueil et relation client, techniques de vente, gestion du temps, hygiène et sécurité au travail, informatique bureautique. En présentiel dans vos locaux ou en externe. Pour entreprises souhaitant monter en compétences leurs collaborateurs. À partir de 75 000 FCFA par session.",
   },
 ];
 
