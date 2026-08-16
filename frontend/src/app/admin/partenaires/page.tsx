@@ -4,7 +4,7 @@ import { fcfa, formatDate } from "@/lib/format";
 import { Badge, Button, Card, PageHeader, statusTone } from "@/components/ui";
 import { STATUS_LABELS, STATUS_COLORS } from "@/lib/constants";
 import { approvePartner, setPartnerActive, setPartnerRole } from "../actions";
-import { contactUser } from "../../espace/chat/actions";
+import { adminContact } from "../messages/actions";
 
 export const dynamic = "force-dynamic";
 
@@ -91,7 +91,7 @@ export default async function PartenairesPage() {
                   <td>
                     <div className="flex items-center gap-1.5">
                       {p.id !== admin.id && (
-                        <form action={contactUser}>
+                        <form action={adminContact}>
                           <input type="hidden" name="targetUserId" value={p.id} />
                           <Button type="submit" variant="ghost" size="sm">💬 Contacter</Button>
                         </form>
