@@ -9,8 +9,11 @@ const FR_TO_EN: Record<string, string> = {
   "/": "/en",
   "/rejoindre": "/en/rejoindre",
   "/partenaires": "/en/partenaires",
+  "/top-partenaires": "/en/top-partenaires",
   "/cgu": "/en/cgu",
   "/cgv": "/en/cgv",
+  "/confidentialite": "/en/confidentialite",
+  "/cookies": "/en/cookies",
 };
 
 /**

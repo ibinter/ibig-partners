@@ -14,6 +14,7 @@ const ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.S
   { path: "/partenaires", priority: 0.7, changeFrequency: "monthly" },
   { path: "/en/partenaires", priority: 0.6, changeFrequency: "monthly" },
   { path: "/top-partenaires", priority: 0.6, changeFrequency: "weekly" },
+  { path: "/en/top-partenaires", priority: 0.5, changeFrequency: "weekly" },
   { path: "/connexion", priority: 0.5, changeFrequency: "yearly" },
   { path: "/cgv", priority: 0.3, changeFrequency: "yearly" },
   { path: "/cgu", priority: 0.3, changeFrequency: "yearly" },
@@ -21,6 +22,8 @@ const ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.S
   { path: "/en/cgv", priority: 0.2, changeFrequency: "yearly" },
   { path: "/confidentialite", priority: 0.3, changeFrequency: "yearly" },
   { path: "/cookies", priority: 0.3, changeFrequency: "yearly" },
+  { path: "/en/confidentialite", priority: 0.2, changeFrequency: "yearly" },
+  { path: "/en/cookies", priority: 0.2, changeFrequency: "yearly" },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

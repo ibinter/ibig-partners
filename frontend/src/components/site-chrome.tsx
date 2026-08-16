@@ -81,8 +81,8 @@ const HEADER_NAV: Record<Lang, { href: string; label: string }[]> = {
 };
 
 const HEADER_T = {
-  fr: { top: "Top Partenaires", partners: "Nos partenaires", partnersHref: "/partenaires", signIn: "Connexion", join: "Devenir Partenaire", joinHref: "/rejoindre" },
-  en: { top: "Top Partners", partners: "Our partners", partnersHref: "/en/partenaires", signIn: "Sign in", join: "Become a Partner", joinHref: "/en/rejoindre" },
+  fr: { top: "Top Partenaires", topHref: "/top-partenaires", partners: "Nos partenaires", partnersHref: "/partenaires", signIn: "Connexion", join: "Devenir Partenaire", joinHref: "/rejoindre" },
+  en: { top: "Top Partners", topHref: "/en/top-partenaires", partners: "Our partners", partnersHref: "/en/partenaires", signIn: "Sign in", join: "Become a Partner", joinHref: "/en/rejoindre" },
 } as const;
 
 export function SiteHeader({ lang = "fr" }: { lang?: Lang }) {
@@ -100,7 +100,7 @@ export function SiteHeader({ lang = "fr" }: { lang?: Lang }) {
             <NavLink key={item.href} href={item.href}>{item.label}</NavLink>
           ))}
           <Link
-            href="/top-partenaires"
+            href={t.topHref}
             className="ml-1 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-400/15 to-orange-500/15 px-3 py-1.5 text-amber-700 font-semibold ring-1 ring-amber-300/40 hover:from-amber-400/25 hover:to-orange-500/25 transition-all"
           >
             <span>🏆</span>
@@ -167,6 +167,7 @@ const FOOTER_T = {
       { href: "/#faq", label: "FAQ", cls: "text-slate-400 hover:text-brand-400" },
     ],
     top: "🏆 Top Partenaires",
+    topHref: "/top-partenaires",
     partners: "Nos partenaires",
     partnersHref: "/partenaires",
     join: "Rejoindre",
@@ -178,7 +179,9 @@ const FOOTER_T = {
     cguHref: "/cgu",
     cgvHref: "/cgv",
     privacy: "Politique de confidentialité",
+    privacyHref: "/confidentialite",
     cookies: "Politique cookies",
+    cookiesHref: "/cookies",
     support: "— Support",
     groupTag: "— Groupe",
     rights: "© 2026 IBIG PARTNERS. Tous droits réservés.",
@@ -197,6 +200,7 @@ const FOOTER_T = {
       { href: "/en#faq", label: "FAQ", cls: "text-slate-400 hover:text-brand-400" },
     ],
     top: "🏆 Top Partners",
+    topHref: "/en/top-partenaires",
     partners: "Our partners",
     partnersHref: "/en/partenaires",
     join: "Join",
@@ -208,7 +212,9 @@ const FOOTER_T = {
     cguHref: "/en/cgu",
     cgvHref: "/en/cgv",
     privacy: "Privacy Policy",
+    privacyHref: "/en/confidentialite",
     cookies: "Cookie Policy",
+    cookiesHref: "/en/cookies",
     support: "— Support",
     groupTag: "— Group",
     rights: "© 2026 IBIG PARTNERS. All rights reserved.",
@@ -275,7 +281,7 @@ export function SiteFooter({ lang = "fr" }: { lang?: Lang }) {
                 {f.nav.map((item) => (
                   <li key={item.href}><a href={item.href} className="text-slate-400 hover:text-brand-400 transition-colors">{item.label}</a></li>
                 ))}
-                <li><Link href="/top-partenaires" className="text-amber-400 hover:text-amber-300 transition-colors font-semibold">{f.top}</Link></li>
+                <li><Link href={f.topHref} className="text-amber-400 hover:text-amber-300 transition-colors font-semibold">{f.top}</Link></li>
                 <li><Link href={f.partnersHref} className="text-slate-400 hover:text-brand-400 transition-colors">{f.partners}</Link></li>
                 <li><Link href={f.joinHref} className="text-slate-400 hover:text-brand-400 transition-colors">{f.join}</Link></li>
                 <li><Link href="/connexion" className="text-slate-400 hover:text-brand-400 transition-colors">{f.signIn}</Link></li>
@@ -288,8 +294,8 @@ export function SiteFooter({ lang = "fr" }: { lang?: Lang }) {
               <ul className="mt-3 space-y-2 text-sm">
                 <li><Link href={f.cguHref} className="text-slate-400 hover:text-brand-400 transition-colors">{f.cgu}</Link></li>
                 <li><Link href={f.cgvHref} className="text-slate-400 hover:text-brand-400 transition-colors">{f.cgv}</Link></li>
-                <li><Link href="/confidentialite" className="text-slate-400 hover:text-brand-400 transition-colors">{f.privacy}</Link></li>
-                <li><Link href="/cookies" className="text-slate-400 hover:text-brand-400 transition-colors">{f.cookies}</Link></li>
+                <li><Link href={f.privacyHref} className="text-slate-400 hover:text-brand-400 transition-colors">{f.privacy}</Link></li>
+                <li><Link href={f.cookiesHref} className="text-slate-400 hover:text-brand-400 transition-colors">{f.cookies}</Link></li>
               </ul>
             </div>
 
