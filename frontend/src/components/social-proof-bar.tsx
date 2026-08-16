@@ -12,23 +12,35 @@ const MIN_PARTNERS_FOR_PROOF = 25;
  * lancement honnête plutôt que d'afficher des chiffres proches de zéro.
  */
 export async function SocialProofBar() {
-  // Stats en parallèle pour performance
-  const [partnersCount, salesCount, paidTotal, recentJoins, branchesCount, productsCount] = await Promise.all([
-    prisma.user.count({ where: { role: "PARTNER", active: true } }),
-    prisma.sale.count({ where: { status: "CONFIRMED" } }),
-    prisma.payout.aggregate({
-      _sum: { amount: true },
-      where: { status: "PAID" },
-    }),
-    prisma.user.count({
-      where: {
-        role: "PARTNER",
-        createdAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
-      },
-    }),
-    prisma.branch.count({ where: { active: true } }),
-    prisma.product.count({ where: { active: true } }),
-  ]);
+  // Stats en parallèle pour performance. Repli résilient : si la base est
+  // indisponible, on retombe sur le bandeau de lancement (partenaires = 0)
+  // avec des faits vérifiables par défaut plutôt qu'une erreur 500.
+  let partnersCount = 0;
+  let salesCount = 0;
+  let paidTotal: { _sum: { amount: number | null } } = { _sum: { amount: null } };
+  let recentJoins = 0;
+  let branchesCount = 9;
+  let productsCount = 330;
+  try {
+    [partnersCount, salesCount, paidTotal, recentJoins, branchesCount, productsCount] = await Promise.all([
+      prisma.user.count({ where: { role: "PARTNER", active: true } }),
+      prisma.sale.count({ where: { status: "CONFIRMED" } }),
+      prisma.payout.aggregate({
+        _sum: { amount: true },
+        where: { status: "PAID" },
+      }),
+      prisma.user.count({
+        where: {
+          role: "PARTNER",
+          createdAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
+        },
+      }),
+      prisma.branch.count({ where: { active: true } }),
+      prisma.product.count({ where: { active: true } }),
+    ]);
+  } catch (err) {
+    console.error("SocialProofBar: base indisponible, bandeau de lancement par défaut", err);
+  }
 
   if (partnersCount < MIN_PARTNERS_FOR_PROOF) {
     // Rang réel qu'aurait un inscrit aujourd'hui — vrai (basé sur le

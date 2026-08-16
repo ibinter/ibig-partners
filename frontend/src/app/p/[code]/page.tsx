@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { fcfa } from "@/lib/format";
@@ -12,8 +12,13 @@ export async function generateMetadata({
   params: Promise<{ code: string }>;
 }): Promise<Metadata> {
   const { code } = await params;
-  const partner = await prisma.user.findFirst({ where: { code: code.toUpperCase() } });
-  if (!partner) return { title: "Partenaire introuvable" };
+  const partner = await prisma.user
+    .findFirst({
+      where: { code: code.toUpperCase() },
+      select: { firstName: true, lastName: true, code: true },
+    })
+    .catch(() => null);
+  if (!partner) return { title: "Partenaire — IBIG PARTNERS" };
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://ibigpartners.com";
   const ogImageUrl = `${baseUrl}/api/og?code=${encodeURIComponent(partner.code)}`;
   const title = `${partner.firstName} ${partner.lastName} — Partenaire officiel IBIG PARTNERS`;
@@ -72,16 +77,23 @@ export default async function PartnerLandingPage({
   params: Promise<{ code: string }>;
 }) {
   const { code } = await params;
-  const partner = await prisma.user.findFirst({
-    where: { code: code.toUpperCase(), approved: true, active: true },
-    include: {
-      links: {
-        include: { product: { include: { branch: true } } },
-        where: { product: { active: true } },
+  const partner = await prisma.user
+    .findFirst({
+      where: { code: code.toUpperCase(), approved: true, active: true },
+      include: {
+        links: {
+          include: { product: { include: { branch: true } } },
+          where: { product: { active: true } },
+        },
+        _count: { select: { referrals: true, sales: true } },
       },
-      _count: { select: { referrals: true, sales: true } },
-    },
-  });
+    })
+    .catch((err) => {
+      // Base indisponible : on préserve le parrainage en redirigeant vers
+      // l'inscription plutôt que d'afficher une erreur ou un faux 404.
+      console.error("p/[code]: base indisponible, redirection vers /rejoindre", err);
+      redirect(`/rejoindre?ref=${encodeURIComponent(code.toUpperCase())}`);
+    });
 
   if (!partner) notFound();
 

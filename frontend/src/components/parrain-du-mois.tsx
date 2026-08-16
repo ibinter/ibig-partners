@@ -10,19 +10,6 @@ export async function ParrainDuMois() {
   startOfMonth.setDate(1);
   startOfMonth.setHours(0, 0, 0, 0);
 
-  // Top recruteur du mois : qui a eu le plus de nouveaux filleuls actifs ce mois
-  const newReferrals = await prisma.user.groupBy({
-    by: ["sponsorId"],
-    where: {
-      sponsorId: { not: null },
-      createdAt: { gte: startOfMonth },
-      active: true,
-    },
-    _count: { id: true },
-    orderBy: { _count: { id: "desc" } },
-    take: 1,
-  });
-
   let parrain: {
     name: string;
     city: string;
@@ -31,20 +18,39 @@ export async function ParrainDuMois() {
     avatar: string;
   } | null = null;
 
-  if (newReferrals.length > 0 && newReferrals[0].sponsorId) {
-    const u = await prisma.user.findUnique({
-      where: { id: newReferrals[0].sponsorId },
-      select: { firstName: true, lastName: true, city: true, country: true, status: true },
+  try {
+    // Top recruteur du mois : qui a eu le plus de nouveaux filleuls actifs ce mois
+    const newReferrals = await prisma.user.groupBy({
+      by: ["sponsorId"],
+      where: {
+        sponsorId: { not: null },
+        createdAt: { gte: startOfMonth },
+        active: true,
+      },
+      _count: { id: true },
+      orderBy: { _count: { id: "desc" } },
+      take: 1,
     });
-    if (u) {
-      parrain = {
-        name: `${u.firstName} ${u.lastName.charAt(0)}.`,
-        city: u.city || u.country || "Côte d'Ivoire",
-        referrals: newReferrals[0]._count.id,
-        status: u.status,
-        avatar: u.firstName.charAt(0).toUpperCase(),
-      };
+
+    if (newReferrals.length > 0 && newReferrals[0].sponsorId) {
+      const u = await prisma.user.findUnique({
+        where: { id: newReferrals[0].sponsorId },
+        select: { firstName: true, lastName: true, city: true, country: true, status: true },
+      });
+      if (u) {
+        parrain = {
+          name: `${u.firstName} ${u.lastName.charAt(0)}.`,
+          city: u.city || u.country || "Côte d'Ivoire",
+          referrals: newReferrals[0]._count.id,
+          status: u.status,
+          avatar: u.firstName.charAt(0).toUpperCase(),
+        };
+      }
     }
+  } catch (err) {
+    // Base indisponible : on masque simplement la section.
+    console.error("ParrainDuMois: base indisponible, section masquée", err);
+    return null;
   }
 
   // Pas de vrai parrain ce mois : on n'invente pas de fausses données.

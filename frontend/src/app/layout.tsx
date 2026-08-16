@@ -12,7 +12,13 @@ const inter = Inter({
   display: "swap",
 });
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL && process.env.NEXT_PUBLIC_SITE_URL.startsWith("https://")
+    ? process.env.NEXT_PUBLIC_SITE_URL
+    : "https://ibigpartners.com";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "IBIG PARTNERS — Programme d'Affiliation Panafricain",
   description:
     "Programme d'affiliation panafricain : un seul compte pour accéder à 14 logiciels et ERP SaaS, formations, immobilier et services des 9 branches IBIG SARL.",

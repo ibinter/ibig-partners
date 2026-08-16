@@ -11,49 +11,56 @@ export async function HallOfFame() {
   startOfMonth.setDate(1);
   startOfMonth.setHours(0, 0, 0, 0);
 
-  const topPerformers = await prisma.commission.groupBy({
-    by: ["userId"],
-    where: {
-      createdAt: { gte: startOfMonth },
-      status: { in: ["VALIDATED", "PAID"] },
-    },
-    _sum: { amount: true },
-    orderBy: { _sum: { amount: "desc" } },
-    take: 10,
-  });
+  let final: { rank: number; name: string; city: string; earnings: number; status: string }[];
+  try {
+    const topPerformers = await prisma.commission.groupBy({
+      by: ["userId"],
+      where: {
+        createdAt: { gte: startOfMonth },
+        status: { in: ["VALIDATED", "PAID"] },
+      },
+      _sum: { amount: true },
+      orderBy: { _sum: { amount: "desc" } },
+      take: 10,
+    });
 
-  const userIds = topPerformers.map((p) => p.userId);
-  const users = await prisma.user.findMany({
-    where: { id: { in: userIds } },
-    select: {
-      id: true,
-      firstName: true,
-      lastName: true,
-      city: true,
-      country: true,
-      status: true,
-      photoUrl: true,
-    },
-  });
-  const userMap = new Map(users.map((u) => [u.id, u]));
+    const userIds = topPerformers.map((p) => p.userId);
+    const users = await prisma.user.findMany({
+      where: { id: { in: userIds } },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        city: true,
+        country: true,
+        status: true,
+        photoUrl: true,
+      },
+    });
+    const userMap = new Map(users.map((u) => [u.id, u]));
 
-  const podium = topPerformers
-    .map((p, i) => {
-      const u = userMap.get(p.userId);
-      return {
-        rank: i + 1,
-        name: u ? `${u.firstName} ${u.lastName.charAt(0)}.` : "Partenaire",
-        city: u?.city ?? "—",
-        earnings: p._sum.amount ?? 0,
-        status: u?.status ?? "STARTER",
-      };
-    })
-    .filter((p) => p.earnings > 0);
+    const podium = topPerformers
+      .map((p, i) => {
+        const u = userMap.get(p.userId);
+        return {
+          rank: i + 1,
+          name: u ? `${u.firstName} ${u.lastName.charAt(0)}.` : "Partenaire",
+          city: u?.city ?? "—",
+          earnings: p._sum.amount ?? 0,
+          status: u?.status ?? "STARTER",
+        };
+      })
+      .filter((p) => p.earnings > 0);
 
-  // Moins de 3 vrais performers : pas de podium crédible, on n'invente rien.
-  if (podium.length < 3) return null;
+    // Moins de 3 vrais performers : pas de podium crédible, on n'invente rien.
+    if (podium.length < 3) return null;
 
-  const final = podium.slice(0, 8);
+    final = podium.slice(0, 8);
+  } catch (err) {
+    // Base indisponible : on masque simplement la section.
+    console.error("HallOfFame: base indisponible, section masquée", err);
+    return null;
+  }
 
   const monthName = new Date().toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
 

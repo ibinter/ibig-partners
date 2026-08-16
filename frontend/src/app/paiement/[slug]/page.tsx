@@ -11,11 +11,10 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const product = await prisma.product.findUnique({
-    where: { slug },
-    include: { branch: true },
-  });
-  if (!product) return { title: "Produit introuvable" };
+  const product = await prisma.product
+    .findUnique({ where: { slug }, include: { branch: true } })
+    .catch(() => null);
+  if (!product) return { title: "Paiement — IBIG PARTNERS" };
   return {
     title: `Payer — ${product.name} | IBIG PARTNERS`,
     description: `Commandez ${product.name} via IBIG PARTNERS. Paiement sécurisé par Moneroo.`,
@@ -32,19 +31,47 @@ export default async function PaiementPage({
   const { slug } = await params;
   const { ref } = await searchParams;
 
-  const product = await prisma.product.findUnique({
-    where: { slug, active: true },
-    include: { branch: true },
-  });
+  const product = await prisma.product
+    .findUnique({ where: { slug, active: true }, include: { branch: true } })
+    .catch((err) => {
+      console.error("paiement: base indisponible", err);
+      return "DB_ERROR" as const;
+    });
+
+  // Base indisponible : message clair au lieu d'une erreur 500.
+  if (product === "DB_ERROR") {
+    return (
+      <>
+        <SiteHeader />
+        <main className="flex min-h-[70vh] items-center justify-center bg-slate-50 px-4 py-16">
+          <div className="card-premium max-w-md p-8 text-center">
+            <h1 className="text-xl font-extrabold text-ink">Paiement momentanément indisponible</h1>
+            <p className="mt-3 text-sm text-muted">
+              Nous rencontrons un incident technique temporaire. Merci de réessayer dans quelques instants.
+            </p>
+            <a
+              href={`/paiement/${slug}${ref ? `?ref=${encodeURIComponent(ref)}` : ""}`}
+              className="mt-6 inline-block rounded-lg bg-brand-600 px-6 py-3 text-sm font-bold text-white hover:bg-brand-700"
+            >
+              Réessayer
+            </a>
+          </div>
+        </main>
+        <SiteFooter />
+      </>
+    );
+  }
 
   if (!product) notFound();
 
-  // Charger le partenaire si ref fourni
+  // Charger le partenaire si ref fourni (optionnel : ne doit pas bloquer le paiement)
   const partner = ref
-    ? await prisma.user.findFirst({
-        where: { code: ref.toUpperCase(), approved: true, active: true },
-        select: { code: true, firstName: true, lastName: true },
-      })
+    ? await prisma.user
+        .findFirst({
+          where: { code: ref.toUpperCase(), approved: true, active: true },
+          select: { code: true, firstName: true, lastName: true },
+        })
+        .catch(() => null)
     : null;
 
   const partnerCode = partner?.code ?? ref?.toUpperCase() ?? "DIRECT";

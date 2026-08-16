@@ -7,10 +7,18 @@ import { prisma } from "@/lib/prisma";
  * faux partenaires ni de faux avis.
  */
 export async function Testimonials() {
-  const [branchesCount, productsCount] = await Promise.all([
-    prisma.branch.count({ where: { active: true } }),
-    prisma.product.count({ where: { active: true } }),
-  ]);
+  // Repli résilient : la section reste affichée avec des valeurs par défaut
+  // vérifiables si la base est momentanément indisponible.
+  let branchesCount = 9;
+  let productsCount = 330;
+  try {
+    [branchesCount, productsCount] = await Promise.all([
+      prisma.branch.count({ where: { active: true } }),
+      prisma.product.count({ where: { active: true } }),
+    ]);
+  } catch (err) {
+    console.error("Testimonials: base indisponible, valeurs de repli", err);
+  }
 
   const facts = [
     { icon: "🏢", value: `${branchesCount}`, label: "Branches actives à promouvoir" },
