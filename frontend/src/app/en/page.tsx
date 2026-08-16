@@ -138,7 +138,7 @@ export default function EnglishHomePage() {
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
               <Link
-                href="/rejoindre"
+                href="/en/rejoindre"
                 className="rounded-xl bg-white px-6 py-3.5 text-center font-bold text-brand-700 shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-50 hover:shadow-xl sm:px-7"
               >
                 Become a Partner — it&apos;s free
@@ -226,7 +226,7 @@ export default function EnglishHomePage() {
           <ScrollReveal animation="fade-up" delay={200}>
             <div className="mt-10 text-center">
               <Link
-                href="/rejoindre"
+                href="/en/rejoindre"
                 className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-7 py-3.5 font-bold text-white shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-xl"
               >
                 Promote these products
@@ -407,7 +407,7 @@ export default function EnglishHomePage() {
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
-                href="/rejoindre"
+                href="/en/rejoindre"
                 className="w-full rounded-xl bg-brand-600 px-8 py-4 font-bold text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-brand-700 hover:shadow-xl sm:w-auto"
               >
                 Create my free account

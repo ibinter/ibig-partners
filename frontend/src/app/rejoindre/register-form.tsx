@@ -5,22 +5,59 @@ import { useActionState } from "react";
 import { Button, Field } from "@/components/ui";
 
 type State = { error?: string } | null;
+type Lang = "fr" | "en";
 
-const PARTNER_TYPES = [
-  { value: "INDIVIDUAL",   label: "Particulier" },
-  { value: "COMPANY",      label: "Entreprise" },
-  { value: "NGO",          label: "ONG" },
-  { value: "ASSOCIATION",  label: "Association" },
-  { value: "OTHER",        label: "Autre" },
-];
+const TYPE_ORDER = ["INDIVIDUAL", "COMPANY", "NGO", "ASSOCIATION", "OTHER"] as const;
+
+const STRINGS = {
+  fr: {
+    accountType: "Type de compte *",
+    types: { INDIVIDUAL: "Particulier", COMPANY: "Entreprise", NGO: "ONG", ASSOCIATION: "Association", OTHER: "Autre" },
+    orgLabel: (k: string) => `Nom de l'${k === "NGO" ? "ONG" : k === "ASSOCIATION" ? "association" : "organisation"} *`,
+    orgPlaceholder: { COMPANY: "Ex : IBIG SARL", NGO: "Ex : ONG Espoir", ASSOCIATION: "Ex : Association des jeunes entrepreneurs", OTHER: "Nom de votre structure" } as Record<string, string>,
+    firstName: (org: boolean) => (org ? "Prénom du responsable *" : "Prénom *"),
+    lastName: (org: boolean) => (org ? "Nom du responsable *" : "Nom *"),
+    email: "Email *",
+    phone: "Téléphone *",
+    city: "Ville",
+    password: "Mot de passe * (6 caractères min.)",
+    sponsor: "Code parrain (facultatif)",
+    submit: "Créer mon compte partenaire",
+    submitting: "Création…",
+    termsPre: "En vous inscrivant, vous acceptez les ",
+    termsLink: "Conditions Générales d'Utilisation",
+    termsPost: " du programme IBIG PARTNERS. Votre compte sera validé par l'équipe IBIG.",
+  },
+  en: {
+    accountType: "Account type *",
+    types: { INDIVIDUAL: "Individual", COMPANY: "Company", NGO: "NGO", ASSOCIATION: "Association", OTHER: "Other" },
+    orgLabel: (k: string) => `Name of the ${k === "NGO" ? "NGO" : k === "ASSOCIATION" ? "association" : "organization"} *`,
+    orgPlaceholder: { COMPANY: "e.g. IBIG SARL", NGO: "e.g. Hope NGO", ASSOCIATION: "e.g. Young Entrepreneurs Association", OTHER: "Your organization's name" } as Record<string, string>,
+    firstName: (org: boolean) => (org ? "Manager's first name *" : "First name *"),
+    lastName: (org: boolean) => (org ? "Manager's last name *" : "Last name *"),
+    email: "Email *",
+    phone: "Phone *",
+    city: "City",
+    password: "Password * (min. 6 characters)",
+    sponsor: "Referral code (optional)",
+    submit: "Create my partner account",
+    submitting: "Creating…",
+    termsPre: "By signing up, you agree to the ",
+    termsLink: "Terms of Use",
+    termsPost: " of the IBIG PARTNERS program. Your account will be validated by the IBIG team.",
+  },
+} as const;
 
 export default function RegisterForm({
   action,
   prefillCode,
+  lang = "fr",
 }: {
   action: (prev: unknown, fd: FormData) => Promise<State>;
   prefillCode?: string;
+  lang?: Lang;
 }) {
+  const t = STRINGS[lang];
   const [state, formAction, pending] = useActionState<State, FormData>(action, null);
   const [partnerType, setPartnerType] = useState("INDIVIDUAL");
   const isOrg = partnerType !== "INDIVIDUAL";
@@ -30,14 +67,14 @@ export default function RegisterForm({
       {/* Type de compte */}
       <div>
         <label className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">
-          Type de compte *
+          {t.accountType}
         </label>
         <div className="flex flex-wrap gap-2">
-          {PARTNER_TYPES.map((t) => (
+          {TYPE_ORDER.map((value) => (
             <label
-              key={t.value}
+              key={value}
               className={`cursor-pointer rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
-                partnerType === t.value
+                partnerType === value
                   ? "border-brand-500 bg-brand-50 text-brand-700"
                   : "border-slate-300 bg-white text-slate-600 hover:border-brand-300"
               }`}
@@ -45,12 +82,12 @@ export default function RegisterForm({
               <input
                 type="radio"
                 name="partnerType"
-                value={t.value}
-                checked={partnerType === t.value}
-                onChange={() => setPartnerType(t.value)}
+                value={value}
+                checked={partnerType === value}
+                onChange={() => setPartnerType(value)}
                 className="sr-only"
               />
-              {t.label}
+              {t.types[value]}
             </label>
           ))}
         </div>
@@ -59,42 +96,37 @@ export default function RegisterForm({
       {/* Nom de l'organisation (si non Particulier) */}
       {isOrg && (
         <Field
-          label={`Nom de l'${partnerType === "NGO" ? "ONG" : partnerType === "ASSOCIATION" ? "association" : "organisation"} *`}
+          label={t.orgLabel(partnerType)}
           name="orgName"
           required
-          placeholder={
-            partnerType === "COMPANY" ? "Ex : IBIG SARL" :
-            partnerType === "NGO" ? "Ex : ONG Espoir" :
-            partnerType === "ASSOCIATION" ? "Ex : Association des jeunes entrepreneurs" :
-            "Nom de votre structure"
-          }
+          placeholder={t.orgPlaceholder[partnerType] ?? t.orgPlaceholder.OTHER}
         />
       )}
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label={isOrg ? "Prénom du responsable *" : "Prénom *"} name="firstName" required />
-        <Field label={isOrg ? "Nom du responsable *" : "Nom *"} name="lastName" required />
+        <Field label={t.firstName(isOrg)} name="firstName" required />
+        <Field label={t.lastName(isOrg)} name="lastName" required />
       </div>
-      <Field label="Email *" name="email" type="email" required />
+      <Field label={t.email} name="email" type="email" required />
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Téléphone *" name="phone" required placeholder="+225 07 00 00 00" />
-        <Field label="Ville" name="city" />
+        <Field label={t.phone} name="phone" required placeholder="+225 07 00 00 00" />
+        <Field label={t.city} name="city" />
       </div>
-      <Field label="Mot de passe * (6 caractères min.)" name="password" type="password" required />
-      <Field label="Code parrain (facultatif)" name="sponsorCode" defaultValue={prefillCode} placeholder="AFF-XXXX-000" />
+      <Field label={t.password} name="password" type="password" required />
+      <Field label={t.sponsor} name="sponsorCode" defaultValue={prefillCode} placeholder="AFF-XXXX-000" />
 
       {state?.error && (
         <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">{state.error}</p>
       )}
       <Button type="submit" className="w-full" disabled={pending}>
-        {pending ? "Création…" : "Créer mon compte partenaire"}
+        {pending ? t.submitting : t.submit}
       </Button>
       <p className="text-center text-xs text-muted">
-        En vous inscrivant, vous acceptez les{" "}
+        {t.termsPre}
         <a href="/cgu" target="_blank" className="underline hover:text-brand-600">
-          Conditions Générales d&apos;Utilisation
-        </a>{" "}
-        du programme IBIG PARTNERS. Votre compte sera validé par l&apos;équipe IBIG.
+          {t.termsLink}
+        </a>
+        {t.termsPost}
       </p>
     </form>
   );

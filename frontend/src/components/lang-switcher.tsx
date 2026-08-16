@@ -3,17 +3,25 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+// Pages françaises disposant d'un équivalent anglais (mapping page-à-page).
+// Les pages FR sans équivalent renvoient vers l'accueil anglais /en.
+const FR_TO_EN: Record<string, string> = {
+  "/": "/en",
+  "/rejoindre": "/en/rejoindre",
+};
+
 /**
  * Sélecteur de langue FR/EN.
  * - Depuis une page /en/* : renvoie vers l'équivalent français (retrait du préfixe).
- * - Depuis une page française : renvoie vers l'accueil anglais /en.
- *   (Le mapping page-à-page côté FR→EN s'enrichira à mesure que d'autres
- *   pages anglaises seront ajoutées.)
+ * - Depuis une page française : renvoie vers l'équivalent anglais s'il existe,
+ *   sinon vers l'accueil anglais /en.
  */
 export function LangSwitcher() {
   const pathname = usePathname() || "/";
   const isEn = pathname === "/en" || pathname.startsWith("/en/");
-  const target = isEn ? pathname.replace(/^\/en/, "") || "/" : "/en";
+  const target = isEn
+    ? pathname.replace(/^\/en/, "") || "/"
+    : FR_TO_EN[pathname] ?? "/en";
   const label = isEn ? "FR" : "EN";
   const aria = isEn ? "Passer en français" : "Switch to English";
 
