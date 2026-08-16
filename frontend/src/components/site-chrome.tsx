@@ -2,9 +2,11 @@ import Link from "next/link";
 import { MobileMenu } from "./mobile-menu";
 import { LangSwitcher } from "./lang-switcher";
 
-export function Logo({ light = false }: { light?: boolean }) {
+type Lang = "fr" | "en";
+
+export function Logo({ light = false, lang = "fr" }: { light?: boolean; lang?: Lang }) {
   return (
-    <Link href="/" className="group flex shrink-0 items-center gap-2.5 transition-transform hover:scale-[1.02]">
+    <Link href={lang === "en" ? "/en" : "/"} className="group flex shrink-0 items-center gap-2.5 transition-transform hover:scale-[1.02]">
       <span className="relative inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-brand-500 via-brand-600 to-brand-800 text-white font-extrabold text-sm shadow-md shadow-brand-700/30 ring-1 ring-white/10">
         <span className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
         <span className="relative">iB</span>
@@ -27,17 +29,26 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
   );
 }
 
-const MARQUEE_ITEMS = [
-  "Bienvenue sur IBIG PARTNERS — votre plateforme d'opportunités économiques en Afrique",
-  "Un seul compte, tous les produits du groupe IBIG SARL",
-  "Des commissions transparentes sur 3 niveaux",
-  "Inscription 100% gratuite, sans investissement",
-  "Construisez un revenu durable et bâtissez votre équipe",
-];
+const MARQUEE_ITEMS: Record<Lang, string[]> = {
+  fr: [
+    "Bienvenue sur IBIG PARTNERS — votre plateforme d'opportunités économiques en Afrique",
+    "Un seul compte, tous les produits du groupe IBIG SARL",
+    "Des commissions transparentes sur 3 niveaux",
+    "Inscription 100% gratuite, sans investissement",
+    "Construisez un revenu durable et bâtissez votre équipe",
+  ],
+  en: [
+    "Welcome to IBIG PARTNERS — your platform of economic opportunities in Africa",
+    "One account, every product of the IBIG SARL group",
+    "Transparent commissions across 3 levels",
+    "100% free sign-up, no investment required",
+    "Build a lasting income and grow your team",
+  ],
+};
 
-function MarqueeBanner() {
+function MarqueeBanner({ lang = "fr" }: { lang?: Lang }) {
   // Deux copies identiques pour une boucle continue sans coupure.
-  const sequence = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
+  const sequence = [...MARQUEE_ITEMS[lang], ...MARQUEE_ITEMS[lang]];
   return (
     <div className="relative z-40 flex items-stretch bg-gradient-to-r from-brand-800 via-brand-700 to-brand-600 text-white">
       <div className="marquee-mask flex-1 overflow-hidden py-2">
@@ -54,30 +65,49 @@ function MarqueeBanner() {
   );
 }
 
-export function SiteHeader() {
+const HEADER_NAV: Record<Lang, { href: string; label: string }[]> = {
+  fr: [
+    { href: "/#branches", label: "Branches" },
+    { href: "/#commissions", label: "Commissions" },
+    { href: "/#statuts", label: "Statuts" },
+    { href: "/#espace", label: "Espace partenaire" },
+    { href: "/#faq", label: "FAQ" },
+  ],
+  en: [
+    { href: "/en#software", label: "Software" },
+    { href: "/en#commissions", label: "Commissions" },
+    { href: "/en#faq", label: "FAQ" },
+  ],
+};
+
+const HEADER_T = {
+  fr: { top: "Top Partenaires", partners: "Nos partenaires", partnersHref: "/partenaires", signIn: "Connexion", join: "Devenir Partenaire", joinHref: "/rejoindre" },
+  en: { top: "Top Partners", partners: "Our partners", partnersHref: "/en/partenaires", signIn: "Sign in", join: "Become a Partner", joinHref: "/en/rejoindre" },
+} as const;
+
+export function SiteHeader({ lang = "fr" }: { lang?: Lang }) {
+  const t = HEADER_T[lang];
   return (
     <>
-    <MarqueeBanner />
+    <MarqueeBanner lang={lang} />
     <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-white/85 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70 shadow-[0_1px_0_rgba(11,79,224,0.04),0_8px_24px_-12px_rgba(11,79,224,0.08)]">
       <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-2.5 sm:px-6">
-        <Logo />
+        <Logo lang={lang} />
 
         {/* Navigation desktop */}
         <nav className="hidden items-center gap-1 text-sm font-medium text-slate-600 lg:flex">
-          <NavLink href="/#branches">Branches</NavLink>
-          <NavLink href="/#commissions">Commissions</NavLink>
-          <NavLink href="/#statuts">Statuts</NavLink>
-          <NavLink href="/#espace">Espace partenaire</NavLink>
-          <NavLink href="/#faq">FAQ</NavLink>
+          {HEADER_NAV[lang].map((item) => (
+            <NavLink key={item.href} href={item.href}>{item.label}</NavLink>
+          ))}
           <Link
             href="/top-partenaires"
             className="ml-1 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-400/15 to-orange-500/15 px-3 py-1.5 text-amber-700 font-semibold ring-1 ring-amber-300/40 hover:from-amber-400/25 hover:to-orange-500/25 transition-all"
           >
             <span>🏆</span>
-            <span className="hidden xl:inline">Top Partenaires</span>
+            <span className="hidden xl:inline">{t.top}</span>
             <span className="xl:hidden">Top</span>
           </Link>
-          <NavLink href="/partenaires">Nos partenaires</NavLink>
+          <NavLink href={t.partnersHref}>{t.partners}</NavLink>
         </nav>
 
         <div className="flex items-center gap-2">
@@ -86,18 +116,18 @@ export function SiteHeader() {
             href="/connexion"
             className="hidden rounded-lg px-3.5 py-2 text-sm font-semibold text-brand-700 hover:bg-brand-50 transition-colors sm:inline-flex"
           >
-            Connexion
+            {t.signIn}
           </Link>
           <Link
-            href="/rejoindre"
+            href={t.joinHref}
             className="group relative inline-flex items-center gap-1.5 overflow-hidden rounded-xl bg-gradient-to-r from-brand-600 via-brand-600 to-brand-700 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-brand-600/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-600/40"
           >
-            <span className="relative z-10">Devenir Partenaire</span>
+            <span className="relative z-10">{t.join}</span>
             <span className="relative z-10 transition-transform group-hover:translate-x-0.5">→</span>
             <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
           </Link>
           {/* Hamburger mobile */}
-          <MobileMenu />
+          <MobileMenu lang={lang} />
         </div>
       </div>
     </header>
@@ -122,7 +152,72 @@ function WhatsAppBubble() {
   );
 }
 
-export function SiteFooter() {
+const FOOTER_T = {
+  fr: {
+    brand: "La plateforme centrale d'affiliation et de partenariat commercial d'INTERMARK BUSINESS INTERNATIONAL GROUP SARL. Gagnez des commissions sur 3 niveaux.",
+    freeSignup: "✓ Inscription gratuite",
+    fastPay: "✓ Paiement rapide",
+    group: "Groupe IBIG",
+    builtBy: "— Développé par IBIG Soft",
+    program: "Programme",
+    nav: [
+      { href: "/#branches", label: "Branches", cls: "text-slate-400 hover:text-brand-400" },
+      { href: "/#commissions", label: "Commissions", cls: "text-slate-400 hover:text-brand-400" },
+      { href: "/#statuts", label: "Statuts", cls: "text-slate-400 hover:text-brand-400" },
+      { href: "/#faq", label: "FAQ", cls: "text-slate-400 hover:text-brand-400" },
+    ],
+    top: "🏆 Top Partenaires",
+    partners: "Nos partenaires",
+    partnersHref: "/partenaires",
+    join: "Rejoindre",
+    joinHref: "/rejoindre",
+    signIn: "Connexion",
+    legal: "Légal",
+    cgu: "CGU",
+    cgv: "CGV",
+    cguHref: "/cgu",
+    cgvHref: "/cgv",
+    privacy: "Politique de confidentialité",
+    cookies: "Politique cookies",
+    support: "— Support",
+    groupTag: "— Groupe",
+    rights: "© 2026 IBIG PARTNERS. Tous droits réservés.",
+    devBy: "Développé par",
+  },
+  en: {
+    brand: "The central affiliate and commercial partnership platform of INTERMARK BUSINESS INTERNATIONAL GROUP SARL. Earn commissions across 3 levels.",
+    freeSignup: "✓ Free sign-up",
+    fastPay: "✓ Fast payout",
+    group: "IBIG Group",
+    builtBy: "— Built by IBIG Soft",
+    program: "Program",
+    nav: [
+      { href: "/en#software", label: "Software", cls: "text-slate-400 hover:text-brand-400" },
+      { href: "/en#commissions", label: "Commissions", cls: "text-slate-400 hover:text-brand-400" },
+      { href: "/en#faq", label: "FAQ", cls: "text-slate-400 hover:text-brand-400" },
+    ],
+    top: "🏆 Top Partners",
+    partners: "Our partners",
+    partnersHref: "/en/partenaires",
+    join: "Join",
+    joinHref: "/en/rejoindre",
+    signIn: "Sign in",
+    legal: "Legal",
+    cgu: "Terms of Use",
+    cgv: "Terms of Sale",
+    cguHref: "/en/cgu",
+    cgvHref: "/en/cgv",
+    privacy: "Privacy Policy",
+    cookies: "Cookie Policy",
+    support: "— Support",
+    groupTag: "— Group",
+    rights: "© 2026 IBIG PARTNERS. All rights reserved.",
+    devBy: "Built by",
+  },
+} as const;
+
+export function SiteFooter({ lang = "fr" }: { lang?: Lang }) {
+  const f = FOOTER_T[lang];
   return (
     <>
       <footer className="mt-auto bg-slate-900 text-slate-300">
@@ -131,18 +226,16 @@ export function SiteFooter() {
 
             {/* Colonne 1 : Marque */}
             <div className="lg:col-span-1">
-              <Logo light />
+              <Logo light lang={lang} />
               <p className="mt-3 text-sm leading-relaxed text-slate-400">
-                La plateforme centrale d&apos;affiliation et de partenariat
-                commercial d&apos;INTERMARK BUSINESS INTERNATIONAL GROUP SARL.
-                Gagnez des commissions sur 3 niveaux.
+                {f.brand}
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-900/50 px-3 py-1 text-xs font-semibold text-emerald-400">
-                  ✓ Inscription gratuite
+                  {f.freeSignup}
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-900/50 px-3 py-1 text-xs font-semibold text-brand-300">
-                  ✓ Paiement rapide
+                  {f.fastPay}
                 </span>
               </div>
               <a
@@ -157,7 +250,7 @@ export function SiteFooter() {
 
             {/* Colonne 2 : Groupe IBIG */}
             <div>
-              <p className="text-sm font-bold text-white">Groupe IBIG</p>
+              <p className="text-sm font-bold text-white">{f.group}</p>
               <div className="mt-3 space-y-2 text-sm text-slate-400">
                 <a href="https://intermark-business.com/" target="_blank" rel="noopener noreferrer" className="font-semibold text-slate-300 hover:text-brand-400 transition-colors">INTERMARK BUSINESS INTERNATIONAL GROUP SARL</a>
                 <p>Cocody Riviera Palmeraie<br />Abidjan, Côte d&apos;Ivoire</p>
@@ -170,34 +263,33 @@ export function SiteFooter() {
                   <a href="https://ibigsoft.com/" target="_blank" rel="noopener noreferrer" className="hover:text-brand-400 transition-colors">
                     ibigsoft.com ↗
                   </a>
-                  <span className="ml-1 text-xs text-slate-500">— Développé par IBIG Soft</span>
+                  <span className="ml-1 text-xs text-slate-500">{f.builtBy}</span>
                 </p>
               </div>
             </div>
 
             {/* Colonne 3 : Programme */}
             <div>
-              <p className="text-sm font-bold text-white">Programme</p>
+              <p className="text-sm font-bold text-white">{f.program}</p>
               <ul className="mt-3 space-y-2 text-sm">
-                <li><a href="/#branches" className="text-slate-400 hover:text-brand-400 transition-colors">Branches</a></li>
-                <li><a href="/#commissions" className="text-slate-400 hover:text-brand-400 transition-colors">Commissions</a></li>
-                <li><a href="/#statuts" className="text-slate-400 hover:text-brand-400 transition-colors">Statuts</a></li>
-                <li><a href="/#faq" className="text-slate-400 hover:text-brand-400 transition-colors">FAQ</a></li>
-                <li><Link href="/top-partenaires" className="text-amber-400 hover:text-amber-300 transition-colors font-semibold">🏆 Top Partenaires</Link></li>
-                <li><Link href="/partenaires" className="text-slate-400 hover:text-brand-400 transition-colors">Nos partenaires</Link></li>
-                <li><Link href="/rejoindre" className="text-slate-400 hover:text-brand-400 transition-colors">Rejoindre</Link></li>
-                <li><Link href="/connexion" className="text-slate-400 hover:text-brand-400 transition-colors">Connexion</Link></li>
+                {f.nav.map((item) => (
+                  <li key={item.href}><a href={item.href} className="text-slate-400 hover:text-brand-400 transition-colors">{item.label}</a></li>
+                ))}
+                <li><Link href="/top-partenaires" className="text-amber-400 hover:text-amber-300 transition-colors font-semibold">{f.top}</Link></li>
+                <li><Link href={f.partnersHref} className="text-slate-400 hover:text-brand-400 transition-colors">{f.partners}</Link></li>
+                <li><Link href={f.joinHref} className="text-slate-400 hover:text-brand-400 transition-colors">{f.join}</Link></li>
+                <li><Link href="/connexion" className="text-slate-400 hover:text-brand-400 transition-colors">{f.signIn}</Link></li>
               </ul>
             </div>
 
             {/* Colonne 4 : Légal */}
             <div>
-              <p className="text-sm font-bold text-white">Légal</p>
+              <p className="text-sm font-bold text-white">{f.legal}</p>
               <ul className="mt-3 space-y-2 text-sm">
-                <li><Link href="/cgu" className="text-slate-400 hover:text-brand-400 transition-colors">CGU</Link></li>
-                <li><Link href="/cgv" className="text-slate-400 hover:text-brand-400 transition-colors">CGV</Link></li>
-                <li><Link href="/confidentialite" className="text-slate-400 hover:text-brand-400 transition-colors">Politique de confidentialité</Link></li>
-                <li><Link href="/cookies" className="text-slate-400 hover:text-brand-400 transition-colors">Politique cookies</Link></li>
+                <li><Link href={f.cguHref} className="text-slate-400 hover:text-brand-400 transition-colors">{f.cgu}</Link></li>
+                <li><Link href={f.cgvHref} className="text-slate-400 hover:text-brand-400 transition-colors">{f.cgv}</Link></li>
+                <li><Link href="/confidentialite" className="text-slate-400 hover:text-brand-400 transition-colors">{f.privacy}</Link></li>
+                <li><Link href="/cookies" className="text-slate-400 hover:text-brand-400 transition-colors">{f.cookies}</Link></li>
               </ul>
             </div>
 
@@ -214,13 +306,13 @@ export function SiteFooter() {
                   <a href="mailto:support@ibigpartners.com" className="hover:text-brand-400 transition-colors">
                     support@ibigpartners.com
                   </a>
-                  <span className="ml-1 text-xs text-slate-500">— Support</span>
+                  <span className="ml-1 text-xs text-slate-500">{f.support}</span>
                 </li>
                 <li>
                   <a href="mailto:contact@intermark-business.com" className="hover:text-brand-400 transition-colors">
                     contact@intermark-business.com
                   </a>
-                  <span className="ml-1 text-xs text-slate-500">— Groupe</span>
+                  <span className="ml-1 text-xs text-slate-500">{f.groupTag}</span>
                 </li>
                 <li>
                   <a href="tel:+2252722276014" className="hover:text-brand-400 transition-colors">
@@ -239,10 +331,10 @@ export function SiteFooter() {
           </div>
 
           <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-slate-800 pt-6 text-xs text-slate-500">
-            <p>© 2026 IBIG PARTNERS. Tous droits réservés.</p>
+            <p>{f.rights}</p>
             <a href="https://intermark-business.com/" target="_blank" rel="noopener noreferrer" className="hover:text-brand-400 transition-colors">INTERMARK BUSINESS INTERNATIONAL GROUP SARL</a>
             <p>
-              Développé par{" "}
+              {f.devBy}{" "}
               <a href="https://ibigsoft.com/" target="_blank" rel="noopener noreferrer" className="hover:text-brand-400 transition-colors">
                 IBIG Soft
               </a>

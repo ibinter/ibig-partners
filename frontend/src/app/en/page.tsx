@@ -108,7 +108,7 @@ function SectionEyebrow({ children, className = "" }: { children: React.ReactNod
 export default function EnglishHomePage() {
   return (
     <>
-      <SiteHeader />
+      <SiteHeader lang="en" />
 
       {/* ═══════════ HERO ═══════════ */}
       <section className="gradient-hero relative overflow-hidden text-white">
@@ -424,7 +424,7 @@ export default function EnglishHomePage() {
         </div>
       </section>
 
-      <SiteFooter />
+      <SiteFooter lang="en" />
     </>
   );
 }

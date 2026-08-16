@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 const FR_TO_EN: Record<string, string> = {
   "/": "/en",
   "/rejoindre": "/en/rejoindre",
+  "/partenaires": "/en/partenaires",
   "/cgu": "/en/cgu",
   "/cgv": "/en/cgv",
 };

@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function CgvPage() {
   return (
     <>
-      <SiteHeader />
+      <SiteHeader lang="en" />
       <main className="mx-auto max-w-3xl px-4 py-12">
         <Link href="/en" className="text-sm text-brand-600 hover:underline">← Back to home</Link>
 
@@ -154,7 +154,7 @@ export default function CgvPage() {
           </Link>
         </div>
       </main>
-      <SiteFooter />
+      <SiteFooter lang="en" />
     </>
   );
 }
