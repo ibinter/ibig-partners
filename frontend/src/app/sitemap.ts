@@ -16,6 +16,8 @@ const ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.S
   { path: "/connexion", priority: 0.5, changeFrequency: "yearly" },
   { path: "/cgv", priority: 0.3, changeFrequency: "yearly" },
   { path: "/cgu", priority: 0.3, changeFrequency: "yearly" },
+  { path: "/en/cgu", priority: 0.2, changeFrequency: "yearly" },
+  { path: "/en/cgv", priority: 0.2, changeFrequency: "yearly" },
   { path: "/confidentialite", priority: 0.3, changeFrequency: "yearly" },
   { path: "/cookies", priority: 0.3, changeFrequency: "yearly" },
 ];
