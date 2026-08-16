@@ -10,6 +10,7 @@ import {
   sendCommissionsValidatedEmail,
   sendPayoutPaidEmail,
   sendAnnouncementEmail,
+  sendVerificationReminderEmail,
 } from "@/lib/email";
 import { logAction } from "@/lib/audit";
 
@@ -46,27 +47,39 @@ const VERIF_REMINDER = {
   url: "/espace/verification",
 };
 
-/** Envoie le rappel de vérification à un affilié précis. */
+/** Envoie le rappel de vérification à un affilié précis (cloche + e-mail). */
 export async function sendVerificationReminder(formData: FormData) {
   const admin = await requireAdmin();
   const id = String(formData.get("id") || "").trim();
   if (!id) return;
+  const target = await prisma.user.findUnique({
+    where: { id },
+    select: { email: true, firstName: true },
+  });
   await prisma.notification.create({ data: { userId: id, ...VERIF_REMINDER } });
+  if (target?.email) {
+    void sendVerificationReminderEmail({ to: target.email, firstName: target.firstName });
+  }
   void logAction({ userId: admin.id, action: "VERIF_REMINDER", target: id });
   revalidatePath("/admin/partenaires");
 }
 
-/** Envoie le rappel à TOUS les affiliés non encore vérifiés. */
+/** Envoie le rappel à TOUS les affiliés non encore vérifiés (cloche + e-mail). */
 export async function sendVerificationReminderToAll() {
   const admin = await requireAdmin();
   const targets = await prisma.user.findMany({
     where: { role: "PARTNER", verificationStatus: { not: "VERIFIED" } },
-    select: { id: true },
+    select: { id: true, email: true, firstName: true },
   });
   if (targets.length > 0) {
     await prisma.notification.createMany({
       data: targets.map((u) => ({ userId: u.id, ...VERIF_REMINDER })),
     });
+    for (const u of targets) {
+      if (u.email) {
+        void sendVerificationReminderEmail({ to: u.email, firstName: u.firstName });
+      }
+    }
   }
   void logAction({
     userId: admin.id,

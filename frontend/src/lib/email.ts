@@ -309,6 +309,52 @@ export async function sendPayoutPaidEmail(opts: {
   });
 }
 
+// ─── E-mail : Rappel de vérification du compte (KYC) ─────────────────────
+
+export async function sendVerificationReminderEmail(opts: {
+  to: string;
+  firstName: string;
+}) {
+  const html = layout(`
+    <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
+      Vérifiez votre compte pour l'activer 🔐
+    </h2>
+    <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
+      Bonjour <strong>${opts.firstName}</strong>, votre compte IBIG PARTNERS n'est
+      pas encore vérifié. Sans vérification, vos commissions sont calculées mais
+      <strong>non versées</strong>.
+    </p>
+
+    <div style="background:#fffbeb;border-radius:10px;padding:20px 24px;margin-bottom:24px;border:1px solid #fde68a;">
+      <p style="margin:0;font-size:14px;color:#92400e;line-height:1.7;">
+        En envoyant vos documents, vous débloquez :<br/>
+        ✓ la déclaration de vos ventes<br/>
+        ✓ toutes les fonctionnalités de votre espace<br/>
+        ✓ le versement de vos commissions
+      </p>
+    </div>
+
+    <p style="color:#5b6577;font-size:14px;line-height:1.6;">
+      C'est rapide et sécurisé : remplissez le formulaire, notre équipe l'examine
+      sous 48h et vous êtes notifié dès validation.
+    </p>
+
+    ${btn("Vérifier mon compte", `${SITE}/espace/verification`)}
+
+    <hr style="margin:32px 0;border:none;border-top:1px solid #e2e8f0;" />
+    <p style="margin:0;font-size:13px;color:#94a3b8;">
+      Une question ? Contactez-nous à
+      <a href="mailto:support@ibigpartners.com" style="color:#0b5fff;">support@ibigpartners.com</a>
+    </p>
+  `);
+
+  await sendEmail({
+    to: opts.to,
+    subject: "Action requise : vérifiez votre compte IBIG PARTNERS",
+    html,
+  });
+}
+
 // ─── E-mail 5 : Annonce de l'équipe ───────────────────────────────────────
 
 export async function sendAnnouncementEmail(opts: {
