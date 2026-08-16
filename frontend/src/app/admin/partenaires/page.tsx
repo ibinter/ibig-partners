@@ -4,6 +4,7 @@ import { fcfa, formatDate } from "@/lib/format";
 import { Badge, Button, Card, PageHeader, statusTone } from "@/components/ui";
 import { STATUS_LABELS, STATUS_COLORS } from "@/lib/constants";
 import { approvePartner, setPartnerActive, setPartnerRole } from "../actions";
+import { contactUser } from "../../espace/chat/actions";
 
 export const dynamic = "force-dynamic";
 
@@ -56,6 +57,9 @@ export default async function PartenairesPage() {
                   <td>
                     <p className="font-medium text-ink">{p.firstName} {p.lastName}</p>
                     <p className="text-xs text-muted">{p.email}</p>
+                    <p className="text-xs text-muted">
+                      📱 {p.phone || "—"}{p.country ? ` · ${p.country}` : ""}{p.city ? ` (${p.city})` : ""}
+                    </p>
                     {p.role !== "PARTNER" && (
                       <Badge tone="purple">{p.role}</Badge>
                     )}
@@ -86,6 +90,12 @@ export default async function PartenairesPage() {
                   <td className="text-xs text-muted">{formatDate(p.createdAt)}</td>
                   <td>
                     <div className="flex items-center gap-1.5">
+                      {p.id !== admin.id && (
+                        <form action={contactUser}>
+                          <input type="hidden" name="targetUserId" value={p.id} />
+                          <Button type="submit" variant="ghost" size="sm">💬 Contacter</Button>
+                        </form>
+                      )}
                       {!p.approved && (
                         <form action={approvePartner}>
                           <input type="hidden" name="id" value={p.id} />

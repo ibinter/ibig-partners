@@ -37,7 +37,23 @@ export default async function ChatPage() {
   const isAdmin = user.role === "ADMIN" || user.role === "SUPERADMIN";
   const filleulCount = isAdmin ? 1 : await prisma.user.count({ where: { sponsorId: user.id } });
 
-  if (filleulCount === 0) {
+  const conversations = await (prisma as any).chatConversation.findMany({
+    where: { participants: { some: { userId: user.id } } },
+    include: {
+      messages: { orderBy: { createdAt: "desc" }, take: 1 },
+      participants: {
+        include: {
+          user: { select: { id: true, firstName: true, lastName: true, status: true, photoUrl: true } },
+        },
+      },
+    },
+    orderBy: { lastMessageAt: "desc" },
+  });
+
+  // La messagerie se débloque avec le 1er filleul — MAIS les conversations
+  // existantes (ex. message de bienvenue envoyé par un admin) restent toujours
+  // accessibles, même sans filleul.
+  if (filleulCount === 0 && conversations.length === 0) {
     return (
       <div>
         <PageHeader
@@ -60,19 +76,6 @@ export default async function ChatPage() {
       </div>
     );
   }
-
-  const conversations = await (prisma as any).chatConversation.findMany({
-    where: { participants: { some: { userId: user.id } } },
-    include: {
-      messages: { orderBy: { createdAt: "desc" }, take: 1 },
-      participants: {
-        include: {
-          user: { select: { id: true, firstName: true, lastName: true, status: true, photoUrl: true } },
-        },
-      },
-    },
-    orderBy: { lastMessageAt: "desc" },
-  });
 
   // Separate BROADCAST (pinned) from others
   const broadcast = conversations.filter((c: any) => c.type === "BROADCAST");

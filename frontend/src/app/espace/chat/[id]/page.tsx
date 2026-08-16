@@ -17,10 +17,9 @@ export default async function ConversationPage({
   params: Promise<{ id: string }>;
 }) {
   const user = await requireUser();
-  const isAdmin = user.role === "ADMIN" || user.role === "SUPERADMIN";
-  const filleulCount = isAdmin ? 1 : await prisma.user.count({ where: { sponsorId: user.id } });
-  if (filleulCount === 0) redirect("/espace/chat");
-
+  // L'accès est protégé par la vérification de participation plus bas : toute
+  // personne membre de la conversation peut la lire (y compris un affilié sans
+  // filleul qui a reçu un message de bienvenue d'un admin).
   const { id } = await params;
 
   const conversation = await (prisma as any).chatConversation.findUnique({

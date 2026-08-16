@@ -56,11 +56,20 @@ export async function startConversation(
   }
 }
 
+/**
+ * Variante « form action » de startConversation (formData seul) pour un bouton
+ * « Contacter » côté admin : ouvre (ou réutilise) la conversation directe avec
+ * l'affilié ciblé et redirige vers le fil de discussion.
+ */
+export async function contactUser(formData: FormData) {
+  await startConversation(null, formData);
+}
+
 export async function sendMessage(formData: FormData) {
   const user = await requireUser();
-  const isAdmin = user.role === "ADMIN" || user.role === "SUPERADMIN";
-  if (!isAdmin && !(await hasFilleul(user.id))) return;
-
+  // Toute personne PARTICIPANTE d'une conversation peut y répondre (la
+  // vérification de participation ci-dessous protège l'accès), y compris un
+  // affilié sans filleul répondant au message de bienvenue d'un admin.
   const conversationId = String(formData.get("conversationId") || "").trim();
   const body = String(formData.get("body") || "").trim();
 
