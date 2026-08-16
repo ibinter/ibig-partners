@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import { PWARegister, PWAInstallBanner } from "@/components/pwa-register";
 import { TawkVisibility } from "@/components/tawk-visibility";
+import { TawkChat } from "@/components/tawk-chat";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -75,35 +76,8 @@ export default function RootLayout({
         <PWARegister />
         <PWAInstallBanner />
 
-        {/* Tawk.to live chat — bottom-left, identifié IBIG PARTNERS */}
-        <Script id="tawk-to-ibig-partners" strategy="afterInteractive">
-          {`
-            var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
-            Tawk_API.customStyle = {
-              visibility: {
-                desktop: { position: 'bl', xOffset: 15, yOffset: 15 },
-                mobile:  { position: 'bl', xOffset: 5,  yOffset: 70 }
-              }
-            };
-            Tawk_API.visitor = {
-              name:  'Visiteur IBIG PARTNERS',
-              email: 'visitor@ibigpartners.com'
-            };
-            Tawk_API.onLoad = function(){
-              if (typeof Tawk_API.addTags === 'function') {
-                Tawk_API.addTags(['ibig-partners','affiliation'], function(){});
-              }
-            };
-            (function(){
-              var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-              s1.async=true;
-              s1.src='https://embed.tawk.to/6a1ee383d0b6e01c2e34b6be/1jsd4l37i';
-              s1.charset='UTF-8';
-              s1.setAttribute('crossorigin','*');
-              s0.parentNode.insertBefore(s1,s0);
-            })();
-          `}
-        </Script>
+        {/* Tawk.to live chat — chargé uniquement sur les pages publiques */}
+        <TawkChat />
 
         {/* IBIG SARL — Tracking cross-site : envoie les visites PARTNERS vers l'admin Analytics d'intermark-business.com */}
         <Script id="ibig-sarl-tracking" strategy="afterInteractive">
