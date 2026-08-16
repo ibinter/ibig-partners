@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth";
+import { isSyncAuthorized } from "@/lib/sync-auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -94,8 +94,7 @@ const OLD_SLUGS = [
 ];
 
 export async function POST() {
-  const user = await getCurrentUser();
-  if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN")) {
+  if (!(await isSyncAuthorized())) {
     return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
   }
 

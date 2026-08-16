@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { isSyncAuthorized } from "@/lib/sync-auth";
+import { syncBranchCatalog } from "@/lib/catalog-sync";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -946,69 +946,24 @@ const SOFT_PRODUCTS = [
 
 export async function POST() {
   try {
-    const user = await getCurrentUser();
-    if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN")) {
+    if (!(await isSyncAuthorized())) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
 
-    const branch = await prisma.branch.findUnique({ where: { slug: "ibig-soft" } });
-    if (!branch) {
-      return NextResponse.json(
-        { error: "Branche IBIG SOFT introuvable. Synchronisez d'abord les branches." },
-        { status: 404 }
-      );
+    const result = await syncBranchCatalog("ibig-soft", "IBIG SOFT", SOFT_PRODUCTS, { notify: true });
+    if (!result.ok) {
+      return NextResponse.json({ error: result.error }, { status: result.status });
     }
 
-    const knownSlugs = SOFT_PRODUCTS.map((p) => p.slug);
-
-    const deleted = await prisma.product.deleteMany({
-      where: {
-        branchId: branch.id,
-        slug: { notIn: knownSlugs },
-        sales: { none: {} },
-        links: { none: {} },
-      },
-    });
-
-    const BATCH_SIZE = 5;
-    for (let i = 0; i < SOFT_PRODUCTS.length; i += BATCH_SIZE) {
-      const batch = SOFT_PRODUCTS.slice(i, i + BATCH_SIZE);
-      await Promise.all(
-        batch.map((p: any) =>
-          prisma.product.upsert({
-            where: { slug: p.slug },
-            update: {
-              name: p.name,
-              pricingType: p.pricingType,
-              price: p.price,
-              rate: p.rate,
-              siteUrl: p.siteUrl,
-              description: p.description,
-              branchId: branch.id,
-              active: true,
-            },
-            create: {
-              slug: p.slug,
-              name: p.name,
-              pricingType: p.pricingType,
-              price: p.price,
-              rate: p.rate,
-              siteUrl: p.siteUrl,
-              description: p.description,
-              branchId: branch.id,
-              active: true,
-            },
-          })
-        )
-      );
-    }
-    const upserted = SOFT_PRODUCTS.length;
-
+    const { diff, notified } = result;
     return NextResponse.json({
       ok: true,
-      upserted,
-      deleted: deleted.count,
-      message: `${upserted} logiciels IBIG SOFT synchronisés, ${deleted.count} doublon(s) supprimé(s).`,
+      upserted: diff.total,
+      added: diff.added.length,
+      updated: diff.updated.length,
+      deleted: diff.removed,
+      notified,
+      message: `${diff.total} logiciels IBIG SOFT synchronisés (${diff.added.length} nouveau(x), ${diff.updated.length} mis à jour, ${diff.removed} retiré(s)).`,
     });
   } catch (err: any) {
     console.error("sync-soft error:", err);

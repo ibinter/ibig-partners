@@ -1,6 +1,6 @@
 ﻿import { NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { isSyncAuthorized } from "@/lib/sync-auth";
+import { syncBranchCatalog } from "@/lib/catalog-sync";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -271,64 +271,29 @@ const MULTISERVICES_PRODUCTS = [
 ];
 
 export async function POST() {
-  const user = await getCurrentUser();
-  if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN")) {
-    return NextResponse.json({ error: "Non autorisÃ©" }, { status: 403 });
-  }
+  try {
+    if (!(await isSyncAuthorized())) {
+      return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+    }
 
-  const branch = await prisma.branch.findUnique({ where: { slug: "ibig-multiservices" } });
-  if (!branch) {
-    return NextResponse.json(
-      { error: "Branche IBIG MULTISERVICES introuvable. Synchronisez d'abord les branches." },
-      { status: 404 }
-    );
-  }
+    const result = await syncBranchCatalog("ibig-multiservices", "IBIG MULTISERVICES", MULTISERVICES_PRODUCTS, { notify: true });
+    if (!result.ok) {
+      return NextResponse.json({ error: result.error }, { status: result.status });
+    }
 
-  const knownSlugs = MULTISERVICES_PRODUCTS.map((p) => p.slug);
-
-  const deleted = await prisma.product.deleteMany({
-    where: {
-      branchId: branch.id,
-      slug: { notIn: knownSlugs },
-      sales: { none: {} },
-        links: { none: {} },
-    },
-  });
-
-  let upserted = 0;
-  for (const p of MULTISERVICES_PRODUCTS) {
-    await prisma.product.upsert({
-      where: { slug: p.slug },
-      update: {
-        name: p.name,
-        pricingType: p.pricingType,
-        price: p.price,
-        rate: p.rate,
-        siteUrl: p.siteUrl,
-        description: p.description,
-        branchId: branch.id,
-        active: true,
-      },
-      create: {
-        slug: p.slug,
-        name: p.name,
-        pricingType: p.pricingType,
-        price: p.price,
-        rate: p.rate,
-        siteUrl: p.siteUrl,
-        description: p.description,
-        branchId: branch.id,
-        active: true,
-      },
+    const { diff, notified } = result;
+    return NextResponse.json({
+      ok: true,
+      upserted: diff.total,
+      added: diff.added.length,
+      updated: diff.updated.length,
+      deleted: diff.removed,
+      notified,
+      message: `${diff.total} produits IBIG MULTISERVICES synchronisés (${diff.added.length} nouveau(x), ${diff.updated.length} mis à jour, ${diff.removed} retiré(s)).`,
     });
-    upserted++;
+  } catch (err: any) {
+    console.error("sync-multiservices error:", err);
+    return NextResponse.json({ error: err?.message ?? "Erreur serveur" }, { status: 500 });
   }
-
-  return NextResponse.json({
-    ok: true,
-    upserted,
-    deleted: deleted.count,
-    message: `${upserted} services IBIG MULTISERVICES synchronisÃ©s, ${deleted.count} doublon(s) supprimÃ©(s).`,
-  });
 }
 
