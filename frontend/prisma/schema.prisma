@@ -285,6 +285,7 @@ model Notification {
   user      User?    @relation(fields: [userId], references: [id])
   title     String
   body      String
+  url       String? // lien cliquable optionnel (ex. /espace/chat/<id>)
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
 }

@@ -122,6 +122,7 @@ export async function sendMessage(formData: FormData) {
         userId: o.userId,
         title: `💬 Nouveau message de ${senderName}`,
         body: preview,
+        url: `/espace/chat/${conversationId}`,
       })),
     });
   }

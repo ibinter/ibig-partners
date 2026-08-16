@@ -82,6 +82,14 @@ export default async function NotificationsPage() {
                       )}
                     </div>
                     <p className="mt-1 text-sm text-muted leading-relaxed">{n.body}</p>
+                    {n.url && (
+                      <a
+                        href={n.url}
+                        className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-700 hover:underline"
+                      >
+                        Ouvrir →
+                      </a>
+                    )}
                     <p className="mt-2 text-xs text-muted">{formatDate(n.createdAt)}</p>
                   </div>
                 </div>

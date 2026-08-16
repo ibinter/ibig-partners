@@ -15,7 +15,7 @@ export async function GET() {
       },
       orderBy: { createdAt: "desc" },
       take: 3,
-      select: { id: true, title: true, body: true, createdAt: true },
+      select: { id: true, title: true, body: true, url: true, createdAt: true },
     });
     return NextResponse.json({ notifs });
   } catch {

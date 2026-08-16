@@ -16,6 +16,7 @@ interface Notif {
   id: string;
   title: string;
   body: string;
+  url?: string | null;
   createdAt: string;
 }
 
@@ -83,6 +84,15 @@ export function CelebrationToaster() {
           <div className="flex-1 min-w-0">
             <p className="font-bold text-ink leading-tight">{active.title}</p>
             <p className="mt-1 text-sm text-slate-600 leading-relaxed">{active.body}</p>
+            {active.url && (
+              <a
+                href={active.url}
+                onClick={() => setActive(null)}
+                className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700 hover:underline"
+              >
+                Ouvrir →
+              </a>
+            )}
           </div>
           <button
             onClick={() => setActive(null)}
