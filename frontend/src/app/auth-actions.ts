@@ -92,13 +92,14 @@ export async function registerAction(_prev: unknown, formData: FormData) {
   const email = String(formData.get("email") || "").trim().toLowerCase();
   const phone = String(formData.get("phone") || "").trim();
   const city = String(formData.get("city") || "").trim();
+  const country = String(formData.get("country") || "").trim();
   const password = String(formData.get("password") || "");
   const partnerType = String(formData.get("partnerType") || "INDIVIDUAL");
   const orgName = String(formData.get("orgName") || "").trim();
   let sponsorCode = String(formData.get("sponsorCode") || "").trim().toUpperCase();
 
-  if (!firstName || !lastName || !email || !phone || !password) {
-    return { error: "Merci de remplir tous les champs obligatoires." };
+  if (!firstName || !lastName || !email || !phone || !password || !country) {
+    return { error: "Merci de remplir tous les champs obligatoires (dont le pays)." };
   }
   if (partnerType !== "INDIVIDUAL" && !orgName) {
     return { error: "Merci d'indiquer le nom de votre organisation." };
@@ -132,6 +133,7 @@ export async function registerAction(_prev: unknown, formData: FormData) {
       email,
       phone,
       city: city || null,
+      country: country || null,
       passwordHash: await hashPassword(password),
       partnerType,
       orgName: orgName || null,

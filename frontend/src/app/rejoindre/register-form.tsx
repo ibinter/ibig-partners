@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useActionState } from "react";
 import { Button, Field } from "@/components/ui";
+import { COUNTRIES } from "@/lib/countries";
 
 type State = { error?: string } | null;
 type Lang = "fr" | "en";
@@ -20,6 +21,9 @@ const STRINGS = {
     email: "Email *",
     phone: "Téléphone *",
     city: "Ville",
+    country: "Pays *",
+    selectCountry: "Sélectionnez votre pays",
+    whatsapp: "Numéro WhatsApp *",
     password: "Mot de passe * (6 caractères min.)",
     sponsor: "Code parrain (facultatif)",
     submit: "Créer mon compte partenaire",
@@ -38,6 +42,9 @@ const STRINGS = {
     email: "Email *",
     phone: "Phone *",
     city: "City",
+    country: "Country *",
+    selectCountry: "Select your country",
+    whatsapp: "WhatsApp number *",
     password: "Password * (min. 6 characters)",
     sponsor: "Referral code (optional)",
     submit: "Create my partner account",
@@ -61,6 +68,10 @@ export default function RegisterForm({
   const [state, formAction, pending] = useActionState<State, FormData>(action, null);
   const [partnerType, setPartnerType] = useState("INDIVIDUAL");
   const isOrg = partnerType !== "INDIVIDUAL";
+  const [country, setCountry] = useState("");
+  const [dial, setDial] = useState("");
+  const [localNum, setLocalNum] = useState("");
+  const fullPhone = `${dial}${dial && localNum ? " " : ""}${localNum}`.trim();
 
   return (
     <form action={formAction} className="mt-6 space-y-4">
@@ -108,8 +119,47 @@ export default function RegisterForm({
         <Field label={t.lastName(isOrg)} name="lastName" required />
       </div>
       <Field label={t.email} name="email" type="email" required />
+
+      {/* Pays (avec indicatif) */}
+      <Field label={t.country}>
+        <select
+          name="country"
+          required
+          value={country}
+          onChange={(e) => {
+            const c = COUNTRIES.find((x) => x.name === e.target.value);
+            setCountry(e.target.value);
+            setDial(c ? c.dial : "");
+          }}
+          className="admin-input w-full"
+        >
+          <option value="">{t.selectCountry}</option>
+          {COUNTRIES.map((c) => (
+            <option key={c.code} value={c.name}>
+              {c.flag} {c.name} ({c.dial})
+            </option>
+          ))}
+        </select>
+      </Field>
+
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label={t.phone} name="phone" required placeholder="+225 07 00 00 00" />
+        {/* Numéro WhatsApp avec indicatif */}
+        <Field label={t.whatsapp}>
+          <div className="flex items-stretch gap-2">
+            <span className="admin-input inline-flex w-16 shrink-0 items-center justify-center bg-slate-50 font-semibold text-slate-600">
+              {dial || "—"}
+            </span>
+            <input
+              inputMode="tel"
+              value={localNum}
+              onChange={(e) => setLocalNum(e.target.value)}
+              placeholder="07 00 00 00 00"
+              required
+              className="admin-input w-full"
+            />
+          </div>
+          <input type="hidden" name="phone" value={fullPhone} />
+        </Field>
         <Field label={t.city} name="city" />
       </div>
       <Field label={t.password} name="password" type="password" required />
