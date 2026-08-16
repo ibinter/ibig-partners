@@ -155,7 +155,9 @@ export default function RegisterForm({
         {/* Numéro WhatsApp avec indicatif */}
         <Field label={t.whatsapp}>
           <div className="flex items-stretch gap-2">
-            <span className="admin-input inline-flex w-16 shrink-0 items-center justify-center bg-slate-50 font-semibold text-slate-600">
+            {/* NB : pas de classe `admin-input` ici — son width:100% écrase le
+                w-16 et écrase l'input du numéro. On reproduit son style à la main. */}
+            <span className="inline-flex w-16 shrink-0 items-center justify-center rounded-[0.6rem] border border-[#dde3ee] bg-slate-50 text-sm font-semibold text-slate-600">
               {dial || "—"}
             </span>
             <input
