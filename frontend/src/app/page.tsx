@@ -42,6 +42,11 @@ const HERO_SLIDES: HeroSlide[] = [
   },
 ];
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL && process.env.NEXT_PUBLIC_SITE_URL.startsWith("https://")
+    ? process.env.NEXT_PUBLIC_SITE_URL
+    : "https://ibigpartners.com";
+
 const POSITIONING: { icon: IconName; title: string; desc: string }[] = [
   { icon: "key",     title: "Un seul compte",        desc: "Accédez à l'ensemble du portefeuille IBIG SARL avec un seul identifiant partenaire." },
   { icon: "network", title: "Réseau 3 niveaux",      desc: "Touchez des commissions sur vos ventes et celles de vos filleuls N2 et N3." },
@@ -102,13 +107,40 @@ function SectionEyebrow({ children, className = "" }: { children: React.ReactNod
 }
 
 export default async function HomePage() {
-  const branches = await prisma.branch.findMany({
-    where: { active: true },
-    orderBy: { order: "asc" },
-  });
+  // Rendu résilient : si la base est indisponible, la page de vente reste en
+  // ligne en mode dégradé (repli vide) plutôt que de renvoyer une erreur 500.
+  let branches: Awaited<ReturnType<typeof prisma.branch.findMany>> = [];
+  try {
+    branches = await prisma.branch.findMany({
+      where: { active: true },
+      orderBy: { order: "asc" },
+    });
+  } catch (err) {
+    console.error("HomePage: chargement des branches impossible, rendu dégradé", err);
+  }
+
+  const orgJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "IBIG PARTNERS",
+    description:
+      "Programme d'affiliation panafricain du Groupe IBIG SARL : accès à 14 logiciels et ERP SaaS, formations, immobilier et services, avec commissions sur 3 niveaux.",
+    url: SITE_URL,
+    logo: `${SITE_URL}/icon-512.png`,
+    parentOrganization: {
+      "@type": "Organization",
+      name: "INTERMARK BUSINESS INTERNATIONAL GROUP SARL (IBIG SARL)",
+    },
+    areaServed: "Afrique et diaspora",
+    sameAs: ["https://ibigsoft.com"],
+  };
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+      />
       <SiteHeader />
 
       {/* ═══════════ HERO ═══════════ */}
