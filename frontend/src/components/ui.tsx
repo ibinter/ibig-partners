@@ -167,7 +167,7 @@ export function PageHeader({
 }
 
 /* ── Button ──────────────────────────────────────────────────────── */
-const BTN_VARIANTS: Record<string, string> = {
+export const BTN_VARIANTS: Record<string, string> = {
   primary:
     "bg-blue-600 text-white shadow-sm hover:bg-blue-700 active:bg-blue-800",
   secondary:
@@ -182,7 +182,7 @@ const BTN_VARIANTS: Record<string, string> = {
     "bg-amber-500 text-white shadow-sm hover:bg-amber-600",
 };
 
-const BTN_SIZES: Record<string, string> = {
+export const BTN_SIZES: Record<string, string> = {
   xs: "rounded-lg px-2.5 py-1    text-xs  font-medium gap-1",
   sm: "rounded-lg px-3   py-1.5  text-xs  font-semibold gap-1.5",
   md: "rounded-xl px-4   py-2.5  text-sm  font-semibold gap-2",

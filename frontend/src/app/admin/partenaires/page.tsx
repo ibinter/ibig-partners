@@ -1,7 +1,8 @@
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { fcfa, formatDate } from "@/lib/format";
-import { Badge, Button, Card, PageHeader, statusTone } from "@/components/ui";
+import { Badge, Card, PageHeader } from "@/components/ui";
+import { SubmitButton } from "@/components/submit-button";
 import { STATUS_LABELS, STATUS_COLORS } from "@/lib/constants";
 import {
   approvePartner,
@@ -44,9 +45,9 @@ export default async function PartenairesPage() {
         action={
           unverified.length > 0 ? (
             <form action={sendVerificationReminderToAll}>
-              <Button type="submit" variant="secondary" size="sm">
+              <SubmitButton variant="secondary" size="sm" pendingLabel="Envoi en cours…">
                 🔐 Rappeler la vérif à tous ({unverified.length})
-              </Button>
+              </SubmitButton>
             </form>
           ) : undefined
         }
@@ -124,37 +125,37 @@ export default async function PartenairesPage() {
                       {p.id !== admin.id && (
                         <form action={adminContact}>
                           <input type="hidden" name="targetUserId" value={p.id} />
-                          <Button type="submit" variant="ghost" size="sm">💬 Contacter</Button>
+                          <SubmitButton variant="ghost" size="sm" pendingLabel="Ouverture…">💬 Contacter</SubmitButton>
                         </form>
                       )}
                       {p.role === "PARTNER" && p.verificationStatus !== "VERIFIED" && (
                         <form action={sendVerificationReminder}>
                           <input type="hidden" name="id" value={p.id} />
-                          <Button type="submit" variant="ghost" size="sm">🔐 Rappel vérif</Button>
+                          <SubmitButton variant="ghost" size="sm" pendingLabel="Envoi…">🔐 Rappel vérif</SubmitButton>
                         </form>
                       )}
                       {!p.approved && (
                         <form action={approvePartner}>
                           <input type="hidden" name="id" value={p.id} />
-                          <Button type="submit" variant="success" size="sm">Valider</Button>
+                          <SubmitButton variant="success" size="sm" pendingLabel="…">Valider</SubmitButton>
                         </form>
                       )}
                       {p.approved && (
                         <form action={setPartnerActive}>
                           <input type="hidden" name="id" value={p.id} />
                           <input type="hidden" name="active" value={(!p.active).toString()} />
-                          <Button type="submit" variant={p.active ? "danger" : "secondary"} size="sm">
+                          <SubmitButton variant={p.active ? "danger" : "secondary"} size="sm" pendingLabel="…">
                             {p.active ? "Suspendre" : "Réactiver"}
-                          </Button>
+                          </SubmitButton>
                         </form>
                       )}
                       {admin.role === "SUPERADMIN" && p.id !== admin.id && (
                         <form action={setPartnerRole}>
                           <input type="hidden" name="id" value={p.id} />
                           <input type="hidden" name="role" value={p.role === "ADMIN" ? "PARTNER" : "ADMIN"} />
-                          <Button type="submit" variant="ghost" size="sm">
+                          <SubmitButton variant="ghost" size="sm" pendingLabel="…">
                             {p.role === "ADMIN" ? "Retirer admin" : "Promouvoir"}
-                          </Button>
+                          </SubmitButton>
                         </form>
                       )}
                     </div>
