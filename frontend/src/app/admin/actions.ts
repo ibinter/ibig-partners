@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { generateCommissionsForSale, recomputeStatus } from "@/lib/sales";
@@ -23,7 +24,7 @@ export async function approvePartner(formData: FormData) {
     data: { approved: true, active: true },
   });
   if (partner.sponsorId) await recomputeStatus(partner.sponsorId);
-  void sendAccountApprovedEmail({ to: partner.email, firstName: partner.firstName, code: partner.code });
+  after(() => sendAccountApprovedEmail({ to: partner.email, firstName: partner.firstName, code: partner.code }));
   void logAction({ userId: admin.id, action: "APPROVE_PARTNER", target: id, detail: partner.email });
   revalidatePath("/admin/partenaires");
 }
@@ -58,7 +59,11 @@ export async function sendVerificationReminder(formData: FormData) {
   });
   await prisma.notification.create({ data: { userId: id, ...VERIF_REMINDER } });
   if (target?.email) {
-    void sendVerificationReminderEmail({ to: target.email, firstName: target.firstName });
+    const to = target.email;
+    const firstName = target.firstName;
+    // after() : l'e-mail part APRÈS la réponse et n'est pas coupé par le
+    // serverless Vercel (contrairement à un `void` fire-and-forget).
+    after(() => sendVerificationReminderEmail({ to, firstName }));
   }
   void logAction({ userId: admin.id, action: "VERIF_REMINDER", target: id });
   revalidatePath("/admin/partenaires");
@@ -75,11 +80,12 @@ export async function sendVerificationReminderToAll() {
     await prisma.notification.createMany({
       data: targets.map((u) => ({ userId: u.id, ...VERIF_REMINDER })),
     });
-    for (const u of targets) {
-      if (u.email) {
-        void sendVerificationReminderEmail({ to: u.email, firstName: u.firstName });
+    const recipients = targets.filter((u) => u.email);
+    after(async () => {
+      for (const u of recipients) {
+        await sendVerificationReminderEmail({ to: u.email, firstName: u.firstName });
       }
-    }
+    });
   }
   void logAction({
     userId: admin.id,
@@ -195,12 +201,9 @@ export async function validateAllPending(formData: FormData) {
       prisma.commission.aggregate({ where: { userId: uid, status: "VALIDATED", payoutId: null }, _sum: { amount: true }, _count: { _all: true } }),
     ]);
     if (user && (agg._sum.amount ?? 0) > 0) {
-      void sendCommissionsValidatedEmail({
-        to: user.email,
-        firstName: user.firstName,
-        totalAmount: agg._sum.amount ?? 0,
-        count: agg._count._all,
-      });
+      const to = user.email, firstName = user.firstName;
+      const totalAmount = agg._sum.amount ?? 0, count = agg._count._all;
+      after(() => sendCommissionsValidatedEmail({ to, firstName, totalAmount, count }));
     }
   }
 
@@ -242,13 +245,13 @@ export async function markPayoutPaid(formData: FormData) {
   });
   await prisma.commission.updateMany({ where: { payoutId: id }, data: { status: "PAID" } });
 
-  void sendPayoutPaidEmail({
+  after(() => sendPayoutPaidEmail({
     to: payout.user.email,
     firstName: payout.user.firstName,
     amount: payout.amount,
     method: payout.method,
     reference,
-  });
+  }));
 
   void logAction({ userId: admin.id, action: "MARK_PAYOUT_PAID", target: id, detail: `${payout.amount} FCFA → ${payout.user.email}` });
   revalidatePath("/admin/paiements");
@@ -414,7 +417,8 @@ export async function sendAnnouncement(formData: FormData) {
     });
     if (partner) {
       await prisma.notification.create({ data: { userId: partner.id, title, body } });
-      void sendAnnouncementEmail({ to: partner.email, firstName: partner.firstName, title, body });
+      const to = partner.email, firstName = partner.firstName;
+      after(() => sendAnnouncementEmail({ to, firstName, title, body }));
     }
   } else {
     // Annonce globale vers tous les partenaires actifs
@@ -423,11 +427,11 @@ export async function sendAnnouncement(formData: FormData) {
       select: { id: true, email: true, firstName: true },
     });
     await prisma.notification.create({ data: { userId: null, title, body } });
-    void Promise.all(
-      targets.map((t) =>
-        sendAnnouncementEmail({ to: t.email, firstName: t.firstName, title, body })
-      )
-    );
+    after(async () => {
+      for (const t of targets) {
+        await sendAnnouncementEmail({ to: t.email, firstName: t.firstName, title, body });
+      }
+    });
   }
 
   revalidatePath("/admin/communication");

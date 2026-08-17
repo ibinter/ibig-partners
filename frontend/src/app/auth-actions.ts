@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import {
   createSession,
@@ -166,7 +167,8 @@ export async function registerAction(_prev: unknown, formData: FormData) {
     const sp = await prisma.user.findUnique({ where: { id: sponsorId }, select: { firstName: true, lastName: true } });
     if (sp) sponsorName = `${sp.firstName} ${sp.lastName}`;
   }
-  void sendWelcomeEmail({ to: email, firstName, code, sponsorName });
+  // after() : l'e-mail part après la réponse et survit au serverless Vercel.
+  after(() => sendWelcomeEmail({ to: email, firstName, code, sponsorName }));
 
   redirect("/espace?bienvenue=1");
 }
