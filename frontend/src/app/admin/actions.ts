@@ -63,7 +63,16 @@ export async function sendVerificationReminder(formData: FormData) {
     const firstName = target.firstName;
     // after() : l'e-mail part APRÈS la réponse et n'est pas coupé par le
     // serverless Vercel (contrairement à un `void` fire-and-forget).
-    after(() => sendVerificationReminderEmail({ to, firstName }));
+    // On journalise le résultat exact de Resend pour diagnostic.
+    after(async () => {
+      const res = await sendVerificationReminderEmail({ to, firstName });
+      await logAction({
+        userId: id,
+        action: res.ok ? "EMAIL_REMINDER_OK" : "EMAIL_REMINDER_FAIL",
+        target: to,
+        detail: res.ok ? `id=${res.id}` : res.error,
+      });
+    });
   }
   void logAction({ userId: admin.id, action: "VERIF_REMINDER", target: id });
   revalidatePath("/admin/partenaires");

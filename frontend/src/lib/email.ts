@@ -15,21 +15,31 @@ const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 // ─── Utilitaire d'envoi ────────────────────────────────────────────────────
 
+export type EmailResult = { ok: boolean; id?: string; error?: string };
+
 async function sendEmail(opts: {
   to: string;
   subject: string;
   html: string;
-}) {
+}): Promise<EmailResult> {
   if (!resend) {
     // En dev, log au lieu d'envoyer
     console.log(`[EMAIL DEV] To: ${opts.to} | Subject: ${opts.subject}`);
-    return;
+    return { ok: false, error: "RESEND_API_KEY absente (mode log / non envoyé)" };
   }
   try {
-    await resend.emails.send({ from: FROM, ...opts });
+    // Le SDK Resend NE throw PAS sur erreur API : il renvoie { data, error }.
+    const { data, error } = await resend.emails.send({ from: FROM, ...opts });
+    if (error) {
+      const msg = `${(error as { name?: string }).name ?? "error"}: ${(error as { message?: string }).message ?? JSON.stringify(error)}`;
+      console.error("[EMAIL API ERROR]", msg);
+      return { ok: false, error: msg };
+    }
+    return { ok: true, id: data?.id };
   } catch (err) {
-    // Ne pas faire planter le flux métier si l'email échoue
-    console.error("[EMAIL ERROR]", err);
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error("[EMAIL EXCEPTION]", msg);
+    return { ok: false, error: msg };
   }
 }
 
@@ -314,7 +324,7 @@ export async function sendPayoutPaidEmail(opts: {
 export async function sendVerificationReminderEmail(opts: {
   to: string;
   firstName: string;
-}) {
+}): Promise<EmailResult> {
   const html = layout(`
     <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
       Vérifiez votre compte pour l'activer 🔐
@@ -348,7 +358,7 @@ export async function sendVerificationReminderEmail(opts: {
     </p>
   `);
 
-  await sendEmail({
+  return sendEmail({
     to: opts.to,
     subject: "Action requise : vérifiez votre compte IBIG PARTNERS",
     html,
