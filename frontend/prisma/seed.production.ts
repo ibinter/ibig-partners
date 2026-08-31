@@ -93,16 +93,57 @@ async function main() {
     },
     {
       slug: "ibig-digital", name: "IBIG DIGITAL",
-      tagline: "Création digitale & Communication visuelle",
-      description: "IBIG DIGITAL est le pôle créatif et communication du groupe IBIG SARL : création de sites web vitrines, identité visuelle, community management, production de contenus digitaux, campagnes publicitaires en ligne et stratégie de marque. Des solutions créatives pour valoriser votre image.",
-      website: "https://intermark-business.com/digital",
-      offerType: "Service créatif & communication", commissionModel: "10% N1 • 5% N2 • 2% N3",
+      tagline: "Sites web, applications, e-commerce & identité visuelle",
+      description: "IBIG DIGITAL (IBIG Software Solutions) est le pôle création & développement digital du groupe IBIG SARL : sites internet professionnels, applications web (PWA) et mobiles Android/iOS, sites e-commerce, identité visuelle (logo + charte), community management, cartes professionnelles digitales et physiques, hébergement, sécurisation et maintenance. Offre globale « Création · Développement · Identité visuelle · Accompagnement ». Tarification indicative, devis personnalisé après étude des besoins.",
+      website: "https://digital.intermark-business.com/",
+      offerType: "Packs & services digitaux (sites, apps, e-commerce, identité visuelle)", commissionModel: "10% N1 • 5% N2 • 2% N3",
       order: 5,
       products: [
-        { slug: "site-vitrine-digital", name: "Site Vitrine Professionnel", pricingType: "PRODUCT", price: 400000, rate: 10 },
-        { slug: "identite-visuelle-digital", name: "Identité Visuelle & Logo", pricingType: "PRODUCT", price: 150000, rate: 10 },
-        { slug: "community-management-digital", name: "Community Management", pricingType: "MONTHLY_SUB", price: 80000, rate: 10 },
-        { slug: "campagne-pub-digital", name: "Campagne Publicitaire", pricingType: "SERVICE", price: 250000, rate: 10 },
+        // ── Packs groupés (prix remisés) ──────────────────────────────
+        { slug: "pack-visibilite", name: "Pack Visibilité", pricingType: "SERVICE", price: 225000, rate: 10,
+          description: "Pour indépendants et TPE qui démarrent. Inclus : logo + mini-charte, carte digitale sécurisée, page Facebook pro, WhatsApp Business. Valeur séparée 275 000 F — économie 50 000 F." },
+        { slug: "pack-lancement-entreprise", name: "Pack Lancement Entreprise", pricingType: "SERVICE", price: 525000, rate: 10,
+          description: "La formule la plus demandée. Inclus : site internet pro (domaine + hébergement 1 an), logo + charte, page Facebook pro, carte digitale, WhatsApp Business, 2 e-mails pro. Valeur séparée 645 000 F — économie 120 000 F." },
+        { slug: "pack-commerce-en-ligne", name: "Pack Commerce en Ligne", pricingType: "SERVICE", price: 850000, rate: 10,
+          description: "Pour vendre en ligne dès la mise en service. Inclus : site e-commerce (domaine + hébergement 1 an), logo + charte, paiement en ligne, SEO initial, page Facebook pro, carte digitale, WhatsApp Business. Valeur séparée 1 050 000 F — économie 200 000 F." },
+        { slug: "pack-mobile-pro", name: "Pack Mobile Pro", pricingType: "SERVICE", price: 1100000, rate: 10,
+          description: "Pour une activité qui passe par une application mobile. Inclus : application Android sur cahier des charges, logo + charte, carte digitale, 3 mois de maintenance. Valeur séparée 1 350 000 F — économie 250 000 F." },
+        { slug: "pack-digital-360", name: "Pack Digital 360", pricingType: "SERVICE", price: 1250000, rate: 10,
+          description: "La formule complète : site + application web (PWA), logo + charte, SEO initial, page Facebook pro, carte digitale, WhatsApp Business, 3 e-mails pro, 3 mois de community management, 3 mois de maintenance. Valeur séparée 1 580 000 F — économie 330 000 F." },
+        // ── Prestations à l'unité ─────────────────────────────────────
+        { slug: "site-internet-pro", name: "Site Internet Professionnel", pricingType: "SERVICE", price: 350000, rate: 10,
+          description: "Site vitrine responsive : design personnalisé, pages clés, contact, WhatsApp, réseaux sociaux, carte de localisation, domaine + hébergement 1 an, SSL, formation et assistance. Délai 7 à 20 jours." },
+        { slug: "site-app-web-pwa", name: "Site + Application Web téléchargeable (PWA)", pricingType: "SERVICE", price: 650000, rate: 10,
+          description: "Site professionnel + application web progressive installable sur smartphone, base de données, espace admin, domaine + hébergement 1 an, SSL. Délai 15 à 30 jours." },
+        { slug: "app-mobile-android", name: "Application Mobile Android", pricingType: "SERVICE", price: 850000, rate: 10,
+          description: "Application Android sur cahier des charges : UX/UI, base de données, interface admin, authentification, notifications, API, hébergement backend 1 an. Prix définitif après analyse du cahier des charges." },
+        { slug: "app-android-ios", name: "Application Android + iOS", pricingType: "SERVICE", price: 1500000, rate: 10,
+          description: "Application multiplateforme Android + iOS : UX/UI, backend, base de données, interface d'administration, API, hébergement 1 an, assistance à la publication (comptes développeurs à la charge du client)." },
+        { slug: "site-ecommerce", name: "Site E-commerce", pricingType: "SERVICE", price: 600000, rate: 10,
+          description: "Boutique en ligne complète : catalogue, prix et stocks, panier, commandes, comptes clients, tableau de bord admin, WhatsApp, paiement en ligne, domaine + hébergement 1 an, SSL." },
+        { slug: "page-facebook-pro", name: "Page Facebook Professionnelle", pricingType: "SERVICE", price: 50000, rate: 10,
+          description: "Création/configuration de page pro : catégorie, visuels de profil et couverture, présentation, bouton d'action, lien WhatsApp, localisation, horaires et paramétrage." },
+        { slug: "community-management", name: "Community Management (Essentiel)", pricingType: "MONTHLY_SUB", price: 100000, rate: 10,
+          description: "Gestion de présence digitale : planification, création et publication de contenus (Facebook, Instagram), animation, réponses, statistiques, rapport mensuel. Formules Standard (150 000 F) et Premium (250 000 F) disponibles." },
+        { slug: "carte-digitale-securisee", name: "Carte Digitale Professionnelle Sécurisée", pricingType: "SERVICE", price: 50000, rate: 10,
+          description: "Carte de visite numérique accessible par smartphone, partageable par lien ou QR Code : identité, contacts, WhatsApp, réseaux sociaux, localisation, interface responsive." },
+        { slug: "carte-physique-securisee", name: "Carte Professionnelle Physique Sécurisée", pricingType: "PRODUCT", price: 15000, rate: 10,
+          description: "Carte physique avec QR Code d'accès aux informations numériques : conception graphique, logo, impression. Prix selon quantité, support, format et finition." },
+        { slug: "logo-charte-graphique", name: "Logo + Charte Graphique", pricingType: "SERVICE", price: 150000, rate: 10,
+          description: "Identité visuelle : recherche créative, logo et déclinaisons (couleur, monochrome, clair/foncé), couleurs et typographies, fichiers web et impression, mini-charte. Charte complète sur devis." },
+        // ── Prestations complémentaires ───────────────────────────────
+        { slug: "seo-initial", name: "Référencement SEO Initial", pricingType: "SERVICE", price: 100000, rate: 10 },
+        { slug: "whatsapp-business", name: "Configuration WhatsApp Business", pricingType: "SERVICE", price: 25000, rate: 10 },
+        { slug: "email-pro", name: "Adresse E-mail Professionnelle", pricingType: "SERVICE", price: 10000, rate: 10,
+          description: "Par adresse." },
+        { slug: "integration-paiement", name: "Intégration Paiement en Ligne", pricingType: "SERVICE", price: 75000, rate: 10 },
+        { slug: "creation-contenu-web", name: "Création de Contenu Web", pricingType: "SERVICE", price: 50000, rate: 10 },
+        { slug: "maintenance-site", name: "Maintenance Site Web", pricingType: "MONTHLY_SUB", price: 75000, rate: 10,
+          description: "Corrections et mises à jour, sauvegardes, surveillance et sécurité, assistance, petites modifications de contenu." },
+        { slug: "maintenance-app", name: "Maintenance Application", pricingType: "MONTHLY_SUB", price: 100000, rate: 10,
+          description: "Surveillance et corrections, maintenance technique, sauvegardes et sécurité, assistance, évolutions mineures." },
+        { slug: "nom-domaine-renouvellement", name: "Nom de Domaine (renouvellement annuel)", pricingType: "ANNUAL_SUB", price: 25000, rate: 10 },
+        { slug: "hebergement-renouvellement", name: "Hébergement (renouvellement annuel)", pricingType: "ANNUAL_SUB", price: 50000, rate: 10 },
       ],
     },
     {
@@ -171,6 +212,22 @@ async function main() {
         create: { ...p, branchId: branch.id },
       });
     }
+  }
+
+  // Anciens produits digitaux génériques, remplacés par l'offre réelle IBIG DIGITAL
+  // (désactivés plutôt que supprimés pour préserver les liens/ventes éventuels).
+  const retiredProductSlugs = [
+    "site-vitrine-digital",
+    "identite-visuelle-digital",
+    "community-management-digital",
+    "campagne-pub-digital",
+  ];
+  const retired = await prisma.product.updateMany({
+    where: { slug: { in: retiredProductSlugs } },
+    data: { active: false },
+  });
+  if (retired.count > 0) {
+    console.log(`   ${retired.count} ancien(s) produit(s) digital(aux) générique(s) désactivé(s).`);
   }
 
   if (!adminPassword) {
