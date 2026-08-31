@@ -133,12 +133,19 @@ export async function declareSale(formData: FormData) {
   const productId = String(formData.get("productId") || "").trim();
   const customerName = String(formData.get("customerName") || "").trim();
   const customerPhone = String(formData.get("customerPhone") || "").trim();
+  const customerEmail = String(formData.get("customerEmail") || "").trim();
   const channel = String(formData.get("channel") || "WhatsApp").trim();
+  const proofNote = String(formData.get("proofNote") || "").trim();
+  const proofUrl = String(formData.get("proofUrl") || "").trim();
+  const amountRaw = Number(formData.get("amount"));
 
   if (!productId || !customerName) return;
 
   const product = await prisma.product.findUnique({ where: { id: productId } });
   if (!product) return;
+
+  // Montant réellement encaissé (l'affilié peut l'ajuster ; défaut = prix produit).
+  const amount = amountRaw > 0 ? Math.round(amountRaw) : product.price;
 
   const count = await prisma.sale.count();
   await prisma.sale.create({
@@ -148,12 +155,33 @@ export async function declareSale(formData: FormData) {
       sellerId: user.id,
       customerName: `${customerName} [${channel}]`,
       customerPhone: customerPhone || null,
-      amount: product.price,
+      customerEmail: customerEmail || null,
+      amount,
       pricingType: product.pricingType,
       status: "PENDING",
-      monthsPaid: 0,
+      // Une vente déclarée = le client a payé au moins la 1re période. Indispensable
+      // pour que la confirmation génère bien les commissions (y compris mensuel).
+      monthsPaid: 1,
+      proofNote: proofNote || null,
+      proofUrl: proofUrl || null,
     },
   });
+
+  // Prévenir les admins qu'une vente attend leur validation (cloche → /admin/ventes).
+  const admins = await prisma.user.findMany({
+    where: { role: { in: ["ADMIN", "SUPERADMIN"] } },
+    select: { id: true },
+  });
+  if (admins.length > 0) {
+    await prisma.notification.createMany({
+      data: admins.map((a) => ({
+        userId: a.id,
+        title: "🧾 Nouvelle vente à valider",
+        body: `${user.firstName} ${user.lastName} a déclaré une vente « ${product.name} » (${amount.toLocaleString("fr-FR")} FCFA). À vérifier et confirmer.`,
+        url: "/admin/ventes",
+      })),
+    });
+  }
 
   revalidatePath("/espace/ventes");
   revalidatePath("/admin/ventes");

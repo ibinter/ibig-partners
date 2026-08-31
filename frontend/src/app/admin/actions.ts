@@ -12,6 +12,7 @@ import {
   sendPayoutPaidEmail,
   sendAnnouncementEmail,
   sendVerificationReminderEmail,
+  sendNewSaleEmail,
 } from "@/lib/email";
 import { logAction } from "@/lib/audit";
 
@@ -150,9 +151,40 @@ export async function createSale(formData: FormData) {
 export async function confirmSale(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("id"));
-  const sale = await prisma.sale.update({ where: { id }, data: { status: "CONFIRMED" } });
+  const sale = await prisma.sale.update({
+    where: { id },
+    data: { status: "CONFIRMED" },
+    include: {
+      product: { select: { name: true } },
+      seller: { select: { id: true, firstName: true, email: true } },
+    },
+  });
   await generateCommissionsForSale(sale.id);
   await recomputeStatus(sale.sellerId);
+
+  // Notifier l'affilié que sa vente déclarée a été validée (cloche + e-mail).
+  await prisma.notification.create({
+    data: {
+      userId: sale.sellerId,
+      title: "🎉 Vente confirmée !",
+      body: `Votre vente « ${sale.product.name} » (${sale.amount.toLocaleString("fr-FR")} FCFA) a été validée. Votre commission est en cours de calcul.`,
+      url: "/espace/commissions",
+    },
+  });
+  if (sale.seller.email) {
+    const to = sale.seller.email;
+    after(() =>
+      sendNewSaleEmail({
+        to,
+        firstName: sale.seller.firstName,
+        productName: sale.product.name,
+        amount: sale.amount,
+        customerName: sale.customerName,
+        reference: sale.reference,
+      }),
+    );
+  }
+
   revalidatePath("/admin/ventes");
   revalidatePath("/admin/commissions");
 }

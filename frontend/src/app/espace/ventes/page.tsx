@@ -1,7 +1,7 @@
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { fcfa, formatDate } from "@/lib/format";
-import { Badge, Card, Field, PageHeader, statusTone } from "@/components/ui";
+import { Badge, Button, Card, Field, PageHeader, statusTone } from "@/components/ui";
 import { SALE_STATUS_LABELS, PRICING_TYPE_LABELS } from "@/lib/constants";
 import { declareSale } from "../actions";
 
@@ -94,8 +94,10 @@ export default async function EspaceVentesPage() {
               ))}
             </select>
           </Field>
+          <Field label="Montant encaissé (FCFA)" name="amount" type="number" placeholder="Auto = prix du produit" />
           <Field label="Nom du client" name="customerName" required placeholder="Ex : Kofi Asante" />
           <Field label="Téléphone client" name="customerPhone" placeholder="Ex : +225 07 01 02 03" />
+          <Field label="E-mail client" name="customerEmail" type="email" placeholder="Pour son reçu (facultatif)" />
           <Field label="Canal de vente" name="channel">
             <select name="channel" className="admin-input">
               <option value="WhatsApp">WhatsApp</option>
@@ -105,17 +107,19 @@ export default async function EspaceVentesPage() {
               <option value="Autre">Autre</option>
             </select>
           </Field>
+          <div className="sm:col-span-2">
+            <Field label="Référence / preuve de paiement" name="proofNote" placeholder="Ex : payé par Orange Money le 12/08, réf. OM123456" />
+          </div>
+          <div className="sm:col-span-2 lg:col-span-4">
+            <Field label="Lien de preuve — capture ou reçu (facultatif)" name="proofUrl" placeholder="Collez un lien (WhatsApp, Google Drive, photo…)" />
+          </div>
           <div className="sm:col-span-2 lg:col-span-4 flex justify-end">
-            <button
-              type="submit"
-              className="rounded-xl bg-brand-600 px-8 py-2.5 text-sm font-bold text-white hover:bg-brand-700 transition shadow"
-            >
-              Soumettre la déclaration →
-            </button>
+            <Button type="submit" size="lg">Soumettre la déclaration →</Button>
           </div>
         </form>
         <p className="mt-3 text-xs text-slate-500">
-          Après soumission, l&apos;équipe IBIG vérifie et confirme la vente sous 24-48h. Vos commissions sont générées à la confirmation.
+          Indiquez le montant réellement encaissé et une preuve (référence ou lien) pour accélérer la validation.
+          L&apos;équipe IBIG vérifie et confirme sous 24-48h ; vos commissions sont générées à la confirmation.
         </p>
       </Card>
 

@@ -202,6 +202,8 @@ model Sale {
   status        String   @default("PENDING") // PENDING | CONFIRMED | CANCELLED
   monthsPaid    Int      @default(1) // nb de mois encaisses (abonnements mensuels)
   providerRef   String?  @unique // id de transaction du processeur (Moneroo) — anti-doublon
+  proofNote     String?  // note / référence de paiement fournie par l'affilié (vente déclarée)
+  proofUrl      String?  // lien vers une preuve (capture, reçu) fournie par l'affilié
   createdAt     DateTime @default(now())
 
   commissions Commission[]

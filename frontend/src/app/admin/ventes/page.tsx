@@ -110,7 +110,20 @@ export default async function VentesPage() {
                     <span className="text-xs text-muted">{PRICING_TYPE_LABELS[s.pricingType]}</span>
                   </td>
                   <td>{s.seller.firstName} {s.seller.lastName}</td>
-                  <td>{s.customerName}</td>
+                  <td>
+                    <p className="text-ink">{s.customerName}</p>
+                    {(s.customerPhone || s.customerEmail) && (
+                      <p className="text-xs text-muted">{[s.customerPhone, s.customerEmail].filter(Boolean).join(" · ")}</p>
+                    )}
+                    {s.proofNote && (
+                      <p className="text-xs text-slate-500 mt-0.5">🧾 {s.proofNote}</p>
+                    )}
+                    {s.proofUrl && (
+                      <a href={s.proofUrl} target="_blank" rel="noreferrer" className="text-xs font-semibold text-brand-600 hover:underline">
+                        Voir la preuve ↗
+                      </a>
+                    )}
+                  </td>
                   <td className="font-semibold text-ink">{fcfa(s.amount)}</td>
                   <td className="text-center">
                     {s.pricingType === "MONTHLY_SUB" ? `${s.monthsPaid}/${MONTHLY_DURATION}` : "—"}
