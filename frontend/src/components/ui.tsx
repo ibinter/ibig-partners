@@ -1,5 +1,10 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { Button, BTN_VARIANTS, BTN_SIZES } from "./button";
+
+// Le bouton (réactif au clic sur soumission) vit dans ./button (client component).
+// On le re-exporte ici pour ne pas changer les imports existants (`@/components/ui`).
+export { Button, BTN_VARIANTS, BTN_SIZES };
 
 /* ── Card ─────────────────────────────────────────────────────────────
    Conteneur universel admin. Pas de hover/translate — c'est une surface
@@ -166,53 +171,10 @@ export function PageHeader({
   );
 }
 
-/* ── Button ──────────────────────────────────────────────────────── */
-export const BTN_VARIANTS: Record<string, string> = {
-  primary:
-    "bg-blue-600 text-white shadow-sm hover:bg-blue-700 active:bg-blue-800",
-  secondary:
-    "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 shadow-sm",
-  ghost:
-    "text-slate-600 hover:bg-slate-100",
-  danger:
-    "bg-rose-600 text-white shadow-sm hover:bg-rose-700 active:bg-rose-800",
-  success:
-    "bg-emerald-600 text-white shadow-sm hover:bg-emerald-700",
-  warning:
-    "bg-amber-500 text-white shadow-sm hover:bg-amber-600",
-};
-
-export const BTN_SIZES: Record<string, string> = {
-  xs: "rounded-lg px-2.5 py-1    text-xs  font-medium gap-1",
-  sm: "rounded-lg px-3   py-1.5  text-xs  font-semibold gap-1.5",
-  md: "rounded-xl px-4   py-2.5  text-sm  font-semibold gap-2",
-  lg: "rounded-xl px-5   py-3    text-sm  font-semibold gap-2",
-};
-
-export function Button({
-  children,
-  type = "button",
-  variant = "primary",
-  size = "md",
-  className = "",
-  ...rest
-}: {
-  children: ReactNode;
-  type?: "submit" | "button";
-  variant?: keyof typeof BTN_VARIANTS;
-  size?: keyof typeof BTN_SIZES;
-  className?: string;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  return (
-    <button
-      type={type}
-      className={`inline-flex items-center justify-center transition-all disabled:opacity-50 ${BTN_VARIANTS[variant]} ${BTN_SIZES[size]} ${className}`}
-      {...rest}
-    >
-      {children}
-    </button>
-  );
-}
+/* ── Button ──────────────────────────────────────────────────────────
+   `Button` et les maps BTN_VARIANTS/BTN_SIZES sont définis dans ./button
+   (client component, réactif au clic) et re-exportés en haut de ce fichier.
+──────────────────────────────────────────────────────────────────────── */
 
 export function LinkButton({
   href,

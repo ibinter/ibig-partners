@@ -248,31 +248,50 @@ export default async function PartnerLandingPage({
                             )}
 
                             {/* Prix */}
-                            <div className="mt-4 flex items-end justify-between gap-3 border-t border-slate-100 pt-3">
-                              <div>
+                            <div className="mt-4 border-t border-slate-100 pt-3">
+                              <div className="mb-3">
                                 <p className="text-xs text-muted">Prix</p>
                                 <p className="text-xl font-extrabold text-ink">
                                   {l.product.price > 0 ? fcfa(l.product.price) : "Sur devis"}
                                 </p>
                               </div>
-                              <div className="flex flex-col gap-2">
-                                {l.product.siteUrl && (
+
+                              {l.product.siteUrl ? (
+                                /* Produit avec sa propre plateforme : paiement naturel sur le
+                                   site officiel (bouton principal), ou paiement direct ici. */
+                                <div className="flex flex-col gap-2">
                                   <a
                                     href={normalizeUrl(l.product.siteUrl)}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-center text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                                    className="rounded-lg bg-brand-600 px-4 py-2.5 text-center text-sm font-bold text-white transition-colors hover:bg-brand-700 shadow-sm"
                                   >
-                                    Découvrir l’offre ↗
+                                    S’abonner sur le site officiel ↗
                                   </a>
-                                )}
-                                <a
-                                  href={`${SITE}/paiement/${l.product.slug}?ref=${partner.code}`}
-                                  className="rounded-lg bg-brand-600 px-4 py-2 text-center text-sm font-bold text-white transition-colors hover:bg-brand-700 shadow-sm"
-                                >
-                                  Commander →
-                                </a>
-                              </div>
+                                  <a
+                                    href={`${SITE}/paiement/${l.product.slug}?ref=${partner.code}`}
+                                    className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-center text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+                                  >
+                                    💳 Ou payer ici (Mobile Money)
+                                  </a>
+                                  <p className="text-center text-[11px] leading-snug text-muted">
+                                    Paiement sur la plateforme officielle du produit, ou directement ici en toute sécurité.
+                                  </p>
+                                </div>
+                              ) : (
+                                /* Service sans site dédié : paiement uniquement sur IBIG PARTNERS. */
+                                <div className="flex flex-col gap-2">
+                                  <a
+                                    href={`${SITE}/paiement/${l.product.slug}?ref=${partner.code}`}
+                                    className="rounded-lg bg-brand-600 px-4 py-2.5 text-center text-sm font-bold text-white transition-colors hover:bg-brand-700 shadow-sm"
+                                  >
+                                    💳 Commander &amp; payer ici →
+                                  </a>
+                                  <p className="text-center text-[11px] leading-snug text-muted">
+                                    Paiement sécurisé (Mobile Money &amp; carte) sur IBIG&nbsp;PARTNERS.
+                                  </p>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
