@@ -196,10 +196,12 @@ model Sale {
   seller        User     @relation(fields: [sellerId], references: [id])
   customerName  String
   customerPhone String?
+  customerEmail String? // e-mail du client (paiement en ligne) — pour le reçu
   amount        Int // montant FCFA paye par le client (par periode si mensuel)
   pricingType   String // snapshot du type au moment de la vente
   status        String   @default("PENDING") // PENDING | CONFIRMED | CANCELLED
   monthsPaid    Int      @default(1) // nb de mois encaisses (abonnements mensuels)
+  providerRef   String?  @unique // id de transaction du processeur (Moneroo) — anti-doublon
   createdAt     DateTime @default(now())
 
   commissions Commission[]

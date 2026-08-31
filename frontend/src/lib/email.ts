@@ -365,6 +365,97 @@ export async function sendVerificationReminderEmail(opts: {
   });
 }
 
+// ─── E-mail : Reçu de paiement au CLIENT ─────────────────────────────────
+
+export async function sendPaymentReceiptEmail(opts: {
+  to: string;
+  customerName: string;
+  productName: string;
+  amount: number;
+  reference: string;
+}): Promise<EmailResult> {
+  const html = layout(`
+    <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
+      Paiement confirmé ✅
+    </h2>
+    <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
+      Bonjour <strong>${opts.customerName}</strong>, nous confirmons la bonne réception
+      de votre paiement. Merci de votre confiance !
+    </p>
+
+    <div style="background:#f0fdf4;border-radius:10px;padding:24px;margin-bottom:24px;border:1px solid #bbf7d0;text-align:center;">
+      <p style="margin:0 0 4px;font-size:13px;color:#166534;text-transform:uppercase;letter-spacing:0.5px;">
+        Montant payé
+      </p>
+      <p style="margin:0;font-size:34px;font-weight:800;color:#15803d;">
+        ${fcfaFmt(opts.amount)}
+      </p>
+    </div>
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+      <tr>
+        <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#5b6577;">Prestation</td>
+        <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f1729;font-weight:600;text-align:right;">${opts.productName}</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#5b6577;">Référence</td>
+        <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;font-size:14px;color:#0f1729;font-weight:600;text-align:right;font-family:monospace;">${opts.reference}</td>
+      </tr>
+    </table>
+
+    <p style="color:#5b6577;font-size:14px;line-height:1.6;">
+      Conservez cette référence comme preuve de paiement. Notre équipe vous
+      contactera pour la suite de votre commande. Pour toute question :
+      <a href="mailto:support@ibigpartners.com" style="color:#0b5fff;">support@ibigpartners.com</a>.
+    </p>
+  `);
+
+  return sendEmail({
+    to: opts.to,
+    subject: `Reçu de paiement — ${opts.reference} · IBIG PARTNERS`,
+    html,
+  });
+}
+
+// ─── E-mail : Nouvelle vente à l'AFFILIÉ ─────────────────────────────────
+
+export async function sendNewSaleEmail(opts: {
+  to: string;
+  firstName: string;
+  productName: string;
+  amount: number;
+  customerName: string;
+  reference: string;
+}): Promise<EmailResult> {
+  const html = layout(`
+    <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
+      🎉 Nouvelle vente confirmée !
+    </h2>
+    <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
+      Félicitations <strong>${opts.firstName}</strong> ! Un client vient de régler
+      une commande via votre lien d'affiliation. Votre commission est en cours de
+      calcul et apparaîtra dans votre espace.
+    </p>
+
+    <div style="background:#f0f4ff;border-radius:10px;padding:20px 24px;margin-bottom:24px;">
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr><td style="padding:6px 0;font-size:14px;color:#5b6577;">Prestation</td><td style="padding:6px 0;font-size:14px;color:#0f1729;font-weight:600;text-align:right;">${opts.productName}</td></tr>
+        <tr><td style="padding:6px 0;font-size:14px;color:#5b6577;">Montant</td><td style="padding:6px 0;font-size:14px;color:#0b5fff;font-weight:700;text-align:right;">${fcfaFmt(opts.amount)}</td></tr>
+        <tr><td style="padding:6px 0;font-size:14px;color:#5b6577;">Client</td><td style="padding:6px 0;font-size:14px;color:#0f1729;font-weight:600;text-align:right;">${opts.customerName}</td></tr>
+        <tr><td style="padding:6px 0;font-size:14px;color:#5b6577;">Référence</td><td style="padding:6px 0;font-size:14px;color:#0f1729;font-weight:600;text-align:right;font-family:monospace;">${opts.reference}</td></tr>
+      </table>
+    </div>
+
+    ${btn("Voir mes commissions", `${SITE}/espace/commissions`)}
+  `);
+
+  return sendEmail({
+    to: opts.to,
+    subject: `🎉 Nouvelle vente ${opts.reference} — ${fcfaFmt(opts.amount)}`,
+    html,
+  });
+}
+
 // ─── E-mail 5 : Annonce de l'équipe ───────────────────────────────────────
 
 export async function sendAnnouncementEmail(opts: {

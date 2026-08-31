@@ -8,9 +8,11 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { after } from "next/server";
 import { createHmac } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { generateCommissionsForSale, recomputeStatus } from "@/lib/sales";
+import { sendPaymentReceiptEmail, sendNewSaleEmail } from "@/lib/email";
 
 function verifySignature(payload: string, signature: string, secret: string): boolean {
   const expected = createHmac("sha256", secret).update(payload).digest("hex");
@@ -83,13 +85,27 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "partenaire introuvable" }, { status: 404 });
   }
 
-  // Récupérer le nom du client depuis le payload Moneroo si disponible
+  // Récupérer le client depuis le payload Moneroo si disponible
   const customer = (data.customer ?? body.customer ?? {}) as {
     first_name?: string;
     last_name?: string;
     email?: string;
+    phone?: string;
   };
   const customerName = [customer.first_name, customer.last_name].filter(Boolean).join(" ") || "Client Moneroo";
+  const customerEmail = customer.email ?? null;
+  const customerPhone = customer.phone ?? null;
+
+  // Identifiant de transaction du processeur — pour éviter les doublons si Moneroo
+  // réémet le webhook (idempotence).
+  const providerRef = String(data.id ?? body.id ?? (data as { transaction_id?: string }).transaction_id ?? "") || null;
+  if (providerRef) {
+    const already = await prisma.sale.findUnique({ where: { providerRef } });
+    if (already) {
+      console.log(`[Moneroo Webhook] Transaction ${providerRef} déjà traitée (vente ${already.reference}) — ignorée.`);
+      return NextResponse.json({ message: "déjà traité", saleId: already.id });
+    }
+  }
 
   const saleAmount = Math.round(amount) || product.price;
   const count = await prisma.sale.count();
@@ -100,6 +116,9 @@ export async function POST(req: NextRequest) {
       productId: product.id,
       sellerId: seller.id,
       customerName,
+      customerEmail,
+      customerPhone,
+      providerRef,
       amount: saleAmount,
       pricingType: product.pricingType,
       status: "CONFIRMED",
@@ -109,6 +128,41 @@ export async function POST(req: NextRequest) {
 
   await generateCommissionsForSale(sale.id);
   await recomputeStatus(seller.id);
+
+  // Notifier l'affilié (cloche) — il est prévenu en temps réel de la vente.
+  await prisma.notification.create({
+    data: {
+      userId: seller.id,
+      title: "🎉 Nouvelle vente confirmée !",
+      body: `Un client (${customerName}) a payé « ${product.name} » — ${saleAmount.toLocaleString("fr-FR")} FCFA. Votre commission est en cours de calcul.`,
+      url: "/espace/commissions",
+    },
+  });
+
+  // E-mails (après la réponse, pour ne pas retarder l'accusé au processeur) :
+  //  - reçu au CLIENT (s'il a fourni un e-mail)
+  //  - alerte "nouvelle vente" à l'AFFILIÉ
+  after(async () => {
+    if (customerEmail) {
+      await sendPaymentReceiptEmail({
+        to: customerEmail,
+        customerName,
+        productName: product.name,
+        amount: saleAmount,
+        reference: sale.reference,
+      });
+    }
+    if (seller.email) {
+      await sendNewSaleEmail({
+        to: seller.email,
+        firstName: seller.firstName,
+        productName: product.name,
+        amount: saleAmount,
+        customerName,
+        reference: sale.reference,
+      });
+    }
+  });
 
   console.log(`[Moneroo] Vente ${sale.reference} créée — ${saleAmount} FCFA — Client: ${customerName} — Vendeur: ${seller.code}`);
   return NextResponse.json({ success: true, saleId: sale.id });
