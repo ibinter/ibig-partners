@@ -1,6 +1,6 @@
 import { prisma } from "./prisma";
 import { computeCommissions } from "./commissions";
-import { STATUS_RULES } from "./constants";
+import { STATUS_RULES, STATUSES, STATUS_LABELS, STATUS_BONUS } from "./constants";
 import { getNetwork, activeTeamCount, directReferralsCount } from "./metrics";
 import { checkAndAwardBadges } from "@/lib/badges";
 import type { PricingType } from "./constants";
@@ -99,10 +99,12 @@ export async function generateCommissionsForSale(saleId: string): Promise<number
  *   Master  → Elite   : 100 ventes + 50 filleuls directs + 100 actifs équipe
  */
 export async function recomputeStatus(userId: string): Promise<string> {
-  const [salesCount, network] = await Promise.all([
+  const [before, salesCount, network] = await Promise.all([
+    prisma.user.findUnique({ where: { id: userId }, select: { status: true } }),
     prisma.sale.count({ where: { sellerId: userId, status: "CONFIRMED" } }),
     getNetwork(userId),
   ]);
+  const oldStatus = before?.status ?? "STARTER";
 
   const direct = directReferralsCount(network);
   const activeTeam = activeTeamCount(network);
@@ -139,6 +141,39 @@ export async function recomputeStatus(userId: string): Promise<string> {
 
   // Attribuer automatiquement les badges mérités (ventes, statut, équipe)
   await checkAndAwardBadges(userId).catch(() => {});
+
+  // ── Notifications de motivation ──────────────────────────────────────
+  const oldIdx = STATUSES.indexOf(oldStatus as (typeof STATUSES)[number]);
+  const newIdx = STATUSES.indexOf(status as (typeof STATUSES)[number]);
+  if (newIdx > oldIdx) {
+    // Montée de statut : célébration + rappel du nouveau bonus.
+    const bonusPct = Math.round((STATUS_BONUS[status] ?? 0) * 100);
+    await prisma.notification
+      .create({
+        data: {
+          userId,
+          title: `🎉 Félicitations, vous êtes ${STATUS_LABELS[status] ?? status} !`,
+          body: `Nouveau palier débloqué. Votre bonus passe à +${bonusPct}% sur toutes vos commissions. Continuez, l'élan est là !`,
+          url: "/espace",
+        },
+      })
+      .catch(() => {});
+  } else if (status === "STARTER") {
+    // Coup de pouce vers Silver (condition = ventes uniquement, donc message fiable).
+    const remaining = STATUS_RULES.SILVER.sales - salesCount;
+    if (remaining >= 1 && remaining <= 2) {
+      await prisma.notification
+        .create({
+          data: {
+            userId,
+            title: "🔥 Bientôt Silver !",
+            body: `Plus que ${remaining} vente${remaining > 1 ? "s" : ""} confirmée${remaining > 1 ? "s" : ""} pour débloquer le statut Silver (+2% sur toutes vos commissions).`,
+            url: "/espace/ventes",
+          },
+        })
+        .catch(() => {});
+    }
+  }
 
   return status;
 }

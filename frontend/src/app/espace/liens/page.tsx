@@ -89,6 +89,7 @@ export default async function LiensPage() {
                   affiliateCode={user.code}
                   partnerName={`${user.firstName} ${user.lastName}`}
                   baseUrl={baseUrl}
+                  link={url}
                   pricingType={link.product.pricingType}
                   price={link.product.price}
                 />

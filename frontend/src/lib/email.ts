@@ -456,6 +456,65 @@ export async function sendNewSaleEmail(opts: {
   });
 }
 
+// ─── E-mail : Résumé hebdomadaire de l'affilié ───────────────────────────
+
+export async function sendWeeklyDigestEmail(opts: {
+  to: string;
+  firstName: string;
+  salesCount: number;
+  salesAmount: number;
+  commissionsAmount: number;
+  statusLabel: string;
+}): Promise<EmailResult> {
+  const active = opts.salesCount > 0 || opts.commissionsAmount > 0;
+  const html = layout(`
+    <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
+      Votre semaine chez IBIG PARTNERS 📊
+    </h2>
+    <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
+      Bonjour <strong>${opts.firstName}</strong>, voici votre récapitulatif des 7 derniers jours.
+    </p>
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:22px;">
+      <tr>
+        <td style="width:33%;background:#f0f4ff;border-radius:10px;padding:16px;text-align:center;">
+          <p style="margin:0;font-size:24px;font-weight:800;color:#0b5fff;">${opts.salesCount}</p>
+          <p style="margin:4px 0 0;font-size:12px;color:#5b6577;">Vente${opts.salesCount > 1 ? "s" : ""}</p>
+        </td>
+        <td style="width:8px;"></td>
+        <td style="width:33%;background:#fffbeb;border-radius:10px;padding:16px;text-align:center;">
+          <p style="margin:0;font-size:20px;font-weight:800;color:#b45309;">${fcfaFmt(opts.commissionsAmount)}</p>
+          <p style="margin:4px 0 0;font-size:12px;color:#92400e;">Commissions gagnées</p>
+        </td>
+        <td style="width:8px;"></td>
+        <td style="width:33%;background:#f0fdf4;border-radius:10px;padding:16px;text-align:center;">
+          <p style="margin:0;font-size:16px;font-weight:800;color:#15803d;">${opts.statusLabel}</p>
+          <p style="margin:4px 0 0;font-size:12px;color:#166534;">Votre statut</p>
+        </td>
+      </tr>
+    </table>
+
+    ${active ? `
+    <p style="color:#5b6577;font-size:14px;line-height:1.6;">
+      Beau travail ! Continuez à partager vos liens pour transformer l'élan en revenus réguliers.
+    </p>` : `
+    <div style="background:#f8fafc;border:1px dashed #cbd5e1;border-radius:10px;padding:16px 18px;margin-bottom:20px;">
+      <p style="margin:0;font-size:14px;color:#475569;">
+        Aucune vente cette semaine — pas de souci, il suffit d'un partage pour démarrer.
+        Envoyez votre lien à 5 contacts sur WhatsApp aujourd'hui : c'est souvent tout ce qu'il faut. 💪
+      </p>
+    </div>`}
+
+    ${btn("Voir mon tableau de bord", `${SITE}/espace`)}
+  `);
+
+  return sendEmail({
+    to: opts.to,
+    subject: `📊 Votre semaine IBIG PARTNERS — ${opts.salesCount} vente${opts.salesCount > 1 ? "s" : ""}, ${fcfaFmt(opts.commissionsAmount)}`,
+    html,
+  });
+}
+
 // ─── E-mail 5 : Annonce de l'équipe ───────────────────────────────────────
 
 export async function sendAnnouncementEmail(opts: {

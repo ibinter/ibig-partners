@@ -12,6 +12,9 @@ interface Props {
   affiliateCode: string;
   partnerName: string;
   baseUrl?: string;
+  /** Lien à partager (par défaut le lien générique du partenaire). Fournir le
+   *  lien produit tracké (/aff/CODE?p=slug) pour un partage ciblé, aligné sur le QR. */
+  link?: string;
   pricingType?: string;
   price?: number;
 }
@@ -21,13 +24,14 @@ export function ViralShare({
   affiliateCode,
   partnerName,
   baseUrl = "https://ibigpartners.com",
+  link: linkProp,
   pricingType = "PRODUCT",
   price,
 }: Props) {
   const [copied, setCopied] = useState(false);
   const [showCustom, setShowCustom] = useState(false);
 
-  const link = `${baseUrl}/aff/${affiliateCode}`;
+  const link = linkProp ?? `${baseUrl}/aff/${affiliateCode}`;
 
   // Génération message optimisé conversion par produit
   const messages = generateMessages({ productName, link, partnerName, pricingType, price });
