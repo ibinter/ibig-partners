@@ -158,11 +158,11 @@ export function DashboardShell({
   const isAdmin = variant === "admin";
 
   return (
-    <div className="flex min-h-screen bg-[#f2f5fb] overflow-x-hidden">
+    <div className="flex h-screen overflow-hidden bg-[#f2f5fb]">
 
       {/* ── Sidebar desktop ── */}
       <aside
-        className={`hidden md:flex shrink-0 flex-col sticky top-0 h-screen overflow-hidden print:hidden transition-all duration-300 ease-in-out ${
+        className={`hidden md:flex shrink-0 flex-col h-full overflow-hidden print:hidden transition-all duration-300 ease-in-out ${
           collapsed ? "w-[68px]" : "w-64"
         } ${isAdmin ? "sidebar-admin" : "border-r border-slate-100 bg-white shadow-sm"}`}
       >
@@ -321,7 +321,7 @@ export function DashboardShell({
       </aside>
 
       {/* ── Contenu principal ── */}
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
 
         {/* Header */}
         <header className="sticky top-0 z-30 flex items-center justify-between border-b border-slate-100 bg-white/90 backdrop-blur-md px-4 py-3 md:px-6 print:hidden shadow-[0_1px_0_0_rgba(0,0,0,0.05)]">
@@ -364,7 +364,7 @@ export function DashboardShell({
           </div>
         </header>
 
-        <main className="dash-surface flex-1 px-4 py-7 md:px-8 md:py-9 animate-fade-in">
+        <main className="dash-surface flex-1 overflow-y-auto px-4 py-7 md:px-8 md:py-9 animate-fade-in">
           {children}
         </main>
       </div>
