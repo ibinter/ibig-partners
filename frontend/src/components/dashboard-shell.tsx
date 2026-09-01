@@ -2,10 +2,66 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Logo } from "@/components/site-chrome";
 import { logoutAction } from "@/app/auth-actions";
 import { STATUS_LABELS } from "@/lib/constants";
+import { CommandPalette } from "@/components/command-palette";
+
+/* ── Scroll-to-top + Offline indicator ── */
+function FloatingWidgets() {
+  const [showTop, setShowTop] = useState(false);
+  const [offline, setOffline] = useState(false);
+  const mainRef = useRef<Element | null>(null);
+
+  useEffect(() => {
+    setOffline(!navigator.onLine);
+    const onOnline  = () => setOffline(false);
+    const onOffline = () => setOffline(true);
+    window.addEventListener("online",  onOnline);
+    window.addEventListener("offline", onOffline);
+
+    // Observe scroll on .dash-surface
+    const el = document.querySelector(".dash-surface");
+    mainRef.current = el;
+    if (!el) return () => { window.removeEventListener("online", onOnline); window.removeEventListener("offline", onOffline); };
+
+    function onScroll() { setShowTop((el as Element).scrollTop > 300); }
+    el.addEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("online", onOnline);
+      window.removeEventListener("offline", onOffline);
+      el.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
+  function scrollTop() {
+    mainRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  return (
+    <>
+      {/* Offline banner */}
+      {offline && (
+        <div className="fixed bottom-4 left-1/2 z-[100] -translate-x-1/2 flex items-center gap-2 rounded-full bg-slate-800 px-4 py-2 text-xs text-white shadow-lg">
+          <span className="h-2 w-2 rounded-full bg-rose-400 animate-pulse" />
+          Hors ligne — vérifiez votre connexion
+        </div>
+      )}
+
+      {/* Scroll-to-top */}
+      {showTop && (
+        <button
+          onClick={scrollTop}
+          title="Retour en haut"
+          className="fixed bottom-6 right-6 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-all duration-150 text-lg"
+        >
+          ↑
+        </button>
+      )}
+    </>
+  );
+}
 
 export type NavItem = {
   href: string;
@@ -170,6 +226,8 @@ export function DashboardShell({
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#f2f5fb]">
+      <CommandPalette />
+      <FloatingWidgets />
 
       {/* ── Sidebar desktop ── */}
       <aside
@@ -375,6 +433,18 @@ export function DashboardShell({
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Ctrl+K hint */}
+            {variant === "partner" && (
+              <button
+                onClick={() => window.dispatchEvent(new KeyboardEvent("keydown", { ctrlKey: true, key: "k", bubbles: true }))}
+                className="hidden md:flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+                title="Ouvrir la recherche"
+              >
+                <span>🔍</span>
+                <span>Rechercher…</span>
+                <kbd className="ml-1 font-mono bg-white border border-slate-200 rounded px-1 text-[10px]">Ctrl K</kbd>
+              </button>
+            )}
             <div className={`hidden sm:flex h-7 items-center rounded-full px-3 text-xs font-semibold ${
               isAdmin ? "bg-brand-50 text-brand-700" : "bg-slate-100 text-slate-600"
             }`}>

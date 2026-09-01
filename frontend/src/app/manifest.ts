@@ -54,6 +54,20 @@ export default function manifest(): MetadataRoute.Manifest {
         url: "/espace/reseau",
         icons: [{ src: "/icon-192.svg", sizes: "192x192" }],
       },
+      {
+        name: "Simulateur",
+        short_name: "Simulateur",
+        description: "Calculer mes commissions potentielles",
+        url: "/espace/simulateur",
+        icons: [{ src: "/icon-192.svg", sizes: "192x192" }],
+      },
+      {
+        name: "Guide démarrage",
+        short_name: "Démarrage",
+        description: "Étapes pour bien démarrer",
+        url: "/espace/bienvenue",
+        icons: [{ src: "/icon-192.svg", sizes: "192x192" }],
+      },
     ],
     screenshots: [],
   };
