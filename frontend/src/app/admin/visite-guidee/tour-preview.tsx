@@ -239,6 +239,40 @@ export default function TourPreview() {
         </div>
       </div>
 
+      {/* KYC */}
+      <div className="rounded-2xl border border-orange-200 bg-orange-50 p-5 flex items-start gap-4">
+        <span className="text-3xl shrink-0">🔐</span>
+        <div className="min-w-0 flex-1">
+          <h3 className="font-bold text-orange-900">KYC — vérification obligatoire pour recevoir les paiements</h3>
+          <p className="text-sm text-orange-800 mt-1 leading-relaxed">
+            Le KYC (Know Your Customer) est l'étape de vérification d'identité et de coordonnées de paiement. Sans KYC valide, les commissions s'accumulent mais aucun virement n'est effectué. Le dossier est traité sous 24 à 48 heures.
+          </p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            {[
+              { icon: "🪪", label: "Pièce d'identité",           desc: "CNI recto/verso ou passeport en cours de validité" },
+              { icon: "📞", label: "Coordonnées de contact",      desc: "Téléphone et adresse vérifiés" },
+              { icon: "💳", label: "Coordonnées de paiement",     desc: "Orange Money, Wave ou coordonnées bancaires" },
+              { icon: "✅", label: "Validation sous 24–48h",      desc: "L'équipe IBIG traite et confirme par notification" },
+            ].map((f) => (
+              <div key={f.label} className="flex items-start gap-2 rounded-xl bg-white/60 px-3 py-2.5">
+                <span className="text-lg shrink-0">{f.icon}</span>
+                <div>
+                  <p className="text-xs font-bold text-orange-900">{f.label}</p>
+                  <p className="text-[11px] text-orange-700 leading-snug">{f.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 rounded-xl border border-orange-300 bg-orange-100 px-4 py-2.5 flex items-start gap-2">
+            <span className="text-base shrink-0">⚠️</span>
+            <p className="text-xs text-orange-800 leading-relaxed">
+              <strong>Sans KYC validé</strong>, les commissions sont bloquées et le retrait self-service est désactivé. C'est la première action prioritaire pour tout nouvel affilié.
+            </p>
+          </div>
+          <p className="mt-3 text-xs text-orange-600">📍 Accessible via <strong>Vérification</strong> dans l'espace affilié. Présenté à l'étape 5 de la visite guidée.</p>
+        </div>
+      </div>
+
       {/* Réseau d'affiliation */}
       <div className="rounded-2xl border border-purple-200 bg-purple-50 p-5 flex items-start gap-4">
         <span className="text-3xl shrink-0">👥</span>
