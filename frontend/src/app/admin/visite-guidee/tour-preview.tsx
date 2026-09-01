@@ -58,6 +58,36 @@ export default function TourPreview() {
         </div>
       </div>
 
+      {/* Résumé des 9 branches */}
+      <div className="rounded-2xl border border-slate-100 bg-white p-6">
+        <h3 className="font-semibold text-slate-800 mb-1">Les 9 branches du groupe IBIG</h3>
+        <p className="text-xs text-slate-400 mb-4">330+ produits & services · commissions sur 3 niveaux (N1 / N2 / N3)</p>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            { icon: "💻", name: "IBIG SOFT",          desc: "14 logiciels de gestion (ERP, CRM, compta…)",    taux: "20 % / 10 % / 5 %" },
+            { icon: "🎓", name: "IBIG EDUFORM",        desc: "10 formations professionnelles certifiées",       taux: "10 % / 5 % / 2,5 %" },
+            { icon: "🏠", name: "IBIG IMMO TRUST",     desc: "Immobilier, gestion locative, investissement",    taux: "10 % / 5 % / 2,5 %" },
+            { icon: "🛒", name: "IBIG MARKET",         desc: "Marketplace produits (alimentation, mode…)",      taux: "8 % / 4 % / 2 %" },
+            { icon: "🌐", name: "IBIG DIGITAL",        desc: "10 services web & marketing digital",             taux: "10 % / 5 % / 2 %" },
+            { icon: "⚙️", name: "IBIG DIGITAL KITS",   desc: "8 services tech (dev web, ERP, cybersécurité)",   taux: "10 % / 5 % / 2 %" },
+            { icon: "📋", name: "IBIG CONSEIL+",       desc: "6 missions de conseil & audit stratégique",       taux: "10 % / 5 % / 2,5 %" },
+            { icon: "🔧", name: "IBIG MULTISERVICES",  desc: "6 services BTP, maintenance, logistique",         taux: "10 % / 5 % / 2 %" },
+            { icon: "🌍", name: "IBIG INTERNATIONAL",  desc: "Commerce international & import-export",          taux: "Sur devis" },
+          ].map((b) => (
+            <div key={b.name} className="flex items-start gap-3 rounded-xl border border-slate-100 bg-slate-50 p-3">
+              <span className="text-2xl shrink-0">{b.icon}</span>
+              <div className="min-w-0">
+                <p className="text-sm font-bold text-slate-800 truncate">{b.name}</p>
+                <p className="text-xs text-slate-500 mt-0.5 leading-snug">{b.desc}</p>
+                <p className="mt-1.5 inline-block rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                  N1 / N2 / N3 : {b.taux}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {show && <OnboardingTour isNewUser={true} />}
     </div>
   );
