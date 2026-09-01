@@ -177,6 +177,36 @@ export default function TourPreview() {
         </div>
       </div>
 
+      {/* Tableau de bord */}
+      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 flex items-start gap-4">
+        <span className="text-3xl shrink-0">📊</span>
+        <div className="min-w-0 flex-1">
+          <h3 className="font-bold text-slate-900">Tableau de bord — toute l'activité en un coup d'œil</h3>
+          <p className="text-sm text-slate-600 mt-1 leading-relaxed">
+            La page d'accueil de l'espace affilié centralise toutes les informations clés en temps réel. Les chiffres se mettent à jour automatiquement à chaque nouvelle vente ou commission.
+          </p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              { icon: "💰", label: "Commissions du mois",      desc: "Montant gagné sur la période en cours" },
+              { icon: "🛒", label: "Ventes récentes",           desc: "Dernières transactions enregistrées" },
+              { icon: "👥", label: "Taille du réseau",          desc: "Nombre de filleuls N1, N2, N3 actifs" },
+              { icon: "🏅", label: "Statut actuel",             desc: "Niveau Starter → Elite et progression" },
+              { icon: "🎯", label: "Objectifs & paliers",       desc: "CA restant pour atteindre le prochain statut" },
+              { icon: "📈", label: "Évolution graphique",       desc: "Courbe des commissions sur les derniers mois" },
+            ].map((f) => (
+              <div key={f.label} className="flex items-start gap-2 rounded-xl bg-white px-3 py-2.5 border border-slate-100">
+                <span className="text-lg shrink-0">{f.icon}</span>
+                <div>
+                  <p className="text-xs font-bold text-slate-800">{f.label}</p>
+                  <p className="text-[11px] text-slate-500 leading-snug">{f.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-xs text-slate-500">📍 Page d'accueil de l'espace affilié (<strong>/espace</strong>). Présenté à l'étape 2 de la visite guidée.</p>
+        </div>
+      </div>
+
       {/* Liens d'affiliation */}
       <div className="rounded-2xl border border-cyan-200 bg-cyan-50 p-5 flex items-start gap-4">
         <span className="text-3xl shrink-0">🔗</span>
