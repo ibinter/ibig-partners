@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const TOTAL_PAGES = 25;
+const TOTAL_PAGES = 26;
 
 export default function ProjetPage() {
   const [loading,setLoading] = useState(false);
@@ -160,7 +160,7 @@ export default function ProjetPage() {
 
       doc.setFontSize(8);
       doc.setTextColor(...GOLD);
-      doc.text(t("Version 1.0 - Juin 2026 - DOCUMENT CONFIDENTIEL"),W / 2,170,{ align: "center"});
+      doc.text(t("Version 2.0 - Septembre 2026 - DOCUMENT CONFIDENTIEL"),W / 2,170,{ align: "center"});
 
       doc.setFontSize(7);
       doc.setTextColor(150,170,210);
@@ -197,25 +197,26 @@ export default function ProjetPage() {
         ["10.",t("IBIG DIGITAL KITS - Technologies et Transformation Numérique"),"9"],
         ["11.",t("IBIG CONSEIL+ - Structuration, Comptabilité et Juridique"),"10"],
         ["12.",t("IBIG MULTISERVICES - Solutions Polyvalentes"),"10"],
-        ["10.",t("Système de Commissions N1/N2/N3"),"10"],
-        ["11.",t("Dégressivité commissions IBIG SOFT mensuel"),"11"],
-        ["12.",t("Simulation de revenus passifs"),"11"],
-        ["13.",t("Statuts Partenaires et Avantages"),"12"],
-        ["14.",t("Gamification et Badges"),"12"],
-        ["15.",t("Plateforme Technologique - Stack et Modules"),"13"],
-        ["16.",t("Sécurité, Conformité et Performance"),"14"],
-        ["17.",t("Processus d'Affiliation"),"15"],
-        ["18.",t("Méthodes de Paiement"),"16"],
-        ["19.",t("Académie IBIG - Formation Intégrée"),"17"],
-        ["20.",t("Coach IA IBIG"),"18"],
-        ["21.",t("Stratégie de Développement 2026-2028"),"19"],
-        ["22.",t("Avantages Concurrentiels"),"20"],
-        ["23.",t("Comparaison avec les alternatives du marché"),"20"],
-        ["24.",t("Cadre Juridique et Conformité"),"21"],
-        ["25.",t("Organisation et Gouvernance"),"22"],
-        ["26.",t("Questions Fréquemment Posées (FAQ)"),"24"],
-        ["27.",t("Contacts et Opportunités de Partenariat"),"25"],
-        ["28.",t("Conclusion"),"25"],
+        ["10.",t("IBIG MULTISERVICES - Solutions Polyvalentes"),"10"],
+        ["11.",t("Système de Commissions N1/N2/N3"),"11"],
+        ["12.",t("Dégressivité commissions IBIG SOFT mensuel"),"12"],
+        ["13.",t("Simulation de revenus passifs"),"12"],
+        ["14.",t("Statuts Partenaires et Avantages"),"13"],
+        ["15.",t("Gamification et Badges"),"13"],
+        ["16.",t("Plateforme Technologique - Stack et Modules"),"14"],
+        ["17.",t("Sécurité, Conformité et Performance"),"15"],
+        ["18.",t("Processus d'Affiliation"),"16"],
+        ["19.",t("Méthodes de Paiement"),"17"],
+        ["20.",t("Académie IBIG - Formation Intégrée"),"18"],
+        ["21.",t("Coach IA IBIG"),"18"],
+        ["22.",t("Stratégie de Développement 2026-2028"),"20"],
+        ["23.",t("Avantages Concurrentiels"),"21"],
+        ["24.",t("Comparaison avec les alternatives du marché"),"21"],
+        ["25.",t("Cadre Juridique et Conformité"),"22"],
+        ["26.",t("Organisation et Gouvernance"),"23"],
+        ["27.",t("Questions Fréquemment Posées (FAQ)"),"24"],
+        ["28.",t("Contacts et Opportunités de Partenariat"),"25"],
+        ["29.",t("Conclusion"),"25"],
       ];
 
       let y = 48;
@@ -548,6 +549,33 @@ export default function ProjetPage() {
       });
       y = (doc as any).lastAutoTable.finalY + 3;
       y = body(t("Site officiel : intermark-business.com/conseil — Commissions : N1=10%, N2=5%, N3=2%"),y);
+      y += 4;
+
+      y = checkPage(y,70);
+      // --- IBIG MULTISERVICES ---
+      y = subTitle(t("IBIG MULTISERVICES - Solutions Polyvalentes"),y);
+      y = body(t("Pôle de services polyvalents à destination des particuliers, PME et institutions : organisation d'événements professionnels et privés, déménagement, maintenance et réparation, logistique last-mile, tourisme d'affaires et transport VIP. IBIG MULTISERVICES est le guichet unique pour tous les besoins de conciergerie B2B et B2C en Afrique de l'Ouest."),y);
+      y += 3;
+
+      autoTable(doc,{
+        startY: y,
+        head: [[t("Service"),t("Description"),t("Tarif indicatif")]],
+        body: [
+          [t("Événementiel Pro"),t("Séminaires, conférences, team building, galas"),"300 000 - 5 000 000 FCFA"],
+          [t("Déménagement & Stockage"),t("Transport national, emballage, garde-meubles"),"100 000 - 1 000 000 FCFA"],
+          [t("Maintenance & Réparation"),t("Électricité, plomberie, climatisation, IT"),"25 000 - 500 000 FCFA"],
+          [t("Logistique Last-Mile"),t("Livraison express, coursiers, transport B2B"),"15 000 - 300 000 FCFA/mission"],
+          [t("Tourisme d'affaires"),t("Visa, hôtel, billets, circuits, transferts"),"Sur devis"],
+          [t("Transport VIP"),t("Chauffeurs privés, véhicules premium"),"50 000 - 300 000 FCFA/jour"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 8 },
+        bodyStyles: { fontSize: 8,textColor: DARK },
+        alternateRowStyles: { fillColor: [248,250,252] },
+        margin: { left: 14,right: 14 },
+        theme: "grid",
+      });
+      y = (doc as any).lastAutoTable.finalY + 3;
+      y = body(t("Site officiel : intermark-business.com/multiservices — Commissions : N1=8%, N2=4%, N3=2%"),y);
 
       // ═══════════════════════════════════════════════════════════
       // PAGE 10-11 — SYSTEME DE COMMISSIONS DETAILLE
@@ -740,7 +768,8 @@ export default function ProjetPage() {
           [t("Coach IA"),t("GPT personnalisé sur produits IBIG"),t("Partenaires")],
           [t("Kit Marketing"),t("Argumentaires, visuels personnalisables"),t("Partenaires")],
           [t("Prospects CRM"),t("Suivi pipeline commercial"),t("Partenaires")],
-          [t("Paiements"),t("Multi-méthodes, historique, virements"),t("Partenaires + Admin")],
+          [t("Paiements"),t("Multi-méthodes, historique, virements, retrait self-service"),t("Partenaires + Admin")],
+          [t("Retrait self-service"),t("Demande de retrait en ligne, validation admin, notifications"),t("Partenaires + Admin")],
           [t("Admin SUPERADMIN"),t("Gestion complète, audit, paramètres"),t("Administrateurs")],
           [t("API Moneroo"),t("Paiements en ligne intégrés"),t("Système")],
         ],
@@ -1312,7 +1341,7 @@ export default function ProjetPage() {
  <h1 className="text-3xl font-bold mb-2">Document de Presentation du Projet</h1>
  <p className="text-blue-200 text-lg mb-1">IBIG PARTNERS — Programme d'Affiliation Panafricain Multi-Niveaux</p>
           <p className="text-blue-300 text-sm">
-            INTERMARK BUSINESS INTERNATIONAL GROUP SARL · Version 1.0 · Juin 2026 · {TOTAL_PAGES} pages · Confidentiel
+            INTERMARK BUSINESS INTERNATIONAL GROUP SARL · Version 2.0 · Septembre 2026 · {TOTAL_PAGES} pages · Confidentiel
           </p>
         </div>
       </div>
@@ -1374,7 +1403,7 @@ export default function ProjetPage() {
             { label: "Format",value: "A4 Portrait"},
             { label: "Pages",value: `${TOTAL_PAGES} pages`},
             { label: "Sections",value: `${sections.length} chapitres`},
-            { label: "Version",value: "Juin 2026"},
+            { label: "Version",value: "Septembre 2026"},
           ].map((item,i) => (
             <div key={i} className="bg-[#0b5fff] text-white rounded-xl p-4">
               <p className="text-2xl font-bold">{item.value}</p>
