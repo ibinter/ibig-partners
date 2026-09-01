@@ -156,7 +156,7 @@ export default function GuidePage() {
       // PAGE 2 — TABLE DES MATIÈRES
       // ═══════════════════════════════════════════════════════════
       newPage();
-      header(2,12);
+      header(2,14);
       footer();
 
       doc.setFillColor(...LIGHT);
@@ -169,18 +169,19 @@ export default function GuidePage() {
       doc.rect(14,36,40,2,"F");
 
       const toc = [
-        ["1.","Présentation d'IBIG PARTNERS","3"],
-        ["2.","Inscription et types de comptes","4"],
-        ["3.","Tableau de bord partenaire","5"],
-        ["4.","Programme d'affiliation - Commissions sur 3 niveaux","6"],
-        ["5.","Catalogue des branches et produits","7"],
-        ["6.","Vérification KYC - Activation des paiements","8"],
-        ["7.","Liens d'affiliation et QR codes","9"],
-        ["8.","Suivi des ventes et commissions","10"],
-        ["9.","Réseau et parrainage","10"],
-        ["10.","Académie IBIG - Formation","11"],
-        ["11.","Espace SUPERADMIN","11"],
-        ["12.","Support, contact et FAQ","12"],
+        ["1.", "Présentation d'IBIG PARTNERS", "3"],
+        ["2.", "Inscription et types de comptes", "4"],
+        ["3.", "Tableau de bord partenaire", "5"],
+        ["4.", "Programme d'affiliation - Commissions sur 3 niveaux", "6"],
+        ["5.", "Catalogue complet des produits par branche", "7"],
+        ["6.", "Vérification KYC - Activation des paiements", "9"],
+        ["7.", "Liens d'affiliation et QR codes", "9"],
+        ["8.", "Suivi des ventes et commissions", "10"],
+        ["9.", "Réseau et parrainage", "11"],
+        ["10.", "Académie IBIG - Formation", "11"],
+        ["11.", "Espace SUPERADMIN", "12"],
+        ["12.", "Badges et récompenses", "13"],
+        ["13.", "Support, contact et FAQ", "13"],
       ];
 
       let y = 50;
@@ -212,7 +213,7 @@ export default function GuidePage() {
       // PAGE 3 — PRÉSENTATION
       // ═══════════════════════════════════════════════════════════
       newPage();
-      header(3,12);
+      header(3,14);
       footer();
 
       let py = 22;
@@ -264,7 +265,7 @@ export default function GuidePage() {
       // PAGE 4 — INSCRIPTION
       // ═══════════════════════════════════════════════════════════
       newPage();
-      header(4,12);
+      header(4,14);
       footer();
 
       py = 22;
@@ -324,7 +325,7 @@ export default function GuidePage() {
       // PAGE 5 — TABLEAU DE BORD
       // ═══════════════════════════════════════════════════════════
       newPage();
-      header(5,12);
+      header(5,14);
       footer();
 
       py = 22;
@@ -352,7 +353,7 @@ export default function GuidePage() {
       ];
 
       sections.forEach(([name,desc]) => {
-        if (py > 260) { newPage(); header(5,12); footer(); py = 22; }
+        if (py > 260) { newPage(); header(5,14); footer(); py = 22; }
         doc.setFillColor(248,250,255);
         doc.roundedRect(14,py - 4,W - 28,14,2,2,"F");
         doc.setFontSize(9);
@@ -370,7 +371,7 @@ export default function GuidePage() {
       // PAGE 6 — COMMISSIONS
       // ═══════════════════════════════════════════════════════════
       newPage();
-      header(6,12);
+      header(6,14);
       footer();
 
       py = 22;
@@ -472,10 +473,241 @@ export default function GuidePage() {
       py = infoBox("Pour les abonnements MENSUELS IBIG SOFT, les commissions sont versées sur 4 mois consécutifs : Mois 1 (taux plein) -> Mois 2 (75%) -> Mois 3 (50%) -> Mois 4 (25%). C'est conçu pour récompenser les partenaires qui fidélisent leurs clients sur la durée.",py,[255,251,235]);
 
       // ═══════════════════════════════════════════════════════════
-      // PAGE 7 — KYC ET LIENS
+      // PAGE 7-8 — CATALOGUE COMPLET DES PRODUITS
       // ═══════════════════════════════════════════════════════════
       newPage();
-      header(7,12);
+      header(7,14);
+      footer();
+
+      py = 22;
+      py = sectionTitle("5. Catalogue Complet des Produits par Branche",py);
+      py = body("Référence complète de tous les produits et services que vous pouvez promouvoir en tant que partenaire IBIG. Les tarifs sont indicatifs. Les commissions s'appliquent sur le montant facturé au client.",py);
+      py += 4;
+
+      // ── IBIG SOFT ──
+      py = subTitle("IBIG SOFT — 14 Logiciels SaaS de Gestion (110+ formules)",py);
+      // @ts-ignore
+      autoTable(doc,{
+        startY: py,
+        head: [["Logiciel","Cible","Starter/mois","Pro/mois","Annuel (dès)","N1"]],
+        body: [
+          ["Scolaby","Établissements scolaires","10 000","20 000","99 600 FCFA","20%"],
+          ["IBIG Fleet 360","Flottes & transport","19 900","35 000","199 000 FCFA","20%"],
+          ["Lokativo","Agences immo / bailleurs","9 900","19 900","99 900 FCFA","20%"],
+          ["GESCOMXEL","PME / commerçants","5 000","12 000","50 000 FCFA","20%"],
+          ["Zelivry","Sociétés de livraison","4 900","9 900","49 000 FCFA","20%"],
+          ["STOCKFLOW ERP","Industries / grandes surfaces","5 000","12 000","50 000 FCFA","20%"],
+          ["CONSTRUIRO ERP","BTP / construction","15 000","28 000","150 000 FCFA","20%"],
+          ["SANTAREX ERP","Cliniques / pharmacies","12 000","22 000","120 000 FCFA","20%"],
+          ["AGRIFRIK","Exploitations agricoles","6 500","13 000","65 000 FCFA","20%"],
+          ["GESTMONEY","Agents Mobile Money","9 900","18 000","99 000 FCFA","20%"],
+          ["ANOUANZÊ ERP","ONG / associations","12 900","22 000","129 000 FCFA","20%"],
+          ["IBIG FactPro","TPE / indépendants","4 900","9 000","49 000 FCFA","20%"],
+          ["SECRETIS ERP","Secrétariats / bureaux","4 900","9 000","49 000 FCFA","20%"],
+          ["IBIG DocPro","Génération documents","Dès 100 F/doc","-","À l'usage","20%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7 },
+        bodyStyles: { fontSize: 7,textColor: DARK },
+        alternateRowStyles: { fillColor: LIGHT },
+        margin: { left: 14,right: 14 },
+        styles: { cellPadding: 2 },
+        columnStyles: { 5: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold",halign: "center" } },
+      });
+      // @ts-ignore
+      py = (doc as any).lastAutoTable.finalY + 3;
+
+      // ── IBIG EDUFORM ──
+      py = subTitle("IBIG EDUFORM — Formations Certifiantes",py);
+      // @ts-ignore
+      autoTable(doc,{
+        startY: py,
+        head: [["Formation","Durée","Prix","N1"]],
+        body: [
+          ["Comptabilité et Finance 4 en 1","3 mois","400 000 FCFA","10%"],
+          ["DAF Dirigeant","3 mois","425 000 FCFA","10%"],
+          ["Expert RH 3 en 1","3 mois","450 000 FCFA","10%"],
+          ["QHSE Expert","2 mois","350 000 FCFA","10%"],
+          ["Logistique et Supply Chain","3 mois","450 000 FCFA","10%"],
+          ["Sage 100 Comptabilité","1 mois","22 500 FCFA","10%"],
+          ["Power BI Avancé","3 semaines","25 000 FCFA","10%"],
+          ["SAP FI (Finance)","6 semaines","35 000 FCFA","10%"],
+          ["Intelligence Artificielle Pro","4 semaines","30 000 FCFA","10%"],
+          ["Canva Pro Design","2 semaines","15 000 FCFA","10%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
+        bodyStyles: { fontSize: 7.5,textColor: DARK },
+        alternateRowStyles: { fillColor: LIGHT },
+        margin: { left: 14,right: 14 },
+        styles: { cellPadding: 2 },
+        columnStyles: { 3: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold",halign: "center" } },
+      });
+      // @ts-ignore
+      py = (doc as any).lastAutoTable.finalY + 5;
+
+      // ── PAGE 8 DU GUIDE ──
+      newPage();
+      header(8,14);
+      footer();
+      py = 22;
+
+      // ── IBIG IMMO TRUST ──
+      py = subTitle("IBIG IMMO TRUST — N1=10% · N2=5% · N3=2,5%",py);
+      // @ts-ignore
+      autoTable(doc,{
+        startY: py,
+        head: [["Service","Base de calcul","Valeur exemple","N1","N2","N3"]],
+        body: [
+          ["Achat / Vente immobilière","Commission agence","1 000 000 FCFA","10%","5%","2,5%"],
+          ["Gestion Locative Garantie","1 mois d'agence","150 000 FCFA","10%","5%","2,5%"],
+          ["Construction Clé en Main","Budget construction","50 000 000 FCFA","10%","5%","2,5%"],
+          ["Rénovation & Réhabilitation","Budget travaux","5 000 000 FCFA","10%","5%","2,5%"],
+          ["Service Diaspora","Valeur du projet","Sur devis","10%","5%","2,5%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
+        bodyStyles: { fontSize: 7.5,textColor: DARK },
+        alternateRowStyles: { fillColor: LIGHT },
+        margin: { left: 14,right: 14 },
+        styles: { cellPadding: 2.5 },
+        columnStyles: {
+          3: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold",halign: "center" },
+          4: { textColor: [0,100,200] as [number,number,number],halign: "center" },
+          5: { textColor: GRAY,halign: "center" },
+        },
+      });
+      // @ts-ignore
+      py = (doc as any).lastAutoTable.finalY + 4;
+
+      // ── IBIG MARKET ──
+      py = subTitle("IBIG MARKET — N1=8% · N2=4% · N3=2%",py);
+      // @ts-ignore
+      autoTable(doc,{
+        startY: py,
+        head: [["Catégorie","Exemples de produits","Gamme de prix","N1"]],
+        body: [
+          ["Matériel informatique","Ordinateurs, imprimantes, réseaux, accessoires","50 000 - 2 000 000 FCFA","8%"],
+          ["Mobilier professionnel","Bureaux, chaises ergonomiques, cloisons","25 000 - 5 000 000 FCFA","8%"],
+          ["Fournitures de bureau","Papeterie, consommables, archivage","5 000 - 500 000 FCFA","8%"],
+          ["Matériel BTP","Outils, matériaux, équipements chantier","10 000 - 10 000 000 FCFA","8%"],
+          ["Équipement multimédia","Écrans, projecteurs, systèmes son","100 000 - 3 000 000 FCFA","8%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
+        bodyStyles: { fontSize: 7.5,textColor: DARK },
+        alternateRowStyles: { fillColor: LIGHT },
+        margin: { left: 14,right: 14 },
+        styles: { cellPadding: 2.5 },
+        columnStyles: { 3: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold",halign: "center" } },
+      });
+      // @ts-ignore
+      py = (doc as any).lastAutoTable.finalY + 4;
+
+      // ── IBIG DIGITAL ──
+      py = subTitle("IBIG DIGITAL — N1=10% · N2=5% · N3=2%",py);
+      // @ts-ignore
+      autoTable(doc,{
+        startY: py,
+        head: [["Service","Tarif indicatif","N1"]],
+        body: [
+          ["Site Vitrine Professionnel","300 000 - 800 000 FCFA","10%"],
+          ["Site E-commerce","500 000 - 1 500 000 FCFA","10%"],
+          ["Refonte de Site Web","200 000 - 600 000 FCFA","10%"],
+          ["Identité Visuelle & Logo","100 000 - 400 000 FCFA","10%"],
+          ["Production Photo & Vidéo Pro","150 000 - 800 000 FCFA","10%"],
+          ["Community Management","50 000 - 150 000 FCFA/mois","10%"],
+          ["Campagne Publicitaire (Meta/Google/TikTok Ads)","150 000 - 500 000 FCFA","10%"],
+          ["Email Marketing & Automation","75 000 - 200 000 FCFA/mois","10%"],
+          ["Stratégie Contenu & SEO","100 000 - 300 000 FCFA/mois","10%"],
+          ["Formation Réseaux Sociaux","75 000 - 200 000 FCFA","10%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
+        bodyStyles: { fontSize: 7.5,textColor: DARK },
+        alternateRowStyles: { fillColor: LIGHT },
+        margin: { left: 14,right: 14 },
+        styles: { cellPadding: 2 },
+        columnStyles: { 2: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold",halign: "center" } },
+      });
+      // @ts-ignore
+      py = (doc as any).lastAutoTable.finalY + 4;
+
+      // ── IBIG DIGITAL KITS ──
+      py = subTitle("IBIG DIGITAL KITS — N1=10% · N2=5% · N3=2%",py);
+      // @ts-ignore
+      autoTable(doc,{
+        startY: py,
+        head: [["Service","Tarif indicatif","N1"]],
+        body: [
+          ["Intégration ERP (SAP/SAGE/Odoo/IBIG SOFT)","800 000 - 10 000 000 FCFA","10%"],
+          ["Développement Web Sur Mesure","500 000 - 3 000 000 FCFA","10%"],
+          ["Application Mobile iOS & Android","1 000 000 - 5 000 000 FCFA","10%"],
+          ["Chatbot & Intelligence Artificielle","300 000 - 1 000 000 FCFA","10%"],
+          ["GED & Digitalisation des Processus","500 000 - 3 000 000 FCFA","10%"],
+          ["Kit Marketing Digital (SEO + Analytics + Emailing)","100 000 - 300 000 FCFA/mois","10%"],
+          ["Formation ERP & Outils Numériques","50 000 - 300 000 FCFA","10%"],
+          ["Cybersécurité & Audit Système d'Information","500 000 - 2 000 000 FCFA","10%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
+        bodyStyles: { fontSize: 7.5,textColor: DARK },
+        alternateRowStyles: { fillColor: LIGHT },
+        margin: { left: 14,right: 14 },
+        styles: { cellPadding: 2 },
+        columnStyles: { 2: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold",halign: "center" } },
+      });
+      // @ts-ignore
+      py = (doc as any).lastAutoTable.finalY + 4;
+
+      // ── IBIG CONSEIL+ ──
+      py = subTitle("IBIG CONSEIL+ — N1=10% · N2=5% · N3=2%",py);
+      // @ts-ignore
+      autoTable(doc,{
+        startY: py,
+        head: [["Service","Tarif indicatif","N1"]],
+        body: [
+          ["Audit Organisationnel","500 000 - 2 000 000 FCFA","10%"],
+          ["Conseil Stratégique","500 000 - 3 000 000 FCFA","10%"],
+          ["Ingénierie Financière","1 000 000 - 5 000 000 FCFA","10%"],
+          ["Création d'Entreprise (RCCM, NIF, statuts)","150 000 - 500 000 FCFA","10%"],
+          ["Étude de Marché","300 000 - 1 500 000 FCFA","10%"],
+          ["Conformité Juridique OHADA","500 000 - 3 000 000 FCFA","10%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
+        bodyStyles: { fontSize: 7.5,textColor: DARK },
+        alternateRowStyles: { fillColor: LIGHT },
+        margin: { left: 14,right: 14 },
+        styles: { cellPadding: 2 },
+        columnStyles: { 2: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold",halign: "center" } },
+      });
+      // @ts-ignore
+      py = (doc as any).lastAutoTable.finalY + 4;
+
+      // ── IBIG MULTISERVICES ──
+      py = subTitle("IBIG MULTISERVICES — N1=10% · N2=5% · N3=2%",py);
+      // @ts-ignore
+      autoTable(doc,{
+        startY: py,
+        head: [["Service","Tarif indicatif","N1"]],
+        body: [
+          ["Événementiel Professionnel","300 000 - 5 000 000 FCFA","10%"],
+          ["Déménagement & Stockage","100 000 - 1 000 000 FCFA","10%"],
+          ["Maintenance & Réparation","25 000 - 500 000 FCFA","10%"],
+          ["Logistique Last-Mile","15 000 - 300 000 FCFA/mission","10%"],
+          ["Tourisme d'Affaires","Sur devis","10%"],
+          ["Transport VIP","50 000 - 300 000 FCFA/jour","10%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
+        bodyStyles: { fontSize: 7.5,textColor: DARK },
+        alternateRowStyles: { fillColor: LIGHT },
+        margin: { left: 14,right: 14 },
+        styles: { cellPadding: 2 },
+        columnStyles: { 2: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold",halign: "center" } },
+      });
+      // @ts-ignore
+      py = (doc as any).lastAutoTable.finalY + 4;
+      py = infoBox("Catalogue complet : 9 branches · 14 logiciels SaaS · 10 formations certifiantes · 5 services immobiliers · 5 catégories commerce · 10 services digitaux · 8 solutions numériques · 6 missions conseil · 6 services polyvalents = 330+ produits et formules disponibles à promouvoir.",py,[235,255,245]);
+
+      // ═══════════════════════════════════════════════════════════
+      // PAGE 9 — KYC ET LIENS
+      // ═══════════════════════════════════════════════════════════
+      newPage();
+      header(9,14);
       footer();
 
       py = 22;
@@ -531,7 +763,7 @@ export default function GuidePage() {
       // PAGE 8 — VENTES ET COMMISSIONS SUIVI
       // ═══════════════════════════════════════════════════════════
       newPage();
-      header(8,12);
+      header(10,14);
       footer();
 
       py = 22;
@@ -617,7 +849,7 @@ export default function GuidePage() {
       // PAGE 9 — RÉSEAU + ACADÉMIE
       // ═══════════════════════════════════════════════════════════
       newPage();
-      header(9,12);
+      header(11,14);
       footer();
 
       py = 22;
@@ -673,7 +905,7 @@ export default function GuidePage() {
         ["Coach IA IBIG","Assistant personnel intelligent formé spécifiquement sur les valeurs, produits et processus d'IBIG PARTNERS."],
       ];
       academy.forEach(([icon,desc]) => {
-        if (py > 265) { newPage(); header(9,12); footer(); py = 22; }
+        if (py > 265) { newPage(); header(11,14); footer(); py = 22; }
         doc.setFillColor(240,245,255);
         doc.roundedRect(14,py - 3,W - 28,13,2,2,"F");
         doc.setFontSize(9);
@@ -691,7 +923,7 @@ export default function GuidePage() {
       // PAGE 10 — ESPACE SUPERADMIN
       // ═══════════════════════════════════════════════════════════
       newPage();
-      header(10,12);
+      header(12,14);
       footer();
 
       py = 22;
@@ -741,7 +973,7 @@ export default function GuidePage() {
       // PAGE 11 — BADGES + FAQ
       // ═══════════════════════════════════════════════════════════
       newPage();
-      header(11,12);
+      header(13,14);
       footer();
 
       py = 22;
@@ -811,7 +1043,7 @@ export default function GuidePage() {
         ["Comment signaler un problème technique ?","Utilisez la section « Support » dans votre espace (tickets), envoyez un email à support@ibigpartners.com ou contactez-nous sur WhatsApp."],
       ];
       faq.forEach(([q,a]) => {
-        if (py > 255) { newPage(); header(11,12); footer(); py = 22; }
+        if (py > 255) { newPage(); header(13,14); footer(); py = 22; }
         doc.setFillColor(239,246,255);
         doc.roundedRect(14,py,W - 28,4,1,1,"F");
         doc.setFontSize(9);
@@ -831,7 +1063,7 @@ export default function GuidePage() {
       // PAGE 12 — CONCLUSION
       // ═══════════════════════════════════════════════════════════
       newPage();
-      header(12,12);
+      header(14,14);
       footer();
 
       // Fond premium
@@ -895,14 +1127,15 @@ export default function GuidePage() {
     { num: "02", title: "Inscription & Types de comptes", desc: "Particulier, entreprise, ONG — processus étape par étape", icon: "✍️" },
     { num: "03", title: "Tableau de bord",                desc: "Vue d'ensemble, KPIs temps réel, alertes, navigation",     icon: "📊" },
     { num: "04", title: "Commissions N1/N2/N3",           desc: "Taux par branche, statuts, bonus, dégressivité SOFT",      icon: "💰" },
-    { num: "05", title: "Catalogue produits",             desc: "14 ERP SOFT, formations, immo, market, digital…",          icon: "📦" },
-    { num: "06", title: "KYC & Activation paiements",    desc: "Vérification identité, étapes, délais, méthodes",          icon: "🔐" },
+    { num: "05", title: "Catalogue des produits",          desc: "330+ produits : 14 ERP, 10 formations, immo, market, digital, kits, conseil, multiservices", icon: "📦" },
+    { num: "06", title: "KYC & Activation paiements",     desc: "Vérification identité, étapes, délais, méthodes",          icon: "🔐" },
     { num: "07", title: "Liens & QR codes",               desc: "Génération, cookie 90j, partage WhatsApp/réseaux",         icon: "🔗" },
     { num: "08", title: "Ventes, commissions & retrait",  desc: "Cycle vente, statuts, retrait self-service, virements",    icon: "💳" },
     { num: "09", title: "Réseau & parrainage",            desc: "Arbre 3 niveaux, prospects, opportunités, classement",     icon: "🌐" },
     { num: "10", title: "Académie IBIG",                  desc: "Articles, vidéos, audios, images, quiz, Coach IA 24/7",    icon: "🎓" },
     { num: "11", title: "Espace SUPERADMIN",              desc: "Gestion partenaires, KYC, ventes, paiements, audit",       icon: "⚙️" },
-    { num: "12", title: "Badges, FAQ & contacts",         desc: "Récompenses, questions fréquentes, canaux support",        icon: "🏆" },
+    { num: "12", title: "Badges & récompenses",           desc: "Jalons, badges automatiques, gamification du programme",   icon: "🏅" },
+    { num: "13", title: "FAQ & contacts",                 desc: "Questions fréquentes, canaux support, équipe IBIG",        icon: "🏆" },
   ];
 
   return (
@@ -918,7 +1151,7 @@ export default function GuidePage() {
               <h1 className="text-2xl font-extrabold text-white tracking-tight">Guide Utilisateur Officiel</h1>
               <p className="text-yellow-400 font-bold text-base mt-1">IBIG PARTNERS — Programme d&apos;Affiliation Panafricain</p>
               <div className="flex flex-wrap gap-3 mt-3 text-xs text-blue-200">
-                <span>📄 12 pages A4</span>
+                <span>📄 14 pages A4</span>
                 <span>📅 Version 2.0 · Septembre 2026</span>
                 <span>🔒 Document confidentiel</span>
               </div>
@@ -951,7 +1184,7 @@ export default function GuidePage() {
 
       {/* Chapitres */}
       <div>
-        <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Contenu du guide — 12 chapitres</p>
+        <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Contenu du guide — 13 chapitres</p>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {chapters.map((c) => (
             <div key={c.num} className="flex items-start gap-3 rounded-xl bg-white border border-slate-100 shadow-sm p-4 hover:shadow-md transition-shadow">
