@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-const TOTAL_PAGES = 26;
+const TOTAL_PAGES = 28;
 
 export default function ProjetPage() {
   const [loading,setLoading] = useState(false);
@@ -197,25 +197,26 @@ export default function ProjetPage() {
         ["10.", t("IBIG DIGITAL KITS - Technologies et Transformation Numérique"), "10"],
         ["11.", t("IBIG CONSEIL+ - Structuration, Comptabilité et Juridique"), "10"],
         ["12.", t("IBIG MULTISERVICES - Solutions et Services Polyvalents"), "11"],
-        ["13.", t("Système de Commissions N1/N2/N3"), "12"],
-        ["14.", t("Dégressivité des commissions IBIG SOFT mensuel"), "13"],
-        ["15.", t("Simulation de revenus passifs"), "13"],
-        ["16.", t("Statuts Partenaires et Avantages"), "14"],
-        ["17.", t("Gamification et Badges"), "14"],
-        ["18.", t("Plateforme Technologique - Stack et Modules"), "15"],
-        ["19.", t("Sécurité, Conformité et Performance"), "16"],
-        ["20.", t("Processus d'Affiliation"), "17"],
-        ["21.", t("Méthodes de Paiement et Retrait"), "18"],
-        ["22.", t("Académie IBIG - Formation Intégrée"), "19"],
-        ["23.", t("Coach IA IBIG"), "19"],
-        ["24.", t("Stratégie de Développement 2026-2028"), "20"],
-        ["25.", t("Avantages Concurrentiels"), "21"],
-        ["26.", t("Comparaison avec les alternatives du marché"), "21"],
-        ["27.", t("Cadre Juridique et Conformité"), "22"],
-        ["28.", t("Organisation et Gouvernance"), "23"],
-        ["29.", t("Questions Fréquemment Posées (FAQ)"), "24"],
-        ["30.", t("Contacts et Opportunités de Partenariat"), "25"],
-        ["31.", t("Conclusion"), "26"],
+        ["13.", t("Catalogue Complet des Produits par Branche"), "12"],
+        ["14.", t("Système de Commissions N1/N2/N3"), "14"],
+        ["15.", t("Dégressivité des commissions IBIG SOFT mensuel"), "15"],
+        ["16.", t("Simulation de revenus passifs"), "15"],
+        ["17.", t("Statuts Partenaires et Avantages"), "16"],
+        ["18.", t("Gamification et Badges"), "16"],
+        ["19.", t("Plateforme Technologique - Stack et Modules"), "17"],
+        ["20.", t("Sécurité, Conformité et Performance"), "18"],
+        ["21.", t("Processus d'Affiliation"), "19"],
+        ["22.", t("Méthodes de Paiement et Retrait"), "20"],
+        ["23.", t("Académie IBIG - Formation Intégrée"), "21"],
+        ["24.", t("Coach IA IBIG"), "21"],
+        ["25.", t("Stratégie de Développement 2026-2028"), "22"],
+        ["26.", t("Avantages Concurrentiels"), "23"],
+        ["27.", t("Comparaison avec les alternatives du marché"), "23"],
+        ["28.", t("Cadre Juridique et Conformité"), "24"],
+        ["29.", t("Organisation et Gouvernance"), "25"],
+        ["30.", t("Questions Fréquemment Posées (FAQ)"), "26"],
+        ["31.", t("Contacts et Opportunités de Partenariat"), "27"],
+        ["32.", t("Conclusion"), "28"],
       ];
 
       let y = 48;
@@ -584,6 +585,230 @@ export default function ProjetPage() {
       });
       y = (doc as any).lastAutoTable.finalY + 3;
       y = body(t("Site officiel : intermark-business.com/multiservices — Commissions : N1=10%, N2=5%, N3=2%"),y);
+
+      // ═══════════════════════════════════════════════════════════
+      // PAGE 12-13 — CATALOGUE COMPLET DES PRODUITS
+      // ═══════════════════════════════════════════════════════════
+      newPage();
+      header(pageNum,TOTAL_PAGES);
+      footer();
+      y = 22;
+      y = sectionTitle(t("Catalogue Complet des Produits par Branche"),y);
+
+      y = body(t("Ce catalogue de référence liste l'ensemble des produits et services commercialisables par les partenaires affiliés IBIG. Les tarifs sont indicatifs et peuvent varier selon les options choisies par le client. Les commissions s'appliquent sur le montant hors taxes facturé."),y);
+      y += 4;
+
+      // ── IBIG SOFT ──
+      y = checkPage(y,60);
+      y = subTitle(t("IBIG SOFT — 14 Logiciels SaaS de Gestion (110+ formules)"),y);
+      autoTable(doc,{
+        startY: y,
+        head: [[t("Logiciel"),t("Cible métier"),t("Starter/mois"),t("Pro/mois"),t("Entreprise/mois"),t("Annuel (dès)"),t("Comm. N1")]],
+        body: [
+          ["Scolaby",t("Établissements scolaires"),"10 000","20 000","35 000","99 600","20%"],
+          ["IBIG Fleet 360",t("Flottes & transport"),"19 900","35 000","55 000","199 000","20%"],
+          ["Lokativo",t("Agences immo / bailleurs"),"9 900","19 900","35 000","99 900","20%"],
+          ["GESCOMXEL",t("PME / commerçants"),"5 000","12 000","25 000","50 000","20%"],
+          ["Zelivry",t("Sociétés de livraison"),"4 900","9 900","18 000","49 000","20%"],
+          ["STOCKFLOW ERP",t("Industries / grandes surfaces"),"5 000","12 000","22 000","50 000","20%"],
+          ["CONSTRUIRO ERP",t("BTP / construction"),"15 000","28 000","45 000","150 000","20%"],
+          ["SANTAREX ERP",t("Cliniques / pharmacies"),"12 000","22 000","38 000","120 000","20%"],
+          ["AGRIFRIK",t("Exploitations agricoles"),"6 500","13 000","22 000","65 000","20%"],
+          ["GESTMONEY",t("Agents Mobile Money"),"9 900","18 000","30 000","99 000","20%"],
+          ["ANOUANZÊ ERP",t("ONG / associations"),"12 900","22 000","35 000","129 000","20%"],
+          ["IBIG FactPro",t("TPE / indépendants"),"4 900","9 000","15 000","49 000","20%"],
+          ["SECRETIS ERP",t("Secrétariats / bureaux"),"4 900","9 000","15 000","49 000","20%"],
+          ["IBIG DocPro",t("Génération documents"),t("Dès 100 F/doc"),"-","-",t("À l'usage"),"20%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7 },
+        bodyStyles: { fontSize: 7,textColor: DARK },
+        alternateRowStyles: { fillColor: [248,250,252] },
+        margin: { left: 14,right: 14 },
+        theme: "grid",
+        columnStyles: { 6: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold" } },
+      });
+      y = (doc as any).lastAutoTable.finalY + 3;
+      y = infoBox(t("IBIG SOFT mensuel : commissions sur 4 mois dégressifs (100%→75%→50%→25%). IBIG SOFT annuel : commission one-shot N1=20%, N2=8%, N3=3%."),y);
+      y += 3;
+
+      // ── IBIG EDUFORM ──
+      y = checkPage(y,60);
+      y = subTitle(t("IBIG EDUFORM — Formations Professionnelles Certifiantes"),y);
+      autoTable(doc,{
+        startY: y,
+        head: [[t("Formation"),t("Durée"),t("Prix"),t("Certification"),t("Comm. N1")]],
+        body: [
+          [t("Comptabilité et Finance 4 en 1"),"3 mois","400 000 FCFA",t("Attestation IBIG"),"10%"],
+          [t("DAF Dirigeant"),"3 mois","425 000 FCFA",t("Attestation IBIG"),"10%"],
+          [t("Expert RH 3 en 1"),"3 mois","450 000 FCFA",t("Attestation IBIG"),"10%"],
+          [t("QHSE Expert"),"2 mois","350 000 FCFA",t("Attestation IBIG"),"10%"],
+          [t("Logistique et Supply Chain"),"3 mois","450 000 FCFA",t("Attestation IBIG"),"10%"],
+          [t("Sage 100 Comptabilité"),"1 mois","22 500 FCFA",t("Attestation IBIG"),"10%"],
+          [t("Power BI Avancé"),"3 semaines","25 000 FCFA",t("Attestation IBIG"),"10%"],
+          [t("SAP FI (Finance)"),"6 semaines","35 000 FCFA",t("Attestation IBIG"),"10%"],
+          [t("Intelligence Artificielle Pro"),"4 semaines","30 000 FCFA",t("Attestation IBIG"),"10%"],
+          [t("Canva Pro Design"),"2 semaines","15 000 FCFA",t("Attestation IBIG"),"10%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
+        bodyStyles: { fontSize: 7.5,textColor: DARK },
+        alternateRowStyles: { fillColor: [248,250,252] },
+        margin: { left: 14,right: 14 },
+        theme: "grid",
+        columnStyles: { 4: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold" } },
+      });
+      y = (doc as any).lastAutoTable.finalY + 5;
+
+      // ── PAGE 2 DU CATALOGUE ──
+      newPage();
+      header(pageNum,TOTAL_PAGES);
+      footer();
+      y = 22;
+
+      // ── IBIG IMMO TRUST ──
+      y = subTitle(t("IBIG IMMO TRUST — Immobilier, BTP et Gestion Locative"),y);
+      autoTable(doc,{
+        startY: y,
+        head: [[t("Service"),t("Base de calcul"),t("Exemple de valeur"),t("Comm. N1"),t("Comm. N2"),t("Comm. N3")]],
+        body: [
+          [t("Achat / Vente immobilière"),t("Commission agence"),t("1 000 000 FCFA"),"10%","5%","2,5%"],
+          [t("Gestion Locative Garantie"),t("1 mois d'agence"),t("150 000 FCFA"),"10%","5%","2,5%"],
+          [t("Construction Clé en Main"),t("Budget construction"),t("50 000 000 FCFA"),"10%","5%","2,5%"],
+          [t("Rénovation et Réhabilitation"),t("Budget travaux"),t("5 000 000 FCFA"),"10%","5%","2,5%"],
+          [t("Service Diaspora"),t("Valeur du projet"),t("Sur devis"),"10%","5%","2,5%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
+        bodyStyles: { fontSize: 7.5,textColor: DARK },
+        alternateRowStyles: { fillColor: [248,250,252] },
+        margin: { left: 14,right: 14 },
+        theme: "grid",
+        columnStyles: {
+          3: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold" },
+          4: { textColor: [0,100,200] as [number,number,number] },
+          5: { textColor: [...GRAY] as [number,number,number] },
+        },
+      });
+      y = (doc as any).lastAutoTable.finalY + 5;
+
+      // ── IBIG MARKET ──
+      y = checkPage(y,50);
+      y = subTitle(t("IBIG MARKET — Commerce B2B/B2C et Distribution"),y);
+      autoTable(doc,{
+        startY: y,
+        head: [[t("Catégorie"),t("Exemples de produits"),t("Gamme de prix"),t("Comm. N1")]],
+        body: [
+          [t("Matériel informatique"),t("Ordinateurs, imprimantes, réseaux, accessoires"),"50 000 - 2 000 000 FCFA","8%"],
+          [t("Mobilier professionnel"),t("Bureaux, chaises ergonomiques, cloisons, armoires"),"25 000 - 5 000 000 FCFA","8%"],
+          [t("Fournitures de bureau"),t("Papeterie, consommables, archivage, encres"),"5 000 - 500 000 FCFA","8%"],
+          [t("Matériel BTP"),t("Outils professionnels, matériaux, équipements chantier"),"10 000 - 10 000 000 FCFA","8%"],
+          [t("Équipement multimédia"),t("Écrans, vidéoprojecteurs, systèmes son, caméras"),"100 000 - 3 000 000 FCFA","8%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
+        bodyStyles: { fontSize: 7.5,textColor: DARK },
+        alternateRowStyles: { fillColor: [248,250,252] },
+        margin: { left: 14,right: 14 },
+        theme: "grid",
+        columnStyles: { 3: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold" } },
+      });
+      y = (doc as any).lastAutoTable.finalY + 5;
+
+      // ── IBIG DIGITAL ──
+      y = checkPage(y,60);
+      y = subTitle(t("IBIG DIGITAL — Création Digitale et Communication"),y);
+      autoTable(doc,{
+        startY: y,
+        head: [[t("Service"),t("Description"),t("Tarif"),t("Comm. N1")]],
+        body: [
+          [t("Site Vitrine Professionnel"),t("Design responsive, dev, hébergement 1 an"),"300 000 - 800 000","10%"],
+          [t("Site E-commerce"),t("Boutique en ligne, paiement mobile intégré"),"500 000 - 1 500 000","10%"],
+          [t("Refonte de Site Web"),t("Modernisation, optimisation SEO & performance"),"200 000 - 600 000","10%"],
+          [t("Identité Visuelle & Logo"),t("Charte graphique complète, logo, supports"),"100 000 - 400 000","10%"],
+          [t("Production Photo & Vidéo Pro"),t("Shooting, montage, motion design"),"150 000 - 800 000","10%"],
+          [t("Community Management"),t("Gestion réseaux sociaux, calendrier éditorial"),"50 000 - 150 000/mois","10%"],
+          [t("Campagne Publicitaire"),t("Meta Ads, Google Ads, TikTok Ads"),"150 000 - 500 000","10%"],
+          [t("Email Marketing & Automation"),t("Emailing, newsletters, scénarios auto."),"75 000 - 200 000/mois","10%"],
+          [t("Stratégie Contenu & SEO"),t("Rédaction, référencement naturel, audit"),"100 000 - 300 000/mois","10%"],
+          [t("Formation Réseaux Sociaux"),t("Coaching pratique Instagram, TikTok, LinkedIn"),"75 000 - 200 000","10%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7 },
+        bodyStyles: { fontSize: 7,textColor: DARK },
+        alternateRowStyles: { fillColor: [248,250,252] },
+        margin: { left: 14,right: 14 },
+        theme: "grid",
+        columnStyles: { 3: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold" } },
+      });
+      y = (doc as any).lastAutoTable.finalY + 5;
+
+      // ── IBIG DIGITAL KITS ──
+      y = checkPage(y,60);
+      y = subTitle(t("IBIG DIGITAL KITS — Transformation Numérique"),y);
+      autoTable(doc,{
+        startY: y,
+        head: [[t("Service"),t("Description"),t("Tarif"),t("Comm. N1")]],
+        body: [
+          [t("Intégration ERP (SAP/SAGE/Odoo/IBIG)"),t("Déploiement, paramétrage, conduite du changement"),"800 000 - 10 000 000","10%"],
+          [t("Développement Web Sur Mesure"),t("Portail client, intranet, plateforme métier"),"500 000 - 3 000 000","10%"],
+          [t("Application Mobile iOS & Android"),t("Natif ou hybride, publication stores"),"1 000 000 - 5 000 000","10%"],
+          [t("Chatbot & Intelligence Artificielle"),t("Chatbot WhatsApp/site web, assistant IA"),"300 000 - 1 000 000","10%"],
+          [t("GED & Digitalisation des Processus"),t("Dématérialisation, archivage numérique"),"500 000 - 3 000 000","10%"],
+          [t("Kit Marketing Digital"),t("SEO, Analytics, emailing, tableau de bord"),"100 000 - 300 000/mois","10%"],
+          [t("Formation ERP & Outils Numériques"),t("SAP, SAGE, Odoo, Excel BI, certifiante"),"50 000 - 300 000","10%"],
+          [t("Cybersécurité & Audit SI"),t("Audit sécurité, RGPD, protection données"),"500 000 - 2 000 000","10%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7 },
+        bodyStyles: { fontSize: 7,textColor: DARK },
+        alternateRowStyles: { fillColor: [248,250,252] },
+        margin: { left: 14,right: 14 },
+        theme: "grid",
+        columnStyles: { 3: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold" } },
+      });
+      y = (doc as any).lastAutoTable.finalY + 5;
+
+      // ── IBIG CONSEIL+ ──
+      y = checkPage(y,55);
+      y = subTitle(t("IBIG CONSEIL+ — Structuration, Comptabilité et Juridique"),y);
+      autoTable(doc,{
+        startY: y,
+        head: [[t("Service"),t("Description"),t("Tarif indicatif"),t("Comm. N1")]],
+        body: [
+          [t("Audit Organisationnel"),t("Diagnostic complet, recommandations stratégiques"),"500 000 - 2 000 000","10%"],
+          [t("Conseil Stratégique"),t("Positionnement, plan d'action, croissance"),"500 000 - 3 000 000","10%"],
+          [t("Ingénierie Financière"),t("Levée de fonds, business plan, relations banques"),"1 000 000 - 5 000 000","10%"],
+          [t("Création d'Entreprise"),t("Statuts, immatriculation RCCM/NIF, domiciliation"),"150 000 - 500 000","10%"],
+          [t("Étude de Marché"),t("Enquête terrain, analyse concurrence, rapport"),"300 000 - 1 500 000","10%"],
+          [t("Conformité Juridique OHADA"),t("Mise en conformité, fiscalité, procédures"),"500 000 - 3 000 000","10%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
+        bodyStyles: { fontSize: 7.5,textColor: DARK },
+        alternateRowStyles: { fillColor: [248,250,252] },
+        margin: { left: 14,right: 14 },
+        theme: "grid",
+        columnStyles: { 3: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold" } },
+      });
+      y = (doc as any).lastAutoTable.finalY + 5;
+
+      // ── IBIG MULTISERVICES ──
+      y = checkPage(y,55);
+      y = subTitle(t("IBIG MULTISERVICES — Services Polyvalents B2B et B2C"),y);
+      autoTable(doc,{
+        startY: y,
+        head: [[t("Service"),t("Description"),t("Tarif indicatif"),t("Comm. N1")]],
+        body: [
+          [t("Événementiel Professionnel"),t("Séminaires, conférences, galas, team building"),"300 000 - 5 000 000","10%"],
+          [t("Déménagement & Stockage"),t("Transport national, emballage, garde-meubles"),"100 000 - 1 000 000","10%"],
+          [t("Maintenance & Réparation"),t("Électricité, plomberie, climatisation, IT"),"25 000 - 500 000","10%"],
+          [t("Logistique Last-Mile"),t("Livraison express, coursiers, transport B2B"),"15 000 - 300 000/mission","10%"],
+          [t("Tourisme d'Affaires"),t("Visa, hôtel, billets, circuits, transferts aéroport"),"Sur devis","10%"],
+          [t("Transport VIP"),t("Chauffeurs privés, véhicules premium, longue durée"),"50 000 - 300 000/jour","10%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
+        bodyStyles: { fontSize: 7.5,textColor: DARK },
+        alternateRowStyles: { fillColor: [248,250,252] },
+        margin: { left: 14,right: 14 },
+        theme: "grid",
+        columnStyles: { 3: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold" } },
+      });
+      y = (doc as any).lastAutoTable.finalY + 5;
+      y = infoBox(t("Chiffres clés du catalogue : 9 branches · 14 logiciels SaaS · 10 formations certifiantes · 5 services immobiliers · 5 catégories commerce · 10 services digitaux · 8 solutions numériques · 6 missions conseil · 6 services polyvalents. Total : 330+ produits et formules disponibles."),y,[235,255,245]);
 
       // ═══════════════════════════════════════════════════════════
       // PAGE 10-11 — SYSTEME DE COMMISSIONS DETAILLE
