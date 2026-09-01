@@ -380,3 +380,35 @@ export async function updateMarket(formData: FormData) {
   revalidatePath("/espace/produits");
   revalidatePath("/espace/missions");
 }
+
+// ─── IBIG CONNECT ─────────────────────────────────────────────────────────────
+export async function submitConnectRequest(formData: FormData) {
+  const user = await requireUser();
+
+  const estimatedValue = Number(formData.get("estimatedValue") || 0);
+  const connectionType = String(formData.get("connectionType") || "AUTRE");
+
+  // Commission estimée : 2% de la valeur (indicatif)
+  const COMMISSION_RATES: Record<string, number> = {
+    FINANCEMENT: 0.015, PARTENARIAT: 0.02, RECRUTEMENT: 0.05,
+    CLIENT: 0.03, FOURNISSEUR: 0.02, INVESTISSEMENT: 0.01,
+    TRANSACTION_IMMOBILIERE: 0.05, AUTRE: 0.02,
+  };
+  const commissionEstimate = Math.round(estimatedValue * (COMMISSION_RATES[connectionType] ?? 0.02));
+
+  await (prisma as any).connectRequest.create({
+    data: {
+      userId: user.id,
+      title: String(formData.get("title")),
+      connectionType,
+      needSide: String(formData.get("needSide")),
+      provideSide: String(formData.get("provideSide")),
+      zone: String(formData.get("zone") || "Côte d'Ivoire"),
+      estimatedValue,
+      commissionEstimate,
+      status: "NEW",
+    },
+  });
+
+  revalidatePath("/espace/connect");
+}

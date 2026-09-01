@@ -617,3 +617,16 @@ export async function updateApplicationStatus(formData: FormData) {
   });
   revalidatePath("/admin/missions");
 }
+
+// ─── IBIG CONNECT ─────────────────────────────────────────────────────────────
+export async function updateConnectStatus(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const status = String(formData.get("status"));
+  const adminNote = String(formData.get("adminNote") || "").trim();
+  await (prisma as any).connectRequest.update({
+    where: { id },
+    data: { status, updatedAt: new Date(), ...(adminNote ? { adminNote } : {}) },
+  });
+  revalidatePath("/admin/connect");
+}

@@ -73,6 +73,7 @@ model User {
   sentMessages     ChatMessage[]      @relation("ChatSender")
   badges           UserBadge[]
   missionApplications MissionApplication[]
+  connectRequests     ConnectRequest[]
 
   createdAt DateTime @default(now())
 }
@@ -487,6 +488,24 @@ model UserBadge {
   earnedAt  DateTime @default(now())
 
   @@unique([userId, badgeId])
+}
+
+// ─── IBIG CONNECT — Mise en relation ─────────────────────────────────────────
+model ConnectRequest {
+  id                 String   @id @default(cuid())
+  userId             String
+  user               User     @relation(fields: [userId], references: [id])
+  title              String
+  connectionType     String   @default("AUTRE") // FINANCEMENT | PARTENARIAT | RECRUTEMENT | CLIENT | FOURNISSEUR | INVESTISSEMENT | TRANSACTION_IMMOBILIERE | AUTRE
+  needSide           String   // qui cherche quoi
+  provideSide        String   // qui peut fournir / l'autre partie
+  zone               String   @default("Côte d'Ivoire")
+  estimatedValue     Int      @default(0) // valeur estimée de la transaction FCFA
+  commissionEstimate Int      @default(0) // commission estimée pour l'affilié FCFA
+  status             String   @default("NEW") // NEW | ANALYZING | MATCHED | COMPLETED | REJECTED
+  adminNote          String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
 
 // ─── Missions Partners ───────────────────────────────────────────────────────
