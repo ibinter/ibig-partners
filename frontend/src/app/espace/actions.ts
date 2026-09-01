@@ -330,3 +330,29 @@ export async function replyToOpportunity(formData: FormData) {
 
   revalidatePath("/espace/opportunites");
 }
+
+// ─── Missions Partners ────────────────────────────────────────────────────────
+export async function applyToMission(formData: FormData) {
+  const user = await requireUser();
+  const missionId = String(formData.get("missionId"));
+  const note = String(formData.get("note") || "").trim();
+
+  await (prisma as any).missionApplication.upsert({
+    where: { missionId_userId: { missionId, userId: user.id } },
+    update: { note, status: "PENDING", updatedAt: new Date() },
+    create: { missionId, userId: user.id, note },
+  });
+
+  revalidatePath("/espace/missions");
+}
+
+export async function withdrawMissionApplication(formData: FormData) {
+  const user = await requireUser();
+  const missionId = String(formData.get("missionId"));
+
+  await (prisma as any).missionApplication.deleteMany({
+    where: { missionId, userId: user.id, status: "PENDING" },
+  });
+
+  revalidatePath("/espace/missions");
+}

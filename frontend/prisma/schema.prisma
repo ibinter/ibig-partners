@@ -66,6 +66,7 @@ model User {
   chatParticipations ChatParticipant[]
   sentMessages     ChatMessage[]      @relation("ChatSender")
   badges           UserBadge[]
+  missionApplications MissionApplication[]
 
   createdAt DateTime @default(now())
 }
@@ -480,6 +481,41 @@ model UserBadge {
   earnedAt  DateTime @default(now())
 
   @@unique([userId, badgeId])
+}
+
+// ─── Missions Partners ───────────────────────────────────────────────────────
+model Mission {
+  id               String   @id @default(cuid())
+  title            String
+  description      String
+  category         String   @default("AUTRE") // même 21 catégories que Opportunity
+  missionType      String   @default("LEAD")  // LEAD | VENTE | RECRUTEMENT | REPRESENTATION | PROSPECTION | AUTRE
+  compensationType String   @default("FIXED") // FIXED | PERCENT
+  compensationAmount Int    @default(0)       // FCFA si FIXED, % * 100 si PERCENT (ex: 1000 = 10%)
+  zone             String   @default("Côte d'Ivoire") // zone géographique cible
+  difficulty       String   @default("MEDIUM") // EASY | MEDIUM | HARD
+  slots            Int      @default(5)        // nombre max de partenaires sur cette mission
+  deadline         DateTime?
+  status           String   @default("OPEN")  // OPEN | CLOSED | COMPLETED
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  applications MissionApplication[]
+}
+
+model MissionApplication {
+  id        String   @id @default(cuid())
+  missionId String
+  mission   Mission  @relation(fields: [missionId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  status    String   @default("PENDING") // PENDING | ACCEPTED | REJECTED | COMPLETED
+  note      String?
+  result    String?  // résultat / rapport de mission
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([missionId, userId])
 }
 
 // ─── Taux de commission par produit (grille détaillée) ─────────────────────

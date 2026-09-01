@@ -7,6 +7,7 @@ const NAV: NavItem[] = [
   { href: "/admin/verifications",               label: "Vérifications KYC",       icon: "🔐", group: "Réseau" },
   { href: "/admin/partenaires-institutionnels", label: "Partenaires institutionnels", icon: "🌐", group: "Réseau" },
   { href: "/admin/opportunites",                label: "Opportunités",                icon: "🤝", group: "Réseau" },
+  { href: "/admin/missions",                    label: "Missions Partners",           icon: "🎯", group: "Réseau" },
   { href: "/admin/ventes",        label: "Ventes",             icon: "🧾", group: "Finance" },
   { href: "/admin/commissions",   label: "Commissions",        icon: "💰", group: "Finance" },
   { href: "/admin/paiements",     label: "Paiements",          icon: "🏦", group: "Finance" },

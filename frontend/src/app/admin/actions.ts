@@ -575,3 +575,45 @@ export async function updateSetting(formData: FormData) {
   });
   revalidatePath("/admin/parametres");
 }
+
+// ─── Missions Partners ────────────────────────────────────────────────────────
+export async function createMission(formData: FormData) {
+  await requireAdmin();
+  const deadline = String(formData.get("deadline") || "").trim();
+  await (prisma as any).mission.create({
+    data: {
+      title: String(formData.get("title")),
+      description: String(formData.get("description")),
+      category: String(formData.get("category") || "AUTRE"),
+      missionType: String(formData.get("missionType") || "LEAD"),
+      compensationType: String(formData.get("compensationType") || "FIXED"),
+      compensationAmount: Number(formData.get("compensationAmount") || 0),
+      zone: String(formData.get("zone") || "Côte d'Ivoire"),
+      difficulty: String(formData.get("difficulty") || "MEDIUM"),
+      slots: Number(formData.get("slots") || 5),
+      status: "OPEN",
+      deadline: deadline ? new Date(deadline) : null,
+    },
+  });
+  revalidatePath("/admin/missions");
+}
+
+export async function updateMissionStatus(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const status = String(formData.get("status"));
+  await (prisma as any).mission.update({ where: { id }, data: { status, updatedAt: new Date() } });
+  revalidatePath("/admin/missions");
+}
+
+export async function updateApplicationStatus(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const status = String(formData.get("status"));
+  const result = String(formData.get("result") || "").trim();
+  await (prisma as any).missionApplication.update({
+    where: { id },
+    data: { status, updatedAt: new Date(), ...(result ? { result } : {}) },
+  });
+  revalidatePath("/admin/missions");
+}
