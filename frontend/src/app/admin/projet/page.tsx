@@ -185,38 +185,37 @@ export default function ProjetPage() {
       doc.rect(14,35,30,2,"F");
 
       const toc = [
-        ["1.",t("Résumé Exécutif"),"3"],
-        ["2.",t("Présentation du Groupe IBIG SARL"),"5"],
-        ["3.",t("Vision, Mission et Valeurs"),"5"],
-        ["4.",t("Historique et Positionnement"),"6"],
-        ["5.",t("IBIG SOFT - Logiciels SaaS de Gestion"),"7"],
-        ["6.",t("IBIG EDUFORM - Formations Professionnelles Certifiantes"),"7"],
-        ["7.",t("IBIG IMMO TRUST - Immobilier et BTP"),"8"],
-        ["8.",t("IBIG MARKET - Commerce et Distribution"),"8"],
-        ["9.",t("IBIG DIGITAL - Création Digitale et Communication Visuelle"),"9"],
-        ["10.",t("IBIG DIGITAL KITS - Technologies et Transformation Numérique"),"9"],
-        ["11.",t("IBIG CONSEIL+ - Structuration, Comptabilité et Juridique"),"10"],
-        ["12.",t("IBIG MULTISERVICES - Solutions Polyvalentes"),"10"],
-        ["10.",t("IBIG MULTISERVICES - Solutions Polyvalentes"),"10"],
-        ["11.",t("Système de Commissions N1/N2/N3"),"11"],
-        ["12.",t("Dégressivité commissions IBIG SOFT mensuel"),"12"],
-        ["13.",t("Simulation de revenus passifs"),"12"],
-        ["14.",t("Statuts Partenaires et Avantages"),"13"],
-        ["15.",t("Gamification et Badges"),"13"],
-        ["16.",t("Plateforme Technologique - Stack et Modules"),"14"],
-        ["17.",t("Sécurité, Conformité et Performance"),"15"],
-        ["18.",t("Processus d'Affiliation"),"16"],
-        ["19.",t("Méthodes de Paiement"),"17"],
-        ["20.",t("Académie IBIG - Formation Intégrée"),"18"],
-        ["21.",t("Coach IA IBIG"),"18"],
-        ["22.",t("Stratégie de Développement 2026-2028"),"20"],
-        ["23.",t("Avantages Concurrentiels"),"21"],
-        ["24.",t("Comparaison avec les alternatives du marché"),"21"],
-        ["25.",t("Cadre Juridique et Conformité"),"22"],
-        ["26.",t("Organisation et Gouvernance"),"23"],
-        ["27.",t("Questions Fréquemment Posées (FAQ)"),"24"],
-        ["28.",t("Contacts et Opportunités de Partenariat"),"25"],
-        ["29.",t("Conclusion"),"25"],
+        ["1.", t("Résumé Exécutif"), "3"],
+        ["2.", t("Présentation du Groupe IBIG SARL"), "5"],
+        ["3.", t("Vision, Mission et Valeurs"), "5"],
+        ["4.", t("Historique et Positionnement"), "6"],
+        ["5.", t("IBIG SOFT - Logiciels SaaS de Gestion"), "7"],
+        ["6.", t("IBIG EDUFORM - Formations Professionnelles Certifiantes"), "7"],
+        ["7.", t("IBIG IMMO TRUST - Immobilier et BTP"), "8"],
+        ["8.", t("IBIG MARKET - Commerce et Distribution"), "8"],
+        ["9.", t("IBIG DIGITAL - Création Digitale et Communication Visuelle"), "9"],
+        ["10.", t("IBIG DIGITAL KITS - Technologies et Transformation Numérique"), "10"],
+        ["11.", t("IBIG CONSEIL+ - Structuration, Comptabilité et Juridique"), "10"],
+        ["12.", t("IBIG MULTISERVICES - Solutions et Services Polyvalents"), "11"],
+        ["13.", t("Système de Commissions N1/N2/N3"), "12"],
+        ["14.", t("Dégressivité des commissions IBIG SOFT mensuel"), "13"],
+        ["15.", t("Simulation de revenus passifs"), "13"],
+        ["16.", t("Statuts Partenaires et Avantages"), "14"],
+        ["17.", t("Gamification et Badges"), "14"],
+        ["18.", t("Plateforme Technologique - Stack et Modules"), "15"],
+        ["19.", t("Sécurité, Conformité et Performance"), "16"],
+        ["20.", t("Processus d'Affiliation"), "17"],
+        ["21.", t("Méthodes de Paiement et Retrait"), "18"],
+        ["22.", t("Académie IBIG - Formation Intégrée"), "19"],
+        ["23.", t("Coach IA IBIG"), "19"],
+        ["24.", t("Stratégie de Développement 2026-2028"), "20"],
+        ["25.", t("Avantages Concurrentiels"), "21"],
+        ["26.", t("Comparaison avec les alternatives du marché"), "21"],
+        ["27.", t("Cadre Juridique et Conformité"), "22"],
+        ["28.", t("Organisation et Gouvernance"), "23"],
+        ["29.", t("Questions Fréquemment Posées (FAQ)"), "24"],
+        ["30.", t("Contacts et Opportunités de Partenariat"), "25"],
+        ["31.", t("Conclusion"), "26"],
       ];
 
       let y = 48;
@@ -248,9 +247,9 @@ export default function ProjetPage() {
 
       y = body(t("IBIG PARTNERS est le programme officiel d'affiliation multi-niveaux du groupe INTERMARK BUSINESS INTERNATIONAL GROUP SARL (IBIG SARL), société de droit ivoirien spécialisée dans la fourniture de solutions technologiques, educatives, immobilières, commerciales et de conseil stratégique en Afrique subsaharienne."),y);
       y += 3;
-      y = body(t("Le programme permet a toute personne physique ou morale de devenir Partenaire Affilié et de percevoir des commissions sur les ventes de produits et services IBIG qu'elle généré directement (N1) ou via son réseau de filleuls (N2, N3). Aucun investissement initial n'est requis pour rejoindre le programme."),y);
+      y = body(t("Le programme permet à toute personne physique ou morale de devenir Partenaire Affilié et de percevoir des commissions sur les ventes de produits et services IBIG qu'elle génère directement (N1) ou via son réseau de filleuls (N2, N3). Aucun investissement initial n'est requis pour rejoindre le programme."),y);
       y += 3;
-      y = body(t("Chiffres clés : 9 branches d'activité, 330+ produits au catalogue (dont 14 logiciels/ERP IBIG SOFT), commissions jusqu'à 20% N1, système 3 niveaux de profondeur, statuts évolutifs de STARTER a ELITE, paiements via Orange Money, Wave, MTN MoMo et virement bancaire."),y);
+      y = body(t("Chiffres clés : 9 branches d'activité, 330+ produits au catalogue (dont 14 logiciels/ERP IBIG SOFT), commissions jusqu'à 20% N1, système 3 niveaux de profondeur, statuts évolutifs de STARTER à ELITE, paiements via Orange Money, Wave, MTN MoMo et virement bancaire."),y);
       y += 3;
       y = body(t("Objectif 2026 : 500 partenaires actifs, 50M FCFA de commissions versées, couverture Afrique de l'Ouest."),y);
       y += 5;
@@ -278,7 +277,7 @@ export default function ProjetPage() {
 
       y = checkPage(y,60);
       y = subTitle(t("Proposition de valeur unique"),y);
-      y = bullet(t("Zéro investissement requis : inscription 100% gratuite, aucun stock a acheter"),y);
+      y = bullet(t("Zéro investissement requis : inscription 100% gratuite, aucun stock à acheter"),y);
       y = bullet(t("Commissions sur 3 niveaux de profondeur (N1, N2, N3)"),y);
       y = bullet(t("9 branches d'activité : logiciels, formation, immobilier, commerce, digital, conseil, affiliation, multiservices"),y);
       y = bullet(t("Revenus récurrents sur abonnements logiciels mensuels"),y);
@@ -288,7 +287,7 @@ export default function ProjetPage() {
       y += 5;
 
       y = checkPage(y,30);
-      y = infoBox(t("IBIG PARTNERS n'est pas un schéma pyramidal. Chaque commission est directement liée à la vente d'un produit ou service reel. Le programme est conformé au droit OHADA et au code de commerce ivoirien."),y,[235,255,245]);
+      y = infoBox(t("IBIG PARTNERS n'est pas un schéma pyramidal. Chaque commission est directement liée à la vente d'un produit ou service réel. Le programme est conforme au droit OHADA et au code de commerce ivoirien."),y,[235,255,245]);
 
       // ═══════════════════════════════════════════════════════════
       // PAGE 5-6 — PRESENTATION DU GROUPE IBIG SARL
@@ -303,7 +302,7 @@ export default function ProjetPage() {
         startY: y,
         body: [
           [t("Nom légal"),t("INTERMARK BUSINESS INTERNATIONAL GROUP SARL")],
-          [t("Forme juridique"),t("Société a Responsabilité Limitée (SARL) de droit ivoirien")],
+          [t("Forme juridique"),t("Société à Responsabilité Limitée (SARL) de droit ivoirien")],
           [t("Siege social"),t("Cocody Riviera Palmeraie, Abidjan, Côte d'Ivoire")],
           [t("Secteurs d'activité"),t("Technologies, Formation, Immobilier, Commerce, Conseil")],
           [t("Site groupe"),"intermark-business.com"],
@@ -476,17 +475,23 @@ export default function ProjetPage() {
       y = checkPage(y,70);
       // --- IBIG DIGITAL ---
       y = subTitle(t("IBIG DIGITAL - Création Digitale et Communication Visuelle"),y);
-      y = body(t("Pôle créatif et communication du groupe IBIG SARL : création de sites web vitrines, identité visuelle, community management, production de contenus digitaux et campagnes publicitaires en ligne. Des solutions créatives pour valoriser l'image de vos clients."),y);
+      y = body(t("Pôle créatif et communication du groupe IBIG SARL : création de sites web vitrines et e-commerce, identité visuelle, community management, production photo & vidéo, campagnes publicitaires (Meta Ads, Google Ads, TikTok Ads), email marketing et stratégie de contenu. Des solutions digitales complètes pour valoriser l'image des entreprises africaines."),y);
       y += 3;
 
       autoTable(doc,{
         startY: y,
         head: [[t("Service"),t("Description"),t("Tarif indicatif")]],
         body: [
-          [t("Site Vitrine Professionnel"),t("Design, développement, hébergement"),"300 000 - 800 000 FCFA"],
-          [t("Identité Visuelle & Logo"),t("Charte graphique, logo, supports"),"100 000 - 400 000 FCFA"],
-          [t("Community Management"),t("Gestion réseaux sociaux, contenus"),"50 000 - 150 000 FCFA/mois"],
-          [t("Campagne Publicitaire"),t("Facebook Ads, Google Ads, Instagram"),"150 000 - 500 000 FCFA"],
+          [t("Site Vitrine Professionnel"),t("Design responsive, développement, hébergement 1 an"),"300 000 - 800 000 FCFA"],
+          [t("Site E-commerce"),t("Boutique en ligne, paiement mobile intégré"),"500 000 - 1 500 000 FCFA"],
+          [t("Refonte de Site Web"),t("Modernisation, optimisation SEO & performance"),"200 000 - 600 000 FCFA"],
+          [t("Identité Visuelle & Logo"),t("Charte graphique complète, logo, supports comm."),"100 000 - 400 000 FCFA"],
+          [t("Production Photo & Vidéo Pro"),t("Shooting produit/entreprise, montage, motion design"),"150 000 - 800 000 FCFA"],
+          [t("Community Management"),t("Gestion réseaux sociaux, calendrier éditorial"),"50 000 - 150 000 FCFA/mois"],
+          [t("Campagne Publicitaire"),t("Meta Ads, Google Ads, TikTok Ads — gestion complète"),"150 000 - 500 000 FCFA"],
+          [t("Email Marketing & Automation"),t("Emailing, newsletters, scénarios automatisés"),"75 000 - 200 000 FCFA/mois"],
+          [t("Stratégie Contenu & SEO"),t("Rédaction, référencement naturel, audit de visibilité"),"100 000 - 300 000 FCFA/mois"],
+          [t("Formation Réseaux Sociaux"),t("Instagram, TikTok, LinkedIn — coaching pratique"),"75 000 - 200 000 FCFA"],
         ],
         headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 8 },
         bodyStyles: { fontSize: 8,textColor: DARK },
@@ -501,18 +506,21 @@ export default function ProjetPage() {
       y = checkPage(y,70);
       // --- IBIG DIGITAL KITS ---
       y = subTitle(t("IBIG DIGITAL KITS - Technologies et Transformation Numérique"),y);
-      y = body(t("Accompagnement des entreprises dans leur transformation numérique : intégration ERP (SAP, SAGE, Odoo), GED, développement d'applications mobiles, intelligence artificielle, chatbots et kits numériques prêts à l'emploi."),y);
+      y = body(t("Accompagnement des entreprises dans leur transformation numérique : intégration ERP (SAP, SAGE, Odoo, IBIG SOFT), développement d'applications mobiles iOS & Android, intelligence artificielle, chatbots, GED, cybersécurité et kits numériques prêts à l'emploi pour les PME africaines."),y);
       y += 3;
 
       autoTable(doc,{
         startY: y,
         head: [[t("Service"),t("Description"),t("Tarif indicatif")]],
         body: [
-          [t("Intégration ERP (SAP/SAGE/Odoo)"),t("Déploiement, paramétrage, formation"),"800 000 - 10 000 000 FCFA"],
-          [t("Application Mobile sur Mesure"),t("iOS et Android, développement complet"),"1 000 000 - 5 000 000 FCFA"],
-          [t("Chatbot & Intelligence Artificielle"),t("Chatbot WhatsApp, site web, CRM"),"300 000 - 1 000 000 FCFA"],
-          [t("Kit Marketing Digital"),t("SEO, emailing, analytics, stratégie"),"100 000 - 300 000 FCFA/mois"],
-          [t("GED & Digitalisation Processus"),t("Dématérialisation, archivage numérique"),"500 000 - 3 000 000 FCFA"],
+          [t("Intégration ERP (SAP/SAGE/Odoo/IBIG)"),t("Déploiement, paramétrage, conduite du changement"),"800 000 - 10 000 000 FCFA"],
+          [t("Développement Web Sur Mesure"),t("Portail client, intranet, plateforme métier"),"500 000 - 3 000 000 FCFA"],
+          [t("Application Mobile iOS & Android"),t("Développement natif ou hybride, publication stores"),"1 000 000 - 5 000 000 FCFA"],
+          [t("Chatbot & Intelligence Artificielle"),t("Chatbot WhatsApp/site web, assistant IA, CRM IA"),"300 000 - 1 000 000 FCFA"],
+          [t("GED & Digitalisation des Processus"),t("Dématérialisation, archivage numérique, workflow"),"500 000 - 3 000 000 FCFA"],
+          [t("Kit Marketing Digital"),t("SEO, Google Analytics, emailing, tableau de bord"),"100 000 - 300 000 FCFA/mois"],
+          [t("Formation ERP & Outils Numériques"),t("SAP, SAGE, Odoo, Excel BI, formation certifiante"),"50 000 - 300 000 FCFA"],
+          [t("Cybersécurité & Audit SI"),t("Audit sécurité, RGPD, protection des données"),"500 000 - 2 000 000 FCFA"],
         ],
         headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 8 },
         bodyStyles: { fontSize: 8,textColor: DARK },
@@ -575,7 +583,7 @@ export default function ProjetPage() {
         theme: "grid",
       });
       y = (doc as any).lastAutoTable.finalY + 3;
-      y = body(t("Site officiel : intermark-business.com/multiservices — Commissions : N1=8%, N2=4%, N3=2%"),y);
+      y = body(t("Site officiel : intermark-business.com/multiservices — Commissions : N1=10%, N2=5%, N3=2%"),y);
 
       // ═══════════════════════════════════════════════════════════
       // PAGE 10-11 — SYSTEME DE COMMISSIONS DETAILLE
@@ -587,7 +595,7 @@ export default function ProjetPage() {
       y = sectionTitle(t("Système de Commissions - Architecture N1/N2/N3"),y);
 
       y = subTitle(t("Principe fondamental"),y);
-      y = body(t("Le programme IBIG PARTNERS repose sur un système de commissions à 3 niveaux de profondeur. Lorsqu'un Partenaire (niveau N1) réalisé directement une vente, il perçoit une commission de niveau N1. Lorsqu'un de ses filleuls directs (niveau N2) réalisé une vente, le partenaire filleul perçoit sa commission N1, et le partenaire parrain perçoit une commission N2. De même, lorsqu'un filleul de filleul (niveau N3) réalisé une vente, le parrain de parrain perçoit une commission N3. Ce système permet de construire un revenu passif croissant en développant un réseau de partenaires actifs."),y);
+      y = body(t("Le programme IBIG PARTNERS repose sur un système de commissions à 3 niveaux de profondeur. Lorsqu'un Partenaire (niveau N1) réalise directement une vente, il perçoit une commission de niveau N1. Lorsqu'un de ses filleuls directs (niveau N2) réalise une vente, le partenaire filleul perçoit sa commission N1, et le partenaire parrain perçoit une commission N2. De même, lorsqu'un filleul de filleul (niveau N3) réalise une vente, le parrain de parrain perçoit une commission N3. Ce système permet de construire un revenu passif croissant en développant un réseau de partenaires actifs."),y);
       y += 5;
 
       y = checkPage(y,80);
@@ -605,8 +613,9 @@ export default function ProjetPage() {
           [t("IBIG IMMO TRUST"),t("Vente — commission agence 1M"),"1 000 000","10%","5%","2.5%","100 000","50 000","25 000"],
           [t("IBIG MARKET"),t("PC portable"),"500 000","8%","4%","2%","40 000","20 000","10 000"],
           [t("IBIG DIGITAL"),t("Site vitrine"),"400 000","10%","5%","2%","40 000","20 000","8 000"],
-          [t("IBIG DIGITAL KITS"),t("Intégration ERP"),"2 000 000","15%","7.5%","3.75%","300 000","150 000","75 000"],
+          [t("IBIG DIGITAL KITS"),t("Intégration ERP"),"2 000 000","10%","5%","2%","200 000","100 000","40 000"],
           [t("IBIG CONSEIL+"),t("Mission audit"),"1 500 000","10%","5%","2%","150 000","75 000","30 000"],
+          [t("IBIG MULTISERVICES"),t("Événementiel Pro"),"1 000 000","10%","5%","2%","100 000","50 000","20 000"],
         ],
         headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7 },
         bodyStyles: { fontSize: 7,textColor: DARK },
@@ -1060,7 +1069,7 @@ export default function ProjetPage() {
  y = sectionTitle(t("Cadre Juridique et Conformité"), y);
 
  y = subTitle(t("Statut légal du programme"), y);
- y = body(t("IBIG PARTNERS est un programme d'affiliation commerciale licite, distinct des schémas pyramidaux illégaux. Chaque commission est directement liée à la vente d'un produit ou service reel du catalogue IBIG. Il n'existe aucune obligation d'achat,aucun investissement requis et aucune promesse de gain garantie. Le programme est conforme aux dispositions du droit OHADA et de la législation commerciale ivoirienne."), y);
+ y = body(t("IBIG PARTNERS est un programme d'affiliation commerciale licite, distinct des schémas pyramidaux illégaux. Chaque commission est directement liée à la vente d'un produit ou service réel du catalogue IBIG. Il n'existe aucune obligation d'achat, aucun investissement requis et aucune promesse de gain garantie. Le programme est conforme aux dispositions du droit OHADA et de la législation commerciale ivoirienne."), y);
  y += 5;
 
  y = subTitle(t("Cadre juridique applicable"), y);
@@ -1072,24 +1081,24 @@ export default function ProjetPage() {
  y += 5;
 
  y = subTitle(t("Protection des partenaires"), y);
- y = bullet(t("Contrat de partenariat signe électroniquement a l'inscription"), y);
+ y = bullet(t("Contrat de partenariat signé électroniquement à l'inscription"), y);
  y = bullet(t("Transparence totale sur le calcul des commissions (accessible en temps réel)"), y);
- y = bullet(t("Droit de rétractation sous 14 jours a compter de l'inscription"), y);
+ y = bullet(t("Droit de rétractation sous 14 jours à compter de l'inscription"), y);
  y = bullet(t("Aucune clause de non-concurrence"), y);
- y = bullet(t("Possibilité de résiliation a tout moment sans pénalité ni frais"), y);
+ y = bullet(t("Possibilité de résiliation à tout moment sans pénalité ni frais"), y);
  y += 5;
 
  y = subTitle(t("Protection des données personnelles"), y);
  y = bullet(t("Données chiffrées en transit (HTTPS/TLS 1.3) et au repos (AES-256)"), y);
  y = bullet(t("Accès aux données personnelles limité au strictement nécessaire (principe de minimisation)"), y);
- y = bullet(t("Droit a l'oubli sur demande écrite - suppression sous 30 jours"), y);
+ y = bullet(t("Droit à l'oubli sur demande écrite - suppression sous 30 jours"), y);
  y = bullet(t("Aucune revente de données à des tiers commerciaux"), y);
  y = bullet(t("Audit log de tous les accès administrateurs aux données partenaires"), y);
  y += 5;
 
  y = checkPage(y, 40);
  y = subTitle(t("KYC et lutte contre le blanchiment"), y);
- y = body(t("La vérification KYC (Know Your Customer) est obligatoire avant tout versement de commission. Elle permet a IBIG SARL de se se conformer aux réglementations anti-blanchiment (AML) et de vérifier l'identité réelle de chaque bénéficiaire. Les pièces fournies sont conservees de maniere securisee et ne sont pas partagées avec des tiers. Les documents requis : pièce d'identité nationale valide (CNI, passeport ou titre de séjour) + justificatif de domicile de moins de 3 mois + coordonnées bancaires ou mobile money pour le virement."), y);
+ y = body(t("La vérification KYC (Know Your Customer) est obligatoire avant tout versement de commission. Elle permet à IBIG SARL de se conformer aux réglementations anti-blanchiment (AML) et de vérifier l'identité réelle de chaque bénéficiaire. Les pièces fournies sont conservées de manière sécurisée et ne sont pas partagées avec des tiers. Documents requis : pièce d'identité nationale valide (CNI, passeport ou titre de séjour) + justificatif de domicile de moins de 3 mois + coordonnées bancaires ou mobile money."), y);
 
  // 
  // PAGE 22-23 — ORGANISATION ET GOUVERNANCE
@@ -1154,7 +1163,7 @@ export default function ProjetPage() {
  const faq = [
  {
  q: t("IBIG PARTNERS est-il un schéma pyramidal ?"),
- r: t("Non. IBIG PARTNERS est un programme d'affiliation commerciale légitime. Chaque commission est liée a la vente d'un produit ou service reel. Il n'existe aucune obligation d'investissement ni de recrutement obligatoire. Le programme est conforme au droit OHADA."),
+ r: t("Non. IBIG PARTNERS est un programme d'affiliation commerciale légitime. Chaque commission est liée à la vente d'un produit ou service réel. Il n'existe aucune obligation d'investissement ni de recrutement obligatoire. Le programme est conforme au droit OHADA."),
  },
  {
  q: t("Comment est garanti le paiement des commissions ?"),
@@ -1170,7 +1179,7 @@ export default function ProjetPage() {
  },
  {
  q: t("Combien de temps faut-il pour les premieres commissions ?"),
- r: t("Avec de la proactivité,un premier partenaire peut réaliser sa 1ere vente en 3 a 7 jours. La commission est versée sous 7 jours après validation. En pratique,les nouveaux partenaires perçoivent leur premiere commission en 2 a 4 semaines."),
+ r: t("Avec de la proactivité, un partenaire peut réaliser sa 1ère vente en 3 à 7 jours. La commission est versée sous 7 jours après validation. En pratique, les nouveaux partenaires perçoivent leur première commission en 2 à 4 semaines."),
  },
  {
  q: t("Les produits IBIG sont-ils compétitifs sur le marché ?"),
@@ -1178,7 +1187,7 @@ export default function ProjetPage() {
  },
  {
  q: t("Est-il possible de cumulér les commissions de plusieurs branches ?"),
- r: t("Absolument. Un partenaire peut promouvoir simultanément les 9 branches et cumulér des commissions sur toutes. Un client peut acheter un logiciel IBIG SOFT,s'inscrire en formation EDUFORM et commander du matériel IBIG MARKET - le partenaire perçoit une commission sur chacune de ces transactions."),
+ r: t("Absolument. Un partenaire peut promouvoir simultanément les 9 branches et cumuler des commissions sur toutes. Un client peut acheter un logiciel IBIG SOFT, s'inscrire en formation EDUFORM et commander du matériel IBIG MARKET — le partenaire perçoit une commission sur chacune de ces transactions."),
  },
  {
  q: t("Comment rejoindre IBIG PARTNERS en tant qu'entreprise ?"),
@@ -1278,7 +1287,7 @@ export default function ProjetPage() {
  doc.setFontSize(8);
  doc.setFont("helvetica","normal");
  doc.setTextColor(200, 220, 255);
- const closingText = t("Rejoignez des aujourd'hui le premier programme d'affiliation multi-branches panafricain. Construisez un revenu supplementaire ou principal en partageant des solutions qui répondent aux vrais besoins des entreprises et particuliers africains. Chaque partenaire IBIG contribue a l'émergence économique de l'Afrique tout en bâtissant sa propre prospérité.");
+ const closingText = t("Rejoignez dès aujourd'hui le premier programme d'affiliation multi-branches panafricain. Construisez un revenu supplémentaire ou principal en partageant des solutions qui répondent aux vrais besoins des entreprises et particuliers africains. Chaque partenaire IBIG contribue à l'émergence économique de l'Afrique tout en bâtissant sa propre prospérité.");
  const closingLines = doc.splitTextToSize(closingText, W - 50);
  doc.text(closingLines, W / 2, y + 40,{ align:"center"});
 
