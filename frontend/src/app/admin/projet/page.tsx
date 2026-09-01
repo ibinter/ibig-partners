@@ -1003,7 +1003,7 @@ export default function ProjetPage() {
           [t("Kit Marketing"),t("Argumentaires, visuels personnalisables"),t("Partenaires")],
           [t("Prospects CRM"),t("Suivi pipeline commercial"),t("Partenaires")],
           [t("Paiements"),t("Multi-méthodes, historique, virements, retrait self-service"),t("Partenaires + Admin")],
-          [t("Retrait self-service"),t("Demande de retrait en ligne, validation admin, notifications"),t("Partenaires + Admin")],
+          [t("Retrait self-service"),t("Demande de retrait en ligne sans passer par le support, disponible apres validation KYC, virement sous 48h"),t("Partenaires + Admin")],
           [t("Admin SUPERADMIN"),t("Gestion complète, audit, paramètres"),t("Administrateurs")],
           [t("API Moneroo"),t("Paiements en ligne intégrés"),t("Système")],
         ],
@@ -1100,7 +1100,7 @@ export default function ProjetPage() {
  theme: "grid",
  });
  y = (doc as any).lastAutoTable.finalY + 5;
- y = infoBox(t("Seuil minimum de versement : 5 000 FCFA. Les commissions inférieures au seuil s'accumulént jusqu'à dépasser le minimum."), y);
+ y = infoBox(t("Seuil minimum de versement : 5 000 FCFA. Les commissions inferieures au seuil s'accumulent jusqu'a depasser le minimum. Le retrait est 100% self-service apres validation KYC : aucune intervention du support n'est requise."), y);
 
  // 
  // PAGE 17-18 — ACADÉMIE IBIG
@@ -1124,7 +1124,7 @@ export default function ProjetPage() {
  body: [
  [t("Videos"), t("YouTube, Vimeo, MP4"), t("Demo Scolaby, Pitch EDUFORM, Tutoriels"), t("Selon statut")],
  [t("Guides PDF"), t("Documents téléchargeable"), t("Fiches produits, scripts de vente"), t("Selon statut")],
- [t("Articlés"), t("Texte enrichi Markdown"), t("Techniques prospection, gestion objections"),"STARTER+"],
+ [t("Articles"), t("Texte enrichi Markdown"), t("Techniques prospection, gestion objections"),"STARTER+"],
  [t("Podcasts Audio"), t("MP3, streaming"), t("Témoignages partenaires, conseils terrain"),"STARTER+"],
  [t("Infographies"), t("Images haute résolution"), t("Catalogue produits, organigramme commissions"),"STARTER+"],
  [t("Quiz"), t("Évaluation interactive"), t("Test connaissances produits, certification"),"STARTER+"],
@@ -1386,6 +1386,10 @@ export default function ProjetPage() {
  y = sectionTitle(t("Questions Fréquemment Posées sur le Projet"), y);
 
  const faq = [
+ {
+ q: t("Par ou commencer quand on est nouveau partenaire ?"),
+ r: t("Plan d'action 7 jours : Jour 1 - Completer le KYC + parcourir le catalogue 330+ produits. Jour 2 - Activer vos liens sur les produits choisis. Jour 3 - Partager a 10 contacts de confiance avec les scripts du Kit Marketing. Jours 4-5 - Recruter votre 1er filleul. Jours 6-7 - Completer 3 modules de l'Academie IBIG."),
+ },
  {
  q: t("IBIG PARTNERS est-il un schéma pyramidal ?"),
  r: t("Non. IBIG PARTNERS est un programme d'affiliation commerciale légitime. Chaque commission est liée à la vente d'un produit ou service réel. Il n'existe aucune obligation d'investissement ni de recrutement obligatoire. Le programme est conforme au droit OHADA."),
