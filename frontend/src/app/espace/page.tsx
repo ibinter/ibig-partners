@@ -7,6 +7,7 @@ import { Badge, EmptyState, PageHeader, statusTone } from "@/components/ui";
 import { COMMISSION_STATUS_LABELS, STATUS_LABELS } from "@/lib/constants";
 import { OnboardingQuest } from "@/components/onboarding-quest";
 import { WeeklyChallenge } from "@/components/weekly-challenge";
+import DashboardCharts, { type SalePoint, type CommPoint } from "./dashboard-charts";
 
 export const dynamic = "force-dynamic";
 
@@ -37,12 +38,30 @@ export default async function DashboardPage({
   const summary = await partnerSummary(user.id);
   const prog = nextStatusProgress(summary.confirmedSales, summary.directReferrals, summary.activeTeam);
 
-  const recentCommissions = await prisma.commission.findMany({
-    where: { userId: user.id },
-    orderBy: { createdAt: "desc" },
-    take: 5,
-    include: { sale: { include: { product: true } } },
-  });
+  const eightWeeksAgo = new Date();
+  eightWeeksAgo.setDate(eightWeeksAgo.getDate() - 56);
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+  const [recentCommissions, chartSales, chartComms] = await Promise.all([
+    prisma.commission.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      include: { sale: { include: { product: true } } },
+    }),
+    prisma.sale.findMany({
+      where: { sellerId: user.id, status: "CONFIRMED", createdAt: { gte: eightWeeksAgo } },
+      select: { createdAt: true },
+    }),
+    prisma.commission.findMany({
+      where: { userId: user.id, createdAt: { gte: sixMonthsAgo } },
+      select: { createdAt: true, amount: true, status: true },
+    }),
+  ]);
+
+  const salePoints: SalePoint[]  = chartSales.map((s) => ({ createdAt: s.createdAt instanceof Date ? s.createdAt.toISOString() : String(s.createdAt) }));
+  const commPoints: CommPoint[] = chartComms.map((c) => ({ createdAt: c.createdAt instanceof Date ? c.createdAt.toISOString() : String(c.createdAt), amount: c.amount, status: c.status }));
 
   const counts = [1, 2, 3].map(
     (lvl) => summary.network.filter((m) => m.level === lvl).length,
@@ -268,6 +287,9 @@ export default async function DashboardPage({
           </Link>
         </div>
       </div>
+
+      {/* ── Analytics charts ── */}
+      <DashboardCharts sales={salePoints} commissions={commPoints} />
 
       {/* ── Onboarding + Défi semaine ── */}
       <OnboardingQuest doneSteps={onboardingDone} />

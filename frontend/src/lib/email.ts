@@ -573,6 +573,64 @@ export async function sendWeeklyDigestEmail(opts: {
   });
 }
 
+// ─── E-mail : Relance affilié inactif ────────────────────────────────────
+
+export async function sendInactiveReminderEmail(opts: {
+  to: string;
+  firstName: string;
+  daysSinceLastSale: number;
+  totalEarned: number;
+  code: string;
+}): Promise<EmailResult> {
+  const html = layout(`
+    <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
+      ${opts.firstName}, vos commissions vous attendent 💰
+    </h2>
+    <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
+      Cela fait <strong>${opts.daysSinceLastSale} jour${opts.daysSinceLastSale > 1 ? "s" : ""}</strong> que vous n'avez pas déclaré de vente.
+      Votre réseau est toujours actif — il ne manque qu'un partage pour relancer l'élan.
+    </p>
+
+    <div style="background:#f0f4ff;border-radius:10px;padding:20px 24px;margin-bottom:24px;text-align:center;">
+      <p style="margin:0 0 4px;font-size:13px;color:#3b5bdb;text-transform:uppercase;letter-spacing:0.5px;">
+        Déjà gagné
+      </p>
+      <p style="margin:0;font-size:28px;font-weight:800;color:#0b5fff;">
+        ${fcfaFmt(opts.totalEarned)}
+      </p>
+      <p style="margin:6px 0 0;font-size:13px;color:#5b6577;">depuis votre inscription</p>
+    </div>
+
+    <div style="background:#f8fafc;border:1px dashed #cbd5e1;border-radius:10px;padding:16px 18px;margin-bottom:24px;">
+      <p style="margin:0 0 8px;font-size:14px;font-weight:700;color:#0f1729;">3 actions rapides pour repartir :</p>
+      <p style="margin:0;font-size:14px;color:#475569;line-height:1.8;">
+        1. Envoyez votre lien à 5 contacts WhatsApp aujourd'hui<br/>
+        2. Publiez une story sur votre réseau social avec votre témoignage<br/>
+        3. Demandez à votre Coach IA un script de relance personnalisé
+      </p>
+    </div>
+
+    ${btn("Retourner dans mon espace", `${SITE}/espace`)}
+
+    <p style="margin-top:20px;font-size:13px;color:#94a3b8;">
+      Votre code d'affiliation : <strong style="color:#0b5fff;">${opts.code}</strong>
+    </p>
+
+    <hr style="margin:32px 0;border:none;border-top:1px solid #e2e8f0;" />
+    <p style="margin:0;font-size:12px;color:#94a3b8;">
+      Vous recevez cet e-mail car vous n'avez pas été actif récemment.
+      Pour modifier vos préférences de notification, rendez-vous dans
+      <a href="${SITE}/espace/profil" style="color:#0b5fff;">votre profil</a>.
+    </p>
+  `);
+
+  return sendEmail({
+    to: opts.to,
+    subject: `${opts.firstName}, reprenez l'élan — vos commissions vous attendent 🚀`,
+    html,
+  });
+}
+
 // ─── E-mail 5 : Annonce de l'équipe ───────────────────────────────────────
 
 export async function sendAnnouncementEmail(opts: {
