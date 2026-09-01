@@ -85,6 +85,42 @@ export default function TourPreview() {
         <p className="mt-4 text-xs text-slate-400 text-center">Le statut actuel est visible dans le tableau de bord et la barre latérale. Il évolue automatiquement à chaque palier atteint.</p>
       </div>
 
+      {/* Académie IBIG */}
+      <div className="rounded-2xl border border-pink-200 bg-pink-50 p-5 flex items-start gap-4">
+        <span className="text-3xl shrink-0">🎓</span>
+        <div className="min-w-0 flex-1">
+          <h3 className="font-bold text-pink-900">Académie IBIG — formez-vous pour mieux vendre</h3>
+          <p className="text-sm text-pink-800 mt-1 leading-relaxed">
+            L'Académie IBIG est la plateforme de formation interne réservée aux affiliés. Elle couvre l'ensemble des produits et branches du groupe à travers 7 types de contenu, accessibles selon le statut de l'affilié.
+          </p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { icon: "🎬", label: "Vidéos",    desc: "Présentations produits et tutoriels" },
+              { icon: "📄", label: "PDF",        desc: "Guides, fiches produits, argumentaires" },
+              { icon: "📝", label: "Articles",   desc: "Conseils vente, actualités branches" },
+              { icon: "🎧", label: "Podcasts",   desc: "Formations audio écouter partout" },
+              { icon: "🖼️", label: "Images",     desc: "Infographies et supports visuels" },
+              { icon: "🤖", label: "Coach IA",   desc: "Réponses instantanées 24h/24" },
+              { icon: "🧠", label: "Quiz",        desc: "Évaluations et certifications" },
+            ].map((t) => (
+              <div key={t.label} className="flex items-start gap-2 rounded-xl bg-white/60 px-3 py-2.5">
+                <span className="text-lg shrink-0">{t.icon}</span>
+                <div>
+                  <p className="text-xs font-bold text-pink-900">{t.label}</p>
+                  <p className="text-[11px] text-pink-700 leading-snug">{t.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2 text-xs font-semibold">
+            <span className="rounded-full bg-pink-100 px-3 py-1 text-pink-800">📦 Couvre les 9 branches</span>
+            <span className="rounded-full bg-pink-100 px-3 py-1 text-pink-800">🔐 Contenu filtré par statut affilié</span>
+            <span className="rounded-full bg-pink-100 px-3 py-1 text-pink-800">⭐ Modules mis en avant</span>
+          </div>
+          <p className="mt-3 text-xs text-pink-600">📍 Accessible via <strong>Académie</strong> dans l'espace affilié. Présenté à l'étape 7 de la visite guidée.</p>
+        </div>
+      </div>
+
       {/* Coach IA */}
       <div className="rounded-2xl border border-violet-200 bg-violet-50 p-5 flex items-start gap-4">
         <span className="text-3xl shrink-0">🤖</span>
