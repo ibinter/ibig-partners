@@ -286,6 +286,15 @@ export async function markPayoutPaid(formData: FormData) {
   });
   await prisma.commission.updateMany({ where: { payoutId: id }, data: { status: "PAID" } });
 
+  await prisma.notification.create({
+    data: {
+      userId: payout.userId,
+      title: "🏦 Virement effectué !",
+      body: `Votre retrait de ${payout.amount.toLocaleString("fr-FR")} FCFA a été versé (réf. ${reference}). Vérifiez votre compte ${payout.method.replace(/_/g, " ")}.`,
+      url: "/espace/paiements",
+    },
+  });
+
   after(() => sendPayoutPaidEmail({
     to: payout.user.email,
     firstName: payout.user.firstName,

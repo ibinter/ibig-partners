@@ -1,9 +1,11 @@
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { fcfa, formatDate } from "@/lib/format";
-import { Badge, EmptyState, PageHeader, StatCard, statusTone } from "@/components/ui";
+import { Badge, EmptyState, PageHeader, StatCard } from "@/components/ui";
+import { Button } from "@/components/button";
 import { PAYOUT_METHOD_LABELS } from "@/lib/constants";
 import PayoutConfigForm from "./payout-config";
+import { requestPayout } from "../actions";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +36,7 @@ export default async function PaiementsPage() {
 
   const progressPct = Math.min(100, Math.round((payable / minPayout) * 100));
   const canRequest  = payable >= minPayout && user.verificationStatus === "VERIFIED";
+  const pendingPayout = payouts.find(p => p.status === "PENDING" || p.status === "PROCESSING");
 
   return (
     <div className="space-y-6 pb-10">
@@ -79,10 +82,27 @@ export default async function PaiementsPage() {
           <span>{fcfa(payable)} disponible</span>
           <span>{progressPct}% du seuil atteint</span>
         </div>
-        {canRequest && (
-          <div className="mt-3 rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-2.5 text-sm text-emerald-800 font-semibold">
-            ✅ Seuil atteint — un paiement sera initié prochainement.
+        {pendingPayout && (
+          <div className="mt-3 rounded-xl bg-blue-50 border border-blue-200 px-4 py-3">
+            <p className="text-sm font-semibold text-blue-800">
+              ⏳ Demande en cours de traitement
+            </p>
+            <p className="mt-0.5 text-xs text-blue-700">
+              Votre retrait de <strong>{fcfa(pendingPayout.amount)}</strong> est en cours de traitement par l&apos;équipe IBIG.
+              Vous serez notifié dès le virement effectué (24-48h).
+            </p>
           </div>
+        )}
+        {canRequest && !pendingPayout && (
+          <form action={requestPayout} className="mt-3">
+            <Button type="submit" size="lg" className="w-full">
+              💸 Demander mon retrait — {fcfa(payable)}
+            </Button>
+            <p className="mt-1.5 text-center text-xs text-muted">
+              Via {PAYOUT_METHOD_LABELS[user.payoutMethod] ?? user.payoutMethod}
+              {user.payoutDetail && ` · ${user.payoutDetail}`}
+            </p>
+          </form>
         )}
       </div>
 

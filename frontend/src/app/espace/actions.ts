@@ -1,8 +1,10 @@
 "use server";
 
+import { after } from "next/server";
 import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { sendPayoutRequestedEmail } from "@/lib/email";
 
 /** Active (cree le lien) ou desactive (supprime le lien) un produit pour le partenaire. */
 export async function toggleProduct(formData: FormData) {
@@ -185,6 +187,83 @@ export async function declareSale(formData: FormData) {
 
   revalidatePath("/espace/ventes");
   revalidatePath("/admin/ventes");
+}
+
+export async function requestPayout() {
+  const user = await requireUser();
+
+  if (user.verificationStatus !== "VERIFIED") {
+    throw new Error("Compte non vérifié — retrait impossible.");
+  }
+
+  const [validated, existingPending] = await Promise.all([
+    prisma.commission.findMany({
+      where: { userId: user.id, status: "VALIDATED", payoutId: null },
+    }),
+    prisma.payout.findFirst({
+      where: { userId: user.id, status: { in: ["PENDING", "PROCESSING"] } },
+    }),
+  ]);
+
+  if (existingPending) {
+    throw new Error("Une demande de retrait est déjà en cours.");
+  }
+
+  const totalValidated = validated.reduce((s, c) => s + c.amount, 0);
+  if (totalValidated < (user.minPayout ?? 5000)) {
+    throw new Error(`Montant insuffisant (${totalValidated.toLocaleString("fr-FR")} FCFA < seuil ${(user.minPayout ?? 5000).toLocaleString("fr-FR")} FCFA).`);
+  }
+
+  const payout = await prisma.payout.create({
+    data: {
+      userId: user.id,
+      amount: totalValidated,
+      method: user.payoutMethod,
+      status: "PENDING",
+    },
+  });
+  await prisma.commission.updateMany({
+    where: { id: { in: validated.map((c) => c.id) } },
+    data: { payoutId: payout.id },
+  });
+
+  // Notifier l'affilié + les admins
+  const admins = await prisma.user.findMany({
+    where: { role: { in: ["ADMIN", "SUPERADMIN"] } },
+    select: { id: true, email: true },
+  });
+
+  await prisma.notification.create({
+    data: {
+      userId: user.id,
+      title: "✅ Demande de retrait envoyée",
+      body: `Votre demande de retrait de ${totalValidated.toLocaleString("fr-FR")} FCFA a bien été reçue. L'équipe IBIG la traitera dans les 24-48h.`,
+      url: "/espace/paiements",
+    },
+  });
+
+  if (admins.length > 0) {
+    await prisma.notification.createMany({
+      data: admins.map((a) => ({
+        userId: a.id,
+        title: "💸 Demande de retrait",
+        body: `${user.firstName} ${user.lastName} (${user.code}) demande un retrait de ${totalValidated.toLocaleString("fr-FR")} FCFA via ${user.payoutMethod}.`,
+        url: "/admin/paiements",
+      })),
+    });
+  }
+
+  after(async () => {
+    await sendPayoutRequestedEmail({
+      to: user.email,
+      firstName: user.firstName,
+      amount: totalValidated,
+      method: user.payoutMethod,
+    });
+  });
+
+  revalidatePath("/espace/paiements");
+  revalidatePath("/admin/paiements");
 }
 
 export async function updateProfile(formData: FormData) {

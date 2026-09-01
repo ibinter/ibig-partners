@@ -319,6 +319,64 @@ export async function sendPayoutPaidEmail(opts: {
   });
 }
 
+// ─── E-mail : Demande de retrait (affilié → IBIG) ────────────────────────
+export async function sendPayoutRequestedEmail(opts: {
+  to: string;
+  firstName: string;
+  amount: number;
+  method: string;
+}) {
+  const methodLabels: Record<string, string> = {
+    ORANGE_MONEY: "Orange Money",
+    WAVE: "Wave",
+    MTN_MOMO: "MTN MoMo",
+    BANK: "Virement bancaire",
+    PAYPAL: "PayPal",
+    WESTERN_UNION: "Western Union",
+  };
+
+  const html = layout(`
+    <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
+      Demande de retrait reçue ✅
+    </h2>
+    <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
+      Bonjour <strong>${opts.firstName}</strong>, votre demande de retrait a bien été enregistrée.
+      L'équipe IBIG PARTNERS la traitera dans les <strong>24 à 48 heures</strong>.
+    </p>
+
+    <div style="background:#eff6ff;border-radius:10px;padding:24px;margin-bottom:24px;border:1px solid #bfdbfe;text-align:center;">
+      <p style="margin:0 0 4px;font-size:13px;color:#1d4ed8;text-transform:uppercase;letter-spacing:0.5px;">
+        Montant demandé
+      </p>
+      <p style="margin:0;font-size:36px;font-weight:800;color:#1e40af;">
+        ${fcfaFmt(opts.amount)}
+      </p>
+      <p style="margin:8px 0 0;font-size:14px;color:#1d4ed8;">
+        via ${methodLabels[opts.method] ?? opts.method}
+      </p>
+    </div>
+
+    <p style="color:#5b6577;font-size:14px;line-height:1.6;">
+      Vous recevrez un e-mail de confirmation dès que le virement aura été effectué.
+      Si vous avez des questions, contactez notre support.
+    </p>
+
+    ${btn("Voir mes paiements", `${SITE}/espace/paiements`)}
+
+    <hr style="margin:32px 0;border:none;border-top:1px solid #e2e8f0;" />
+    <p style="margin:0;font-size:13px;color:#94a3b8;">
+      Support :
+      <a href="mailto:support@ibigpartners.com" style="color:#0b5fff;">support@ibigpartners.com</a>
+    </p>
+  `);
+
+  return sendEmail({
+    to: opts.to,
+    subject: `Demande de retrait de ${fcfaFmt(opts.amount)} — IBIG PARTNERS`,
+    html,
+  });
+}
+
 // ─── E-mail : Rappel de vérification du compte (KYC) ─────────────────────
 
 export async function sendVerificationReminderEmail(opts: {
