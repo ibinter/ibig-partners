@@ -239,6 +239,59 @@ export default function TourPreview() {
         </div>
       </div>
 
+      {/* Commissions */}
+      <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 flex items-start gap-4">
+        <span className="text-3xl shrink-0">💰</span>
+        <div className="min-w-0 flex-1">
+          <h3 className="font-bold text-emerald-900">Commissions — taux par branche sur 3 niveaux</h3>
+          <p className="text-sm text-emerald-800 mt-1 leading-relaxed">
+            Les commissions sont versées automatiquement sur 3 niveaux de réseau. N2 = 50 % du taux N1 · N3 = 25 % du taux N1.
+          </p>
+          <div className="mt-3 overflow-x-auto">
+            <table className="w-full text-xs border-collapse">
+              <thead>
+                <tr className="bg-emerald-100 text-emerald-900">
+                  <th className="px-3 py-2 text-left rounded-tl-lg font-bold">Branche</th>
+                  <th className="px-3 py-2 text-center font-bold">N1</th>
+                  <th className="px-3 py-2 text-center font-bold">N2</th>
+                  <th className="px-3 py-2 text-center rounded-tr-lg font-bold">N3</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-emerald-100">
+                {[
+                  { branch: "💻 IBIG SOFT",         n1: "20 %", n2: "10 %",   n3: "5 %",    note: "versé sur 4 mois (abonnement)" },
+                  { branch: "🎓 IBIG EDUFORM",       n1: "10 %", n2: "5 %",    n3: "2,5 %",  note: "" },
+                  { branch: "🏠 IBIG IMMO TRUST",    n1: "10 %", n2: "5 %",    n3: "2,5 %",  note: "" },
+                  { branch: "🌐 IBIG DIGITAL",       n1: "10 %", n2: "5 %",    n3: "2 %",    note: "" },
+                  { branch: "⚙️ IBIG DIGITAL KITS",  n1: "10 %", n2: "5 %",    n3: "2 %",    note: "" },
+                  { branch: "📋 IBIG CONSEIL+",      n1: "10 %", n2: "5 %",    n3: "2,5 %",  note: "" },
+                  { branch: "🔧 IBIG MULTISERVICES", n1: "10 %", n2: "5 %",    n3: "2 %",    note: "" },
+                  { branch: "🛒 IBIG MARKET",        n1: "8 %",  n2: "4 %",    n3: "2 %",    note: "" },
+                  { branch: "🌍 IBIG INTERNATIONAL", n1: "Sur devis", n2: "—", n3: "—",      note: "" },
+                ].map((row) => (
+                  <tr key={row.branch} className="bg-white/60 hover:bg-white transition-colors">
+                    <td className="px-3 py-2 font-semibold text-emerald-900">
+                      {row.branch}
+                      {row.note && <span className="ml-1 text-[10px] text-emerald-600 font-normal">({row.note})</span>}
+                    </td>
+                    <td className="px-3 py-2 text-center font-bold text-emerald-800">{row.n1}</td>
+                    <td className="px-3 py-2 text-center text-emerald-700">{row.n2}</td>
+                    <td className="px-3 py-2 text-center text-emerald-600">{row.n3}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="mt-3 rounded-xl bg-emerald-100 px-4 py-2.5 flex items-start gap-2">
+            <span className="text-base shrink-0">💡</span>
+            <p className="text-xs text-emerald-800 leading-relaxed">
+              <strong>Exemple :</strong> votre filleul vend une formation EDUFORM à 400 000 FCFA → vous gagnez <strong>20 000 FCFA</strong> en N2 (5 %), automatiquement, sans rien faire.
+            </p>
+          </div>
+          <p className="mt-3 text-xs text-emerald-600">📍 Accessible via <strong>Mes Commissions</strong> dans l'espace affilié. Présenté à l'étape 4 de la visite guidée.</p>
+        </div>
+      </div>
+
       {/* KYC */}
       <div className="rounded-2xl border border-orange-200 bg-orange-50 p-5 flex items-start gap-4">
         <span className="text-3xl shrink-0">🔐</span>
