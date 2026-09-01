@@ -5,10 +5,20 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 30;
 
 const ALLOWED_TYPES = [
-  "image/jpeg", "image/png", "image/webp", "image/gif",
+  "image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml",
   "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "application/zip",
+  "application/x-zip-compressed",
+  "text/plain",
+  "text/csv",
 ];
-const MAX_SIZE = 10 * 1024 * 1024; // 10 Mo
+const MAX_SIZE = 20 * 1024 * 1024; // 20 Mo
 
 export async function POST(request: Request) {
   try {
@@ -27,7 +37,7 @@ export async function POST(request: Request) {
 
     if (!file) return NextResponse.json({ error: "Fichier manquant" }, { status: 400 });
     if (!ALLOWED_TYPES.includes(file.type)) {
-      return NextResponse.json({ error: "Type de fichier non autorisé (JPEG, PNG, PDF)" }, { status: 400 });
+      return NextResponse.json({ error: "Type de fichier non autorisé" }, { status: 400 });
     }
     if (file.size > MAX_SIZE) {
       return NextResponse.json({ error: "Fichier trop volumineux (max 10 Mo)" }, { status: 400 });

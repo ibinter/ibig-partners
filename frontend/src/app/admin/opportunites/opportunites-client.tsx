@@ -1,12 +1,36 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 
 const STATUS_LABELS: Record<string, string> = {
   NEW: "Nouveau",
   IN_PROGRESS: "En cours",
   WON: "Gagné",
   LOST: "Perdu",
+};
+
+const CATEGORY_LABELS: Record<string, string> = {
+  FORMATION: "🎓 Formation",
+  DIGITAL: "💻 Digital & Web",
+  INFORMATIQUE: "⚙️ Logiciels & IT",
+  IMMOBILIER: "🏠 Immobilier",
+  BTP: "🏗️ BTP & Construction",
+  CONSEIL: "📋 Conseil",
+  FINANCEMENT: "💰 Financement",
+  COMMERCIAL: "🤝 Commercial",
+  PARTENARIAT: "🌐 Partenariat",
+  MISE_EN_RELATION: "🔗 Mise en relation",
+  EMPLOI_RH: "👥 Emploi & RH",
+  EVENEMENTIEL: "🎪 Événementiel",
+  MARKETING: "📢 Marketing",
+  SERVICES: "🛠️ Services B2B",
+  COMMERCE: "🛒 Commerce",
+  LOGISTIQUE: "🚚 Logistique",
+  SANTE: "🏥 Santé",
+  AGRI: "🌱 Agriculture",
+  ENERGIE: "⚡ Énergie",
+  INTERNATIONAL: "🌍 International",
+  AUTRE: "💡 Autre",
 };
 
 const STATUS_STYLES: Record<string, string> = {
@@ -41,6 +65,7 @@ type Message = {
 type Row = {
   id: string;
   title: string;
+  category: string;
   description: string;
   estimatedValue: number;
   status: string;
@@ -51,6 +76,52 @@ type Row = {
   partnerPhone: string;
   messages: Message[];
 };
+
+function getMsgBodyType(body: string): "image" | "pdf" | "doc" | "sheet" | "ppt" | "zip" | "file" | "text" {
+  if (/\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(body)) return "image";
+  if (/\.pdf(\?.*)?$/i.test(body)) return "pdf";
+  if (/\.(docx?)(\?.*)?$/i.test(body)) return "doc";
+  if (/\.(xlsx?|csv)(\?.*)?$/i.test(body)) return "sheet";
+  if (/\.(pptx?)(\?.*)?$/i.test(body)) return "ppt";
+  if (/\.(zip|rar)(\?.*)?$/i.test(body)) return "zip";
+  if (/res\.cloudinary\.com/i.test(body)) return "file";
+  return "text";
+}
+
+const FILE_ICONS: Record<string, string> = {
+  pdf: "📄", doc: "📝", sheet: "📊", ppt: "📑", zip: "🗜️", file: "📁",
+};
+
+function fileLabel(url: string, type: string) {
+  try {
+    const last = new URL(url).pathname.split("/").pop() ?? "";
+    if (last.includes(".")) return decodeURIComponent(last);
+  } catch {}
+  const labels: Record<string, string> = {
+    pdf: "Document PDF", doc: "Document Word", sheet: "Feuille Excel",
+    ppt: "Présentation", zip: "Archive ZIP", file: "Fichier",
+  };
+  return labels[type] ?? "Fichier";
+}
+
+function MsgBody({ body, fromAdmin }: { body: string; fromAdmin: boolean }) {
+  const type = getMsgBodyType(body);
+  if (type === "image") {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={body} alt="image partagée" className="max-w-[220px] max-h-[180px] rounded-lg object-cover mt-1" />;
+  }
+  if (type !== "text") {
+    return (
+      <a href={body} target="_blank" rel="noopener noreferrer" download
+        className={`inline-flex items-center gap-2 mt-1 rounded-lg px-3 py-2 text-sm font-medium ${fromAdmin ? "bg-blue-100 text-blue-800 hover:bg-blue-200" : "bg-slate-100 text-slate-700 hover:bg-slate-200"}`}>
+        <span>{FILE_ICONS[type] ?? "📁"}</span>
+        <span className="max-w-[180px] truncate underline underline-offset-2">{fileLabel(body, type)}</span>
+        <span className="text-xs opacity-60">↓</span>
+      </a>
+    );
+  }
+  return <p className="text-slate-700 whitespace-pre-line">{body}</p>;
+}
 
 function fcfaFmt(n: number) {
   return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "XOF", maximumFractionDigits: 0 }).format(n);
@@ -76,6 +147,9 @@ export default function OpportunitesClient({
   const [messaging, setMessaging] = useState<string | null>(null);
   const [msgText, setMsgText] = useState<Record<string, string>>({});
   const [sending, setSending] = useState(false);
+  const [uploading, setUploading] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const fileRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const counts = useMemo(() => {
     const c: Record<string, number> = { ALL: rows.length, NEW: 0, IN_PROGRESS: 0, WON: 0, LOST: 0 };
@@ -86,16 +160,37 @@ export default function OpportunitesClient({
   const totalValue = useMemo(() => rows.reduce((s, r) => s + r.estimatedValue, 0), [rows]);
   const wonValue   = useMemo(() => rows.filter(r => r.status === "WON").reduce((s, r) => s + r.estimatedValue, 0), [rows]);
 
-  async function handleMessage(opportunityId: string) {
-    const body = (msgText[opportunityId] ?? "").trim();
-    if (!body) return;
+  async function handleMessage(opportunityId: string, body?: string) {
+    const text = body ?? (msgText[opportunityId] ?? "").trim();
+    if (!text) return;
     setSending(true);
     const fd = new FormData();
     fd.set("opportunityId", opportunityId);
-    fd.set("body", body);
+    fd.set("body", text);
     await messageAction(fd);
-    setMsgText(prev => ({ ...prev, [opportunityId]: "" }));
+    if (!body) setMsgText(prev => ({ ...prev, [opportunityId]: "" }));
     setSending(false);
+  }
+
+  async function handleFileUpload(opportunityId: string, e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadError(null);
+    if (file.size > 20 * 1024 * 1024) { setUploadError("Fichier trop volumineux (max 20 Mo)."); return; }
+    setUploading(opportunityId);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("folder", "ibig-opportunites");
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      if (!res.ok) { const err = await res.json().catch(() => ({})); setUploadError((err as any).error ?? "Échec upload"); return; }
+      const { url } = await res.json() as { url: string };
+      await handleMessage(opportunityId, url);
+    } catch { setUploadError("Impossible d'envoyer le fichier."); }
+    finally {
+      setUploading(null);
+      if (fileRefs.current[opportunityId]) fileRefs.current[opportunityId]!.value = "";
+    }
   }
 
   const filtered = useMemo(() => {
@@ -216,7 +311,14 @@ export default function OpportunitesClient({
 
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-slate-800 text-sm leading-snug">{o.title}</p>
-                  <p className="text-xs text-slate-400 mt-0.5 line-clamp-1">{o.description}</p>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    {o.category && o.category !== "AUTRE" && (
+                      <span className="text-[10px] text-blue-600 font-semibold">
+                        {CATEGORY_LABELS[o.category] ?? o.category}
+                      </span>
+                    )}
+                    <p className="text-xs text-slate-400 line-clamp-1">{o.description}</p>
+                  </div>
                 </div>
 
                 <div className="shrink-0 text-right ml-3">
@@ -303,28 +405,48 @@ export default function OpportunitesClient({
                                 {new Date(m.createdAt).toLocaleString("fr-FR", { day:"2-digit", month:"short", hour:"2-digit", minute:"2-digit" })}
                               </span>
                             </div>
-                            <p className="text-slate-700 whitespace-pre-line">{m.body}</p>
+                            <MsgBody body={m.body} fromAdmin={m.fromAdmin} />
                           </div>
                         ))}
                       </div>
                     )}
 
                     {messaging === o.id && (
-                      <div className="flex gap-2 items-end">
-                        <textarea
-                          rows={2}
-                          value={msgText[o.id] ?? ""}
-                          onChange={e => setMsgText(prev => ({ ...prev, [o.id]: e.target.value }))}
-                          placeholder="Écrire un message à l'affilié…"
-                          className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none resize-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-                        />
-                        <button
-                          onClick={() => handleMessage(o.id)}
-                          disabled={sending || !(msgText[o.id] ?? "").trim()}
-                          className="shrink-0 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-bold px-4 py-2.5 transition"
-                        >
-                          {sending ? "…" : "Envoyer ↗"}
-                        </button>
+                      <div className="space-y-2">
+                        <div className="flex gap-2 items-end">
+                          <button
+                            type="button"
+                            title="Joindre un fichier"
+                            disabled={!!uploading || sending}
+                            onClick={() => fileRefs.current[o.id]?.click()}
+                            className="shrink-0 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-500 hover:bg-slate-100 disabled:opacity-40 transition"
+                          >
+                            {uploading === o.id ? "⏳" : "📎"}
+                          </button>
+                          <input
+                            type="file"
+                            accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.csv,.txt,.zip"
+                            className="hidden"
+                            ref={el => { fileRefs.current[o.id] = el; }}
+                            onChange={e => handleFileUpload(o.id, e)}
+                          />
+                          <textarea
+                            rows={2}
+                            value={msgText[o.id] ?? ""}
+                            onChange={e => setMsgText(prev => ({ ...prev, [o.id]: e.target.value }))}
+                            placeholder="Écrire un message à l'affilié…"
+                            className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none resize-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                          />
+                          <button
+                            onClick={() => handleMessage(o.id)}
+                            disabled={sending || uploading === o.id || !(msgText[o.id] ?? "").trim()}
+                            className="shrink-0 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-bold px-4 py-2.5 transition"
+                          >
+                            {sending ? "…" : "Envoyer ↗"}
+                          </button>
+                        </div>
+                        {uploadError && <p className="text-xs text-red-600">{uploadError}</p>}
+                        <p className="text-[10px] text-slate-400">📎 Images, PDF, Word, Excel, ZIP (max 20 Mo)</p>
                       </div>
                     )}
                   </div>

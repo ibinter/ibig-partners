@@ -27,6 +27,7 @@ export default async function EspaceOpportunitesPage() {
   const rows = opportunities.map((o: any) => ({
     id: o.id,
     title: o.title,
+    category: o.category ?? "AUTRE",
     description: o.description,
     estimatedValue: o.estimatedValue,
     status: o.status,

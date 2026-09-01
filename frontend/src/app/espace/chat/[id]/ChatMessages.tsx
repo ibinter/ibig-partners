@@ -32,26 +32,50 @@ function initials(first: string, last: string) {
   return `${first?.[0] ?? ""}${last?.[0] ?? ""}`.toUpperCase();
 }
 
-function isImageUrl(url: string) {
-  return /^data:image\//i.test(url) || /\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(url);
+// Détection du type de contenu d'un message
+function getBodyType(body: string): "image" | "pdf" | "doc" | "sheet" | "ppt" | "zip" | "file" | "video" | "link" | "text" {
+  if (/^data:image\//i.test(body) || /\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(body)) return "image";
+  if (/^data:application\/pdf/i.test(body) || /\.pdf(\?.*)?$/i.test(body)) return "pdf";
+  if (/\.(docx?|rtf)(\?.*)?$/i.test(body)) return "doc";
+  if (/\.(xlsx?|csv)(\?.*)?$/i.test(body)) return "sheet";
+  if (/\.(pptx?)(\?.*)?$/i.test(body)) return "ppt";
+  if (/\.(zip|rar|7z)(\?.*)?$/i.test(body)) return "zip";
+  // fichier générique uploadé sur Cloudinary (raw resource)
+  if (/res\.cloudinary\.com/i.test(body) && /^https?:\/\//i.test(body)) return "file";
+  if (/youtu\.be|youtube\.com|vimeo\.com/i.test(body)) return "video";
+  if (/^https?:\/\//i.test(body)) return "link";
+  return "text";
 }
 
-function isVideoLink(text: string) {
-  return /youtu\.be|youtube\.com|vimeo\.com/i.test(text);
+function fileIcon(type: ReturnType<typeof getBodyType>) {
+  const map: Record<string, string> = {
+    pdf: "📄", doc: "📝", sheet: "📊", ppt: "📑", zip: "🗜️", file: "📁",
+  };
+  return map[type] ?? "📎";
 }
 
-function isPdfUrl(url: string) {
-  return /^data:application\/pdf/i.test(url) || /\.pdf(\?.*)?$/i.test(url);
+function fileLabel(url: string, type: ReturnType<typeof getBodyType>) {
+  // Essaie d'extraire le nom depuis l'URL Cloudinary
+  try {
+    const parts = new URL(url).pathname.split("/");
+    const last = parts[parts.length - 1];
+    if (last && last.includes(".")) return decodeURIComponent(last);
+  } catch {}
+  const labels: Record<string, string> = {
+    pdf: "Document PDF", doc: "Document Word", sheet: "Feuille Excel",
+    ppt: "Présentation", zip: "Archive ZIP", file: "Fichier partagé",
+  };
+  return labels[type] ?? "Fichier";
 }
 
 function MessageBubble({ m, mine }: { m: ChatMessageData; mine: boolean }) {
   const sc = STATUS_COLORS[m.sender.status];
   const body = m.body;
+  const type = getBodyType(body);
 
-  const isImage = isImageUrl(body);
-  const isVideo = isVideoLink(body);
-  const isPdf = isPdfUrl(body);
-  const isLink = !isImage && !isPdf && /^https?:\/\//i.test(body);
+  const bubbleBase = mine
+    ? "bg-blue-600 text-white"
+    : "bg-white border border-slate-200 text-slate-700";
 
   return (
     <div className={`flex gap-2.5 ${mine ? "flex-row-reverse" : ""}`}>
@@ -79,40 +103,31 @@ function MessageBubble({ m, mine }: { m: ChatMessageData; mine: boolean }) {
           </div>
         )}
 
-        {isImage ? (
+        {type === "image" ? (
           <div className={`rounded-2xl overflow-hidden border ${mine ? "border-blue-300" : "border-slate-200"}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={body} alt="image partagée" loading="lazy" decoding="async" className="max-w-[260px] max-h-[300px] object-cover block" />
           </div>
-        ) : isPdf ? (
-          <a
-            href={body}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`flex items-center gap-2 rounded-2xl px-4 py-3 text-sm font-medium ${mine ? "bg-blue-600 text-white" : "bg-white border border-slate-200 text-slate-700"}`}
-          >
-            <span className="text-lg">📄</span>
-            <span className="underline underline-offset-2">Document PDF</span>
-          </a>
-        ) : isVideo ? (
-          <a
-            href={body}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`flex items-center gap-2 rounded-2xl px-4 py-3 text-sm font-medium ${mine ? "bg-blue-600 text-white" : "bg-white border border-slate-200 text-slate-700"}`}
-          >
+        ) : type === "video" ? (
+          <a href={body} target="_blank" rel="noopener noreferrer"
+            className={`flex items-center gap-2 rounded-2xl px-4 py-3 text-sm font-medium ${bubbleBase}`}>
             <span className="text-lg">▶️</span>
             <span className="underline underline-offset-2 truncate max-w-[200px]">{body}</span>
           </a>
-        ) : isLink ? (
-          <a
-            href={body}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`flex items-center gap-2 rounded-2xl px-4 py-3 text-sm ${mine ? "bg-blue-600 text-white" : "bg-white border border-slate-200 text-slate-700"}`}
-          >
+        ) : type === "link" ? (
+          <a href={body} target="_blank" rel="noopener noreferrer"
+            className={`flex items-center gap-2 rounded-2xl px-4 py-3 text-sm ${bubbleBase}`}>
             <span>🔗</span>
             <span className="underline underline-offset-2 truncate max-w-[220px]">{body}</span>
+          </a>
+        ) : type !== "text" ? (
+          <a href={body} target="_blank" rel="noopener noreferrer" download
+            className={`flex items-center gap-2 rounded-2xl px-4 py-3 text-sm font-medium max-w-[260px] ${bubbleBase}`}>
+            <span className="text-xl shrink-0">{fileIcon(type)}</span>
+            <span className="flex-1 min-w-0">
+              <span className="block truncate underline underline-offset-2">{fileLabel(body, type)}</span>
+              <span className="text-[10px] opacity-70">Télécharger ↓</span>
+            </span>
           </a>
         ) : (
           <div className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${mine ? "bg-blue-600 text-white rounded-tr-sm" : "bg-white text-slate-800 border border-slate-100 rounded-tl-sm"}`}>
@@ -190,21 +205,23 @@ export function ChatMessages({ initialMessages, conversationId, currentUserId }:
     setUploadingFile(true);
     setError(null);
     try {
-      // Limite 3 Mo pour le base64 inline
-      if (file.size > 3 * 1024 * 1024) {
-        setError("Fichier trop volumineux (max 3 Mo). Partagez un lien Google Drive ou Dropbox dans le message.");
+      if (file.size > 20 * 1024 * 1024) {
+        setError("Fichier trop volumineux (max 20 Mo).");
         return;
       }
-      // Convertir en data URL base64 et envoyer directement comme message
-      const dataUrl = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-      await sendBody(dataUrl);
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("folder", "ibig-chat");
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setError((err as any).error ?? "Échec de l'envoi du fichier.");
+        return;
+      }
+      const { url } = await res.json() as { url: string };
+      await sendBody(url);
     } catch {
-      setError("Impossible de lire le fichier.");
+      setError("Impossible d'envoyer le fichier.");
     } finally {
       setUploadingFile(false);
       if (fileRef.current) fileRef.current.value = "";
@@ -219,7 +236,7 @@ export function ChatMessages({ initialMessages, conversationId, currentUserId }:
             <div>
               <p className="text-3xl mb-2">👋</p>
               <p className="text-sm font-semibold text-slate-600">Démarrez la conversation</p>
-              <p className="text-xs text-slate-400 mt-1">Vous pouvez envoyer du texte, des images, des PDFs et des liens vidéo.</p>
+              <p className="text-xs text-slate-400 mt-1">Texte, images, PDF, Word, Excel, ZIP, liens vidéo…</p>
             </div>
           </div>
         ) : (
@@ -245,7 +262,7 @@ export function ChatMessages({ initialMessages, conversationId, currentUserId }:
           <input
             ref={fileRef}
             type="file"
-            accept="image/*,.pdf"
+            accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.csv,.txt,.zip"
             className="hidden"
             onChange={handleFileChange}
           />
@@ -270,7 +287,7 @@ export function ChatMessages({ initialMessages, conversationId, currentUserId }:
         </form>
         {error && <p className="px-4 pb-2 text-xs text-red-600">{error}</p>}
         <p className="px-4 pb-2 text-[10px] text-slate-400">
-          📎 Images & PDF · 🔗 Liens YouTube / vidéo · ⌨️ Entrée pour envoyer
+          📎 Images, PDF, Word, Excel, ZIP (max 20 Mo) · 🔗 Liens YouTube · ⌨️ Entrée pour envoyer
         </p>
       </div>
     </div>

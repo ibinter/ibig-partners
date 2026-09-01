@@ -114,10 +114,11 @@ export async function submitOpportunity(formData: FormData) {
   const title = String(formData.get("title") || "").trim();
   const description = String(formData.get("description") || "").trim();
   if (!title || !description) return;
-  await prisma.opportunity.create({
+  await (prisma as any).opportunity.create({
     data: {
       userId: user.id,
       title,
+      category: String(formData.get("category") || "AUTRE"),
       description,
       estimatedValue: Number(formData.get("estimatedValue") || 0) || 0,
       status: "NEW",

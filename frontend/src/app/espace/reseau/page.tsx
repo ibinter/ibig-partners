@@ -214,22 +214,53 @@ export default async function ReseauPage() {
           <div className="mb-4">
             <h3 className="font-semibold text-slate-800 text-sm">💼 Soumettre une opportunité B2B</h3>
             <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-              Marché, collaboration, appel d&apos;offres… Toute opportunité signée est commissionnée par accord écrit avec l&apos;équipe IBIG.
+              Vous avez identifié un besoin, un contact, un projet ou un marché ?
+              Soumettez-le — l&apos;équipe IBIG l&apos;étudie et vous contacte si l&apos;opportunité est retenue.
             </p>
           </div>
           <form action={submitOpportunity} className="space-y-3">
-            <Field label="Titre de l'opportunité" name="title" required placeholder="Ex : digitalisation mairie de Cocody" />
-            <Field label="Valeur estimée (FCFA)" name="estimatedValue" type="number" placeholder="0" />
+            <Field label="Titre de l'opportunité" name="title" required placeholder="Ex : PME de Cocody cherche un ERP" />
+            <Field label="Catégorie" name="category">
+              <select
+                name="category"
+                required
+                className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 bg-white"
+              >
+                <option value="">-- Choisir une catégorie --</option>
+                <option value="FORMATION">🎓 Formation & Éducation</option>
+                <option value="DIGITAL">💻 Digital & Web (sites, apps, e-commerce)</option>
+                <option value="INFORMATIQUE">⚙️ Logiciels & Informatique (ERP, SaaS)</option>
+                <option value="IMMOBILIER">🏠 Immobilier (vente, location, foncier)</option>
+                <option value="BTP">🏗️ BTP & Construction</option>
+                <option value="CONSEIL">📋 Conseil & Accompagnement</option>
+                <option value="FINANCEMENT">💰 Financement & Investissement</option>
+                <option value="COMMERCIAL">🤝 Développement Commercial & Vente</option>
+                <option value="PARTENARIAT">🌐 Partenariat & Représentation</option>
+                <option value="MISE_EN_RELATION">🔗 Mise en Relation & Intermédiation</option>
+                <option value="EMPLOI_RH">👥 Emploi & Ressources Humaines</option>
+                <option value="EVENEMENTIEL">🎪 Événementiel & Communication</option>
+                <option value="MARKETING">📢 Marketing & Communication Visuelle</option>
+                <option value="SERVICES">🛠️ Services aux Entreprises</option>
+                <option value="COMMERCE">🛒 Commerce, Distribution & Import/Export</option>
+                <option value="LOGISTIQUE">🚚 Logistique & Transport</option>
+                <option value="SANTE">🏥 Santé & Bien-être</option>
+                <option value="AGRI">🌱 Agriculture & Agrobusiness</option>
+                <option value="ENERGIE">⚡ Énergie & Environnement</option>
+                <option value="INTERNATIONAL">🌍 Opportunité Internationale</option>
+                <option value="AUTRE">💡 Autre / Je ne sais pas encore</option>
+              </select>
+            </Field>
+            <Field label="Valeur estimée (FCFA) — optionnel" name="estimatedValue" type="number" placeholder="0" />
             <Field label="Description" name="description">
               <textarea
                 name="description"
                 required
-                rows={3}
+                rows={4}
                 className="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 placeholder:text-slate-400"
-                placeholder="Contexte, contact, nature de la collaboration…"
+                placeholder="Décrivez l'opportunité : qui est le client / le besoin, quel secteur, quelle ville, quel type de collaboration envisagé…"
               />
             </Field>
-            <Button type="submit" className="w-full">Soumettre l&apos;opportunité</Button>
+            <Button type="submit" className="w-full">Soumettre l&apos;opportunité →</Button>
           </form>
         </div>
 
