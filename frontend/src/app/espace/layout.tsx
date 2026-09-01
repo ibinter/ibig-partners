@@ -45,6 +45,7 @@ export default async function EspaceLayout({
     { href: "/espace/chat",         label: "Messages",        icon: "💬",  group: "Formation & Communauté" },
     { href: "/espace/badges",       label: "Mes Badges",      icon: "🏅",  group: "Formation & Communauté" },
     { href: "/espace/verification", label: "Vérifier mon compte", icon: "🔐", group: "Compte" },
+    { href: "/espace/plan-compensation", label: "Plan de compensation", icon: "💎", group: "Ressources" },
     { href: "/espace/formation",    label: "Guide Commissions", icon: "📚",  group: "Ressources" },
     { href: "/espace/kit",          label: "Kit Marketing",   icon: "🎨",  group: "Ressources" },
     { href: "/espace/guide",        label: "Guide Affilié (PDF)", icon: "📖", group: "Ressources" },
