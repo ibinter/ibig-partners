@@ -42,6 +42,7 @@ export default async function ProspectsPage() {
   ];
 
   /* Sérialisation pour le composant client */
+  const now = Date.now();
   const rows = prospects.map((p) => ({
     id: p.id,
     name: p.name,
@@ -52,6 +53,7 @@ export default async function ProspectsPage() {
     statusTone: statusTone(p.status),
     productName: p.productId ? (productMap.get(p.productId) ?? null) : null,
     date: formatDate(p.createdAt),
+    daysSince: Math.floor((now - new Date(p.createdAt).getTime()) / (1000 * 60 * 60 * 24)),
   }));
 
   return (

@@ -6,8 +6,14 @@ import { formatDate, fcfa } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
-export default async function AnalyticsPage() {
+export default async function AnalyticsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ days?: string }>;
+}) {
   const user = await requireUser();
+  const { days } = await searchParams;
+  const periodDays = days === "7" ? 7 : days === "90" ? 90 : 30;
 
   const links = await prisma.affiliateLink.findMany({
     where: { userId: user.id },
@@ -22,7 +28,7 @@ export default async function AnalyticsPage() {
   const now = new Date();
 
   const since30 = new Date(now);
-  since30.setDate(since30.getDate() - 30);
+  since30.setDate(since30.getDate() - periodDays);
 
   const weekStart = new Date(now);
   const dow = weekStart.getDay() === 0 ? 7 : weekStart.getDay();
@@ -71,9 +77,9 @@ export default async function AnalyticsPage() {
       ? 100
       : 0;
 
-  /* ── Graphique 30 jours ── */
+  /* ── Graphique période ── */
   const clicksByDay: Record<string, number> = {};
-  for (let i = 29; i >= 0; i--) {
+  for (let i = periodDays - 1; i >= 0; i--) {
     const d = new Date(now);
     d.setDate(d.getDate() - i);
     const key = d.toISOString().slice(0, 10);
@@ -103,16 +109,37 @@ export default async function AnalyticsPage() {
 
   return (
     <div className="space-y-5">
-      <PageHeader
-        title="Analytics"
-        subtitle="Performance de vos liens d'affiliation — 30 derniers jours"
-      />
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <PageHeader
+          title="Analytics"
+          subtitle={`Performance de vos liens d'affiliation — ${periodDays} derniers jours`}
+        />
+        <div className="flex gap-1.5 shrink-0">
+          {[
+            { label: "7 jours",  val: "7" },
+            { label: "30 jours", val: "30" },
+            { label: "90 jours", val: "90" },
+          ].map((o) => (
+            <Link
+              key={o.val}
+              href={`/espace/analytics?days=${o.val}`}
+              className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+                String(periodDays) === o.val
+                  ? "bg-blue-600 text-white shadow"
+                  : "bg-white border border-slate-200 text-slate-500 hover:border-blue-300"
+              }`}
+            >
+              {o.label}
+            </Link>
+          ))}
+        </div>
+      </div>
 
       {/* ── 5 KPIs ── */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         {[
           { label: "Clics totaux", value: totalClicks.toLocaleString("fr-FR"), sub: "depuis le début", gradient: "from-blue-600 to-blue-700", sub2: "blue" },
-          { label: "Clics sur 30j", value: clicks30.toLocaleString("fr-FR"), sub: `${thisWeekClicks} cette semaine`, gradient: "from-cyan-600 to-cyan-700", sub2: "cyan" },
+          { label: `Clics sur ${periodDays}j`, value: clicks30.toLocaleString("fr-FR"), sub: `${thisWeekClicks} cette semaine`, gradient: "from-cyan-600 to-cyan-700", sub2: "cyan" },
           { label: "Ventes confirmées", value: totalSales, sub: "depuis le début", gradient: "from-emerald-600 to-teal-600", sub2: "emerald" },
           { label: "Taux de conversion", value: `${convRate} %`, sub: "clics → ventes", gradient: "from-violet-600 to-purple-700", sub2: "violet" },
           { label: "Commissions gagnées", value: fcfa(commissionsEarned), sub: "validées + versées", gradient: "from-amber-500 to-orange-500", sub2: "amber" },
@@ -158,7 +185,7 @@ export default async function AnalyticsPage() {
         <div className="flex items-center justify-between mb-5">
           <div>
             <h3 className="font-semibold text-slate-800 text-sm">Clics quotidiens</h3>
-            <p className="text-xs text-slate-400 mt-0.5">30 derniers jours · {clicks30} clics au total</p>
+            <p className="text-xs text-slate-400 mt-0.5">{periodDays} derniers jours · {clicks30} clics au total</p>
           </div>
           <span className="rounded-lg bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-600">
             Moy. {clicks30 > 0 ? (clicks30 / 30).toFixed(1) : "0"} / jour

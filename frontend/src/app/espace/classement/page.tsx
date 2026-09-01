@@ -50,25 +50,54 @@ type Partner = {
   _count: { sales: number };
 };
 
-export default async function ClassementPage() {
+export default async function ClassementPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ period?: string }>;
+}) {
   const currentUser = (await requireUser()) as any;
+  const { period } = await searchParams;
+  const isCeMois = period !== "alltime";
 
-  const topBySales: Partner[] = await (prisma as any).user.findMany({
-    where: { active: true, approved: true },
-    select: {
-      id: true,
-      firstName: true,
-      lastName: true,
-      status: true,
-      photoUrl: true,
-      city: true,
-      country: true,
-      partnerType: true,
-      _count: { select: { sales: true } },
-    },
-    orderBy: { sales: { _count: "desc" } },
-    take: 20,
-  });
+  // Start of current month for filtering
+  const startOfMonth = new Date();
+  startOfMonth.setDate(1);
+  startOfMonth.setHours(0, 0, 0, 0);
+
+  // For "Ce mois" we need to count monthly sales per user
+  let topBySales: Partner[];
+  if (isCeMois) {
+    // Get all users with at least 1 confirmed sale this month
+    const monthlySales = await prisma.sale.groupBy({
+      by: ["sellerId"],
+      where: { status: "CONFIRMED", createdAt: { gte: startOfMonth } },
+      _count: { id: true },
+      orderBy: { _count: { id: "desc" } },
+      take: 20,
+    });
+    const userIds = monthlySales.map((s) => s.sellerId);
+    const usersMap = userIds.length > 0
+      ? await (prisma as any).user.findMany({
+          where: { id: { in: userIds }, active: true, approved: true },
+          select: { id: true, firstName: true, lastName: true, status: true, photoUrl: true, city: true, country: true, partnerType: true },
+        })
+      : [];
+    const countMap = new Map(monthlySales.map((s) => [s.sellerId, s._count.id]));
+    topBySales = (usersMap as any[])
+      .map((u: any) => ({ ...u, _count: { sales: countMap.get(u.id) ?? 0 } }))
+      .sort((a: any, b: any) => b._count.sales - a._count.sales);
+  } else {
+    topBySales = await (prisma as any).user.findMany({
+      where: { active: true, approved: true },
+      select: {
+        id: true, firstName: true, lastName: true, status: true,
+        photoUrl: true, city: true, country: true, partnerType: true,
+        _count: { select: { sales: true } },
+      },
+      orderBy: { sales: { _count: "desc" } },
+      take: 20,
+    });
+  }
 
   const currentUserRank = topBySales.findIndex((p) => p.id === currentUser.id);
   const podium = topBySales.slice(0, 3);
@@ -87,7 +116,7 @@ export default async function ClassementPage() {
     <div className="space-y-6">
       <PageHeader
         title="🏆 Classement des partenaires"
-        subtitle={`Classement général — ${monthName()}`}
+        subtitle={isCeMois ? `Ce mois — ${monthName()}` : "Classement tout temps"}
       />
 
       {/* Motivational banner for current user */}
@@ -113,15 +142,26 @@ export default async function ClassementPage() {
         </div>
       )}
 
-      {/* ── Tabs placeholder (same data, both tabs) ── */}
+      {/* ── Tabs ── */}
       <div className="flex gap-2">
-        <span className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm">
+        <Link
+          href="/espace/classement"
+          className={`rounded-xl px-4 py-2 text-sm font-semibold shadow-sm transition ${isCeMois ? "bg-blue-600 text-white" : "bg-white border border-slate-200 text-slate-500 hover:border-blue-300"}`}
+        >
           Ce mois
-        </span>
-        <span className="rounded-xl bg-white border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-500 shadow-sm cursor-default">
+        </Link>
+        <Link
+          href="/espace/classement?period=alltime"
+          className={`rounded-xl px-4 py-2 text-sm font-semibold shadow-sm transition ${!isCeMois ? "bg-blue-600 text-white" : "bg-white border border-slate-200 text-slate-500 hover:border-blue-300"}`}
+        >
           Tout temps
-        </span>
+        </Link>
       </div>
+      {isCeMois && (
+        <p className="text-xs text-slate-400 -mt-2">
+          Ventes confirmées depuis le 1er {new Date().toLocaleDateString("fr-FR", { month: "long", year: "numeric" })}
+        </p>
+      )}
 
       {/* ── Podium top 3 ── */}
       {podium.length > 0 && (

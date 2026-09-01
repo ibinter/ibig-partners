@@ -7,6 +7,7 @@ import { PAYOUT_METHODS, PAYOUT_METHOD_LABELS, STATUS_LABELS, STATUS_DETAILS } f
 import { getNetwork } from "@/lib/metrics";
 import { updateProfile } from "../actions";
 import { FileUpload } from "@/components/file-upload";
+import { ReferralCard } from "./ReferralCard";
 
 export const dynamic = "force-dynamic";
 
@@ -120,6 +121,9 @@ export default async function ProfilPage() {
               <p className="text-[11px] text-slate-400 mt-0.5 font-semibold uppercase tracking-wide">Liens actifs</p>
             </div>
           </div>
+
+          {/* Lien de parrainage */}
+          <ReferralCard code={user.code ?? ""} siteUrl={process.env.NEXT_PUBLIC_SITE_URL ?? "https://ibigpartners.com"} firstName={user.firstName ?? ""} />
 
           {/* Accès rapides */}
           <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm space-y-2">
