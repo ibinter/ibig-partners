@@ -137,8 +137,10 @@ export async function declareSale(formData: FormData) {
   const customerPhone = String(formData.get("customerPhone") || "").trim();
   const customerEmail = String(formData.get("customerEmail") || "").trim();
   const channel = String(formData.get("channel") || "WhatsApp").trim();
-  const proofNote = String(formData.get("proofNote") || "").trim();
-  const proofUrl = String(formData.get("proofUrl") || "").trim();
+  const proofNote   = String(formData.get("proofNote") || "").trim();
+  const proofUrlUp  = String(formData.get("proofUrl") || "").trim();
+  const proofUrlAlt = String(formData.get("proofUrlAlt") || "").trim();
+  const proofUrl    = proofUrlUp || proofUrlAlt;
   const amountRaw = Number(formData.get("amount"));
 
   if (!productId || !customerName) return;
