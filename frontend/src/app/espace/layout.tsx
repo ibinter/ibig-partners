@@ -31,6 +31,7 @@ export default async function EspaceLayout({
     { href: "/espace/simulateur",   label: "Simulateur gains",icon: "🧮",  group: "Vue d'ensemble" },
     { href: "/espace/bienvenue",    label: "Guide démarrage", icon: "🚀",  group: "Vue d'ensemble" },
     { href: "/espace/produits",     label: "Mes Produits",    icon: "🧩",  group: "Mon activité" },
+    { href: "/espace/mon-marche",  label: "Mon Marché",      icon: "🗺️",  group: "Mon activité" },
     { href: "/espace/liens",        label: "Mes Liens",       icon: "🔗",  group: "Mon activité" },
     { href: "/espace/reseau",       label: "Mon Réseau",      icon: "🌳",  group: "Mon activité" },
     { href: "/espace/prospects",    label: "Mes Prospects",   icon: "📇",  group: "Mon activité" },

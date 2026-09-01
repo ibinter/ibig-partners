@@ -20,6 +20,15 @@ export default async function ProduitsPage() {
   const user = await requireUser();
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
+  // Préférences sectorielles de l'affilié
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { marketSectors: true } as any,
+  });
+  const marketSectors: string[] = (dbUser as any)?.marketSectors
+    ? ((dbUser as any).marketSectors as string).split(",").filter(Boolean)
+    : [];
+
   const branches = await prisma.branch.findMany({
     where: { active: true },
     orderBy: { order: "asc" },
@@ -93,6 +102,7 @@ export default async function ProduitsPage() {
         totalProducts={allProducts.length}
         totalActive={links.length}
         totalDocumented={totalDocumented}
+        marketSectors={marketSectors}
       />
     </div>
   );

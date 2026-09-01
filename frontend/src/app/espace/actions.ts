@@ -356,3 +356,27 @@ export async function withdrawMissionApplication(formData: FormData) {
 
   revalidatePath("/espace/missions");
 }
+
+// ─── Mon Marché ───────────────────────────────────────────────────────────────
+export async function updateMarket(formData: FormData) {
+  const user = await requireUser();
+
+  const sectors = formData.getAll("sectors").map(String).filter(Boolean);
+  const zone = String(formData.get("zone") || "").trim();
+  const networkType = String(formData.get("networkType") || "MIXTE");
+  const networkDescription = String(formData.get("networkDescription") || "").trim();
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      marketSectors: sectors.join(",") || null,
+      marketZone: zone || null,
+      networkType,
+      networkDescription: networkDescription || null,
+    } as any,
+  });
+
+  revalidatePath("/espace/mon-marche");
+  revalidatePath("/espace/produits");
+  revalidatePath("/espace/missions");
+}

@@ -45,6 +45,12 @@ model User {
   website       String?  // site web personnel ou entreprise
   publicListing Boolean  @default(false) // opt-in pour apparaitre dans le listing public
 
+  // Mon Marché — préférences sectorielles de l'affilié
+  marketSectors      String? // secteurs séparés par virgule ex: "FORMATION,DIGITAL,IMMOBILIER"
+  marketZone         String? // zone géographique principale ex: "Côte d'Ivoire"
+  networkType        String? @default("MIXTE") // ENTREPRISES | PARTICULIERS | ONG | MIXTE
+  networkDescription String? // description libre du réseau
+
   // Parrainage : structure du reseau multi-niveaux
   sponsorId String?
   sponsor   User?   @relation("Referral", fields: [sponsorId], references: [id])

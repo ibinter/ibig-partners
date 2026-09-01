@@ -31,11 +31,26 @@ interface Branch {
   activeCount: number;
 }
 
+// Map branche → catégorie marché
+const BRANCH_TO_SECTOR: Record<string, string> = {
+  "ibig-eduform": "FORMATION",
+  "ibig-soft": "INFORMATIQUE",
+  "ibig-immo-trust": "IMMOBILIER",
+  "ibig-digital": "DIGITAL",
+  "ibig-digital-kits": "INFORMATIQUE",
+  "ibig-conseil-plus": "CONSEIL",
+  "ibig-market": "COMMERCE",
+  "ibig-multiservices": "SERVICES",
+  "ibig-financement": "FINANCEMENT",
+  "ibig-emploi-talents": "EMPLOI_RH",
+};
+
 interface Props {
   branches: Branch[];
   totalProducts: number;
   totalActive: number;
   totalDocumented: number;
+  marketSectors?: string[];
 }
 
 const PRICING_LABELS: Record<string, string> = {
@@ -85,11 +100,13 @@ function ProductCard({
   branchName,
   branchGradient,
   branchSlug,
+  recommended,
 }: {
   product: Product;
   branchName: string;
   branchGradient: string;
   branchSlug: string;
+  recommended?: boolean;
 }) {
   const active = product.affiliateUrl !== null;
   const destination = product.siteUrl
@@ -107,11 +124,18 @@ function ProductCard({
         <span className="text-xs font-bold text-white/90 truncate">
           {BRANCH_ICONS[branchSlug] ?? "📦"} {branchName}
         </span>
-        {active && (
-          <span className="shrink-0 rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold text-white">
-            ✓ Activé
-          </span>
-        )}
+        <div className="flex items-center gap-1.5 shrink-0">
+          {recommended && (
+            <span className="rounded-full bg-amber-400 px-2 py-0.5 text-[9px] font-extrabold text-amber-900 uppercase tracking-wide">
+              ★ Mon marché
+            </span>
+          )}
+          {active && (
+            <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold text-white">
+              ✓ Activé
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Body */}
@@ -182,23 +206,33 @@ function ProductCard({
   );
 }
 
-export default function ProduitsClient({ branches, totalProducts, totalActive }: Props) {
+export default function ProduitsClient({ branches, totalProducts, totalActive, marketSectors = [] }: Props) {
   const [selectedBranch, setSelectedBranch] = useState<string>("ALL");
   const [filter, setFilter] = useState<"all" | "active" | "inactive">("all");
   const [search, setSearch] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  // Flatten all products with branch info
+  // Flatten all products with branch info + recommended flag
   const allProducts = useMemo(() =>
-    branches.flatMap(b =>
-      b.products.map(p => ({ ...p, branchId: b.id, branchSlug: b.id.slice(0, 30), branchName: b.name, branchGradient: b.gradient, branchSlugKey: b.id }))
-    ), [branches]);
+    branches.flatMap(b => {
+      const branchSector = BRANCH_TO_SECTOR[b.id] ?? "";
+      const recommended = marketSectors.length > 0 && marketSectors.includes(branchSector);
+      return b.products.map(p => ({
+        ...p,
+        branchId: b.id,
+        branchSlug: b.id.slice(0, 30),
+        branchName: b.name,
+        branchGradient: b.gradient,
+        branchSlugKey: b.id,
+        recommended,
+      }));
+    }), [branches, marketSectors]);
 
   // Branch slugs — on utilise l'id comme clé stable
   const branchMap = useMemo(() => new Map(branches.map(b => [b.id, b])), [branches]);
 
   const filtered = useMemo(() => {
-    return allProducts.filter(p => {
+    const results = allProducts.filter(p => {
       if (selectedBranch !== "ALL" && p.branchId !== selectedBranch) return false;
       if (filter === "active" && !p.affiliateUrl) return false;
       if (filter === "inactive" && p.affiliateUrl) return false;
@@ -208,7 +242,12 @@ export default function ProduitsClient({ branches, totalProducts, totalActive }:
       }
       return true;
     });
-  }, [allProducts, selectedBranch, filter, search]);
+    // Recommended first when market sectors set
+    if (marketSectors.length > 0) {
+      results.sort((a, b) => (b.recommended ? 1 : 0) - (a.recommended ? 1 : 0));
+    }
+    return results;
+  }, [allProducts, selectedBranch, filter, search, marketSectors]);
 
   const totalCommissionPotential = filtered.filter(p => p.affiliateUrl).reduce((s, p) => s + (p.price > 0 ? Math.round(p.price * p.rate / 100) : 0), 0);
 
@@ -227,6 +266,18 @@ export default function ProduitsClient({ branches, totalProducts, totalActive }:
             {totalProducts}+ offres à promouvoir — logiciels, formations, immobilier, conseil, financement et bien plus.
             Activez celles qui correspondent à votre réseau et générez des commissions.
           </p>
+          {marketSectors.length === 0 && (
+            <Link href="/espace/mon-marche"
+              className="mt-3 inline-flex items-center gap-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-amber-900 font-bold text-xs px-4 py-2 transition">
+              🗺️ Définir Mon Marché pour voir les recommandations →
+            </Link>
+          )}
+          {marketSectors.length > 0 && (
+            <p className="mt-2 text-xs text-amber-300 font-semibold">
+              ★ Les offres de votre marché ({marketSectors.length} secteur{marketSectors.length > 1 ? "s" : ""}) apparaissent en premier.
+              <Link href="/espace/mon-marche" className="ml-2 underline underline-offset-2 hover:text-amber-200">Modifier →</Link>
+            </p>
+          )}
           <div className="mt-4 flex flex-wrap gap-3">
             <div className="rounded-xl bg-white/10 px-4 py-2 text-center">
               <p className="text-xl font-extrabold">{totalProducts}</p>
@@ -364,6 +415,7 @@ export default function ProduitsClient({ branches, totalProducts, totalActive }:
               branchName={p.branchName}
               branchGradient={p.branchGradient}
               branchSlug={p.branchId}
+              recommended={p.recommended}
             />
           ))}
           {/* CTA Soumettre une opportunité */}
