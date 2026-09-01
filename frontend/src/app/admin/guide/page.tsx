@@ -144,7 +144,7 @@ export default function GuidePage() {
       // Version & date
       doc.setFontSize(8);
       doc.setTextColor(...GOLD);
-      doc.text(t("Version 1.0 - Juin 2026"),W / 2,175,{ align: "center"});
+      doc.text(t("Version 2.0 - Septembre 2026"),W / 2,175,{ align: "center"});
 
       // Bas de page couverture
       doc.setFontSize(8);
@@ -340,6 +340,7 @@ export default function GuidePage() {
         ["Ventes","Historique complet de toutes vos ventes confirmées, en attente et annulées, avec montants et dates."],
         ["Commissions","Détail de chaque commission : niveau (N1/N2/N3), montant, statut (En attente / Validée / Payée)."],
         ["Paiements","Historique des virements reçus avec références, montants et méthodes de paiement."],
+        ["Retrait self-service","Demandez votre retrait en ligne directement depuis votre tableau de bord - validation admin puis virement sous 48h."],
         ["Mon Réseau","Visualisation de votre arbre de parrainage sur 3 niveaux avec les performances de chaque filleul."],
         ["Prospects","Gestion de vos prospects : ajout, suivi du statut (Contacté, Démo, Converti, Perdu)."],
         ["Badges","Collection de vos badges gagnés : 1ère vente, 10 ventes, statut Gold, équipe de 10..."],
@@ -665,6 +666,8 @@ export default function GuidePage() {
       const academy = [
         ["Articles","Guides détaillés sur les produits, techniques de vente, stratégies de recrutement."],
         ["Vidéos","Démonstrations produits, témoignages de partenaires, formations en ligne."],
+        ["Audios","Capsules sonores, podcasts partenaires, interviews terrain - écoutable en déplacement."],
+        ["Images & Infographies","Visuels pédagogiques, organigrammes commissions, fiches produit illustrées."],
         ["Quiz","Évaluations interactivés pour valider vos connaissances et débloquer des badges."],
         ["Assistant IA","Posez toutes vos questions sur les produits IBIG, les commissions ou les techniques de vente - réponse instantanée 24h/24."],
         ["Coach IA IBIG","Assistant personnel intelligent formé spécifiquement sur les valeurs, produits et processus d'IBIG PARTNERS."],
@@ -710,7 +713,7 @@ export default function GuidePage() {
           ["Partenaires institutionnels","Gestion des partenaires publics affichés sur la page d'accueil"],
           ["Ventes","Historique global, confirmation/annulation, détail client"],
           ["Commissions","Validation en masse, suivi par partenaire, export"],
-          ["Paiements","Gestion des virements, marquage 'Payé', référence de transaction"],
+          ["Paiements","Gestion des virements, retrait self-service (validation demandes partenaires), marquage Payé, référence transaction"],
           ["Branches & Produits","Création/modification des branches et produits du catalogue"],
           ["Académie IBIG","Gestion des modules de formation, contenus, badges"],
           ["Opportunités","Suivi des grandes opportunités commerciales du réseau"],
@@ -887,55 +890,90 @@ export default function GuidePage() {
     }
   }
 
+  const chapters = [
+    { num: "01", title: "Présentation & Branches",       desc: "9 branches, vision, mission, engagement IBIG SARL",       icon: "🌍" },
+    { num: "02", title: "Inscription & Types de comptes", desc: "Particulier, entreprise, ONG — processus étape par étape", icon: "✍️" },
+    { num: "03", title: "Tableau de bord",                desc: "Vue d'ensemble, KPIs temps réel, alertes, navigation",     icon: "📊" },
+    { num: "04", title: "Commissions N1/N2/N3",           desc: "Taux par branche, statuts, bonus, dégressivité SOFT",      icon: "💰" },
+    { num: "05", title: "Catalogue produits",             desc: "14 ERP SOFT, formations, immo, market, digital…",          icon: "📦" },
+    { num: "06", title: "KYC & Activation paiements",    desc: "Vérification identité, étapes, délais, méthodes",          icon: "🔐" },
+    { num: "07", title: "Liens & QR codes",               desc: "Génération, cookie 90j, partage WhatsApp/réseaux",         icon: "🔗" },
+    { num: "08", title: "Ventes, commissions & retrait",  desc: "Cycle vente, statuts, retrait self-service, virements",    icon: "💳" },
+    { num: "09", title: "Réseau & parrainage",            desc: "Arbre 3 niveaux, prospects, opportunités, classement",     icon: "🌐" },
+    { num: "10", title: "Académie IBIG",                  desc: "Articles, vidéos, audios, images, quiz, Coach IA 24/7",    icon: "🎓" },
+    { num: "11", title: "Espace SUPERADMIN",              desc: "Gestion partenaires, KYC, ventes, paiements, audit",       icon: "⚙️" },
+    { num: "12", title: "Badges, FAQ & contacts",         desc: "Récompenses, questions fréquentes, canaux support",        icon: "🏆" },
+  ];
+
   return (
-    <div className="max-w-2xl mx-auto py-10 space-y-8">
-      <div className="rounded-2xl overflow-hidden shadow-xl border border-slate-100">
-        {/* Header premium */}
-        <div className="bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 px-8 py-10 text-center">
-          <p className="text-xs font-bold tracking-widest text-blue-300 uppercase mb-2">IBIG SARL — Programme Officiel</p>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">IBIG PARTNERS</h1>
-          <p className="text-yellow-400 font-bold text-lg mt-1">Guide Utilisateur Officiel</p>
-          <p className="text-blue-200 text-sm mt-3">Version 1.0 — Juin 2026 · 12 pages · Format A4</p>
-        </div>
-
-        {/* Contenu */}
-        <div className="bg-white px-8 py-6 space-y-5">
-          <p className="text-slate-600 text-sm leading-relaxed">
-            Ce guide couvre l'intégralité de la plateformé IBIG PARTNERS de A à Z : inscription, KYC, liens d'affiliation,commissions sur 3 niveaux,réseau,académie,espace admin et FAQ.
-          </p>
-
-          <div className="grid grid-cols-2 gap-3 text-sm">
-            {[
-              "Présentation & Branches",
-              "Inscription & Types de comptes",
-              "Tableau de bord complet",
-              "Commissions N1/N2/N3",
-              "KYC & Activation paiements",
-              "Liens & QR codes",
-              "Suivi ventes & commissions",
-              "Réseau & parrainage",
-              "Académie & formations",
-              "Espace SUPERADMIN",
-              "Badges & récompenses",
-              "Contact & FAQ",
-            ].map((item) => (
-              <div key={item} className="flex items-center gap-2 text-slate-700">{item}</div>
-            ))}
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="rounded-2xl overflow-hidden shadow-lg">
+        <div className="bg-gradient-to-r from-[#0f1729] via-[#0b3db5] to-[#0f1729] px-8 py-10">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+            <div>
+              <span className="inline-block rounded-full bg-blue-500/20 border border-blue-400/30 px-3 py-1 text-xs font-bold text-blue-200 uppercase tracking-widest mb-3">
+                Document Officiel · IBIG SARL
+              </span>
+              <h1 className="text-2xl font-extrabold text-white tracking-tight">Guide Utilisateur Officiel</h1>
+              <p className="text-yellow-400 font-bold text-base mt-1">IBIG PARTNERS — Programme d&apos;Affiliation Panafricain</p>
+              <div className="flex flex-wrap gap-3 mt-3 text-xs text-blue-200">
+                <span>📄 12 pages A4</span>
+                <span>📅 Version 2.0 · Septembre 2026</span>
+                <span>🔒 Document confidentiel</span>
+              </div>
+            </div>
+            <button
+              onClick={generatePDF}
+              disabled={loading}
+              className="shrink-0 flex items-center gap-2 rounded-xl bg-yellow-400 hover:bg-yellow-300 disabled:opacity-60 px-6 py-3.5 text-sm font-bold text-slate-900 transition-all shadow-xl"
+            >
+              {loading ? (
+                <>
+                  <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                  </svg>
+                  Génération...
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                  Télécharger le PDF
+                </>
+              )}
+            </button>
           </div>
-
-          <button
-            onClick={generatePDF}
-            disabled={loading}
-            className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-4 text-base font-bold text-white hover:from-blue-700 hover:to-blue-900 disabled:opacity-60 transition-all shadow-lg"
-          >
-            {loading ? "Génération du PDF en cours...": "Télécharger le Guide PDF (Premium)"}
-          </button>
-
-          <p className="text-center text-xs text-slate-400">
-            Document officiel IBIG PARTNERS · INTERMARK BUSINESS INTERNATIONAL GROUP SARL<br />
-            Cocody Riviera Palmeraie,Abidjan,Côte d'Ivoire
-          </p>
         </div>
+      </div>
+
+      {/* Chapitres */}
+      <div>
+        <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Contenu du guide — 12 chapitres</p>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {chapters.map((c) => (
+            <div key={c.num} className="flex items-start gap-3 rounded-xl bg-white border border-slate-100 shadow-sm p-4 hover:shadow-md transition-shadow">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-xl">
+                {c.icon}
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-blue-400">{c.num}</span>
+                  <p className="text-sm font-bold text-slate-800 truncate">{c.title}</p>
+                </div>
+                <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{c.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Pied de page */}
+      <div className="rounded-xl bg-slate-50 border border-slate-100 px-5 py-4 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
+        <span>INTERMARK BUSINESS INTERNATIONAL GROUP SARL · Cocody Riviera Palmeraie, Abidjan, Côte d&apos;Ivoire</span>
+        <span>contact@ibigpartners.com · +225 27 22 27 60 14</span>
       </div>
     </div>
   );
