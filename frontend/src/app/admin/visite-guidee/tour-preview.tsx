@@ -177,6 +177,38 @@ export default function TourPreview() {
         </div>
       </div>
 
+      {/* Liens d'affiliation */}
+      <div className="rounded-2xl border border-cyan-200 bg-cyan-50 p-5 flex items-start gap-4">
+        <span className="text-3xl shrink-0">🔗</span>
+        <div className="min-w-0 flex-1">
+          <h3 className="font-bold text-cyan-900">Liens d'affiliation — votre outil numéro 1</h3>
+          <p className="text-sm text-cyan-800 mt-1 leading-relaxed">
+            Chaque affilié dispose d'un lien unique par produit activé. Lorsqu'un client clique sur ce lien et effectue un achat, la commission est attribuée automatiquement — sans aucune action manuelle.
+          </p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            {[
+              { icon: "🔗", label: "Lien unique par produit",    desc: "ibigpartners.com/go/[CODE]-[PRODUIT] — traçabilité totale" },
+              { icon: "📱", label: "QR Code téléchargeable",     desc: "Pour cartes de visite, affiches, présentations" },
+              { icon: "✅", label: "Activation en un clic",      desc: "Choisissez les produits à promouvoir parmi les 9 branches" },
+              { icon: "📊", label: "Suivi des clics & ventes",   desc: "Statistiques en temps réel dans le tableau de bord" },
+            ].map((f) => (
+              <div key={f.label} className="flex items-start gap-2 rounded-xl bg-white/60 px-3 py-2.5">
+                <span className="text-lg shrink-0">{f.icon}</span>
+                <div>
+                  <p className="text-xs font-bold text-cyan-900">{f.label}</p>
+                  <p className="text-[11px] text-cyan-700 leading-snug">{f.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2 text-xs font-semibold">
+            <span className="rounded-full bg-cyan-100 px-3 py-1 text-cyan-800">📲 WhatsApp · Réseaux sociaux · SMS · Email</span>
+            <span className="rounded-full bg-cyan-100 px-3 py-1 text-cyan-800">💸 Commission attribuée automatiquement</span>
+          </div>
+          <p className="mt-3 text-xs text-cyan-600">📍 Accessible via <strong>Mes Liens</strong> dans l'espace affilié. Présenté à l'étape 3 de la visite guidée.</p>
+        </div>
+      </div>
+
       {/* Réseau d'affiliation */}
       <div className="rounded-2xl border border-purple-200 bg-purple-50 p-5 flex items-start gap-4">
         <span className="text-3xl shrink-0">👥</span>
