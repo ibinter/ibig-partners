@@ -58,6 +58,22 @@ export default function TourPreview() {
         </div>
       </div>
 
+      {/* Retrait self-service */}
+      <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 flex items-start gap-4">
+        <span className="text-3xl shrink-0">💸</span>
+        <div>
+          <h3 className="font-bold text-emerald-900">Retrait self-service</h3>
+          <p className="text-sm text-emerald-800 mt-1 leading-relaxed">
+            Une fois le KYC validé, chaque affilié peut demander le virement de ses commissions directement depuis son espace partenaire — <strong>sans passer par le support</strong>. La demande est traitée automatiquement. Cette information est présentée à l'étape 5 (KYC) de la visite guidée.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2 text-xs font-semibold">
+            <span className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-800">✅ Disponible après validation KYC</span>
+            <span className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-800">💳 Orange Money · Wave · Banque</span>
+            <span className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-800">🚀 Aucune intervention support requise</span>
+          </div>
+        </div>
+      </div>
+
       {/* Résumé des 9 branches */}
       <div className="rounded-2xl border border-slate-100 bg-white p-6">
         <h3 className="font-semibold text-slate-800 mb-1">Les 9 branches du groupe IBIG</h3>
