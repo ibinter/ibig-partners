@@ -1,15 +1,12 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Badge, PageHeader } from "@/components/ui";
+import { PageHeader } from "@/components/ui";
 import { STATUS_LABELS } from "@/lib/constants";
 import { StartConversationButton } from "./StartConversationButton";
+import NouveauClient from "./nouveau-client";
 
 export const dynamic = "force-dynamic";
-
-function getInitials(firstName: string, lastName: string) {
-  return `${firstName?.[0] ?? ""}${lastName?.[0] ?? ""}`.toUpperCase();
-}
 
 export default async function NouvelleConversationPage() {
   const user = await requireUser();
@@ -19,22 +16,24 @@ export default async function NouvelleConversationPage() {
 
   if (filleulCount === 0) {
     return (
-      <div>
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <Link href="/espace/chat" className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 hover:border-slate-300 transition">
+            ← Retour
+          </Link>
+        </div>
         <PageHeader title="Nouvelle conversation" subtitle="Disponible dès votre premier filleul" />
         <div className="rounded-2xl border border-blue-100 bg-blue-50 p-8 text-center">
           <p className="text-4xl mb-4">💬</p>
-          <p className="text-sm text-muted">
-            Recrutez votre premier affilié pour débloquer la messagerie.
-          </p>
-          <Link href="/espace/chat" className="mt-4 inline-block text-sm font-semibold text-blue-600 hover:underline">
-            ← Retour
+          <p className="text-sm text-slate-600 mb-4">Recrutez votre premier affilié pour débloquer la messagerie.</p>
+          <Link href="/espace/reseau" className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-700 transition shadow">
+            Voir mon réseau →
           </Link>
         </div>
       </div>
     );
   }
 
-  // Admins voient tous les affiliés, les autres voient leurs filleuls directs
   const filleuls = await prisma.user.findMany({
     where: isAdmin
       ? { active: true, id: { not: user.id } }
@@ -50,63 +49,51 @@ export default async function NouvelleConversationPage() {
     },
   });
 
+  // Compter les ventes confirmées pour chaque filleul
+  const salesCounts = await prisma.sale.groupBy({
+    by: ["sellerId"],
+    where: {
+      sellerId: { in: filleuls.map((f) => f.id) },
+      status: "CONFIRMED",
+    },
+    _count: { id: true },
+  });
+  const salesMap = new Map(salesCounts.map((s) => [s.sellerId, s._count.id]));
+
+  const contacts = filleuls.map((f) => ({
+    id: f.id,
+    firstName: f.firstName ?? "",
+    lastName:  f.lastName ?? "",
+    statusLabel: STATUS_LABELS[f.status] ?? f.status,
+    photoUrl: f.photoUrl ?? null,
+    city: f.city ?? null,
+    salesCount: salesMap.get(f.id) ?? 0,
+  }));
+
   return (
-    <div>
-      <div className="mb-4 flex items-center gap-3">
-        <Link
-          href="/espace/chat"
-          className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 hover:border-slate-300 transition"
-        >
+    <div className="space-y-5">
+      <div className="flex items-center gap-3">
+        <Link href="/espace/chat" className="rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 hover:border-slate-300 transition">
           ← Retour
         </Link>
       </div>
 
       <PageHeader
         title="Nouvelle conversation"
-        subtitle={isAdmin ? `${filleuls.length} affilié(s)` : `${filleuls.length} filleul${filleuls.length !== 1 ? "s" : ""} direct${filleuls.length !== 1 ? "s" : ""}`}
+        subtitle={isAdmin ? `${contacts.length} affilié(s)` : `${contacts.length} filleul${contacts.length !== 1 ? "s" : ""} direct${contacts.length !== 1 ? "s" : ""}`}
       />
 
-      {filleuls.length === 0 ? (
-        <div className="rounded-2xl border border-slate-100 bg-white p-10 text-center">
+      {contacts.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 py-14 text-center">
           <p className="text-3xl mb-3">👥</p>
-          <p className="text-sm text-muted">Aucun filleul direct actif pour le moment.</p>
+          <p className="text-sm text-slate-500 font-semibold">Aucun filleul direct actif</p>
+          <p className="text-xs text-slate-400 mt-1">Partagez votre lien de parrainage pour recruter.</p>
+          <Link href="/espace/reseau" className="mt-3 inline-block text-xs font-bold text-blue-600 hover:underline">
+            Mon réseau →
+          </Link>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filleuls.map((p: any) => (
-            <div
-              key={p.id}
-              className="flex flex-col items-center rounded-2xl border border-slate-100 bg-white p-5 text-center shadow-sm hover:border-blue-200 hover:shadow-md transition"
-            >
-              {p.photoUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={p.photoUrl}
-                  alt={`${p.firstName} ${p.lastName}`}
-                  className="mb-3 h-16 w-16 rounded-full object-cover shadow"
-                />
-              ) : (
-                <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white font-bold text-lg shadow">
-                  {getInitials(p.firstName, p.lastName)}
-                </div>
-              )}
-
-              <p className="font-semibold text-ink text-sm">
-                {p.firstName} {p.lastName}
-              </p>
-
-              <span className="mt-1 rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-600">
-                {STATUS_LABELS[p.status] ?? p.status}
-              </span>
-
-              {p.city && (
-                <p className="mt-1 text-xs text-muted">📍 {p.city}</p>
-              )}
-
-              <StartConversationButton targetUserId={p.id} />
-            </div>
-          ))}
-        </div>
+        <NouveauClient contacts={contacts} />
       )}
     </div>
   );

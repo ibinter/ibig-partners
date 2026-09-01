@@ -1,35 +1,11 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Badge, EmptyState, PageHeader } from "@/components/ui";
-import { STATUS_LABELS, STATUS_COLORS } from "@/lib/constants";
+import { PageHeader } from "@/components/ui";
+import { STATUS_LABELS } from "@/lib/constants";
+import ChatListClient, { type ConvRow } from "./chat-list-client";
 
 export const dynamic = "force-dynamic";
-
-function formatRelative(date: Date | null): string {
-  if (!date) return "";
-  const diff = Date.now() - new Date(date).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "À l'instant";
-  if (mins < 60) return `Il y a ${mins} min`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `Il y a ${hrs} h`;
-  const days = Math.floor(hrs / 24);
-  return `Il y a ${days} j`;
-}
-
-function getInitials(firstName: string, lastName: string) {
-  return `${firstName?.[0] ?? ""}${lastName?.[0] ?? ""}`.toUpperCase();
-}
-
-function getConversationName(conv: any, currentUserId: string): string {
-  if (conv.name) return conv.name;
-  if (conv.type === "DIRECT") {
-    const other = conv.participants.find((p: any) => p.userId !== currentUserId);
-    if (other?.user) return `${other.user.firstName} ${other.user.lastName}`;
-  }
-  return "Conversation";
-}
 
 export default async function ChatPage() {
   const user = await requireUser();
@@ -50,158 +26,87 @@ export default async function ChatPage() {
     orderBy: { lastMessageAt: "desc" },
   });
 
-  // La messagerie se débloque avec le 1er filleul — MAIS les conversations
-  // existantes (ex. message de bienvenue envoyé par un admin) restent toujours
-  // accessibles, même sans filleul.
   if (filleulCount === 0 && conversations.length === 0) {
     return (
-      <div>
-        <PageHeader
-          title="Messages"
-          subtitle="Échangez en direct avec vos filleuls"
-        />
-        <div className="rounded-2xl border border-blue-100 bg-blue-50 p-8 text-center">
-          <p className="text-4xl mb-4">💬</p>
-          <h2 className="font-bold text-ink text-lg mb-2">La messagerie se débloque avec votre premier filleul</h2>
-          <p className="text-sm text-muted mb-4">
-            Recrutez votre premier affilié et vous pourrez échanger des messages, partager des conseils, des documents et des ressources directement depuis cette interface.
+      <div className="space-y-5">
+        <PageHeader title="Messages" subtitle="Échangez en direct avec vos filleuls et votre réseau" />
+        <div className="rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-violet-50 p-10 text-center">
+          <p className="text-5xl mb-4">💬</p>
+          <h2 className="font-bold text-slate-800 text-lg mb-2">La messagerie se débloque avec votre premier filleul</h2>
+          <p className="text-sm text-slate-500 mb-6 max-w-sm mx-auto leading-relaxed">
+            Recrutez votre premier affilié pour accéder à la messagerie directe — partagez des conseils, des ressources et suivez vos filleuls en temps réel.
           </p>
           <Link
             href="/espace/reseau"
-            className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition"
+            className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-bold text-white hover:bg-blue-700 transition shadow"
           >
             Voir mon réseau →
           </Link>
+        </div>
+
+        {/* Aperçu de ce que la messagerie permet */}
+        <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
+          <div className="bg-gradient-to-r from-blue-600 to-violet-700 px-5 py-3">
+            <h3 className="font-semibold text-white text-sm">💬 Ce que vous pourrez faire avec la messagerie</h3>
+          </div>
+          <div className="divide-y divide-slate-50">
+            {[
+              { icon: "📩", title: "Messages directs avec vos filleuls", desc: "Guidez-les dans leurs premières ventes, répondez à leurs questions, partagez des ressources." },
+              { icon: "📢", title: "Annonces de la communauté Gold+", desc: "Recevez les actualités, nouvelles formations et opportunités diffusées par l'équipe IBIG." },
+              { icon: "🤝", title: "Coordination de votre réseau", desc: "Organisez des actions collectives avec votre équipe pour maximiser vos commissions." },
+            ].map((f, i) => (
+              <div key={i} className="flex items-start gap-4 px-5 py-4">
+                <span className="text-2xl shrink-0">{f.icon}</span>
+                <div>
+                  <p className="font-semibold text-sm text-slate-800">{f.title}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">{f.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
   }
 
-  // Separate BROADCAST (pinned) from others
-  const broadcast = conversations.filter((c: any) => c.type === "BROADCAST");
-  const regular = conversations.filter((c: any) => c.type !== "BROADCAST");
+  const rows: ConvRow[] = conversations.map((conv: any) => {
+    const isBroadcast = conv.type === "BROADCAST";
+    const other = conv.type === "DIRECT"
+      ? conv.participants.find((p: any) => p.userId !== user.id)?.user
+      : null;
+    const myParticipant = conv.participants.find((p: any) => p.userId === user.id);
+    const lastMsg = conv.messages[0] ?? null;
+    const unread = !!(
+      myParticipant?.lastReadAt &&
+      lastMsg &&
+      new Date(lastMsg.createdAt) > new Date(myParticipant.lastReadAt)
+    );
+    const name = conv.name
+      ? conv.name
+      : other
+        ? `${other.firstName} ${other.lastName}`
+        : "Groupe";
+
+    return {
+      id: conv.id,
+      type: conv.type,
+      name,
+      lastBody: lastMsg?.body ?? null,
+      lastAt: conv.lastMessageAt ? new Date(conv.lastMessageAt).toISOString() : null,
+      unread: !isBroadcast && unread,
+      isBroadcast,
+      avatarUrl: other?.photoUrl ?? null,
+      otherStatus: other?.status ? (STATUS_LABELS[other.status] ?? other.status) : null,
+    };
+  });
 
   return (
-    <div>
+    <div className="space-y-5">
       <PageHeader
         title="Messages"
-        subtitle="Échangez avec vos filleuls et votre réseau"
+        subtitle="Échangez avec vos filleuls et votre réseau IBIG"
       />
-
-      <div className="mb-5 flex items-center justify-between">
-        <p className="text-xs text-muted">{conversations.length} conversation{conversations.length !== 1 ? "s" : ""}</p>
-        <Link
-          href="/espace/chat/nouveau"
-          className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition shadow-sm"
-        >
-          + Nouvelle conversation
-        </Link>
-      </div>
-
-      {conversations.length === 0 ? (
-        <EmptyState>
-          Aucune conversation pour le moment. Démarrez un échange avec un partenaire !
-        </EmptyState>
-      ) : (
-        <div className="space-y-2">
-          {/* Pinned BROADCAST channels */}
-          {broadcast.map((conv: any) => (
-            <Link
-              key={conv.id}
-              href={`/espace/chat/${conv.id}`}
-              className="flex items-center gap-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 hover:bg-amber-100 transition"
-            >
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-white font-bold text-lg shadow">
-                📢
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <p className="font-semibold text-ink text-sm truncate">{conv.name ?? "Communauté GOLD+"}</p>
-                  <span className="rounded-full bg-amber-400 px-1.5 py-0.5 text-xs font-bold text-amber-900">
-                    Annonces
-                  </span>
-                </div>
-                {conv.messages[0] && (
-                  <p className="text-xs text-muted truncate mt-0.5">{conv.messages[0].body}</p>
-                )}
-              </div>
-              {conv.lastMessageAt && (
-                <span className="shrink-0 text-xs text-muted">{formatRelative(conv.lastMessageAt)}</span>
-              )}
-            </Link>
-          ))}
-
-          {/* Regular conversations */}
-          {regular.map((conv: any) => {
-            const name = getConversationName(conv, user.id);
-            const otherParticipant =
-              conv.type === "DIRECT"
-                ? conv.participants.find((p: any) => p.userId !== user.id)
-                : null;
-            const lastMsg = conv.messages[0];
-            const myParticipant = conv.participants.find((p: any) => p.userId === user.id);
-            const unread =
-              myParticipant?.lastReadAt && lastMsg
-                ? new Date(lastMsg.createdAt) > new Date(myParticipant.lastReadAt)
-                : false;
-
-            return (
-              <Link
-                key={conv.id}
-                href={`/espace/chat/${conv.id}`}
-                className="flex items-center gap-4 rounded-2xl border border-slate-100 bg-white p-4 hover:border-blue-200 hover:shadow-sm transition"
-              >
-                {/* Avatar */}
-                {otherParticipant?.user?.photoUrl ? (
-                  <img
-                    src={otherParticipant.user.photoUrl}
-                    alt={name}
-                    loading="lazy" decoding="async" className="h-12 w-12 shrink-0 rounded-full object-cover shadow-sm"
-                  />
-                ) : (
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-700 text-white font-bold text-sm shadow">
-                    {otherParticipant?.user
-                      ? getInitials(otherParticipant.user.firstName, otherParticipant.user.lastName)
-                      : "GR"}
-                  </div>
-                )}
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className={`text-sm truncate ${unread ? "font-bold text-ink" : "font-medium text-ink"}`}>
-                      {name}
-                    </p>
-                    {otherParticipant?.user?.status && (
-                      <span className="hidden sm:inline rounded-full bg-slate-100 px-2 py-0.5 text-xs text-muted">
-                        {STATUS_LABELS[otherParticipant.user.status] ?? otherParticipant.user.status}
-                      </span>
-                    )}
-                  </div>
-                  {lastMsg && (
-                    <p className={`text-xs truncate mt-0.5 ${unread ? "text-ink font-medium" : "text-muted"}`}>
-                      {lastMsg.body}
-                    </p>
-                  )}
-                  {!lastMsg && (
-                    <p className="text-xs text-muted mt-0.5">Aucun message encore</p>
-                  )}
-                </div>
-
-                <div className="flex shrink-0 flex-col items-end gap-1">
-                  {conv.lastMessageAt && (
-                    <span className="text-xs text-muted">{formatRelative(conv.lastMessageAt)}</span>
-                  )}
-                  {unread && (
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
-                      •
-                    </span>
-                  )}
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      )}
+      <ChatListClient rows={rows} newHref="/espace/chat/nouveau" />
     </div>
   );
 }
