@@ -14,6 +14,7 @@ const NAV_ITEMS = [
   { label: "Mon Réseau",          href: "/espace/reseau",      icon: "🌳", group: "Mon activité" },
   { label: "Mes Prospects",       href: "/espace/prospects",   icon: "📇", group: "Mon activité" },
   { label: "Déclarer une vente",  href: "/espace/ventes",      icon: "📝", group: "Mon activité" },
+  { label: "Mes Opportunités B2B", href: "/espace/opportunites", icon: "💼", group: "Mon activité" },
   { label: "Mes Commissions",     href: "/espace/commissions", icon: "💰", group: "Revenus" },
   { label: "Mes Paiements",       href: "/espace/paiements",   icon: "🏦", group: "Revenus" },
   { label: "Académie IBIG",       href: "/espace/academie",    icon: "🎓", group: "Formation" },

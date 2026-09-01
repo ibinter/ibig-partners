@@ -4,7 +4,7 @@ import { after } from "next/server";
 import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { sendPayoutRequestedEmail } from "@/lib/email";
+import { sendPayoutRequestedEmail, sendOpportunityMessageEmail } from "@/lib/email";
 
 /** Active (cree le lien) ou desactive (supprime le lien) un produit pour le partenaire. */
 export async function toggleProduct(formData: FormData) {
@@ -285,4 +285,47 @@ export async function updateProfile(formData: FormData) {
     },
   });
   revalidatePath("/espace/profil");
+}
+
+export async function replyToOpportunity(formData: FormData) {
+  const user = await requireUser();
+  const opportunityId = String(formData.get("opportunityId"));
+  const body = String(formData.get("body") || "").trim();
+  if (!body) return;
+
+  // Vérifier que l'opportunité appartient bien à cet utilisateur
+  const opp = await prisma.opportunity.findUnique({
+    where: { id: opportunityId },
+    select: { id: true, title: true, userId: true },
+  });
+  if (!opp || opp.userId !== user.id) return;
+
+  await (prisma as any).opportunityMessage.create({
+    data: {
+      opportunityId,
+      fromAdmin: false,
+      senderName: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || user.email,
+      body,
+    },
+  });
+
+  // Notifier les admins par email
+  after(async () => {
+    const admins = await prisma.user.findMany({
+      where: { role: "ADMIN" },
+      select: { email: true, firstName: true },
+    });
+    for (const admin of admins) {
+      await sendOpportunityMessageEmail({
+        to: admin.email,
+        firstName: admin.firstName ?? "Admin",
+        opportunityTitle: opp.title,
+        senderName: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim(),
+        body,
+        fromAdmin: false,
+      });
+    }
+  });
+
+  revalidatePath("/espace/opportunites");
 }

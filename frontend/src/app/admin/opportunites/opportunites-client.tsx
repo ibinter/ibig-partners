@@ -30,6 +30,14 @@ const KPI_ICONS: Record<string, string> = {
   LOST: "❌",
 };
 
+type Message = {
+  id: string;
+  fromAdmin: boolean;
+  senderName: string;
+  body: string;
+  createdAt: string;
+};
+
 type Row = {
   id: string;
   title: string;
@@ -41,6 +49,7 @@ type Row = {
   partnerName: string;
   partnerCode: string;
   partnerPhone: string;
+  messages: Message[];
 };
 
 function fcfaFmt(n: number) {
@@ -54,14 +63,19 @@ function fmtDate(iso: string) {
 export default function OpportunitesClient({
   rows,
   updateAction,
+  messageAction,
 }: {
   rows: Row[];
   updateAction: (fd: FormData) => Promise<void>;
+  messageAction: (fd: FormData) => Promise<void>;
 }) {
   const [filter, setFilter] = useState<string>("ALL");
   const [search, setSearch] = useState("");
   const [expanded, setExpanded] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
+  const [messaging, setMessaging] = useState<string | null>(null);
+  const [msgText, setMsgText] = useState<Record<string, string>>({});
+  const [sending, setSending] = useState(false);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = { ALL: rows.length, NEW: 0, IN_PROGRESS: 0, WON: 0, LOST: 0 };
@@ -71,6 +85,18 @@ export default function OpportunitesClient({
 
   const totalValue = useMemo(() => rows.reduce((s, r) => s + r.estimatedValue, 0), [rows]);
   const wonValue   = useMemo(() => rows.filter(r => r.status === "WON").reduce((s, r) => s + r.estimatedValue, 0), [rows]);
+
+  async function handleMessage(opportunityId: string) {
+    const body = (msgText[opportunityId] ?? "").trim();
+    if (!body) return;
+    setSending(true);
+    const fd = new FormData();
+    fd.set("opportunityId", opportunityId);
+    fd.set("body", body);
+    await messageAction(fd);
+    setMsgText(prev => ({ ...prev, [opportunityId]: "" }));
+    setSending(false);
+  }
 
   const filtered = useMemo(() => {
     let list = filter === "ALL" ? rows : rows.filter(r => r.status === filter);
@@ -242,6 +268,65 @@ export default function OpportunitesClient({
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Description</p>
                     <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">{o.description}</p>
+                  </div>
+
+                  {/* Fil de messages */}
+                  <div className="border-t border-slate-100 pt-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <p className="text-xs font-bold uppercase tracking-wide text-slate-400">
+                        💬 Messages avec l'affilié ({o.messages?.length ?? 0})
+                      </p>
+                      <button
+                        onClick={() => setMessaging(messaging === o.id ? null : o.id)}
+                        className="text-xs font-bold text-blue-600 hover:underline"
+                      >
+                        {messaging === o.id ? "Annuler" : "+ Envoyer un message"}
+                      </button>
+                    </div>
+
+                    {(o.messages?.length ?? 0) > 0 && (
+                      <div className="space-y-2 max-h-48 overflow-y-auto mb-3">
+                        {o.messages.map(m => (
+                          <div
+                            key={m.id}
+                            className={`rounded-xl px-3 py-2 text-sm ${
+                              m.fromAdmin
+                                ? "bg-blue-50 border border-blue-100 mr-8"
+                                : "bg-slate-50 border border-slate-200 ml-8"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between mb-0.5">
+                              <span className={`text-[10px] font-bold uppercase ${m.fromAdmin ? "text-blue-600" : "text-slate-500"}`}>
+                                {m.fromAdmin ? `🏢 ${m.senderName} (IBIG)` : `👤 ${m.senderName}`}
+                              </span>
+                              <span className="text-[10px] text-slate-400">
+                                {new Date(m.createdAt).toLocaleString("fr-FR", { day:"2-digit", month:"short", hour:"2-digit", minute:"2-digit" })}
+                              </span>
+                            </div>
+                            <p className="text-slate-700 whitespace-pre-line">{m.body}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {messaging === o.id && (
+                      <div className="flex gap-2 items-end">
+                        <textarea
+                          rows={2}
+                          value={msgText[o.id] ?? ""}
+                          onChange={e => setMsgText(prev => ({ ...prev, [o.id]: e.target.value }))}
+                          placeholder="Écrire un message à l'affilié…"
+                          className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none resize-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                        />
+                        <button
+                          onClick={() => handleMessage(o.id)}
+                          disabled={sending || !(msgText[o.id] ?? "").trim()}
+                          className="shrink-0 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-bold px-4 py-2.5 transition"
+                        >
+                          {sending ? "…" : "Envoyer ↗"}
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   {/* Formulaire mise à jour */}

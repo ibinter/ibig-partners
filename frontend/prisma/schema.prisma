@@ -252,15 +252,26 @@ model Payout {
 }
 
 model Opportunity {
-  id             String   @id @default(cuid())
+  id             String               @id @default(cuid())
   userId         String
-  user           User     @relation(fields: [userId], references: [id])
+  user           User                 @relation(fields: [userId], references: [id])
   title          String
   description    String
-  estimatedValue Int      @default(0)
-  status         String   @default("NEW") // NEW | IN_PROGRESS | WON | LOST
+  estimatedValue Int                  @default(0)
+  status         String               @default("NEW") // NEW | IN_PROGRESS | WON | LOST
   handler        String?
-  createdAt      DateTime @default(now())
+  createdAt      DateTime             @default(now())
+  messages       OpportunityMessage[]
+}
+
+model OpportunityMessage {
+  id             String      @id @default(cuid())
+  opportunityId  String
+  opportunity    Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  fromAdmin      Boolean     @default(false)
+  senderName     String
+  body           String
+  createdAt      DateTime    @default(now())
 }
 
 model Prospect {

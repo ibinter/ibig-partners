@@ -13,6 +13,8 @@ import {
   sendAnnouncementEmail,
   sendVerificationReminderEmail,
   sendNewSaleEmail,
+  sendOpportunityMessageEmail,
+  sendOpportunityStatusEmail,
 } from "@/lib/email";
 import { logAction } from "@/lib/audit";
 
@@ -443,11 +445,85 @@ export async function updateOpportunity(formData: FormData) {
   const id = String(formData.get("id"));
   const status = String(formData.get("status"));
   const handler = String(formData.get("handler") || "").trim();
-  await prisma.opportunity.update({
+
+  const opp = await prisma.opportunity.update({
     where: { id },
     data: { status, handler: handler || null },
+    include: { user: { select: { id: true, email: true, firstName: true } } },
   });
+
+  // Notifier l'affilié du changement de statut
+  after(async () => {
+    await prisma.notification.create({
+      data: {
+        userId: opp.user.id,
+        title: "Mise à jour de votre opportunité",
+        body: `Votre opportunité "${opp.title}" est maintenant : ${
+          { NEW: "Nouveau", IN_PROGRESS: "En cours", WON: "Gagné 🎉", LOST: "Non retenu" }[status] ?? status
+        }`,
+        url: "/espace/opportunites",
+      },
+    });
+    await sendOpportunityStatusEmail({
+      to: opp.user.email,
+      firstName: opp.user.firstName ?? "",
+      opportunityTitle: opp.title,
+      newStatus: status,
+    });
+  });
+
   revalidatePath("/admin/opportunites");
+  revalidatePath("/espace/opportunites");
+}
+
+export async function sendOpportunityMessage(formData: FormData) {
+  const admin = await requireAdmin();
+  const opportunityId = String(formData.get("opportunityId"));
+  const body = String(formData.get("body") || "").trim();
+  if (!body) return;
+
+  const opp = await prisma.opportunity.findUnique({
+    where: { id: opportunityId },
+    include: { user: { select: { id: true, email: true, firstName: true } } },
+  });
+  if (!opp) return;
+
+  await (prisma as any).opportunityMessage.create({
+    data: {
+      opportunityId,
+      fromAdmin: true,
+      senderName: admin.firstName ?? "L'équipe IBIG",
+      body,
+    },
+  });
+
+  after(async () => {
+    await prisma.notification.create({
+      data: {
+        userId: opp.user.id,
+        title: `Message de l'équipe IBIG — ${opp.title}`,
+        body: body.length > 120 ? body.slice(0, 117) + "…" : body,
+        url: "/espace/opportunites",
+      },
+    });
+    await sendOpportunityMessageEmail({
+      to: opp.user.email,
+      firstName: opp.user.firstName ?? "",
+      opportunityTitle: opp.title,
+      senderName: admin.firstName ?? "L'équipe IBIG",
+      body,
+      fromAdmin: true,
+    });
+  });
+
+  revalidatePath("/admin/opportunites");
+  revalidatePath("/espace/opportunites");
+}
+
+export async function replyOpportunityMessage(formData: FormData) {
+  const user = await requireAdmin();
+  // réutilise sendOpportunityMessage côté admin
+  return sendOpportunityMessage(formData);
 }
 
 // --- Communication ---

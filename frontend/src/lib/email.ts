@@ -659,3 +659,96 @@ export async function sendAnnouncementEmail(opts: {
     html,
   });
 }
+
+// ─── E-mail : Message sur une opportunité ────────────────────────────────────
+export async function sendOpportunityMessageEmail(opts: {
+  to: string;
+  firstName: string;
+  opportunityTitle: string;
+  senderName: string;
+  body: string;
+  fromAdmin: boolean;
+}): Promise<EmailResult> {
+  const direction = opts.fromAdmin
+    ? `L'équipe IBIG Partners vous a envoyé un message concernant votre opportunité.`
+    : `Un de vos partenaires vous a répondu concernant une opportunité.`;
+
+  const html = `
+    <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f8fafc;padding:32px 0">
+      <div style="background:#0b5fff;padding:24px 32px;border-radius:12px 12px 0 0">
+        <h1 style="color:#fff;font-size:18px;margin:0">💬 Nouveau message — Opportunité</h1>
+      </div>
+      <div style="background:#fff;padding:32px;border-radius:0 0 12px 12px;border:1px solid #e2e8f0;border-top:none">
+        <p style="color:#374151;margin:0 0 8px">Bonjour <strong>${opts.firstName}</strong>,</p>
+        <p style="color:#6b7280;margin:0 0 24px;font-size:14px">${direction}</p>
+
+        <div style="background:#f1f5f9;border-left:4px solid #0b5fff;border-radius:8px;padding:16px 20px;margin-bottom:24px">
+          <p style="color:#64748b;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 4px">Opportunité</p>
+          <p style="color:#1e293b;font-weight:700;font-size:15px;margin:0">${opts.opportunityTitle}</p>
+        </div>
+
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px 20px;margin-bottom:24px">
+          <p style="color:#64748b;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 8px">Message de ${opts.senderName}</p>
+          <p style="color:#334155;font-size:15px;line-height:1.6;margin:0;white-space:pre-line">${opts.body}</p>
+        </div>
+
+        <a href="${SITE}/espace/opportunites" style="display:inline-block;background:#0b5fff;color:#fff;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:700;font-size:14px">
+          Voir et répondre dans mon espace →
+        </a>
+
+        <p style="color:#9ca3af;font-size:12px;margin-top:32px;border-top:1px solid #f1f5f9;padding-top:16px">
+          IBIG PARTNERS · Ce message concerne une opportunité B2B soumise via votre espace partenaire.
+        </p>
+      </div>
+    </div>`;
+
+  return sendEmail({
+    to: opts.to,
+    subject: `💬 Message IBIG : ${opts.opportunityTitle}`,
+    html,
+  });
+}
+
+// ─── E-mail : Changement de statut d'une opportunité ────────────────────────
+export async function sendOpportunityStatusEmail(opts: {
+  to: string;
+  firstName: string;
+  opportunityTitle: string;
+  newStatus: string;
+}): Promise<EmailResult> {
+  const STATUS_LABELS: Record<string, string> = {
+    NEW: "Nouveau",
+    IN_PROGRESS: "En cours de traitement ⚙️",
+    WON: "Gagné — Félicitations ! 🎉",
+    LOST: "Non retenu",
+  };
+  const label = STATUS_LABELS[opts.newStatus] ?? opts.newStatus;
+  const isWon = opts.newStatus === "WON";
+
+  const html = `
+    <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f8fafc;padding:32px 0">
+      <div style="background:${isWon ? "#059669" : "#0b5fff"};padding:24px 32px;border-radius:12px 12px 0 0">
+        <h1 style="color:#fff;font-size:18px;margin:0">${isWon ? "🏆" : "📋"} Mise à jour de votre opportunité</h1>
+      </div>
+      <div style="background:#fff;padding:32px;border-radius:0 0 12px 12px;border:1px solid #e2e8f0;border-top:none">
+        <p style="color:#374151;margin:0 0 8px">Bonjour <strong>${opts.firstName}</strong>,</p>
+        <p style="color:#6b7280;font-size:14px;margin:0 0 24px">
+          Le statut de votre opportunité <strong>${opts.opportunityTitle}</strong> vient d'être mis à jour.
+        </p>
+        <div style="background:${isWon ? "#f0fdf4" : "#f1f5f9"};border:1px solid ${isWon ? "#bbf7d0" : "#e2e8f0"};border-radius:8px;padding:16px 20px;margin-bottom:24px;text-align:center">
+          <p style="color:#64748b;font-size:11px;font-weight:700;text-transform:uppercase;margin:0 0 4px">Nouveau statut</p>
+          <p style="color:${isWon ? "#059669" : "#0b5fff"};font-size:20px;font-weight:800;margin:0">${label}</p>
+        </div>
+        ${isWon ? `<p style="color:#065f46;background:#d1fae5;border-radius:8px;padding:12px 16px;font-size:14px">🎉 Félicitations ! Votre commission sera calculée et créditée une fois la vente officiellement enregistrée.</p>` : ""}
+        <a href="${SITE}/espace/opportunites" style="display:inline-block;background:#0b5fff;color:#fff;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:700;font-size:14px">
+          Voir mon opportunité →
+        </a>
+      </div>
+    </div>`;
+
+  return sendEmail({
+    to: opts.to,
+    subject: `📋 Opportunité mise à jour : ${opts.opportunityTitle}`,
+    html,
+  });
+}
