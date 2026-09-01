@@ -283,7 +283,6 @@ export default async function BranchesPage({
           </div>
           <div className="flex items-center gap-3">
             <a href="/admin/branches?action=new-branch"
-              onClick={(e) => e.stopPropagation()}
               className="rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-700 transition-colors">
               + Nouvelle branche
             </a>
