@@ -341,7 +341,8 @@ export default function GuidePage() {
         ["Ventes","Historique complet de toutes vos ventes confirmées, en attente et annulées, avec montants et dates."],
         ["Commissions","Détail de chaque commission : niveau (N1/N2/N3), montant, statut (En attente / Validée / Payée)."],
         ["Paiements","Historique des virements reçus avec références, montants et méthodes de paiement."],
-        ["Retrait self-service","Demandez votre retrait en ligne directement depuis votre tableau de bord - validation admin puis virement sous 48h."],
+        ["Retrait self-service","Demandez votre retrait directement depuis votre espace, a tout moment, sans passer par le support. Disponible apres validation KYC. Virement sous 48h."],
+        ["Kit Marketing","Argumentaires personnalises avec votre nom et code, visuels prets a partager, scripts WhatsApp, videos de presentation par branche."],
         ["Mon Réseau","Visualisation de votre arbre de parrainage sur 3 niveaux avec les performances de chaque filleul."],
         ["Prospects","Gestion de vos prospects : ajout, suivi du statut (Contacté, Démo, Converti, Perdu)."],
         ["Badges","Collection de vos badges gagnés : 1ère vente, 10 ventes, statut Gold, équipe de 10..."],
@@ -349,7 +350,7 @@ export default function GuidePage() {
         ["Coach IA","Assistant intelligent formé sur les produits IBIG pour répondre à toutes vos questions."],
         ["Communication","Chat avec l'équipe IBIG et les autres partenaires, dès le 1er filleul parrainé."],
         ["Paramètres","Modification du profil, méthode de paiement, mot de passe, préférences."],
-        ["Vérification KYC","Soumission de votre dossier de vérification pour activér les paiements de commissions."],
+        ["Vérification KYC","Soumission de votre dossier de vérification pour activer les paiements de commissions."],
       ];
 
       sections.forEach(([name,desc]) => {
@@ -1035,6 +1036,7 @@ export default function GuidePage() {
 
       py = subTitle("Questions fréquentes (FAQ)",py);
       const faq = [
+        ["Par ou commencer quand on est nouveau partenaire ?","Plan d'action 7 jours : Jour 1 - KYC + parcourir le catalogue 330+ produits. Jour 2 - Activer vos liens d'affiliation. Jour 3 - Partager a 10 contacts de confiance. Jours 4-5 - Recruter votre 1er filleul. Jours 6-7 - Completer 3 modules de l'Academie IBIG."],
         ["L'inscription est-elle payante ?","Non. L'inscription sur IBIG PARTNERS est 100% gratuite et sans investissement obligatoire."],
         ["Quand sont versées les commissions ?","Les commissions sont validées par l'équipe IBIG puis virées selon votre méthode de paiement configurée. Délai standard : 7 jours ouvrés après validation."],
         ["Puis-je m'inscrire depuis n'importe quel pays ?","Oui. IBIG PARTNERS est une plateforme panafricaine ouverte à tous les pays d'Afrique et à la diaspora mondiale."],
@@ -1130,7 +1132,8 @@ export default function GuidePage() {
     { num: "05", title: "Catalogue des produits",          desc: "330+ produits : 14 ERP, 10 formations, immo, market, digital, kits, conseil, multiservices", icon: "📦" },
     { num: "06", title: "KYC & Activation paiements",     desc: "Vérification identité, étapes, délais, méthodes",          icon: "🔐" },
     { num: "07", title: "Liens & QR codes",               desc: "Génération, cookie 90j, partage WhatsApp/réseaux",         icon: "🔗" },
-    { num: "08", title: "Ventes, commissions & retrait",  desc: "Cycle vente, statuts, retrait self-service, virements",    icon: "💳" },
+    { num: "07b", title: "Kit Marketing",                  desc: "Argumentaires personnalisés, visuels, scripts WhatsApp, vidéos par branche", icon: "🎨" },
+    { num: "08", title: "Ventes, commissions & retrait",  desc: "Cycle vente, statuts, retrait self-service sans support, virements", icon: "💳" },
     { num: "09", title: "Réseau & parrainage",            desc: "Arbre 3 niveaux, prospects, opportunités, classement",     icon: "🌐" },
     { num: "10", title: "Académie IBIG",                  desc: "Articles, vidéos, audios, images, quiz, Coach IA 24/7",    icon: "🎓" },
     { num: "11", title: "Espace SUPERADMIN",              desc: "Gestion partenaires, KYC, ventes, paiements, audit",       icon: "⚙️" },
