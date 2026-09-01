@@ -141,6 +141,40 @@ export default function TourPreview() {
         </div>
       </div>
 
+      {/* Réseau d'affiliation */}
+      <div className="rounded-2xl border border-purple-200 bg-purple-50 p-5 flex items-start gap-4">
+        <span className="text-3xl shrink-0">👥</span>
+        <div className="min-w-0 flex-1">
+          <h3 className="font-bold text-purple-900">Réseau d'affiliation — commissions sur 3 niveaux</h3>
+          <p className="text-sm text-purple-800 mt-1 leading-relaxed">
+            Chaque affilié peut recruter d'autres partenaires via son lien de parrainage. Les ventes réalisées par son réseau lui génèrent des commissions passives automatiquement sur 3 niveaux de profondeur.
+          </p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-3">
+            {[
+              { level: "N1", icon: "🟢", label: "Vos propres ventes",              taux: "Taux plein",          ex: "Vous vendez → vous gagnez 100 % du taux" },
+              { level: "N2", icon: "🔵", label: "Ventes de vos filleuls",          taux: "50 % du taux N1",    ex: "Votre filleul vend → vous gagnez 50 %" },
+              { level: "N3", icon: "🟣", label: "Ventes des filleuls de filleuls", taux: "25 % du taux N1",    ex: "Son filleul vend → vous gagnez 25 %" },
+            ].map((n) => (
+              <div key={n.level} className="rounded-xl bg-white/70 px-3 py-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-base">{n.icon}</span>
+                  <span className="text-xs font-extrabold text-purple-900">{n.level}</span>
+                  <span className="ml-auto rounded-full bg-purple-100 px-2 py-0.5 text-[10px] font-bold text-purple-700">{n.taux}</span>
+                </div>
+                <p className="text-xs font-semibold text-purple-800 leading-snug">{n.label}</p>
+                <p className="text-[11px] text-purple-600 mt-0.5 leading-snug">{n.ex}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2 text-xs font-semibold">
+            <span className="rounded-full bg-purple-100 px-3 py-1 text-purple-800">🔗 Lien de parrainage unique</span>
+            <span className="rounded-full bg-purple-100 px-3 py-1 text-purple-800">📊 Suivi réseau en temps réel</span>
+            <span className="rounded-full bg-purple-100 px-3 py-1 text-purple-800">💸 Commissions versées automatiquement</span>
+          </div>
+          <p className="mt-3 text-xs text-purple-600">📍 Accessible via <strong>Mon Réseau</strong> dans l'espace affilié. Présenté à l'étape 6 de la visite guidée.</p>
+        </div>
+      </div>
+
       {/* Retrait self-service */}
       <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 flex items-start gap-4">
         <span className="text-3xl shrink-0">💸</span>
