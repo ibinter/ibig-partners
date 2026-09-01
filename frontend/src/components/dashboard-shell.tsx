@@ -150,7 +150,18 @@ export function DashboardShell({
   variant?: "partner" | "admin";
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("ibig_sidebar_collapsed") === "1";
+  });
+
+  function toggleCollapsed() {
+    setCollapsed((c) => {
+      const next = !c;
+      try { localStorage.setItem("ibig_sidebar_collapsed", next ? "1" : "0"); } catch {}
+      return next;
+    });
+  }
 
   const home = variant === "admin" ? "/admin" : "/espace";
   const initials = (user.firstName[0] ?? "") + (user.lastName[0] ?? "");
@@ -166,9 +177,9 @@ export function DashboardShell({
           collapsed ? "w-[68px]" : "w-64"
         } ${isAdmin ? "sidebar-admin" : "border-r border-slate-100 bg-white shadow-sm"}`}
       >
-        {/* En-tête logo / titre */}
+        {/* En-tête logo / titre + bouton repli */}
         <div className={`shrink-0 flex items-center transition-all duration-300 ${
-          collapsed ? "justify-center px-0 py-4 h-[64px]" : "px-5 py-5"
+          collapsed ? "justify-center px-0 py-4 h-[64px]" : "px-4 py-4"
         } ${isAdmin ? "border-b border-white/10" : "border-b border-slate-100"}`}>
           {isAdmin ? (
             collapsed ? (
@@ -176,11 +187,11 @@ export function DashboardShell({
                 iB
               </span>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-1 items-center gap-2 min-w-0">
                 <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/20 text-white font-extrabold text-sm shadow">
                   iB
                 </span>
-                <div className="overflow-hidden">
+                <div className="overflow-hidden flex-1">
                   <p className="font-extrabold text-white tracking-tight whitespace-nowrap">
                     IBIG <span className="text-blue-300">PARTNERS</span>
                   </p>
@@ -188,14 +199,34 @@ export function DashboardShell({
                     ⚡ SuperAdmin
                   </span>
                 </div>
+                <button
+                  onClick={toggleCollapsed}
+                  title="Réduire le menu"
+                  className="shrink-0 flex h-7 w-7 items-center justify-center rounded-lg text-white/50 hover:bg-white/15 hover:text-white transition-colors"
+                >
+                  <ChevronIcon collapsed={false} />
+                </button>
               </div>
             )
           ) : collapsed ? (
-            <Link href={home} className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 text-brand-700 font-extrabold text-sm">
-              iB
-            </Link>
+            <button
+              onClick={toggleCollapsed}
+              title="Agrandir le menu"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 text-brand-600 hover:bg-brand-100 transition-colors font-extrabold text-sm"
+            >
+              ›
+            </button>
           ) : (
-            <Logo />
+            <div className="flex flex-1 items-center gap-2 min-w-0">
+              <div className="flex-1 min-w-0"><Logo /></div>
+              <button
+                onClick={toggleCollapsed}
+                title="Réduire le menu"
+                className="shrink-0 flex h-7 w-7 items-center justify-center rounded-lg text-slate-300 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+              >
+                <ChevronIcon collapsed={false} />
+              </button>
+            </div>
           )}
         </div>
 
@@ -259,19 +290,20 @@ export function DashboardShell({
           )}
         </div>
 
-        {/* Bouton repli — ancré en bas de la sidebar */}
-        <button
-          onClick={() => setCollapsed((c) => !c)}
-          title={collapsed ? "Agrandir le menu" : "Réduire le menu"}
-          className={`shrink-0 flex items-center justify-center gap-2 py-3 text-xs font-medium transition-all duration-150 ${
-            isAdmin
-              ? "text-white/40 hover:bg-white/10 hover:text-white border-t border-white/10"
-              : "text-slate-400 hover:bg-slate-50 hover:text-slate-600 border-t border-slate-100"
-          }`}
-        >
-          <ChevronIcon collapsed={collapsed} />
-          {!collapsed && <span>Réduire</span>}
-        </button>
+        {/* Bouton repli bas — visible uniquement en mode replié pour ré-ouvrir */}
+        {collapsed && (
+          <button
+            onClick={toggleCollapsed}
+            title="Agrandir le menu"
+            className={`shrink-0 flex items-center justify-center py-3 text-xs font-medium transition-all duration-150 ${
+              isAdmin
+                ? "text-white/40 hover:bg-white/10 hover:text-white border-t border-white/10"
+                : "text-slate-400 hover:bg-slate-50 hover:text-slate-600 border-t border-slate-100"
+            }`}
+          >
+            <ChevronIcon collapsed={true} />
+          </button>
+        )}
       </aside>
 
       {/* ── Overlay mobile ── */}
