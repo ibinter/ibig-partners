@@ -6,6 +6,7 @@ import { Button, Field, PageHeader } from "@/components/ui";
 import { PAYOUT_METHODS, PAYOUT_METHOD_LABELS, STATUS_LABELS, STATUS_DETAILS } from "@/lib/constants";
 import { getNetwork } from "@/lib/metrics";
 import { updateProfile } from "../actions";
+import { FileUpload } from "@/components/file-upload";
 
 export const dynamic = "force-dynamic";
 
@@ -203,7 +204,30 @@ export default async function ProfilPage() {
                 <p className="text-xs text-violet-200 mt-0.5">Visible sur /partenaires si vous êtes Gold+ et vérifié.</p>
               </div>
               <div className="p-5 space-y-4">
-                <Field label="Photo de profil (URL)" name="photoUrl" defaultValue={user.photoUrl ?? ""} placeholder="https://..." />
+                {/* Photo de profil avec aperçu */}
+                <div className="flex items-start gap-4">
+                  <div className="shrink-0">
+                    {user.photoUrl ? (
+                      <img src={user.photoUrl} alt="Photo" className="h-16 w-16 rounded-2xl object-cover border border-slate-200 shadow-sm" />
+                    ) : (
+                      <div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center text-2xl font-bold text-slate-400 border border-slate-200">
+                        {initials}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <FileUpload
+                      name="photoUrl"
+                      defaultUrl={user.photoUrl}
+                      folder="ibig-photos"
+                      accept="image/jpeg,image/png,image/webp"
+                      label="Photo de profil"
+                      hint="JPEG ou PNG · max 5 Mo · format carré recommandé"
+                      preview="image"
+                      maxMb={5}
+                    />
+                  </div>
+                </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-600 mb-1.5">Bio / Présentation courte</label>
                   <textarea

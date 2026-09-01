@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { submitVerification } from "./actions";
+import { FileUpload } from "@/components/file-upload";
 
 type Existing = {
   type?: string | null;
   fullName?: string | null; idType?: string | null; idNumber?: string | null;
-  cvText?: string | null; country?: string | null; city?: string | null;
+  cvText?: string | null; idDocUrl?: string | null; idDocBack?: string | null; cvFileUrl?: string | null;
+  country?: string | null; city?: string | null;
   profession?: string | null; whatsapp?: string | null; secondPhone?: string | null;
   contact1Name?: string | null; contact1Phone?: string | null;
   contact2Name?: string | null; contact2Phone?: string | null;
@@ -127,13 +129,59 @@ function IndividualForm({ existing }: { existing: Existing }) {
         <F label="Ville / Région" name="city" defaultValue={existing?.city} required placeholder="Abidjan — Cocody" />
       </Section>
 
+      {/* Pièce d'identité — upload */}
+      <div className="card-premium overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 border-b border-blue-700 px-5 py-3">
+          <h3 className="font-semibold text-sm text-white">🪪 Photo de la pièce d&apos;identité</h3>
+          <p className="text-xs text-blue-100 mt-0.5">CNI recto/verso, passeport ou permis — obligatoire pour la validation.</p>
+        </div>
+        <div className="p-5 grid gap-4 sm:grid-cols-2">
+          <FileUpload
+            name="idDocUrl"
+            defaultUrl={existing?.idDocUrl}
+            folder="ibig-kyc-docs"
+            accept="image/jpeg,image/png,image/webp,application/pdf"
+            label="Recto (face avant) *"
+            hint="JPEG, PNG ou PDF · max 10 Mo"
+            preview="image"
+          />
+          <FileUpload
+            name="idDocBack"
+            defaultUrl={existing?.idDocBack}
+            folder="ibig-kyc-docs"
+            accept="image/jpeg,image/png,image/webp,application/pdf"
+            label="Verso (face arrière) — facultatif pour passeport"
+            hint="JPEG, PNG ou PDF · max 10 Mo"
+            preview="image"
+          />
+        </div>
+        <div className="bg-amber-50 border-t border-amber-100 px-5 py-2.5">
+          <p className="text-xs text-amber-700">⚠️ Vos documents sont transmis de façon sécurisée et ne sont utilisés qu&apos;à des fins de vérification.</p>
+        </div>
+      </div>
+
+      {/* CV */}
       <div className="card-premium overflow-hidden">
         <div className="bg-slate-50 border-b border-slate-100 px-5 py-3">
-          <h3 className="font-semibold text-sm text-ink">📄 Curriculum Vitae / Parcours</h3>
+          <h3 className="font-semibold text-sm text-ink">📄 Curriculum Vitae / Parcours <span className="text-slate-400 font-normal">(optionnel)</span></h3>
         </div>
-        <div className="p-5 space-y-2">
-          <T label="Résumé de votre parcours, compétences, expériences et réseaux professionnels" name="cvText" defaultValue={existing?.cvText} rows={6} />
-          <p className="text-xs text-muted">Décrivez vos expériences professionnelles, domaines de compétence et votre réseau.</p>
+        <div className="p-5 space-y-4">
+          <FileUpload
+            name="cvFileUrl"
+            defaultUrl={existing?.cvFileUrl}
+            folder="ibig-kyc-cv"
+            accept="application/pdf,image/jpeg,image/png"
+            label="Uploader votre CV (PDF ou image)"
+            hint="PDF recommandé · max 10 Mo"
+            preview="none"
+          />
+          <div className="relative flex items-center gap-3">
+            <div className="flex-1 border-t border-slate-100" />
+            <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wide shrink-0">ou décrivez à la place</span>
+            <div className="flex-1 border-t border-slate-100" />
+          </div>
+          <T label="Résumé de votre parcours, compétences, expériences et réseaux professionnels" name="cvText" defaultValue={existing?.cvText} rows={5} />
+          <p className="text-xs text-slate-400">Si vous avez uploadé un CV, ce texte est optionnel.</p>
         </div>
       </div>
 

@@ -122,6 +122,11 @@ model VerificationRequest {
   iban            String?
   westernUnionName String?
 
+  // ─── Pièces justificatives (URLs Cloudinary) ───────────────
+  idDocUrl   String? // photo recto/verso CNI ou passeport
+  idDocBack  String? // verso si CNI
+  cvFileUrl  String? // CV PDF ou image (optionnel)
+
   submittedAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

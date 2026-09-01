@@ -25,6 +25,9 @@ export async function submitVerification(formData: FormData) {
   const idType        = formData.get("idType")        ? String(formData.get("idType"))        : null;
   const idNumber      = formData.get("idNumber")      ? String(formData.get("idNumber"))      : null;
   const cvText        = formData.get("cvText")        ? String(formData.get("cvText"))        : null;
+  const idDocUrl      = formData.get("idDocUrl")      ? String(formData.get("idDocUrl"))      : null;
+  const idDocBack     = formData.get("idDocBack")     ? String(formData.get("idDocBack"))     : null;
+  const cvFileUrl     = formData.get("cvFileUrl")     ? String(formData.get("cvFileUrl"))     : null;
   const country       = formData.get("country")       ? String(formData.get("country"))       : null;
   const city          = formData.get("city")          ? String(formData.get("city"))          : null;
   const profession    = formData.get("profession")    ? String(formData.get("profession"))    : null;
@@ -56,7 +59,7 @@ export async function submitVerification(formData: FormData) {
         userId: user.id,
         type: partnerType,
         // individual
-        fullName, idType, idNumber, cvText,
+        fullName, idType, idNumber, cvText, idDocUrl, idDocBack, cvFileUrl,
         country, city, profession, whatsapp, secondPhone,
         contact1Name, contact1Phone, contact2Name, contact2Phone,
         // company
@@ -72,7 +75,7 @@ export async function submitVerification(formData: FormData) {
       update: {
         type: partnerType,
         // individual
-        fullName, idType, idNumber, cvText,
+        fullName, idType, idNumber, cvText, idDocUrl, idDocBack, cvFileUrl,
         country, city, profession, whatsapp, secondPhone,
         contact1Name, contact1Phone, contact2Name, contact2Phone,
         // company
