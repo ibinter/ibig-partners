@@ -113,6 +113,34 @@ export default function TourPreview() {
         </div>
       </div>
 
+      {/* Kit Marketing */}
+      <div className="rounded-2xl border border-teal-200 bg-teal-50 p-5 flex items-start gap-4">
+        <span className="text-3xl shrink-0">🎨</span>
+        <div className="min-w-0 flex-1">
+          <h3 className="font-bold text-teal-900">Kit Marketing — outils de campagne prêts à l'emploi</h3>
+          <p className="text-sm text-teal-800 mt-1 leading-relaxed">
+            Chaque affilié dispose d'un kit marketing personnalisé avec son nom et son code d'affiliation. Les outils sont prêts à partager en un clic — aucune compétence en design requise.
+          </p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            {[
+              { icon: "📝", label: "Argumentaires personnalisés",  desc: "Votre nom + code insérés automatiquement" },
+              { icon: "🖼️", label: "Visuels prêts à partager",     desc: "Bannières, posts, stories par produit" },
+              { icon: "💬", label: "Scripts WhatsApp & SMS",        desc: "Messages optimisés pour maximiser les conversions" },
+              { icon: "🎬", label: "Vidéos de présentation",        desc: "Une vidéo par branche, partageables directement" },
+            ].map((f) => (
+              <div key={f.label} className="flex items-start gap-2 rounded-xl bg-white/60 px-3 py-2.5">
+                <span className="text-lg shrink-0">{f.icon}</span>
+                <div>
+                  <p className="text-xs font-bold text-teal-900">{f.label}</p>
+                  <p className="text-[11px] text-teal-700 leading-snug">{f.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-xs text-teal-600">📍 Accessible via <strong>Kit Marketing</strong> dans l'espace affilié. Présenté à l'étape 8 de la visite guidée.</p>
+        </div>
+      </div>
+
       {/* Retrait self-service */}
       <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 flex items-start gap-4">
         <span className="text-3xl shrink-0">💸</span>
