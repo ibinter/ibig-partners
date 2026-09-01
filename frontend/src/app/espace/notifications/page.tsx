@@ -1,8 +1,7 @@
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { formatDate } from "@/lib/format";
-import { Button, EmptyState, PageHeader } from "@/components/ui";
-import { markAllRead, markOneRead } from "./actions";
+import { PageHeader } from "@/components/ui";
+import NotifListClient, { type NotifRow } from "./notif-list-client";
 
 export const dynamic = "force-dynamic";
 
@@ -12,97 +11,58 @@ export default async function NotificationsPage() {
   const notifications = await prisma.notification.findMany({
     where: { OR: [{ userId: null }, { userId: user.id }] },
     orderBy: { createdAt: "desc" },
-    take: 50,
+    take: 100,
   });
 
-  const unread = notifications.filter((n) => n.userId === user.id && !n.read).length;
+  const unread     = notifications.filter((n) => n.userId !== null && !n.read).length;
+  const globalCount = notifications.filter((n) => n.userId === null).length;
+  const total      = notifications.length;
+
+  const rows: NotifRow[] = notifications.map((n) => ({
+    id:        n.id,
+    title:     n.title,
+    body:      n.body,
+    url:       n.url ?? null,
+    read:      n.read,
+    isGlobal:  n.userId === null,
+    createdAt: n.createdAt instanceof Date ? n.createdAt.toISOString() : String(n.createdAt),
+  }));
 
   return (
-    <div className="space-y-5">
-      <div className="flex items-end justify-between gap-3">
-        <PageHeader
-          title="Notifications"
-          subtitle={unread > 0 ? `${unread} non lue${unread > 1 ? "s" : ""}` : "Tout est à jour"}
-        />
-        {unread > 0 && (
-          <form action={markAllRead} className="shrink-0 mb-6">
-            <Button type="submit" variant="secondary">✓ Tout marquer comme lu</Button>
-          </form>
-        )}
-      </div>
+    <div className="space-y-5 pb-10">
+      <PageHeader
+        title="Notifications"
+        subtitle={unread > 0 ? `${unread} non lue${unread > 1 ? "s" : ""}` : "Tout est à jour ✓"}
+      />
 
-      {/* Counter badges */}
+      {/* ── KPIs ── */}
       <div className="grid gap-3 sm:grid-cols-3">
-        <div className="rounded-2xl bg-gradient-to-br from-rose-500 to-rose-600 p-4 text-white shadow-md">
-          <p className="text-xs font-semibold text-rose-200 uppercase tracking-wide">Non lues</p>
-          <p className="text-2xl font-bold mt-1">{unread}</p>
+        <div className={`rounded-2xl p-4 text-white shadow-sm ${unread > 0 ? "bg-gradient-to-br from-rose-500 to-rose-600" : "bg-gradient-to-br from-emerald-600 to-teal-600"}`}>
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-white/70">Non lues</p>
+          <p className="mt-1 text-2xl font-extrabold">{unread}</p>
+          <p className="mt-0.5 text-xs text-white/60">{unread === 0 ? "tout lu ✓" : `à consulter`}</p>
         </div>
-        <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 p-4 text-white shadow-md">
-          <p className="text-xs font-semibold text-blue-200 uppercase tracking-wide">Total</p>
-          <p className="text-2xl font-bold mt-1">{notifications.length}</p>
+        <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 p-4 text-white shadow-sm">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-blue-200">Total</p>
+          <p className="mt-1 text-2xl font-extrabold">{total}</p>
+          <p className="mt-0.5 text-xs text-blue-200">notifications reçues</p>
         </div>
-        <div className="rounded-2xl bg-gradient-to-br from-slate-600 to-slate-700 p-4 text-white shadow-md">
-          <p className="text-xs font-semibold text-slate-300 uppercase tracking-wide">Annonces</p>
-          <p className="text-2xl font-bold mt-1">{notifications.filter(n => n.userId === null).length}</p>
+        <div className="rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-4 text-white shadow-sm">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-100">Annonces</p>
+          <p className="mt-1 text-2xl font-extrabold">{globalCount}</p>
+          <p className="mt-0.5 text-xs text-amber-100">de l&apos;équipe IBIG</p>
         </div>
       </div>
 
-      {notifications.length === 0 ? (
-        <EmptyState>Aucune notification pour le moment.</EmptyState>
-      ) : (
-        <div className="space-y-2">
-          {notifications.map((n) => {
-            const isGlobal = n.userId === null;
-            const isUnread = !isGlobal && !n.read;
-            return (
-              <div
-                key={n.id}
-                className={`rounded-2xl border p-4 flex items-start justify-between gap-4 transition-colors ${
-                  isUnread
-                    ? "border-blue-200 bg-blue-50/50"
-                    : isGlobal
-                    ? "border-amber-100 bg-amber-50/30"
-                    : "border-slate-100 bg-white"
-                } shadow-sm`}
-              >
-                <div className="flex gap-3">
-                  <span className="text-xl shrink-0 mt-0.5">
-                    {isGlobal ? "📢" : isUnread ? "🔔" : "✓"}
-                  </span>
-                  <div>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <p className="font-semibold text-sm text-ink">{n.title}</p>
-                      {isGlobal && (
-                        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-700">
-                          Annonce
-                        </span>
-                      )}
-                      {isUnread && (
-                        <span className="h-2 w-2 rounded-full bg-blue-500" />
-                      )}
-                    </div>
-                    <p className="mt-1 text-sm text-muted leading-relaxed">{n.body}</p>
-                    {n.url && (
-                      <a
-                        href={n.url}
-                        className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-700 hover:underline"
-                      >
-                        Ouvrir →
-                      </a>
-                    )}
-                    <p className="mt-2 text-xs text-muted">{formatDate(n.createdAt)}</p>
-                  </div>
-                </div>
-                {isUnread && (
-                  <form action={markOneRead} className="shrink-0">
-                    <input type="hidden" name="id" value={n.id} />
-                    <Button type="submit" variant="ghost">Lu</Button>
-                  </form>
-                )}
-              </div>
-            );
-          })}
+      {/* ── Liste filtrée (client) ── */}
+      {total === 0 ? (
+        <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 py-16 text-center">
+          <p className="text-5xl mb-4">🔔</p>
+          <p className="text-sm font-semibold text-slate-500">Aucune notification pour le moment</p>
+          <p className="text-xs text-slate-400 mt-1">Vous serez notifié lors de ventes confirmées, versements, messages et annonces.</p>
         </div>
+      ) : (
+        <NotifListClient rows={rows} unreadCount={unread} />
       )}
     </div>
   );
