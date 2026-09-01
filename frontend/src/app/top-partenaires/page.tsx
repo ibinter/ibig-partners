@@ -63,7 +63,7 @@ export default async function TopPartenairesPage() {
               Leurs gains, leurs villes, leur progression. Rejoignez-les.
             </p>
 
-            <div className="mt-10 grid grid-cols-3 gap-4 max-w-3xl mx-auto">
+            <div className="mt-10 grid grid-cols-3 gap-2 sm:gap-4 max-w-3xl mx-auto">
               <div className="rounded-2xl bg-white/10 backdrop-blur-sm p-5">
                 <p className="text-numeral text-3xl text-gold-400 sm:text-4xl">{partners.toLocaleString("fr-FR")}</p>
                 <p className="text-xs text-brand-200 mt-1">Partenaires actifs</p>

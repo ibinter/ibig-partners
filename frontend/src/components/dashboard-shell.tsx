@@ -158,7 +158,7 @@ export function DashboardShell({
   const isAdmin = variant === "admin";
 
   return (
-    <div className="flex min-h-screen bg-[#f2f5fb]">
+    <div className="flex min-h-screen bg-[#f2f5fb] overflow-x-hidden">
 
       {/* ── Sidebar desktop ── */}
       <aside

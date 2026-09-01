@@ -82,7 +82,7 @@ export default async function TopPartnersPage() {
               Their earnings, their cities, their progress. Join them.
             </p>
 
-            <div className="mt-10 grid grid-cols-3 gap-4 max-w-3xl mx-auto">
+            <div className="mt-10 grid grid-cols-3 gap-2 sm:gap-4 max-w-3xl mx-auto">
               <div className="rounded-2xl bg-white/10 backdrop-blur-sm p-5">
                 <p className="text-numeral text-3xl text-gold-400 sm:text-4xl">{partners.toLocaleString("en-US")}</p>
                 <p className="text-xs text-brand-200 mt-1">Active partners</p>

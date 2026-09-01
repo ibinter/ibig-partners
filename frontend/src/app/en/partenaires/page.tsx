@@ -101,7 +101,7 @@ export default async function PartnersPage() {
               Discover our active certified partners and our institutional partners.
               Together, we are building tomorrow&apos;s economic ecosystem.
             </p>
-            <div className="mt-8 grid grid-cols-3 gap-4 max-w-md mx-auto">
+            <div className="mt-8 grid grid-cols-3 gap-2 sm:gap-4 max-w-md mx-auto">
               {[
                 { val: certifiedPartners.length, label: "Certified partners" },
                 { val: institutional.length,     label: "Institutional partners" },

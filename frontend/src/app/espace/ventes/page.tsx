@@ -125,7 +125,7 @@ export default async function EspaceVentesPage() {
 
       {/* Stats rapides */}
       {sales.length > 0 && (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
           <div className="rounded-2xl border border-slate-200 bg-white p-4 text-center">
             <p className="text-2xl font-extrabold text-slate-800">{sales.length}</p>
             <p className="text-xs text-slate-500 mt-1">Total déclarations</p>

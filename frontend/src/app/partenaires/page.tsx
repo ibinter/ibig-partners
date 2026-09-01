@@ -79,7 +79,7 @@ export default async function PartenairesPage() {
               Découvrez nos partenaires certifiés actifs et nos partenaires institutionnels.
               Ensemble, nous construisons l&apos;écosystème économique de demain.
             </p>
-            <div className="mt-8 grid grid-cols-3 gap-4 max-w-md mx-auto">
+            <div className="mt-8 grid grid-cols-3 gap-2 sm:gap-4 max-w-md mx-auto">
               {[
                 { val: certifiedPartners.length, label: "Partenaires certifiés" },
                 { val: institutional.length,     label: "Partenaires institutionnels" },

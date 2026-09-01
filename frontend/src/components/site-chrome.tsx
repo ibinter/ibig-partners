@@ -120,7 +120,7 @@ export function SiteHeader({ lang = "fr" }: { lang?: Lang }) {
           </Link>
           <Link
             href={t.joinHref}
-            className="group relative inline-flex items-center gap-1.5 overflow-hidden rounded-xl bg-gradient-to-r from-brand-600 via-brand-600 to-brand-700 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-brand-600/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-600/40"
+            className="group relative hidden sm:inline-flex items-center gap-1.5 overflow-hidden rounded-xl bg-gradient-to-r from-brand-600 via-brand-600 to-brand-700 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-brand-600/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-600/40"
           >
             <span className="relative z-10">{t.join}</span>
             <span className="relative z-10 transition-transform group-hover:translate-x-0.5">→</span>
