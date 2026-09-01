@@ -58,6 +58,33 @@ export default function TourPreview() {
         </div>
       </div>
 
+      {/* Statuts affiliés */}
+      <div className="rounded-2xl border border-slate-100 bg-white p-6">
+        <h3 className="font-semibold text-slate-800 mb-1">Progression des statuts affiliés</h3>
+        <p className="text-xs text-slate-400 mb-5">5 niveaux · déblocage automatique selon le chiffre d'affaires cumulé</p>
+        <div className="flex flex-col sm:flex-row items-stretch gap-0">
+          {[
+            { status: "STARTER", icon: "🌱", color: "bg-slate-100 text-slate-700 border-slate-200",  badge: "bg-slate-200 text-slate-700",  desc: "Accès de base · liens d'affiliation · Académie niveau 1" },
+            { status: "SILVER",  icon: "🥈", color: "bg-blue-50 text-blue-800 border-blue-200",      badge: "bg-blue-100 text-blue-800",    desc: "Kit Marketing · bonus recrutement · formations avancées" },
+            { status: "GOLD",    icon: "🥇", color: "bg-amber-50 text-amber-800 border-amber-200",   badge: "bg-amber-100 text-amber-800",  desc: "Accès prioritaire aux nouveaux produits · support dédié" },
+            { status: "MASTER",  icon: "💎", color: "bg-green-50 text-green-800 border-green-200",   badge: "bg-green-100 text-green-800",  desc: "Événements VIP · outils premium · rapports avancés" },
+            { status: "ELITE",   icon: "👑", color: "bg-violet-50 text-violet-800 border-violet-200",badge: "bg-violet-100 text-violet-800",desc: "Statut maximum · tous avantages · commission bonifiée" },
+          ].map((s, i, arr) => (
+            <div key={s.status} className="flex sm:flex-col flex-row items-center sm:items-stretch">
+              <div className={`flex-1 rounded-2xl border p-4 text-center ${s.color}`}>
+                <div className="text-2xl mb-1">{s.icon}</div>
+                <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-bold mb-2 ${s.badge}`}>{s.status}</span>
+                <p className="text-[11px] leading-snug opacity-80">{s.desc}</p>
+              </div>
+              {i < arr.length - 1 && (
+                <div className="flex items-center justify-center text-slate-300 font-bold text-lg px-1 sm:py-1 sm:px-0 shrink-0">→</div>
+              )}
+            </div>
+          ))}
+        </div>
+        <p className="mt-4 text-xs text-slate-400 text-center">Le statut actuel est visible dans le tableau de bord et la barre latérale. Il évolue automatiquement à chaque palier atteint.</p>
+      </div>
+
       {/* Retrait self-service */}
       <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 flex items-start gap-4">
         <span className="text-3xl shrink-0">💸</span>

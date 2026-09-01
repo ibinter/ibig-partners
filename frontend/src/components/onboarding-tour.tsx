@@ -29,7 +29,7 @@ const STEPS: Step[] = [
     icon: "📊",
     title: "Votre tableau de bord",
     subtitle: "Toute votre activité en un coup d'œil",
-    body: "Le tableau de bord centralise vos commissions du mois, vos ventes récentes, votre statut actuel et vos objectifs. C'est votre page d'accueil — vérifiez-la chaque jour pour suivre votre progression en temps réel.",
+    body: "Le tableau de bord centralise vos commissions du mois, vos ventes récentes, votre statut actuel et vos objectifs. C'est votre page d'accueil — vérifiez-la chaque jour pour suivre votre progression en temps réel.\n\nVotre statut évolue automatiquement : 🌱 Starter → 🥈 Silver → 🥇 Gold → 💎 Master → 👑 Elite. Chaque niveau débloque de nouveaux avantages, outils et bonus.",
     tip: "Les chiffres se mettent à jour automatiquement à chaque nouvelle vente ou commission.",
     cta: { label: "Voir mon tableau de bord", href: "/espace" },
     color: "from-slate-800 via-slate-700 to-slate-800",
