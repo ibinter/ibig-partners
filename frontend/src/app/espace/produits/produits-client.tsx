@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { toggleProduct } from "../actions";
 import CopyButton from "../liens/copy-button";
+import Link from "next/link";
 
 interface Product {
   id: string;
@@ -38,255 +39,398 @@ interface Props {
 }
 
 const PRICING_LABELS: Record<string, string> = {
-  ONE_TIME: "Achat unique",
   MONTHLY_SUB: "Abonnement mensuel",
   ANNUAL_SUB: "Abonnement annuel",
-  QUOTE: "Sur devis",
-  COMMISSION: "À la commission",
+  COURSE: "Formation",
+  SERVICE: "Prestation",
+  PRODUCT: "Produit",
+  ONE_TIME: "Achat unique",
 };
 
-export default function ProduitsClient({ branches, totalProducts, totalActive, totalDocumented }: Props) {
-  const [filter, setFilter] = useState<"all" | "active" | "inactive">("all");
-  const [openBranches, setOpenBranches] = useState<Set<string>>(
-    () => new Set(branches.slice(0, 1).map((b) => b.id))
-  );
-  const [search, setSearch] = useState("");
+const PRICING_BADGE: Record<string, string> = {
+  MONTHLY_SUB: "bg-blue-100 text-blue-700",
+  ANNUAL_SUB: "bg-violet-100 text-violet-700",
+  COURSE: "bg-amber-100 text-amber-700",
+  SERVICE: "bg-teal-100 text-teal-700",
+  PRODUCT: "bg-slate-100 text-slate-600",
+  ONE_TIME: "bg-slate-100 text-slate-600",
+};
 
-  function toggleBranch(id: string) {
-    setOpenBranches((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }
+const BRANCH_ICONS: Record<string, string> = {
+  "ibig-soft": "⚙️",
+  "ibig-eduform": "🎓",
+  "ibig-immo-trust": "🏠",
+  "ibig-market": "🛒",
+  "ibig-digital": "💻",
+  "ibig-digital-kits": "🔧",
+  "ibig-conseil-plus": "📋",
+  "ibig-partners-branch": "🌐",
+  "ibig-multiservices": "🛠️",
+  "ibig-financement": "💰",
+  "ibig-emploi-talents": "👥",
+};
 
-  function expandAll() {
-    setOpenBranches(new Set(branches.map((b) => b.id)));
-  }
+// Opportunités du moment (static — sera dynamique plus tard)
+const HOT_OPPORTUNITIES = [
+  { icon: "🖥️", label: "Logiciels de gestion", detail: "PME cherchant à digitaliser leur activité" },
+  { icon: "🎓", label: "Formations professionnelles", detail: "Entreprises ayant besoin de former leurs équipes" },
+  { icon: "🏠", label: "Gestion locative", detail: "Propriétaires cherchant un gestionnaire" },
+  { icon: "🌐", label: "Sites web professionnels", detail: "Entreprises sans présence en ligne" },
+  { icon: "👥", label: "Recrutement de profils", detail: "PME en phase de croissance" },
+  { icon: "📋", label: "Création d'entreprise", detail: "Entrepreneurs voulant se formaliser" },
+];
 
-  function collapseAll() {
-    setOpenBranches(new Set());
-  }
-
-  const filteredBranches = useMemo(() => {
-    return branches
-      .map((branch) => ({
-        ...branch,
-        products: branch.products.filter((p) => {
-          const matchFilter =
-            filter === "all" ||
-            (filter === "active" && p.affiliateUrl !== null) ||
-            (filter === "inactive" && p.affiliateUrl === null);
-          const matchSearch =
-            !search ||
-            p.name.toLowerCase().includes(search.toLowerCase()) ||
-            (p.description ?? "").toLowerCase().includes(search.toLowerCase());
-          return matchFilter && matchSearch;
-        }),
-      }))
-      .filter((b) => b.products.length > 0 || (filter === "all" && !search));
-  }, [branches, filter, search]);
-
-  const visibleCount = filteredBranches.reduce((s, b) => s + b.products.length, 0);
+function ProductCard({
+  product,
+  branchName,
+  branchGradient,
+  branchSlug,
+}: {
+  product: Product;
+  branchName: string;
+  branchGradient: string;
+  branchSlug: string;
+}) {
+  const active = product.affiliateUrl !== null;
+  const destination = product.siteUrl
+    ? product.siteUrl.startsWith("http") ? product.siteUrl : `https://${product.siteUrl}`
+    : null;
 
   return (
-    <div className="space-y-4">
-      {/* Stats */}
-      <div className="grid gap-3 sm:grid-cols-3">
-        <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 p-4 text-white">
-          <p className="text-xs font-semibold uppercase tracking-wide text-blue-200">Offres disponibles</p>
-          <p className="mt-1 text-2xl font-bold">{totalProducts}</p>
+    <div
+      className={`flex flex-col rounded-2xl border bg-white shadow-sm transition-all hover:shadow-md ${
+        active ? "border-emerald-200 ring-1 ring-emerald-100" : "border-slate-100"
+      }`}
+    >
+      {/* Top band */}
+      <div className={`rounded-t-2xl bg-gradient-to-r ${branchGradient} px-4 py-2.5 flex items-center justify-between`}>
+        <span className="text-xs font-bold text-white/90 truncate">
+          {BRANCH_ICONS[branchSlug] ?? "📦"} {branchName}
+        </span>
+        {active && (
+          <span className="shrink-0 rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold text-white">
+            ✓ Activé
+          </span>
+        )}
+      </div>
+
+      {/* Body */}
+      <div className="flex flex-col flex-1 p-4 gap-3">
+        <div>
+          <div className="flex items-start gap-2 mb-1.5">
+            <p className="font-semibold text-slate-900 text-sm leading-snug flex-1">{product.name}</p>
+            <span className={`shrink-0 rounded-lg px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${PRICING_BADGE[product.pricingType] ?? "bg-slate-100 text-slate-500"}`}>
+              {PRICING_LABELS[product.pricingType] ?? product.pricingType}
+            </span>
+          </div>
+          {product.description && (
+            <p className="text-xs text-slate-500 leading-relaxed line-clamp-3">{product.description}</p>
+          )}
         </div>
-        <div className="rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-700 p-4 text-white">
-          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-200">Mes offres activées</p>
-          <p className="mt-1 text-2xl font-bold">{totalActive}</p>
+
+        {/* Prix + Commission */}
+        <div className="grid grid-cols-2 gap-2 mt-auto">
+          <div className="rounded-xl bg-slate-50 px-3 py-2">
+            <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Prix</p>
+            <p className="text-sm font-bold text-slate-700 truncate">{product.priceDisplay}</p>
+          </div>
+          <div className="rounded-xl bg-emerald-50 px-3 py-2">
+            <p className="text-[10px] font-bold uppercase tracking-wide text-emerald-500">Commission N1</p>
+            <p className="text-sm font-bold text-emerald-700 truncate">{product.commissionDisplay}</p>
+          </div>
         </div>
-        <div className="rounded-2xl bg-gradient-to-br from-slate-700 to-slate-800 p-4 text-white">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-300">Fiches complètes</p>
-          <p className="mt-1 text-2xl font-bold">{totalDocumented}/{totalProducts}</p>
+
+        {/* Lien affilié si actif */}
+        {active && product.affiliateUrl && (
+          <div className="flex items-center gap-2 rounded-xl bg-blue-50 border border-blue-100 px-2.5 py-1.5">
+            <span className="font-mono text-[11px] text-slate-500 truncate flex-1 min-w-0">
+              {product.affiliateUrl}
+            </span>
+            <CopyButton text={product.affiliateUrl} />
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="flex items-center gap-2 pt-1 border-t border-slate-50">
+          {destination && (
+            <a
+              href={destination}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-1 text-xs text-slate-400 hover:text-blue-600 transition font-medium"
+            >
+              Voir l&apos;offre ↗
+            </a>
+          )}
+          <div className="flex-1" />
+          <form action={toggleProduct}>
+            <input type="hidden" name="productId" value={product.id} />
+            <button
+              type="submit"
+              className={`rounded-xl px-4 py-1.5 text-xs font-bold transition ${
+                active
+                  ? "bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-600"
+                  : "bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
+              }`}
+            >
+              {active ? "Désactiver" : "Activer →"}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function ProduitsClient({ branches, totalProducts, totalActive }: Props) {
+  const [selectedBranch, setSelectedBranch] = useState<string>("ALL");
+  const [filter, setFilter] = useState<"all" | "active" | "inactive">("all");
+  const [search, setSearch] = useState("");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+
+  // Flatten all products with branch info
+  const allProducts = useMemo(() =>
+    branches.flatMap(b =>
+      b.products.map(p => ({ ...p, branchId: b.id, branchSlug: b.id.slice(0, 30), branchName: b.name, branchGradient: b.gradient, branchSlugKey: b.id }))
+    ), [branches]);
+
+  // Branch slugs — on utilise l'id comme clé stable
+  const branchMap = useMemo(() => new Map(branches.map(b => [b.id, b])), [branches]);
+
+  const filtered = useMemo(() => {
+    return allProducts.filter(p => {
+      if (selectedBranch !== "ALL" && p.branchId !== selectedBranch) return false;
+      if (filter === "active" && !p.affiliateUrl) return false;
+      if (filter === "inactive" && p.affiliateUrl) return false;
+      if (search) {
+        const q = search.toLowerCase();
+        if (!p.name.toLowerCase().includes(q) && !(p.description ?? "").toLowerCase().includes(q) && !p.branchName.toLowerCase().includes(q)) return false;
+      }
+      return true;
+    });
+  }, [allProducts, selectedBranch, filter, search]);
+
+  const totalCommissionPotential = filtered.filter(p => p.affiliateUrl).reduce((s, p) => s + (p.price > 0 ? Math.round(p.price * p.rate / 100) : 0), 0);
+
+  return (
+    <div className="space-y-6">
+
+      {/* ── HERO ──────────────────────────────────────────────── */}
+      <div className="rounded-2xl bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 px-6 py-8 text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(circle at 20% 50%, #3b82f6 0%, transparent 50%), radial-gradient(circle at 80% 50%, #8b5cf6 0%, transparent 50%)" }} />
+        <div className="relative">
+          <p className="text-xs font-bold uppercase tracking-widest text-blue-300 mb-2">IBIG PARTNERS — Marketplace</p>
+          <h1 className="text-2xl font-extrabold leading-tight mb-2">
+            Trouvez. Recommandez. Connectez. <span className="text-blue-400">Gagnez.</span>
+          </h1>
+          <p className="text-sm text-white/70 max-w-lg leading-relaxed">
+            {totalProducts}+ offres à promouvoir — logiciels, formations, immobilier, conseil, financement et bien plus.
+            Activez celles qui correspondent à votre réseau et générez des commissions.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <div className="rounded-xl bg-white/10 px-4 py-2 text-center">
+              <p className="text-xl font-extrabold">{totalProducts}</p>
+              <p className="text-[10px] text-white/60 uppercase tracking-wide">Offres disponibles</p>
+            </div>
+            <div className="rounded-xl bg-white/10 px-4 py-2 text-center">
+              <p className="text-xl font-extrabold">{branches.length}</p>
+              <p className="text-[10px] text-white/60 uppercase tracking-wide">Secteurs</p>
+            </div>
+            <div className="rounded-xl bg-emerald-500/20 px-4 py-2 text-center">
+              <p className="text-xl font-extrabold text-emerald-300">{totalActive}</p>
+              <p className="text-[10px] text-white/60 uppercase tracking-wide">Mes offres activées</p>
+            </div>
+            {totalCommissionPotential > 0 && (
+              <div className="rounded-xl bg-amber-500/20 px-4 py-2 text-center">
+                <p className="text-xl font-extrabold text-amber-300">
+                  {new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 }).format(totalCommissionPotential)} F
+                </p>
+                <p className="text-[10px] text-white/60 uppercase tracking-wide">Potentiel commissions N1</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Barre de contrôle */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center rounded-2xl border border-slate-200 bg-white px-4 py-3">
-        {/* Recherche */}
-        <input
-          type="search"
-          placeholder="Rechercher un produit…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-300"
-        />
-        {/* Filtres */}
-        <div className="flex gap-1.5 shrink-0">
-          {(["all", "active", "inactive"] as const).map((f) => (
+      {/* ── OPPORTUNITÉS DU MOMENT ─────────────────────────────── */}
+      <div className="rounded-2xl border border-orange-100 bg-orange-50 px-5 py-4">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-lg">🔥</span>
+          <p className="text-sm font-bold text-orange-800">Opportunités du moment</p>
+          <span className="ml-auto text-[10px] text-orange-500 font-semibold uppercase tracking-wide">Mis à jour régulièrement</span>
+        </div>
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {HOT_OPPORTUNITIES.map((o, i) => (
+            <div key={i} className="flex items-center gap-2.5 rounded-xl bg-white border border-orange-100 px-3 py-2.5">
+              <span className="text-xl shrink-0">{o.icon}</span>
+              <div className="min-w-0">
+                <p className="text-xs font-bold text-slate-800 truncate">{o.label}</p>
+                <p className="text-[10px] text-slate-500 truncate">{o.detail}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-3 text-xs text-orange-700">
+          Vous avez identifié une de ces opportunités dans votre réseau ?{" "}
+          <Link href="/espace/reseau" className="font-bold underline underline-offset-2">Soumettez-la →</Link>
+        </p>
+      </div>
+
+      {/* ── FILTRES BRANCHES ────────────────────────────────────── */}
+      <div className="overflow-x-auto pb-1">
+        <div className="flex gap-2 min-w-max">
+          <button
+            onClick={() => setSelectedBranch("ALL")}
+            className={`shrink-0 rounded-xl px-4 py-2 text-xs font-bold transition border ${
+              selectedBranch === "ALL"
+                ? "bg-slate-900 text-white border-slate-900"
+                : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+            }`}
+          >
+            Tout ({totalProducts})
+          </button>
+          {branches.map(b => (
             <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
-                filter === f
-                  ? "bg-blue-600 text-white shadow"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+              key={b.id}
+              onClick={() => setSelectedBranch(b.id)}
+              className={`shrink-0 rounded-xl px-4 py-2 text-xs font-bold transition border ${
+                selectedBranch === b.id
+                  ? `bg-gradient-to-r ${b.gradient} text-white border-transparent`
+                  : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
               }`}
             >
-              {f === "all" ? "Tout" : f === "active" ? "✓ Activées" : "À activer"}
+              {BRANCH_ICONS[b.id] ?? "📦"} {b.name.replace("IBIG ", "")} ({b.products.length})
             </button>
           ))}
         </div>
-        {/* Tout ouvrir / fermer */}
-        <div className="flex gap-1.5 shrink-0">
-          <button onClick={expandAll} className="text-xs text-slate-400 hover:text-slate-700 transition px-1">
-            Tout ouvrir
+      </div>
+
+      {/* ── BARRE RECHERCHE + FILTRES ───────────────────────────── */}
+      <div className="flex flex-col sm:flex-row gap-3 items-center">
+        <div className="relative flex-1 w-full">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
+          <input
+            type="search"
+            placeholder="Rechercher un produit, service, formation…"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full rounded-xl border border-slate-200 bg-white pl-9 pr-4 py-2.5 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+          />
+        </div>
+        <div className="flex gap-2 shrink-0">
+          {(["all", "active", "inactive"] as const).map(f => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`rounded-xl px-3 py-2 text-xs font-bold transition border ${
+                filter === f ? "bg-blue-600 text-white border-blue-600" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+              }`}
+            >
+              {f === "all" ? "Toutes" : f === "active" ? "✓ Activées" : "À activer"}
+            </button>
+          ))}
+        </div>
+        <div className="flex gap-1 shrink-0 rounded-xl border border-slate-200 bg-white p-1">
+          <button onClick={() => setViewMode("grid")} className={`rounded-lg px-2.5 py-1.5 text-xs transition ${viewMode === "grid" ? "bg-slate-900 text-white" : "text-slate-400 hover:text-slate-700"}`}>
+            ⊞ Grille
           </button>
-          <span className="text-slate-200">|</span>
-          <button onClick={collapseAll} className="text-xs text-slate-400 hover:text-slate-700 transition px-1">
-            Tout fermer
+          <button onClick={() => setViewMode("list")} className={`rounded-lg px-2.5 py-1.5 text-xs transition ${viewMode === "list" ? "bg-slate-900 text-white" : "text-slate-400 hover:text-slate-700"}`}>
+            ☰ Liste
           </button>
         </div>
       </div>
 
-      {/* Résultat de recherche */}
-      {(search || filter !== "all") && (
-        <p className="text-xs text-slate-400 px-1">
-          {visibleCount} offre{visibleCount !== 1 ? "s" : ""} affichée{visibleCount !== 1 ? "s" : ""}
-          {search && <> pour « <span className="font-semibold text-slate-600">{search}</span> »</>}
-        </p>
-      )}
+      {/* Compteur résultats */}
+      <p className="text-xs text-slate-400 -mt-2">
+        <span className="font-bold text-slate-700">{filtered.length}</span> offre{filtered.length !== 1 ? "s" : ""}
+        {selectedBranch !== "ALL" && ` · ${branchMap.get(selectedBranch)?.name ?? ""}`}
+        {search && ` · recherche : « ${search} »`}
+        {filter !== "all" && ` · ${filter === "active" ? "activées" : "non activées"}`}
+      </p>
 
-      {/* Branches en accordéon */}
-      {filteredBranches.map((branch) => {
-        const isOpen = openBranches.has(branch.id);
-        return (
-          <section key={branch.id} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-            {/* En-tête cliquable */}
-            <button
-              onClick={() => toggleBranch(branch.id)}
-              className={`w-full bg-gradient-to-r ${branch.gradient} px-5 py-4 text-white text-left`}
+      {/* ── GRILLE PRODUITS ─────────────────────────────────────── */}
+      {filtered.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-slate-200 bg-white py-16 text-center">
+          <p className="text-4xl mb-3">🔍</p>
+          <p className="text-slate-500 text-sm font-semibold">Aucun résultat</p>
+          <p className="text-xs text-slate-400 mt-1">Essayez un autre filtre ou une autre recherche.</p>
+        </div>
+      ) : viewMode === "grid" ? (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map(p => (
+            <ProductCard
+              key={p.id}
+              product={p}
+              branchName={p.branchName}
+              branchGradient={p.branchGradient}
+              branchSlug={p.branchId}
+            />
+          ))}
+          {/* CTA Soumettre une opportunité */}
+          <div className="rounded-2xl border-2 border-dashed border-blue-200 bg-blue-50 flex flex-col items-center justify-center p-6 text-center gap-3">
+            <span className="text-4xl">💼</span>
+            <div>
+              <p className="font-bold text-blue-800 text-sm">Vous avez une opportunité ?</p>
+              <p className="text-xs text-blue-600 mt-1 leading-relaxed">
+                Un client potentiel, un projet, un besoin identifié dans votre réseau ?
+              </p>
+            </div>
+            <Link
+              href="/espace/reseau"
+              className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-5 py-2.5 transition"
             >
-              <div className="flex items-center justify-between gap-4">
-                <div className="min-w-0">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/70">{branch.offerType}</p>
-                  <h2 className="mt-0.5 text-base font-bold text-white leading-tight">{branch.name}</h2>
-                  {branch.tagline && (
-                    <p className="mt-0.5 text-xs text-white/80 truncate">{branch.tagline}</p>
-                  )}
-                </div>
-                <div className="flex items-center gap-3 shrink-0">
-                  <div className="text-right">
-                    <p className="text-xs text-white/70">{branch.commissionModel}</p>
-                    <p className="text-xs font-bold text-white/90">
-                      {branch.activeCount}/{branch.products.length} activée{branch.products.length !== 1 ? "s" : ""}
-                    </p>
+              Soumettre une opportunité →
+            </Link>
+          </div>
+        </div>
+      ) : (
+        /* Vue liste compacte */
+        <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden divide-y divide-slate-50">
+          {filtered.map(p => {
+            const active = p.affiliateUrl !== null;
+            return (
+              <div key={p.id} className={`flex items-center gap-4 px-4 py-3 hover:bg-slate-50/60 transition ${active ? "bg-blue-50/30" : ""}`}>
+                <span className={`shrink-0 h-2 w-2 rounded-full ${active ? "bg-emerald-500" : "bg-slate-300"}`} />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="text-sm font-semibold text-slate-800 truncate">{p.name}</p>
+                    <span className={`rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide ${PRICING_BADGE[p.pricingType] ?? "bg-slate-100 text-slate-500"}`}>
+                      {PRICING_LABELS[p.pricingType] ?? p.pricingType}
+                    </span>
                   </div>
-                  <span className={`text-white/70 text-lg transition-transform duration-200 ${isOpen ? "rotate-90" : ""}`}>
-                    ›
-                  </span>
+                  <p className="text-[11px] text-slate-400 truncate">{p.branchName}</p>
                 </div>
+                <div className="shrink-0 text-right hidden sm:block">
+                  <p className="text-xs text-slate-600">{p.priceDisplay}</p>
+                  <p className="text-xs font-bold text-emerald-600">{p.commissionDisplay}</p>
+                </div>
+                <form action={toggleProduct}>
+                  <input type="hidden" name="productId" value={p.id} />
+                  <button type="submit" className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-bold transition ${active ? "bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-600" : "bg-blue-600 text-white hover:bg-blue-700"}`}>
+                    {active ? "Désact." : "Activer"}
+                  </button>
+                </form>
               </div>
-            </button>
-
-            {/* Liste produits */}
-            {isOpen && (
-              <div className="divide-y divide-slate-100">
-                {branch.products.length === 0 ? (
-                  <p className="px-5 py-6 text-center text-sm text-slate-400">Aucune offre pour ces critères.</p>
-                ) : (
-                  branch.products.map((product) => {
-                    const active = product.affiliateUrl !== null;
-                    const destination =
-                      product.siteUrl
-                        ? product.siteUrl.startsWith("http")
-                          ? product.siteUrl
-                          : `https://${product.siteUrl}`
-                        : null;
-
-                    return (
-                      <div
-                        key={product.id}
-                        className={`px-4 py-3 transition-colors ${active ? "bg-blue-50/40" : "bg-white hover:bg-slate-50/60"}`}
-                      >
-                        {/* Ligne principale */}
-                        <div className="flex items-start gap-3">
-                          {/* Statut dot */}
-                          <span
-                            className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${active ? "bg-emerald-500" : "bg-slate-300"}`}
-                          />
-                          {/* Infos */}
-                          <div className="min-w-0 flex-1">
-                            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                              <p className="text-sm font-semibold text-slate-900">{product.name}</p>
-                              <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wide">
-                                {PRICING_LABELS[product.pricingType] ?? product.pricingType}
-                              </span>
-                            </div>
-                            {product.description && (
-                              <p className="mt-0.5 text-xs text-slate-500 line-clamp-2 leading-relaxed">
-                                {product.description}
-                              </p>
-                            )}
-                            {/* Prix + commission */}
-                            <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs">
-                              <span className="text-slate-600">
-                                Prix : <strong className="text-slate-800">{product.priceDisplay}</strong>
-                              </span>
-                              <span className="text-emerald-700">
-                                Commission N1 : <strong>{product.commissionDisplay}</strong>
-                              </span>
-                            </div>
-                            {/* Lien affilié si actif */}
-                            {active && product.affiliateUrl && (
-                              <div className="mt-2 flex items-center gap-2 rounded-lg bg-blue-50 border border-blue-100 px-2.5 py-1.5">
-                                <span className="font-mono text-[11px] text-slate-500 truncate flex-1">
-                                  {product.affiliateUrl}
-                                </span>
-                                <CopyButton text={product.affiliateUrl} />
-                              </div>
-                            )}
-                          </div>
-                          {/* Actions */}
-                          <div className="flex shrink-0 items-center gap-2 mt-0.5">
-                            {destination && (
-                              <a
-                                href={destination}
-                                target="_blank"
-                                rel="noreferrer"
-                                title="Voir l'offre"
-                                className="text-slate-400 hover:text-blue-600 transition text-sm"
-                              >
-                                ↗
-                              </a>
-                            )}
-                            <form action={toggleProduct}>
-                              <input type="hidden" name="productId" value={product.id} />
-                              <button
-                                type="submit"
-                                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
-                                  active
-                                    ? "bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-600"
-                                    : "bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
-                                }`}
-                              >
-                                {active ? "Désactiver" : "Activer"}
-                              </button>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            )}
-          </section>
-        );
-      })}
-
-      {filteredBranches.length === 0 && (
-        <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center text-sm text-slate-400">
-          Aucun résultat pour ces critères.
+            );
+          })}
         </div>
       )}
+
+      {/* ── CTA BAS DE PAGE ─────────────────────────────────────── */}
+      <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-violet-600 p-6 text-white text-center">
+        <p className="text-xl font-extrabold mb-2">Votre réseau vaut de l&apos;argent.</p>
+        <p className="text-sm text-white/80 max-w-lg mx-auto leading-relaxed mb-4">
+          Vous connaissez une entreprise qui cherche un logiciel, une formation, un site web ou un financement ?
+          Soumettez l&apos;opportunité à IBIG — si elle aboutit, vous êtes rémunéré.
+        </p>
+        <Link
+          href="/espace/reseau"
+          className="inline-block rounded-xl bg-white text-blue-700 font-bold text-sm px-6 py-3 hover:bg-blue-50 transition shadow-lg"
+        >
+          Soumettre une opportunité →
+        </Link>
+      </div>
+
     </div>
   );
 }
