@@ -85,6 +85,34 @@ export default function TourPreview() {
         <p className="mt-4 text-xs text-slate-400 text-center">Le statut actuel est visible dans le tableau de bord et la barre latérale. Il évolue automatiquement à chaque palier atteint.</p>
       </div>
 
+      {/* Coach IA */}
+      <div className="rounded-2xl border border-violet-200 bg-violet-50 p-5 flex items-start gap-4">
+        <span className="text-3xl shrink-0">🤖</span>
+        <div className="min-w-0 flex-1">
+          <h3 className="font-bold text-violet-900">Coach IA — disponible 24h/24</h3>
+          <p className="text-sm text-violet-800 mt-1 leading-relaxed">
+            Chaque affilié dispose d'un Coach IA intégré à l'Académie IBIG. Il répond instantanément à toutes les questions sur les produits, les techniques de vente, les commissions et le fonctionnement de la plateforme — sans attendre le support humain.
+          </p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            {[
+              { icon: "💬", label: "Réponses instantanées",      desc: "Aucune attente, disponible à toute heure" },
+              { icon: "📦", label: "Connaissance produits",       desc: "Tous les 330+ produits des 9 branches" },
+              { icon: "💡", label: "Conseils de vente",           desc: "Scripts, objections, argumentaires" },
+              { icon: "🎓", label: "Aide à la formation",         desc: "Explique les modules, résume les contenus" },
+            ].map((f) => (
+              <div key={f.label} className="flex items-start gap-2 rounded-xl bg-white/60 px-3 py-2.5">
+                <span className="text-lg shrink-0">{f.icon}</span>
+                <div>
+                  <p className="text-xs font-bold text-violet-900">{f.label}</p>
+                  <p className="text-[11px] text-violet-700 leading-snug">{f.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-xs text-violet-600">📍 Accessible via <strong>Académie → Coach IA</strong> dans l'espace affilié. Présenté à l'étape 7 de la visite guidée.</p>
+        </div>
+      </div>
+
       {/* Retrait self-service */}
       <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 flex items-start gap-4">
         <span className="text-3xl shrink-0">💸</span>
