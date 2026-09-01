@@ -353,6 +353,39 @@ export default function TourPreview() {
         </div>
       </div>
 
+      {/* Plan d'action 7 jours */}
+      <div className="rounded-2xl border border-indigo-200 bg-indigo-50 p-5 flex items-start gap-4">
+        <span className="text-3xl shrink-0">🚀</span>
+        <div className="min-w-0 flex-1">
+          <h3 className="font-bold text-indigo-900">Plan d'action — les 7 premiers jours</h3>
+          <p className="text-sm text-indigo-800 mt-1 leading-relaxed">
+            Ce plan est présenté à chaque nouvel affilié lors de l'étape finale de la visite guidée. Il structure les premières actions concrètes pour démarrer rapidement et générer les premières commissions.
+          </p>
+          <div className="mt-4 flex flex-col gap-2">
+            {[
+              { day: "Jour 1",   icon: "🔐", action: "Compléter le KYC",                       detail: "Soumettre pièce d'identité + coordonnées de paiement" },
+              { day: "Jour 1–2", icon: "📦", action: "Parcourir le catalogue",                  detail: "Explorer les 330+ produits des 9 branches disponibles" },
+              { day: "Jour 2",   icon: "🔗", action: "Activer ses liens d'affiliation",         detail: "Sélectionner les produits à promouvoir et générer les liens" },
+              { day: "Jour 3",   icon: "💬", action: "Partager à 10 contacts de confiance",     detail: "WhatsApp, réseaux sociaux, SMS — avec les scripts du Kit Marketing" },
+              { day: "Jour 4–5", icon: "👥", action: "Recruter son 1er filleul",               detail: "Partager son lien de parrainage et accompagner l'inscription" },
+              { day: "Jour 6–7", icon: "🎓", action: "Compléter 3 modules de l'Académie",      detail: "Formations IBIG SOFT, techniques de prospection, argumentaires" },
+            ].map((step, i) => (
+              <div key={i} className="flex items-start gap-3 rounded-xl bg-white/70 px-3 py-2.5">
+                <div className="flex h-7 w-16 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-bold text-white">
+                  {step.day}
+                </div>
+                <span className="text-lg shrink-0 mt-0.5">{step.icon}</span>
+                <div>
+                  <p className="text-xs font-bold text-indigo-900">{step.action}</p>
+                  <p className="text-[11px] text-indigo-700 leading-snug">{step.detail}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-xs text-indigo-600">📍 Présenté à l'étape 9 (dernière étape) de la visite guidée.</p>
+        </div>
+      </div>
+
       {show && <OnboardingTour isNewUser={true} />}
     </div>
   );
