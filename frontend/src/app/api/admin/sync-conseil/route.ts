@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { isSyncAuthorized } from "@/lib/sync-auth";
 import { syncBranchWithFeed } from "@/lib/catalog-feed";
 
@@ -45,6 +45,33 @@ const CONSEIL_PRODUCTS = [
     siteUrl: BASE,
     description: "Conception et suivi d'un tableau de bord financier personnalisé : indicateurs clés (CA, marges, trésorerie, dettes), alertes et rapports mensuels de pilotage. Pour dirigeants souhaitant suivre leur performance financière en temps réel et prendre de meilleures décisions. À partir de 80 000 FCFA.",
   },
+  {
+    slug: "conseil-controle-gestion",
+    name: "Contrôle de Gestion & Analyse des Coûts",
+    pricingType: "SERVICE",
+    price: 150000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Mise en place du contrôle de gestion : comptabilité analytique, calcul des coûts de revient, marges par produit/service, budget prévisionnel, analyse des écarts et reporting mensuel. Pour PME et filiales souhaitant piloter leur rentabilité et optimiser leurs coûts opérationnels. À partir de 150 000 FCFA.",
+  },
+  {
+    slug: "conseil-audit-comptable",
+    name: "Audit Comptable & Financier",
+    pricingType: "SERVICE",
+    price: 250000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Audit indépendant de la comptabilité et des états financiers : vérification de la fiabilité des comptes, détection des anomalies, contrôle de conformité SYSCOHADA et rapport d'audit avec recommandations. Pour entreprises souhaitant sécuriser leurs données financières ou préparer un audit bailleur. À partir de 250 000 FCFA.",
+  },
+  {
+    slug: "conseil-gestion-tresorerie",
+    name: "Gestion & Optimisation de Trésorerie",
+    pricingType: "SERVICE",
+    price: 100000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Analyse et optimisation de la trésorerie : plan de trésorerie prévisionnel, suivi des flux entrants/sortants, identification des décalages, solutions de financement court terme et négociation des conditions bancaires. Pour dirigeants confrontés à des tensions de trésorerie ou souhaitant améliorer leur gestion du cash. À partir de 100 000 FCFA.",
+  },
 
   // ── Création & Structuration d'Entreprise ─────────────────────────────
   {
@@ -82,6 +109,62 @@ const CONSEIL_PRODUCTS = [
     rate: 10,
     siteUrl: BASE,
     description: "Gestion des modifications statutaires et formalités juridiques : changement de dénomination, transfert de siège, augmentation de capital, cession de parts, nomination de gérant et dépôt au RCCM. Pour entreprises devant effectuer des changements juridiques sans se perdre dans les démarches administratives. À partir de 100 000 FCFA.",
+  },
+  {
+    slug: "conseil-dissolution-liquidation",
+    name: "Dissolution & Liquidation d'Entreprise",
+    pricingType: "SERVICE",
+    price: 200000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Accompagnement dans la procédure de dissolution et liquidation amiable : assemblée générale extraordinaire, publication légale, liquidation des actifs et des passifs, radiation au RCCM et clôture des comptes. Pour dirigeants souhaitant fermer leur entreprise dans les règles de l'art et éviter des complications fiscales et sociales. À partir de 200 000 FCFA.",
+  },
+
+  // ── Juridique & Contrats ──────────────────────────────────────────────
+  {
+    slug: "conseil-redaction-contrats",
+    name: "Rédaction de Contrats Commerciaux",
+    pricingType: "SERVICE",
+    price: 75000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Rédaction et relecture de contrats commerciaux sur mesure : contrat de prestation de services, contrat de vente, contrat de partenariat, accord de confidentialité (NDA), lettre d'intention et protocole d'accord. Pour entreprises souhaitant sécuriser leurs engagements commerciaux avec des documents juridiquement solides. À partir de 75 000 FCFA.",
+  },
+  {
+    slug: "conseil-cgv-cgu",
+    name: "Rédaction CGV, CGU & Mentions Légales",
+    pricingType: "SERVICE",
+    price: 60000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Rédaction des Conditions Générales de Vente (CGV), Conditions Générales d'Utilisation (CGU) et mentions légales adaptées à votre activité et conformes au droit OHADA et aux réglementations locales. Indispensable pour e-commercants, prestataires et plateformes numériques. À partir de 60 000 FCFA.",
+  },
+  {
+    slug: "conseil-contrat-travail",
+    name: "Rédaction & Vérification de Contrats de Travail",
+    pricingType: "SERVICE",
+    price: 50000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Rédaction et vérification de contrats de travail conformes au Code du Travail ivoirien : CDI, CDD, contrat de stage, contrat de sous-traitance, clause de non-concurrence et avenant. Pour employeurs souhaitant embaucher en toute sécurité juridique et éviter les litiges prud'homaux. À partir de 50 000 FCFA.",
+  },
+  {
+    slug: "conseil-bail-commercial",
+    name: "Rédaction & Négociation de Bail Commercial",
+    pricingType: "SERVICE",
+    price: 80000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Accompagnement dans la négociation et la rédaction du bail commercial : analyse des clauses, négociation avec le bailleur, vérification de la conformité légale et rédaction du contrat final. Pour entrepreneurs et PME souhaitant louer un local commercial avec des conditions équilibrées et sécurisées. À partir de 80 000 FCFA.",
+  },
+  {
+    slug: "conseil-propriete-intellectuelle",
+    name: "Dépôt de Marque & Propriété Intellectuelle (OAPI)",
+    pricingType: "SERVICE",
+    price: 150000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Accompagnement pour la protection de votre propriété intellectuelle auprès de l'OAPI : dépôt de marque, de brevet, de modèle industriel ou de droit d'auteur. Inclut la recherche d'antériorité, la constitution du dossier et le suivi jusqu'à l'obtention du titre. Pour entreprises, inventeurs et créateurs souhaitant protéger leur nom, logo ou innovation. À partir de 150 000 FCFA.",
   },
 
   // ── Études & Conseil Stratégique ──────────────────────────────────────
@@ -121,6 +204,109 @@ const CONSEIL_PRODUCTS = [
     siteUrl: BASE,
     description: "Accompagnement stratégique pour définir la vision, les objectifs et la feuille de route de votre entreprise : diagnostic stratégique, analyse PESTEL/SWOT, définition des axes de développement et plan d'action sur 3 ans. Pour dirigeants souhaitant prendre du recul et construire une stratégie claire et actionnable. À partir de 350 000 FCFA.",
   },
+  {
+    slug: "conseil-pitch-deck",
+    name: "Conception de Pitch Deck Investisseur",
+    pricingType: "SERVICE",
+    price: 150000,
+    rate: 12,
+    siteUrl: BASE,
+    description: "Création d'un pitch deck professionnel pour convaincre des investisseurs : problème, solution, marché, modèle économique, traction, équipe, besoins et use of funds. Design soigné, narration percutante et données financières clés. Pour startups et entrepreneurs en recherche de financement privé ou de levée de fonds. À partir de 150 000 FCFA.",
+  },
+  {
+    slug: "conseil-diagnostic-strategique",
+    name: "Diagnostic Stratégique d'Entreprise",
+    pricingType: "SERVICE",
+    price: 200000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Diagnostic approfondi de la situation stratégique de votre entreprise : analyse interne (forces, faiblesses), analyse externe (opportunités, menaces), positionnement concurrentiel et identification des leviers de croissance. Livré avec rapport complet et restitution orale. Pour dirigeants souhaitant prendre des décisions éclairées. À partir de 200 000 FCFA.",
+  },
+
+  // ── Ressources Humaines ───────────────────────────────────────────────
+  {
+    slug: "conseil-recrutement",
+    name: "Recrutement & Sélection de Candidats",
+    pricingType: "SERVICE",
+    price: 150000,
+    rate: 12,
+    siteUrl: BASE,
+    description: "Service de recrutement complet : définition du profil de poste, diffusion de l'offre, tri des candidatures, entretiens de présélection, évaluation des compétences et présentation d'une short-list qualifiée. Pour entreprises souhaitant gagner du temps et recruter les bons profils dès la première fois. À partir de 150 000 FCFA par recrutement.",
+  },
+  {
+    slug: "conseil-gestion-paie",
+    name: "Externalisation de la Paie",
+    pricingType: "SERVICE",
+    price: 30000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Gestion externalisée de la paie : calcul des salaires, des charges sociales CNPS, édition des bulletins de paie, déclarations sociales mensuelles et gestion des congés payés. Pour PME souhaitant déléguer la paie à des experts et garantir la conformité sociale sans erreur. À partir de 30 000 FCFA/mois (5 salariés).",
+  },
+  {
+    slug: "conseil-audit-social",
+    name: "Audit Social & Conformité RH",
+    pricingType: "SERVICE",
+    price: 200000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Audit de la conformité sociale de votre entreprise : vérification des contrats de travail, du registre du personnel, des obligations CNPS, de l'affiliation aux mutuelles, du règlement intérieur et des procédures disciplinaires. Livré avec rapport d'anomalies et plan de mise en conformité. À partir de 200 000 FCFA.",
+  },
+  {
+    slug: "conseil-plan-formation",
+    name: "Élaboration du Plan de Formation du Personnel",
+    pricingType: "SERVICE",
+    price: 100000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Conception et structuration du plan de formation annuel : identification des besoins en compétences, catalogue des formations prioritaires, budget prévisionnel et suivi des habilitations. Pour DRH et dirigeants souhaitant développer les compétences de leurs équipes de manière structurée. À partir de 100 000 FCFA.",
+  },
+  {
+    slug: "conseil-procedure-disciplinaire",
+    name: "Gestion des Procédures Disciplinaires & Licenciements",
+    pricingType: "SERVICE",
+    price: 100000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Accompagnement dans la gestion des procédures disciplinaires et des licenciements : rédaction des lettres de convocation, des avertissements, des mises à pied et des lettres de licenciement conformes au Code du Travail ivoirien. Pour employeurs souhaitant gérer leurs conflits sociaux sans risque juridique. À partir de 100 000 FCFA.",
+  },
+  {
+    slug: "conseil-gpec",
+    name: "GPEC & Fiche de Poste",
+    pricingType: "SERVICE",
+    price: 150000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Mise en place de la Gestion Prévisionnelle des Emplois et Compétences (GPEC) : cartographie des métiers, rédaction des fiches de poste, grille des compétences, référentiel métier et plan de succession. Pour entreprises en structuration ou en croissance souhaitant anticiper leurs besoins en ressources humaines. À partir de 150 000 FCFA.",
+  },
+
+  // ── Optimisation Fiscale & Douanière ──────────────────────────────────
+  {
+    slug: "conseil-optimisation-fiscale",
+    name: "Optimisation Fiscale & Régimes d'Imposition",
+    pricingType: "SERVICE",
+    price: 150000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Analyse et optimisation de la charge fiscale de votre entreprise : choix du régime d'imposition optimal (RSI, RNI, IS), optimisation de la TVA, exonérations fiscales applicables et stratégies légales de réduction d'impôt. Pour dirigeants souhaitant minimiser leur imposition dans le strict respect de la loi. À partir de 150 000 FCFA.",
+  },
+  {
+    slug: "conseil-controle-fiscal",
+    name: "Assistance lors d'un Contrôle Fiscal",
+    pricingType: "SERVICE",
+    price: 0,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Accompagnement et représentation lors d'un contrôle fiscal de la DGI : analyse de l'avis de vérification, constitution du dossier de défense, assistance pendant les opérations de contrôle, négociation des redressements et recours hiérarchique si nécessaire. Tarif selon la complexité du dossier — sur devis.",
+  },
+  {
+    slug: "conseil-procedures-douanieres",
+    name: "Conseil en Procédures Douanières & Commerce Extérieur",
+    pricingType: "SERVICE",
+    price: 100000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Accompagnement dans les formalités douanières pour l'import/export : classement tarifaire des marchandises, calcul des droits et taxes, rédaction des documents douaniers, régimes suspensifs et assistance en cas de litige douanier. Pour importateurs, exportateurs et PME développant leur activité internationale. À partir de 100 000 FCFA.",
+  },
 
   // ── Recherche de Financement ──────────────────────────────────────────
   {
@@ -149,6 +335,91 @@ const CONSEIL_PRODUCTS = [
     rate: 10,
     siteUrl: BASE,
     description: "Veille et accompagnement pour l'obtention de subventions et financements non remboursables : identification des appels à projets, rédaction des candidatures, suivi et relances. Pour ONG, startups et PME souhaitant accéder à des fonds publics, programmes internationaux (AFD, Banque Mondiale, UE) et concours entrepreneuriaux. À partir de 120 000 FCFA.",
+  },
+  {
+    slug: "conseil-levee-fonds",
+    name: "Accompagnement Levée de Fonds (Capital-risque & Angel)",
+    pricingType: "SERVICE",
+    price: 300000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Accompagnement stratégique pour une levée de fonds privée : valorisation de l'entreprise, structuration du tour de table, préparation des documents d'investissement (term sheet, pacte d'associés), identification des investisseurs et conduite des négociations. Pour startups et PME souhaitant accéder à des capitaux privés. À partir de 300 000 FCFA.",
+  },
+
+  // ── Marketing & Développement Commercial ─────────────────────────────
+  {
+    slug: "conseil-plan-marketing",
+    name: "Élaboration du Plan Marketing",
+    pricingType: "SERVICE",
+    price: 200000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Conception d'un plan marketing opérationnel : analyse de marché, segmentation client, positionnement, mix marketing (produit, prix, distribution, communication), plan d'actions et budget. Pour entreprises souhaitant structurer leur approche commerciale et gagner en visibilité. À partir de 200 000 FCFA.",
+  },
+  {
+    slug: "conseil-strategie-commerciale",
+    name: "Stratégie Commerciale & Développement des Ventes",
+    pricingType: "SERVICE",
+    price: 250000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Définition et déploiement de la stratégie commerciale : analyse du portefeuille clients, identification des cibles prioritaires, argumentaire de vente, organisation de la force de vente, indicateurs de performance et plan d'actions. Pour dirigeants souhaitant booster leur chiffre d'affaires et structurer leur équipe commerciale. À partir de 250 000 FCFA.",
+  },
+  {
+    slug: "conseil-developpement-partenariats",
+    name: "Développement de Partenariats Stratégiques",
+    pricingType: "SERVICE",
+    price: 200000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Identification, approche et structuration de partenariats stratégiques : identification des partenaires potentiels, négociation des termes, rédaction des accords de partenariat et mise en œuvre opérationnelle. Pour entreprises souhaitant accélérer leur croissance via des alliances et des réseaux de distribution. À partir de 200 000 FCFA.",
+  },
+  {
+    slug: "conseil-prospection-b2b",
+    name: "Prospection & Génération de Leads B2B",
+    pricingType: "SERVICE",
+    price: 150000,
+    rate: 12,
+    siteUrl: BASE,
+    description: "Mise en place d'une stratégie de prospection B2B ciblée : identification des prospects, construction de fichiers qualifiés, script d'approche, prise de rendez-vous et reporting hebdomadaire. Pour entreprises souhaitant développer leur portefeuille clients sans mobiliser leurs équipes internes. À partir de 150 000 FCFA/mois.",
+  },
+
+  // ── Gestion de Projet & Management ───────────────────────────────────
+  {
+    slug: "conseil-gestion-projet",
+    name: "Gestion & Pilotage de Projets",
+    pricingType: "SERVICE",
+    price: 200000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Accompagnement dans la gestion de projets : cadrage, planification (Gantt, WBS), suivi des jalons, gestion des risques, reporting aux parties prenantes et clôture de projet. Méthodologies PMI/PRINCE2 ou Agile selon vos besoins. Pour dirigeants et chefs de projet souhaitant livrer leurs projets dans les délais et budgets. À partir de 200 000 FCFA.",
+  },
+  {
+    slug: "conseil-management-transition",
+    name: "Management de Transition",
+    pricingType: "SERVICE",
+    price: 0,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Mise à disposition d'un manager de transition expérimenté pour assurer une direction opérationnelle temporaire : DG par intérim, DAF de transition, DRH de mission ou directeur commercial en remplacement. Pour entreprises traversant une phase de changement, de crise ou de restructuration. Tarif sur devis selon la durée et le profil requis.",
+  },
+  {
+    slug: "conseil-conduite-changement",
+    name: "Conduite du Changement",
+    pricingType: "SERVICE",
+    price: 250000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Accompagnement humain et organisationnel dans les projets de transformation : communication interne, formation des équipes, gestion des résistances, plan de conduite du changement et mesure de l'adoption. Pour entreprises déployant une nouvelle organisation, un nouvel ERP ou une nouvelle stratégie. À partir de 250 000 FCFA.",
+  },
+  {
+    slug: "conseil-processus-qualite",
+    name: "Amélioration des Processus & Démarche Qualité",
+    pricingType: "SERVICE",
+    price: 300000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Cartographie et optimisation des processus opérationnels : identification des gaspillages, simplification des flux, rédaction des procédures et mise en place d'indicateurs qualité. Pour entreprises souhaitant améliorer leur efficacité opérationnelle et se préparer à une certification qualité. À partir de 300 000 FCFA.",
   },
 
   // ── Coaching & Développement ──────────────────────────────────────────
@@ -179,6 +450,44 @@ const CONSEIL_PRODUCTS = [
     siteUrl: BASE,
     description: "Accompagnement mensuel de l'entrepreneur dans le développement de son activité : validation de l'idée, structuration du modèle économique, premiers clients, gestion des difficultés et montée en compétences. Idéal pour les entrepreneurs en démarrage ou en phase de croissance souhaitant être guidés pas à pas. 60 000 FCFA/mois.",
   },
+  {
+    slug: "conseil-mentoring-startup",
+    name: "Mentoring Startup & Innovation",
+    pricingType: "SERVICE",
+    price: 100000,
+    rate: 12,
+    siteUrl: BASE,
+    description: "Programme de mentoring pour startups : structuration du modèle économique (Canvas), validation client, go-to-market, premier financement et connexion au réseau d'investisseurs et partenaires IBIG. Sessions mensuelles avec un mentor expérimenté. Pour fondateurs souhaitant accélérer leur développement grâce à des conseils pratiques. 100 000 FCFA/mois.",
+  },
+
+  // ── Import/Export & International ─────────────────────────────────────
+  {
+    slug: "conseil-implantation-ci",
+    name: "Accompagnement Implantation en Côte d'Ivoire",
+    pricingType: "SERVICE",
+    price: 300000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Accompagnement complet pour les entreprises étrangères et de la diaspora souhaitant s'implanter en Côte d'Ivoire : étude de faisabilité, choix du statut juridique, création de la filiale ou représentation, recrutement local, obtention des agréments et mise en réseau. À partir de 300 000 FCFA.",
+  },
+  {
+    slug: "conseil-commerce-international",
+    name: "Conseil en Commerce International & Export",
+    pricingType: "SERVICE",
+    price: 200000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Accompagnement pour l'internationalisation de votre activité : identification des marchés cibles, réglementation à l'export, recherche de partenaires commerciaux étrangers, Incoterms, contrats internationaux et montage des opérations import/export. Pour PME souhaitant exporter leurs produits ou services. À partir de 200 000 FCFA.",
+  },
+  {
+    slug: "conseil-diaspora-investissement",
+    name: "Accompagnement Diaspora — Investir en Afrique",
+    pricingType: "SERVICE",
+    price: 250000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Accompagnement personnalisé pour les membres de la diaspora africaine souhaitant investir en Côte d'Ivoire ou en Afrique de l'Ouest : identification des opportunités, analyse de viabilité, structuration juridique, recherche de partenaires locaux et suivi à distance du projet. À partir de 250 000 FCFA.",
+  },
 
   // ── CV, Lettre de Motivation & Emploi ─────────────────────────────────
   {
@@ -207,6 +516,15 @@ const CONSEIL_PRODUCTS = [
     rate: 15,
     siteUrl: BASE,
     description: "Pack complet pour maximiser vos chances d'embauche : CV professionnel, lettre de motivation personnalisée et séance de préparation aux entretiens (questions fréquentes, posture, pitch de présentation). Pour candidats souhaitant mettre toutes les chances de leur côté. 35 000 FCFA.",
+  },
+  {
+    slug: "conseil-profil-linkedin",
+    name: "Optimisation Profil LinkedIn",
+    pricingType: "SERVICE",
+    price: 20000,
+    rate: 15,
+    siteUrl: BASE,
+    description: "Refonte et optimisation complète de votre profil LinkedIn : photo professionnelle (conseils), titre percutant, résumé accrocheur, description des expériences orientée résultats et mots-clés pour être trouvé par les recruteurs. Pour candidats actifs et professionnels souhaitant développer leur personal branding. 20 000 FCFA.",
   },
 
   // ── Insertion Professionnelle & Accompagnement Emploi ─────────────────
@@ -246,6 +564,15 @@ const CONSEIL_PRODUCTS = [
     siteUrl: BASE,
     description: "Séance d'orientation professionnelle : clarification de vos objectifs de carrière, identification des secteurs porteurs, conseils sur les formations à suivre et stratégie de montée en compétences. Pour étudiants, jeunes professionnels et personnes en questionnement sur leur avenir professionnel. 25 000 FCFA.",
   },
+  {
+    slug: "conseil-preparation-entretien",
+    name: "Préparation Intensive aux Entretiens d'Embauche",
+    pricingType: "SERVICE",
+    price: 20000,
+    rate: 15,
+    siteUrl: BASE,
+    description: "Session de coaching intensif pour réussir vos entretiens d'embauche : simulation d'entretien, debriefing, travail sur le pitch de présentation, gestion du stress, réponses aux questions pièges et négociation salariale. Pour candidats ayant décroché des entretiens et souhaitant maximiser leurs chances de succès. 20 000 FCFA/séance.",
+  },
 
   // ── Recommandation & Réseau ───────────────────────────────────────────
   {
@@ -267,7 +594,7 @@ const CONSEIL_PRODUCTS = [
     description: "Activation du réseau professionnel IBIG PARTNERS pour faciliter la mise en relation avec des employeurs, partenaires, investisseurs ou donneurs d'ordre. Recommandation directe auprès des entreprises partenaires du groupe. Pour professionnels et entrepreneurs souhaitant bénéficier d'introductions à fort potentiel. 20 000 FCFA.",
   },
 
-  // ── Services Complémentaires ──────────────────────────────────────────
+  // ── Marchés Publics & Appels d'Offres ────────────────────────────────
   {
     slug: "conseil-accompagnement-marches-publics",
     name: "Accompagnement Marchés Publics",
@@ -277,6 +604,46 @@ const CONSEIL_PRODUCTS = [
     siteUrl: BASE,
     description: "Assistance complète pour soumissionner aux marchés publics : veille des appels d'offres, constitution et vérification du dossier administratif, rédaction de l'offre technique et financière, dépôt et suivi. Pour entreprises souhaitant accéder à la commande publique en Côte d'Ivoire. À partir de 150 000 FCFA.",
   },
+  {
+    slug: "conseil-redaction-offre-technique",
+    name: "Rédaction d'Offre Technique & Financière (AO)",
+    pricingType: "SERVICE",
+    price: 200000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Rédaction professionnelle de l'offre technique et de l'offre financière pour répondre à un appel d'offres public ou privé : note méthodologique, planning d'exécution, moyens humains et matériels, présentation de références et bordereau de prix. Pour entreprises souhaitant maximiser leurs chances de remporter des marchés. À partir de 200 000 FCFA.",
+  },
+
+  // ── Formation Professionnelle ─────────────────────────────────────────
+  {
+    slug: "conseil-formation-gestion-entreprise",
+    name: "Formation Gestion d'Entreprise pour Dirigeants",
+    pricingType: "SERVICE",
+    price: 100000,
+    rate: 12,
+    siteUrl: BASE,
+    description: "Formation pratique pour dirigeants et managers : comptabilité de base, lecture des états financiers, gestion de trésorerie, management des équipes, droit des affaires OHADA et outils de pilotage. Atelier d'une journée ou programme sur 2 jours. Pour dirigeants souhaitant maîtriser les fondamentaux de la gestion pour mieux piloter leur entreprise. 100 000 FCFA/personne.",
+  },
+  {
+    slug: "conseil-formation-commerciale",
+    name: "Formation Techniques de Vente & Négociation",
+    pricingType: "SERVICE",
+    price: 75000,
+    rate: 12,
+    siteUrl: BASE,
+    description: "Formation pratique aux techniques de vente et de négociation commerciale : prospection, argumentation, traitement des objections, closing et fidélisation. Exercices pratiques et mises en situation réelles. Pour commerciaux, entrepreneurs et managers souhaitant améliorer leurs résultats de vente. 75 000 FCFA/personne.",
+  },
+  {
+    slug: "conseil-formation-management",
+    name: "Formation Leadership & Management d'Équipe",
+    pricingType: "SERVICE",
+    price: 80000,
+    rate: 12,
+    siteUrl: BASE,
+    description: "Formation au leadership et management d'équipe : styles de management, délégation, motivation, gestion des conflits, communication managériale et management à distance. Pour managers et futurs managers souhaitant développer leurs compétences de leadership. 80 000 FCFA/personne.",
+  },
+
+  // ── Services Complémentaires ──────────────────────────────────────────
   {
     slug: "conseil-domiciliation-entreprise",
     name: "Domiciliation d'Entreprise",
@@ -294,6 +661,33 @@ const CONSEIL_PRODUCTS = [
     rate: 10,
     siteUrl: BASE,
     description: "Accompagnement dans la résolution amiable de litiges commerciaux, sociaux ou partenariaux : médiation, négociation, rédaction de protocoles d'accord et suivi de l'exécution. Pour entreprises souhaitant régler leurs différends rapidement et sans recours judiciaire coûteux. À partir de 100 000 FCFA.",
+  },
+  {
+    slug: "conseil-secretariat-externalise",
+    name: "Secrétariat Externalisé & Assistance Administrative",
+    pricingType: "SERVICE",
+    price: 40000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Externalisation des tâches administratives et de secrétariat : gestion des agendas, rédaction de courriers, organisation de réunions, classement, saisie de données et suivi administratif. Pour dirigeants et professions libérales souhaitant se concentrer sur leur cœur de métier. À partir de 40 000 FCFA/mois.",
+  },
+  {
+    slug: "conseil-accompagnement-iso",
+    name: "Accompagnement Certification ISO",
+    pricingType: "SERVICE",
+    price: 0,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Accompagnement complet pour l'obtention d'une certification ISO (ISO 9001, ISO 14001, ISO 45001…) : diagnostic initial, mise en place du système de management, formation des équipes, audits internes et préparation à l'audit de certification. Tarif sur devis selon le périmètre et la taille de l'entreprise.",
+  },
+  {
+    slug: "conseil-assurance-entreprise",
+    name: "Conseil en Assurance & Gestion des Risques Entreprise",
+    pricingType: "SERVICE",
+    price: 50000,
+    rate: 10,
+    siteUrl: BASE,
+    description: "Audit des risques et accompagnement dans le choix des couvertures d'assurance adaptées : assurance responsabilité civile professionnelle, assurance marchandises, multirisque professionnelle, assurance-vie dirigeant et prévoyance collective. Pour chefs d'entreprise souhaitant optimiser leur protection sans surpayer. À partir de 50 000 FCFA.",
   },
 ];
 
@@ -323,4 +717,3 @@ export async function POST() {
     return NextResponse.json({ error: err?.message ?? "Erreur serveur" }, { status: 500 });
   }
 }
-
