@@ -1,10 +1,9 @@
 import { notFound } from "next/navigation";
-import { cookies } from "next/headers";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { fcfa } from "@/lib/format";
 import type { Metadata } from "next";
-import { COOKIE_TRACKING_DAYS } from "@/lib/constants";
+import { SetRefCookie } from "./set-ref-cookie";
 
 export const dynamic = "force-dynamic";
 
@@ -135,13 +134,7 @@ export default async function OffrePage({
     });
     if (partner) {
       partnerName = `${partner.firstName} ${partner.lastName}`;
-      const store = await cookies();
-      store.set("ibig_ref", affCodeRaw, {
-        maxAge: 60 * 60 * 24 * COOKIE_TRACKING_DAYS,
-        path: "/",
-        sameSite: "lax",
-        httpOnly: false,
-      });
+      // Cookie posé côté client via SetRefCookie (cookies() interdit en Server Component)
     }
   }
 
@@ -205,6 +198,7 @@ export default async function OffrePage({
 
   return (
     <div className="min-h-screen" style={{ background: "#f1f5f9" }}>
+      {affCode && <SetRefCookie code={affCode} />}
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
       <header className={`relative bg-gradient-to-br ${theme.gradient} overflow-hidden`}>
