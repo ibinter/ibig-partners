@@ -337,13 +337,16 @@ export default async function OffrePage({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50">
-                  {[
-                    { icon: "🖥️", label: "E-learning (accès à vie)", perPerson: Math.round(product.price * 0.50 / 1000) * 1000, tag: "Meilleur prix" },
-                    { icon: "💻", label: "En ligne — individuel", perPerson: product.price, tag: null },
-                    { icon: "🏛️", label: "En présentiel — individuel", perPerson: Math.round(product.price * 1.15 / 1000) * 1000, tag: null },
-                    { icon: "👥", label: "Groupe 3–5 pers (en ligne)", perPerson: Math.round(product.price * 0.85 / 1000) * 1000, tag: "-15% / pers" },
-                    { icon: "👥", label: "Groupe 6–9 pers (en ligne)", perPerson: Math.round(product.price * 0.75 / 1000) * 1000, tag: "-25% / pers" },
-                  ].map((row) => (
+                  {(() => {
+                    const r5 = (x: number) => Math.round(x / 5000) * 5000;
+                    return [
+                      { icon: "🖥️", label: "E-learning (accès à vie, sans formateur)", perPerson: r5(product.price * 0.50), tag: "Meilleur prix" },
+                      { icon: "💻", label: "En ligne — individuel (avec formateur)", perPerson: product.price, tag: null },
+                      { icon: "🏛️", label: "En présentiel — individuel", perPerson: r5(product.price * 1.15), tag: null },
+                      { icon: "👥", label: "Groupe 3–5 pers (en ligne, / pers)", perPerson: r5(product.price * 0.85), tag: "-15% / pers" },
+                      { icon: "👥", label: "Groupe 6–9 pers (en ligne, / pers)", perPerson: r5(product.price * 0.75), tag: "-25% / pers" },
+                    ];
+                  })().map((row) => (
                     <tr key={row.label} className="hover:bg-slate-50 transition">
                       <td className="py-3 pr-4 text-slate-700">
                         <span className="mr-2">{row.icon}</span>
