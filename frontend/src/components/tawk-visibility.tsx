@@ -18,7 +18,7 @@ export function TawkVisibility() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const isInternal = pathname.startsWith("/espace") || pathname.startsWith("/admin");
+    const isInternal = pathname.startsWith("/espace") || pathname.startsWith("/admin") || pathname.startsWith("/offres");
     document.documentElement.classList.toggle("internal-app", isInternal);
 
     let attempts = 0;
