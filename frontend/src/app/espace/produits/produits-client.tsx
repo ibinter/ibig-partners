@@ -17,6 +17,7 @@ interface Product {
   commissionDisplay: string;
   priceDisplay: string;
   affiliateUrl: string | null;
+  category?: string | null;
 }
 
 interface Branch {
@@ -216,8 +217,11 @@ function ProductCard({
   );
 }
 
+const EDUFORM_BRANCH_ID = "cmqwirc1z000fvn9w0gic2jhd";
+
 export default function ProduitsClient({ branches, totalProducts, totalActive, marketSectors = [], affiliateCode = "" }: Props) {
   const [selectedBranch, setSelectedBranch] = useState<string>("ALL");
+  const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
   const [filter, setFilter] = useState<"all" | "active" | "inactive">("all");
   const [search, setSearch] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -241,9 +245,24 @@ export default function ProduitsClient({ branches, totalProducts, totalActive, m
   // Branch slugs — on utilise l'id comme clé stable
   const branchMap = useMemo(() => new Map(branches.map(b => [b.id, b])), [branches]);
 
+  // Catégories disponibles pour la branche sélectionnée (si elle a des catégories)
+  const availableCategories = useMemo(() => {
+    const pool = selectedBranch === "ALL" ? allProducts : allProducts.filter(p => p.branchId === selectedBranch);
+    const cats = new Set<string>();
+    pool.forEach(p => { if (p.category) cats.add(p.category); });
+    return Array.from(cats).sort();
+  }, [allProducts, selectedBranch]);
+
+  // Réinitialise la catégorie quand on change de branche
+  const handleBranchChange = (id: string) => {
+    setSelectedBranch(id);
+    setSelectedCategory("ALL");
+  };
+
   const filtered = useMemo(() => {
     const results = allProducts.filter(p => {
       if (selectedBranch !== "ALL" && p.branchId !== selectedBranch) return false;
+      if (selectedCategory !== "ALL" && p.category !== selectedCategory) return false;
       if (filter === "active" && !p.affiliateUrl) return false;
       if (filter === "inactive" && p.affiliateUrl) return false;
       if (search) {
@@ -341,7 +360,7 @@ export default function ProduitsClient({ branches, totalProducts, totalActive, m
       <div className="overflow-x-auto pb-1">
         <div className="flex gap-2 min-w-max">
           <button
-            onClick={() => setSelectedBranch("ALL")}
+            onClick={() => handleBranchChange("ALL")}
             className={`shrink-0 rounded-xl px-4 py-2 text-xs font-bold transition border ${
               selectedBranch === "ALL"
                 ? "bg-slate-900 text-white border-slate-900"
@@ -353,7 +372,7 @@ export default function ProduitsClient({ branches, totalProducts, totalActive, m
           {branches.map(b => (
             <button
               key={b.id}
-              onClick={() => setSelectedBranch(b.id)}
+              onClick={() => handleBranchChange(b.id)}
               className={`shrink-0 rounded-xl px-4 py-2 text-xs font-bold transition border ${
                 selectedBranch === b.id
                   ? `bg-gradient-to-r ${b.gradient} text-white border-transparent`
@@ -365,6 +384,37 @@ export default function ProduitsClient({ branches, totalProducts, totalActive, m
           ))}
         </div>
       </div>
+
+      {/* ── FILTRE CATÉGORIES (si disponible) ──────────────────── */}
+      {availableCategories.length > 1 && (
+        <div className="overflow-x-auto pb-1">
+          <div className="flex gap-2 min-w-max">
+            <button
+              onClick={() => setSelectedCategory("ALL")}
+              className={`shrink-0 rounded-xl px-3 py-1.5 text-[11px] font-bold transition border ${
+                selectedCategory === "ALL"
+                  ? "bg-emerald-600 text-white border-emerald-600"
+                  : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50"
+              }`}
+            >
+              Toutes catégories
+            </button>
+            {availableCategories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`shrink-0 rounded-xl px-3 py-1.5 text-[11px] font-bold transition border ${
+                  selectedCategory === cat
+                    ? "bg-emerald-600 text-white border-emerald-600"
+                    : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ── BARRE RECHERCHE + FILTRES ───────────────────────────── */}
       <div className="flex flex-col sm:flex-row gap-3 items-center">
@@ -405,6 +455,7 @@ export default function ProduitsClient({ branches, totalProducts, totalActive, m
       <p className="text-xs text-slate-400 -mt-2">
         <span className="font-bold text-slate-700">{filtered.length}</span> offre{filtered.length !== 1 ? "s" : ""}
         {selectedBranch !== "ALL" && ` · ${branchMap.get(selectedBranch)?.name ?? ""}`}
+        {selectedCategory !== "ALL" && ` · ${selectedCategory}`}
         {search && ` · recherche : « ${search} »`}
         {filter !== "all" && ` · ${filter === "active" ? "activées" : "non activées"}`}
       </p>

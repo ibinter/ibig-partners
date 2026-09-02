@@ -20,6 +20,7 @@ type Product = {
   pricingType: string;
   rate: number;
   active: boolean;
+  category?: string | null;
   _count: { sales: number; links: number };
   branchId: string;
   branchName: string;
@@ -45,18 +46,32 @@ export default function CatalogClient({
 }) {
   const [search, setSearch] = useState("");
   const [branchFilter, setBranchFilter] = useState("ALL");
+  const [categoryFilter, setCategoryFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState<"ALL" | "ACTIVE" | "INACTIVE">("ALL");
+
+  const availableCategories = useMemo(() => {
+    const pool = branchFilter === "ALL" ? products : products.filter(p => p.branchId === branchFilter);
+    const cats = new Set<string>();
+    pool.forEach(p => { if (p.category) cats.add(p.category); });
+    return Array.from(cats).sort();
+  }, [products, branchFilter]);
+
+  const handleBranchFilterChange = (id: string) => {
+    setBranchFilter(id);
+    setCategoryFilter("ALL");
+  };
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
     return products.filter((p) => {
       if (branchFilter !== "ALL" && p.branchId !== branchFilter) return false;
+      if (categoryFilter !== "ALL" && p.category !== categoryFilter) return false;
       if (statusFilter === "ACTIVE" && !p.active) return false;
       if (statusFilter === "INACTIVE" && p.active) return false;
       if (q && !p.name.toLowerCase().includes(q) && !p.branchName.toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [products, search, branchFilter, statusFilter]);
+  }, [products, search, branchFilter, categoryFilter, statusFilter]);
 
   return (
     <div className="space-y-4">
@@ -100,7 +115,7 @@ export default function CatalogClient({
         {branches.map((b) => {
           const count = products.filter((p) => p.branchId === b.id).length;
           return (
-            <button key={b.id} onClick={() => setBranchFilter(branchFilter === b.id ? "ALL" : b.id)}
+            <button key={b.id} onClick={() => handleBranchFilterChange(branchFilter === b.id ? "ALL" : b.id)}
               className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${branchFilter === b.id ? "bg-brand-600 text-white" : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"}`}>
               {b.name} ({count})
             </button>
@@ -108,11 +123,28 @@ export default function CatalogClient({
         })}
       </div>
 
+      {/* Filtre catégories */}
+      {availableCategories.length > 1 && (
+        <div className="flex flex-wrap gap-2">
+          <button onClick={() => setCategoryFilter("ALL")}
+            className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${categoryFilter === "ALL" ? "bg-emerald-600 text-white" : "border border-slate-200 bg-white text-slate-500 hover:bg-slate-50"}`}>
+            Toutes catégories
+          </button>
+          {availableCategories.map(cat => (
+            <button key={cat} onClick={() => setCategoryFilter(categoryFilter === cat ? "ALL" : cat)}
+              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${categoryFilter === cat ? "bg-emerald-600 text-white" : "border border-slate-200 bg-white text-slate-500 hover:bg-slate-50"}`}>
+              {cat}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Résultat */}
       <p className="text-xs text-muted">
         {filtered.length} produit{filtered.length !== 1 ? "s" : ""}
         {search && <> correspondant à « <strong>{search}</strong> »</>}
         {branchFilter !== "ALL" && <> dans <strong>{branches.find(b => b.id === branchFilter)?.name}</strong></>}
+        {categoryFilter !== "ALL" && <> · <strong>{categoryFilter}</strong></>}
       </p>
 
       {/* Table */}

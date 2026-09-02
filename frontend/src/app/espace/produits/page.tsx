@@ -86,6 +86,7 @@ export default async function ProduitsPage() {
                   : "")
               : "Sur devis",
           affiliateUrl,
+          category: (product as any).category ?? null,
         };
       }),
     };
