@@ -1,9 +1,60 @@
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { fcfa } from "@/lib/format";
+import type { Metadata } from "next";
+import { COOKIE_TRACKING_DAYS } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
+
+// ── OG metadata pour partage social ─────────────────────────────────────────
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ ref?: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const { ref }  = await searchParams;
+
+  const product = await (prisma as any).product.findUnique({
+    where: { slug, active: true },
+    include: { branch: true },
+  });
+  if (!product) return { title: "Offre introuvable" };
+
+  let md: any = {};
+  try { if (product.marketingData) md = JSON.parse(product.marketingData); } catch { /* */ }
+
+  const baseUrl   = process.env.NEXT_PUBLIC_SITE_URL || "https://ibigpartners.com";
+  const title     = product.name;
+  const tagline   = md.tagline || product.description?.slice(0, 160) || product.name;
+  const imageUrl  = md.imageUrl || undefined;
+  const canonical = ref
+    ? `${baseUrl}/offres/${slug}?ref=${ref}`
+    : `${baseUrl}/offres/${slug}`;
+
+  return {
+    title: `${title} — IBIG PARTNERS`,
+    description: tagline,
+    openGraph: {
+      title,
+      description: tagline,
+      url: canonical,
+      siteName: "IBIG PARTNERS",
+      images: imageUrl ? [{ url: imageUrl }] : [],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: tagline,
+      images: imageUrl ? [imageUrl] : [],
+    },
+  };
+}
 
 const PRICING_LABEL: Record<string, string> = {
   MONTHLY_SUB: "Abonnement mensuel",
@@ -76,38 +127,48 @@ export default async function OffrePage({
 
   if (!product) notFound();
 
-  // Vérifie que le code affilié existe si fourni
+  // Vérifie que le code affilié existe si fourni + pose le cookie de tracking
   let partnerName: string | null = null;
-  if (ref) {
+  const affCodeRaw = ref?.toUpperCase() ?? null;
+  if (affCodeRaw) {
     const partner = await prisma.user.findFirst({
-      where: { code: ref.toUpperCase(), active: true, approved: true },
+      where: { code: affCodeRaw, active: true, approved: true },
     });
     if (partner) {
       partnerName = `${partner.firstName} ${partner.lastName}`;
+      // Pose le cookie dès la visite de la page (pas seulement au clic CTA)
+      const store = await cookies();
+      store.set("ibig_ref", affCodeRaw, {
+        maxAge: 60 * 60 * 24 * COOKIE_TRACKING_DAYS,
+        path: "/",
+        sameSite: "lax",
+        httpOnly: false, // lisible côté client si nécessaire
+      });
     }
   }
 
-  const md         = parseMD(product.marketingData);
-  const baseUrl    = process.env.NEXT_PUBLIC_SITE_URL || "https://ibigpartners.com";
-  const affCode    = ref?.toUpperCase() ?? null;
-  const ctaHref    = affCode
+  const md       = parseMD(product.marketingData);
+  const baseUrl  = process.env.NEXT_PUBLIC_SITE_URL || "https://ibigpartners.com";
+  const affCode  = affCodeRaw;
+  const ctaHref  = affCode
     ? `${baseUrl}/aff/${affCode}?p=${product.slug}`
     : product.siteUrl ?? `${baseUrl}/rejoindre`;
 
   const suffix       = PRICING_SUFFIX[product.pricingType] ?? "";
   const priceDisplay = product.price > 0 ? `${fcfa(product.price)}${suffix}` : "Sur devis";
   const isService    = product.pricingType === "SERVICE" || product.price === 0;
+  const isCourse     = product.pricingType === "COURSE";
   const emoji        = BRANCH_EMOJI[product.branch.name] ?? "📦";
   const gradient     = getBranchColor(product.branch.name);
 
-  // Contenu : marketing enrichi en priorité, sinon extrait de la description
-  const tagline  = md.tagline || "";
-  const bullets  = (md.bullets?.filter(Boolean).length ?? 0) > 0
-    ? md.bullets!.filter(Boolean)
-    : parseDescriptionBullets(product.description ?? "");
-  const audience = md.audience || "";
-  const includes = md.includes?.filter(Boolean) ?? [];
-  const imageUrl = md.imageUrl || "";
+  // Contenu : marketing enrichi en priorité
+  const tagline       = md.tagline || "";
+  const hasMarketing  = (md.bullets?.filter(Boolean).length ?? 0) > 0;
+  // N'afficher les bullets que si enrichissement manuel/auto présent (évite doublon avec description)
+  const bullets       = hasMarketing ? md.bullets!.filter(Boolean) : [];
+  const audience      = md.audience || "";
+  const includes      = md.includes?.filter(Boolean) ?? [];
+  const imageUrl      = md.imageUrl || "";
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -222,19 +283,23 @@ export default async function OffrePage({
           </div>
         )}
 
-        {/* Garanties / Avantages */}
+        {/* Garanties / Avantages — adaptés au type de produit */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { icon: "🏆", label: "Certificat inclus" },
-            { icon: "💬", label: "Support formateur" },
-            { icon: "📱", label: "Accès mobile" },
-            { icon: "♾️", label: "Replay inclus" },
-          ].map((g) => (
-            <div key={g.label} className="rounded-xl bg-white border border-slate-200 p-3 text-center shadow-sm">
-              <div className="text-2xl">{g.icon}</div>
-              <div className="text-xs font-semibold text-slate-600 mt-1">{g.label}</div>
-            </div>
-          ))}
+            { icon: "💬", label: "Support formateur",   always: true },
+            { icon: "📱", label: "Accès multi-device",  always: true },
+            { icon: "🏆", label: "Certificat délivré",  show: isCourse },
+            { icon: "♾️", label: "Replay inclus",        show: isCourse },
+            { icon: "📋", label: "Devis gratuit",        show: isService && !isCourse },
+            { icon: "🎯", label: "Sur mesure",           show: isService && !isCourse },
+          ]
+            .filter(g => g.always || g.show)
+            .map((g) => (
+              <div key={g.label} className="rounded-xl bg-white border border-slate-200 p-3 text-center shadow-sm">
+                <div className="text-2xl">{g.icon}</div>
+                <div className="text-xs font-semibold text-slate-600 mt-1">{g.label}</div>
+              </div>
+            ))}
         </div>
 
         {/* CTA bas de page */}
@@ -292,7 +357,7 @@ export default async function OffrePage({
               </ul>
               <div className="pt-2">
                 <a
-                  href={`/rejoindre?ref=${affCode ?? ""}&product=${encodeURIComponent(product.name)}`}
+                  href={`/rejoindre${affCode ? `?ref=${affCode}&` : "?"}product=${encodeURIComponent(product.name)}`}
                   className="inline-flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-600 transition-colors px-5 py-2.5 text-sm font-bold text-white shadow"
                 >
                   Rejoindre IBIG Partners gratuitement
