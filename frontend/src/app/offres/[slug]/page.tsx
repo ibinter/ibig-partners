@@ -219,6 +219,41 @@ export default async function OffrePage({
           </p>
         )}
 
+        {/* ── Rejoindre IBIG Partners ── */}
+        <div className="rounded-2xl border-2 border-dashed border-amber-300 bg-amber-50 p-6">
+          <div className="flex items-start gap-4">
+            <div className="text-3xl shrink-0">🤝</div>
+            <div className="flex-1 space-y-2">
+              <h3 className="text-base font-bold text-amber-900">
+                Vous aussi, devenez Partenaire IBIG !
+              </h3>
+              <p className="text-sm text-amber-800 leading-relaxed">
+                En rejoignant le réseau IBIG PARTNERS, vous touchez des commissions sur chaque formation ou service vendu grâce à votre réseau. Inscription gratuite, aucun stock, aucun risque.
+              </p>
+              <ul className="text-sm text-amber-800 space-y-1">
+                <li className="flex items-center gap-2"><span className="text-amber-600 font-bold">✓</span> Commissions allant jusqu&apos;à 15 % par vente</li>
+                <li className="flex items-center gap-2"><span className="text-amber-600 font-bold">✓</span> Réseau multi-niveaux (N1, N2, N3)</li>
+                <li className="flex items-center gap-2"><span className="text-amber-600 font-bold">✓</span> Accès à tout le catalogue IBIG (formations, digital, immo…)</li>
+                <li className="flex items-center gap-2"><span className="text-amber-600 font-bold">✓</span> Tableau de bord, liens personnalisés, QR codes</li>
+              </ul>
+              <div className="pt-2">
+                <a
+                  href={`/rejoindre?ref=${affCode ?? ""}&product=${encodeURIComponent(product.name)}`}
+                  className="inline-flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-600 transition-colors px-5 py-2.5 text-sm font-bold text-white shadow"
+                >
+                  Rejoindre IBIG Partners gratuitement
+                  <span>→</span>
+                </a>
+                {partnerName && (
+                  <p className="mt-2 text-xs text-amber-700">
+                    Votre parrain sera : <strong>{partnerName}</strong>
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Footer IBIG */}
         <div className="border-t border-slate-200 pt-4 text-center text-xs text-slate-400 space-y-1">
           <p>
