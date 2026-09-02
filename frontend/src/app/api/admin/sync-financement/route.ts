@@ -8,6 +8,80 @@ export const maxDuration = 60;
 const BASE = "https://intermark-business.com/financement";
 
 const FINANCEMENT_PRODUCTS = [
+  // ── Produits existants (repris de la base) ────────────────────────────
+  {
+    slug: "fin-accompagnement-investisseurs-etrangers",
+    name: "Accompagnement Investisseurs Étrangers",
+    pricingType: "SERVICE",
+    price: 500000,
+    rate: 5,
+    siteUrl: BASE,
+    description: "Accompagnement sur mesure pour les investisseurs étrangers souhaitant placer des capitaux en Côte d'Ivoire : identification des opportunités d'investissement (immobilier, PME, secteur agricole, BTP), structuration juridique et fiscale, mise en relation avec les partenaires locaux, gestion des formalités d'implantation et suivi post-investissement. Pour investisseurs de la diaspora, fonds étrangers et particuliers souhaitant investir en Afrique de l'Ouest. À partir de 500 000 FCFA.",
+  },
+  {
+    slug: "fin-aide-levee-fonds",
+    name: "Aide à la Levée de Fonds",
+    pricingType: "SERVICE",
+    price: 400000,
+    rate: 5,
+    siteUrl: BASE,
+    description: "Accompagnement stratégique et opérationnel pour la levée de fonds privée : valorisation de l'entreprise, structuration du dossier investisseur (pitch deck, mémorandum d'information, projections financières), identification des investisseurs et fonds appropriés, préparation des négociations et accompagnement jusqu'au closing. Pour startups, PME et porteurs de projets en recherche de capitaux. À partir de 400 000 FCFA selon la taille de l'opération.",
+  },
+  {
+    slug: "fin-assurance-entreprise-multirisques",
+    name: "Assurance Entreprise Multirisques",
+    pricingType: "ANNUAL_SUB",
+    price: 300000,
+    rate: 5,
+    siteUrl: BASE,
+    description: "Souscription d'une assurance multirisques professionnelle pour entreprises : incendie, dégât des eaux, vol, bris de machine, responsabilité civile exploitation, perte d'exploitation et protection du personnel. Couverture complète adaptée à la taille et au secteur de votre entreprise. Mise en relation avec les compagnies d'assurance agréées CIMA. 300 000 FCFA/an selon le périmètre couvert.",
+  },
+  {
+    slug: "fin-assurance-sante-collective",
+    name: "Assurance Santé Collective",
+    pricingType: "MONTHLY_SUB",
+    price: 50000,
+    rate: 5,
+    siteUrl: BASE,
+    description: "Mise en place d'une mutuelle santé collective pour vos employés : consultations, hospitalisations, maternité, pharmacie et soins dentaires. Forfaits adaptés à la taille de l'entreprise, souscription groupée avec tarifs négociés et gestion simplifiée des remboursements. Pour employeurs souhaitant offrir une couverture santé à leurs équipes. À partir de 50 000 FCFA/mois selon le nombre de bénéficiaires.",
+  },
+  {
+    slug: "fin-epargne-collective-tontine",
+    name: "Épargne Collective & Tontine Digitale",
+    pricingType: "SERVICE",
+    price: 0,
+    rate: 5,
+    siteUrl: BASE,
+    description: "Rejoignez ou créez un groupe d'épargne collective ou de tontine digitale sécurisé sur la plateforme IBIG FINANCEMENT : cotisations mensuelles, tours automatisés, traçabilité complète des versements et paiements via Mobile Money. Groupes de 5 à 30 membres, cotisations de 5 000 à 500 000 FCFA/mois. Pour particuliers et associations souhaitant épargner collectivement en toute sécurité. Gratuit à l'inscription.",
+  },
+  {
+    slug: "fin-financement-equipement-leasing",
+    name: "Financement Équipement (Leasing)",
+    pricingType: "SERVICE",
+    price: 0,
+    rate: 5,
+    siteUrl: BASE,
+    description: "Financement d'équipements professionnels par crédit-bail (leasing) : véhicules utilitaires, matériel BTP, équipements informatiques, matériel médical, machines industrielles. Loyers mensuels avec option d'achat en fin de contrat. Mise en relation avec les sociétés de leasing partenaires agréées. Pour entreprises souhaitant équiper leur activité sans immobiliser leur trésorerie. Tarif sur devis selon le matériel et la durée.",
+  },
+  {
+    slug: "fin-financement-immobilier-credit",
+    name: "Financement Immobilier (Crédit)",
+    pricingType: "SERVICE",
+    price: 0,
+    rate: 5,
+    siteUrl: BASE,
+    description: "Accompagnement complet pour l'obtention d'un crédit immobilier : simulation de capacité d'emprunt, sélection du meilleur établissement prêteur parmi nos partenaires, constitution du dossier (titre foncier, devis, assurance), négociation du taux et suivi jusqu'au déblocage des fonds. Pour particuliers souhaitant financer l'achat ou la construction d'un bien immobilier en Côte d'Ivoire. Tarif sur devis.",
+  },
+  {
+    slug: "fin-microcredit-pme",
+    name: "Microcrédit PME",
+    pricingType: "SERVICE",
+    price: 0,
+    rate: 5,
+    siteUrl: BASE,
+    description: "Mise en relation avec des Institutions de Microfinance (IMF) partenaires pour l'obtention de microcrédits PME : prêts de 50 000 à 5 000 000 FCFA pour auto-entrepreneurs, artisans, commerçants et petits producteurs. Sans garantie immobilière dans certains cas. Pour porteurs de petits projets économiques n'ayant pas accès au crédit bancaire classique. Tarif sur devis selon le montant et la durée.",
+  },
+
   // ── Épargne & Tontines Digitales ──────────────────────────────────────
   {
     slug: "fin-tontine-digitale",
@@ -113,13 +187,13 @@ const FINANCEMENT_PRODUCTS = [
 
   // ── Assurance (Courtage & Intermédiation) ─────────────────────────────
   {
-    slug: "fin-assurance-vie",
+    slug: "fin-assurance-vie-prevoyance",
     name: "Assurance Vie & Prévoyance",
-    pricingType: "SERVICE",
-    price: 0,
-    rate: 12,
+    pricingType: "MONTHLY_SUB",
+    price: 25000,
+    rate: 5,
     siteUrl: BASE,
-    description: "Souscription à un contrat d'assurance vie ou de prévoyance auprès de nos partenaires assureurs agréés CIMA : capital décès, rente éducation pour les enfants, invalidité et épargne à long terme. Conseil personnalisé selon votre situation familiale et professionnelle. Pour toute personne souhaitant protéger ses proches et préparer l'avenir. Primes à partir de 5 000 FCFA/mois selon le capital choisi.",
+    description: "Souscription à un contrat d'assurance vie ou de prévoyance auprès de nos partenaires assureurs agréés CIMA : capital décès, rente éducation pour les enfants, invalidité et épargne à long terme. Conseil personnalisé selon votre situation familiale et professionnelle. Pour toute personne souhaitant protéger ses proches et préparer l'avenir. À partir de 25 000 FCFA/mois selon le capital choisi.",
   },
   {
     slug: "fin-assurance-auto",
