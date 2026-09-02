@@ -158,8 +158,42 @@ export default async function OffrePage({
   const priceDisplay = product.price > 0 ? `${fcfa(product.price)}${suffix}` : "Sur devis";
   const isService    = product.pricingType === "SERVICE" || product.price === 0;
   const isCourse     = product.pricingType === "COURSE";
+  const isSoftware   = ["MONTHLY_SUB", "ANNUAL_SUB"].includes(product.pricingType);
   const emoji        = BRANCH_EMOJI[product.branch.name] ?? "📦";
   const gradient     = getBranchColor(product.branch.name);
+
+  // Textes contextuels selon le type de produit
+  const aboutLabel = isCourse
+    ? "À propos de cette formation"
+    : isSoftware
+    ? "À propos de ce logiciel"
+    : isService
+    ? "À propos de cette prestation"
+    : "À propos de cette offre";
+
+  const ctaLabel = isService
+    ? "Demander un devis gratuit"
+    : isSoftware
+    ? "S'abonner maintenant"
+    : isCourse
+    ? "Je m'inscris maintenant"
+    : "Commander maintenant";
+
+  const ctaBottomTitle = isService
+    ? "Intéressé ? Parlons de votre projet"
+    : isSoftware
+    ? "Prêt à digitaliser votre activité ?"
+    : isCourse
+    ? "Prêt à vous former ?"
+    : "Intéressé par cette offre ?";
+
+  const ctaBottomDesc = isService
+    ? "Notre équipe vous contacte sous 24h pour cadrer votre besoin et établir un devis gratuit."
+    : isSoftware
+    ? "Rejoignez les entreprises qui font confiance à IBIG pour leurs outils de gestion."
+    : isCourse
+    ? "Rejoignez des milliers de professionnels déjà certifiés avec IBIG."
+    : "Contactez-nous pour en savoir plus sur cette offre.";
 
   // Contenu : marketing enrichi en priorité
   const tagline       = md.tagline || "";
@@ -230,7 +264,7 @@ export default async function OffrePage({
                 rel="noopener noreferrer"
                 className={`inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white bg-gradient-to-r ${gradient} shadow-md hover:opacity-90 transition-opacity`}
               >
-                {isService ? "Demander un devis gratuit" : "Je m'inscris maintenant"}
+                {ctaLabel}
                 <span>→</span>
               </a>
               {product.siteUrl && (
@@ -250,7 +284,7 @@ export default async function OffrePage({
         {/* Description complète */}
         {product.description && (
           <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-6 space-y-4">
-            <h2 className="text-base font-bold text-slate-900">À propos de cette formation</h2>
+            <h2 className="text-base font-bold text-slate-900">{aboutLabel}</h2>
             <p className="text-sm text-slate-700 leading-relaxed">
               {product.description}
             </p>
@@ -298,12 +332,13 @@ export default async function OffrePage({
         {/* Garanties / Avantages — adaptés au type de produit */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { icon: "💬", label: "Support formateur",   always: true },
+            { icon: "💬", label: isSoftware ? "Support technique" : "Support client", always: true },
             { icon: "📱", label: "Accès multi-device",  always: true },
             { icon: "🏆", label: "Certificat délivré",  show: isCourse },
             { icon: "♾️", label: "Replay inclus",        show: isCourse },
-            { icon: "📋", label: "Devis gratuit",        show: isService && !isCourse },
-            { icon: "🎯", label: "Sur mesure",           show: isService && !isCourse },
+            { icon: "🔄", label: "Mises à jour incluses", show: isSoftware },
+            { icon: "📋", label: "Devis gratuit",        show: isService && !isCourse && !isSoftware },
+            { icon: "🎯", label: "Sur mesure",           show: isService && !isCourse && !isSoftware },
           ]
             .filter(g => g.always || g.show)
             .map((g) => (
@@ -316,21 +351,15 @@ export default async function OffrePage({
 
         {/* CTA bas de page */}
         <div className={`rounded-2xl bg-gradient-to-br ${gradient} p-6 text-white text-center space-y-3`}>
-          <p className="text-lg font-bold">
-            {isService ? "Intéressé ? Parlons de votre projet" : "Prêt à vous former ?"}
-          </p>
-          <p className="text-sm text-white/80">
-            {isService
-              ? "Notre équipe vous contacte sous 24h pour cadrer votre besoin et établir un devis gratuit."
-              : "Rejoignez des milliers de professionnels déjà certifiés avec IBIG."}
-          </p>
+          <p className="text-lg font-bold">{ctaBottomTitle}</p>
+          <p className="text-sm text-white/80">{ctaBottomDesc}</p>
           <a
             href={ctaHref}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-bold text-slate-900 shadow hover:bg-slate-100 transition-colors"
           >
-            {isService ? "Demander un devis gratuit" : "S'inscrire maintenant"}
+            {ctaLabel}
             <span>→</span>
           </a>
         </div>
