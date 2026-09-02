@@ -105,10 +105,10 @@ const IMMO_PRODUCTS = [
     slug: "immo-diagnostic-immobilier",
     name: "Diagnostic Technique de Bien Immobilier",
     pricingType: "SERVICE",
-    price: 75000,
+    price: 100000,
     rate: 10,
     siteUrl: BASE,
-    description: "Diagnostic technique complet d'un bien avant achat ou mise en vente : inspection de la structure, toiture, électricité, plomberie, humidité et état général. Rapport écrit détaillé avec cotation des travaux à prévoir. Pour acquéreurs et vendeurs souhaitant éviter les mauvaises surprises. À partir de 75 000 FCFA.",
+    description: "Diagnostic technique complet d'un bien avant achat ou mise en vente : inspection de la structure, toiture, électricité, plomberie, humidité et état général. Rapport écrit détaillé avec cotation des travaux à prévoir. Pour acquéreurs et vendeurs souhaitant éviter les mauvaises surprises. À partir de 100 000 FCFA.",
   },
   {
     slug: "immo-visite-virtuelle",
@@ -240,7 +240,7 @@ const IMMO_PRODUCTS = [
     price: 0,
     rate: 5,
     siteUrl: BASE,
-    description: "Construction clé en main de votre villa ou maison individuelle : gros œuvre, second œuvre et finitions. Fourchette indicative : 80 000 à 150 000 FCFA/m² selon le standing et les matériaux choisis (soit 8 000 000 à 15 000 000 FCFA pour 100 m²). Délai moyen : 6 à 18 mois selon la taille. Inclut les plans, le permis de construire et le suivi de chantier. Sur devis après visite du terrain.",
+    description: "Construction clé en main de votre villa ou maison individuelle : gros œuvre, second œuvre et finitions. Fourchette indicative : 100 000 à 200 000 FCFA/m² selon le standing et les matériaux choisis (soit 10 000 000 à 20 000 000 FCFA pour 100 m²). Délai moyen : 6 à 18 mois selon la taille. Inclut les plans, le permis de construire et le suivi de chantier. Sur devis après visite du terrain.",
   },
   {
     slug: "immo-construction-immeuble",
@@ -334,7 +334,7 @@ const IMMO_PRODUCTS = [
     price: 0,
     rate: 10,
     siteUrl: BASE,
-    description: "Installation électrique complète ou mise aux normes : tableau électrique, câblage, prises, interrupteurs, éclairage (LED, plafonnier, applique), climatisation split et groupe électrogène. Fourchette : à partir de 500 000 FCFA pour une installation complète de villa de 100 m². Sur devis selon les plans et l'envergure des travaux.",
+    description: "Installation électrique complète ou mise aux normes : tableau électrique, câblage, prises, interrupteurs, éclairage (LED, plafonnier, applique), climatisation split et groupe électrogène. Fourchette : 1 500 000 à 3 000 000 FCFA pour une installation complète de villa de 100 m². Sur devis selon les plans et l'envergure des travaux.",
   },
   {
     slug: "immo-menuiserie-aluminium-bois",
@@ -370,7 +370,7 @@ const IMMO_PRODUCTS = [
     price: 0,
     rate: 10,
     siteUrl: BASE,
-    description: "Fourniture et installation de systèmes de climatisation : split mural, multi-split, climatisation centralisée (cassette), ventilation mécanique contrôlée (VMC) et brasseurs d'air. Fourchette : à partir de 250 000 FCFA pour un split mural monobloc installé. Maintenance et entretien annuel inclus en option. Sur devis selon le nombre de pièces.",
+    description: "Fourniture et installation de systèmes de climatisation : split mural, multi-split, climatisation centralisée (cassette), ventilation mécanique contrôlée (VMC) et brasseurs d'air. Fourchette : à partir de 300 000 FCFA pour un split mural installé (unité + pose). Maintenance et entretien annuel inclus en option. Sur devis selon le nombre de pièces et la puissance requise.",
   },
   {
     slug: "immo-assainissement-fosse",
