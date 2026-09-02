@@ -333,39 +333,32 @@ export default async function OffrePage({
                 <thead>
                   <tr className="border-b border-slate-100">
                     <th className="text-left py-2 pr-4 text-xs font-bold uppercase tracking-wide text-slate-400">Modalité</th>
-                    <th className="text-right py-2 pl-3 text-xs font-bold uppercase tracking-wide text-slate-400">Par personne</th>
+                    <th className="text-right py-2 px-3 text-xs font-bold uppercase tracking-wide text-slate-400">💻 En ligne</th>
+                    <th className="text-right py-2 pl-3 text-xs font-bold uppercase tracking-wide text-slate-400">🏛️ Présentiel</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50">
                   {(() => {
                     const r5 = (x: number) => Math.round(x / 5000) * 5000;
+                    const pres = r5(product.price * 16000 / 11250);
+                    const fmt = (n: number) => n.toLocaleString("fr-FR") + " FCFA";
                     return [
-                      { icon: "🖥️", label: "E-learning", perPerson: r5(product.price * 0.50) },
-                      { icon: "💻", label: "En ligne — individuel (avec formateur)", perPerson: product.price },
-                      { icon: "🏛️", label: "En présentiel — individuel", perPerson: r5(product.price * 16000 / 11250) },
-                      { icon: "👥", label: "Groupe 3–5 pers (en ligne, / pers)", perPerson: r5(product.price * 0.70) },
-                      { icon: "👥", label: "Groupe 6–10 pers (en ligne, / pers)", perPerson: r5(product.price * 0.55) },
+                      { icon: "🖥️", label: "E-learning", ligne: fmt(r5(product.price * 0.50)), presentiel: "—" },
+                      { icon: "👤", label: "Individuel", ligne: fmt(product.price), presentiel: fmt(pres) },
+                      { icon: "👥", label: "Groupe 3–5 pers (/ pers)", ligne: fmt(r5(product.price * 0.70)), presentiel: fmt(r5(pres * 0.70)) },
+                      { icon: "👥", label: "Groupe 6–10 pers (/ pers)", ligne: fmt(r5(product.price * 0.55)), presentiel: fmt(r5(pres * 0.55)) },
+                      { icon: "🏢", label: "Groupe 10+ pers (/ pers)", ligne: fmt(r5(product.price * 0.45)), presentiel: fmt(r5(pres * 0.45)) },
                     ];
                   })().map((row) => (
                     <tr key={row.label} className="hover:bg-slate-50 transition">
-                      <td className="py-3 pr-4 text-slate-700">
-                        <span className="mr-2">{row.icon}</span>
-                        {row.label}
-                      </td>
-                      <td className="py-3 pl-3 text-right font-bold text-slate-900">
-                        {row.perPerson.toLocaleString("fr-FR")} FCFA
-                      </td>
+                      <td className="py-3 pr-4 text-slate-700"><span className="mr-2">{row.icon}</span>{row.label}</td>
+                      <td className="py-3 px-3 text-right font-bold text-slate-900">{row.ligne}</td>
+                      <td className="py-3 pl-3 text-right font-bold text-slate-900">{row.presentiel}</td>
                     </tr>
                   ))}
-                  <tr className="border-t border-slate-200">
-                    <td className="py-3 pr-4 text-slate-700">
-                      <span className="mr-2">🏢</span>Groupe 10+ pers (en ligne, / pers)
-                    </td>
-                    <td className="py-3 pl-3 text-right font-bold text-slate-900">
-                      {Math.round(product.price * 0.35 / 5000) * 5000 > 0
-                        ? `${(Math.round(product.price * 0.35 / 5000) * 5000).toLocaleString("fr-FR")} FCFA`
-                        : "Sur devis"}
-                    </td>
+                  <tr className="border-t border-slate-200 bg-slate-50">
+                    <td className="py-3 pr-4 text-slate-700"><span className="mr-2">🌍</span>Intra-entreprise / International</td>
+                    <td className="py-3 px-3 text-right font-bold text-slate-500 italic" colSpan={2}>Sur devis</td>
                   </tr>
                 </tbody>
               </table>
