@@ -4,6 +4,7 @@ import { syncBranchWithFeed } from "@/lib/catalog-feed";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
+export const maxDuration = 60;
 
 const EDUFORM_PRODUCTS = [
   {
