@@ -40,7 +40,7 @@ const EDUFORM_PRODUCTS = [
     price: 280000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com/formation/audit-et-controle-de-gestion-4-en-1",
-    description: "Programme certifiant 4 en 1 — Audit & Contrôle de Gestion (65h). Quatre certificats : Audit Interne (méthodologie IIA, COSO, détection fraudes), Contrôle de Gestion (budget, tableaux de bord, KPI), Audit Comptable & Financier (révision cycle par cycle, SYSCOHADA/IFRS) et Gestion des Risques (cartographie ISO 31000). Pour : comptables, contrôleurs de gestion, auditeurs, responsables financiers. À partir de 375 000 FCFA en ligne.",
+    description: "Programme certifiant 4 en 1 — Audit & Contrôle de Gestion (65h). Quatre certificats : Audit Interne (méthodologie IIA, COSO, détection fraudes), Contrôle de Gestion (budget, tableaux de bord, KPI), Audit Comptable & Financier (révision cycle par cycle, SYSCOHADA/IFRS) et Gestion des Risques (cartographie ISO 31000). Pour : comptables, contrôleurs de gestion, auditeurs, responsables financiers. À partir de 280 000 FCFA en ligne.",
   },
   {
     slug: "eduform-marches-publics-3en1",
@@ -186,7 +186,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Programme certifiant 3 en 1 — BTP & Gestion de Chantier (15h). Trois certificats : Conducteur de Travaux (planification, suivi de chantier, coordination des corps d'état), Métreur-Vérificateur (devis quantitatifs, bordereaux de prix, DPGF) et Sécurité & Prévention sur Chantier (plan de prévention, PPSPS, signalisation). Pour chefs de chantier, conducteurs de travaux, techniciens BTP, maîtres d'œuvre et ingénieurs débutants. À partir de 225 000 FCFA en ligne.",
+    description: "Programme certifiant 3 en 1 — BTP & Gestion de Chantier (15h). Trois certificats : Conducteur de Travaux (planification, suivi de chantier, coordination des corps d'état), Métreur-Vérificateur (devis quantitatifs, bordereaux de prix, DPGF) et Sécurité & Prévention sur Chantier (plan de prévention, PPSPS, signalisation). Pour chefs de chantier, conducteurs de travaux, techniciens BTP, maîtres d'œuvre et ingénieurs débutants. À partir de 170 000 FCFA en ligne.",
   },
   {
     slug: "eduform-btp-presentiel",
@@ -195,7 +195,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Version présentiel du programme BTP & Gestion de Chantier 3 en 1 — sessions animées en salle avec études de cas réels sur chantiers locaux. Formateur expert terrain, supports pédagogiques adaptés à l'environnement ivoirien et ouest-africain (normes locales, matériaux disponibles, réglementation en vigueur). Pour les professionnels du BTP souhaitant une formation pratique en face-à-face. À partir de 225 000 FCFA en présentiel.",
+    description: "Version présentiel du programme BTP & Gestion de Chantier 3 en 1 — sessions animées en salle avec études de cas réels sur chantiers locaux. Formateur expert terrain, supports pédagogiques adaptés à l'environnement ivoirien et ouest-africain (normes locales, matériaux disponibles, réglementation en vigueur). Pour les professionnels du BTP souhaitant une formation pratique en face-à-face. À partir de 170 000 FCFA en présentiel.",
   },
 
   // ── Santé / Gestion hospitalière / Paramédical ───────────────────────────
@@ -206,7 +206,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Programme certifiant 3 en 1 — Gestion Hospitalière & Santé Publique (15h). Trois certificats : Administration Hospitalière (pilotage médico-économique, gestion des ressources, réglementation sanitaire), Gestion des Achats & Stocks Médicaux (pharmacovigilance, traçabilité, marchés sanitaires) et Qualité & Hygiène Hospitalière (accréditation, prévention des infections nosocomiales, démarche ISO 9001 en santé). Pour directeurs, administrateurs, responsables qualité et gestionnaires de cliniques, hôpitaux et centres de santé. À partir de 225 000 FCFA en ligne.",
+    description: "Programme certifiant 3 en 1 — Gestion Hospitalière & Santé Publique (15h). Trois certificats : Administration Hospitalière (pilotage médico-économique, gestion des ressources, réglementation sanitaire), Gestion des Achats & Stocks Médicaux (pharmacovigilance, traçabilité, marchés sanitaires) et Qualité & Hygiène Hospitalière (accréditation, prévention des infections nosocomiales, démarche ISO 9001 en santé). Pour directeurs, administrateurs, responsables qualité et gestionnaires de cliniques, hôpitaux et centres de santé. À partir de 170 000 FCFA en ligne.",
   },
 
   // ── Informatique / Digital / Bureautique ─────────────────────────────────
@@ -217,7 +217,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Maîtrise complète de la suite Microsoft Office (15h). Quatre certificats : Word Professionnel (documents structurés, mailing, publipostage), Excel Avancé (formules complexes, tableaux croisés dynamiques, macros VBA initiation), PowerPoint Expert (présentations percutantes, animations, design) et Outlook & Teams (organisation, collaboration, réunions en ligne). Pour secrétaires, assistants, comptables, commerciaux et tout professionnel souhaitant gagner en efficacité bureautique. À partir de 225 000 FCFA en ligne.",
+    description: "Maîtrise complète de la suite Microsoft Office (15h). Quatre certificats : Word Professionnel (documents structurés, mailing, publipostage), Excel Avancé (formules complexes, tableaux croisés dynamiques, macros VBA initiation), PowerPoint Expert (présentations percutantes, animations, design) et Outlook & Teams (organisation, collaboration, réunions en ligne). Pour secrétaires, assistants, comptables, commerciaux et tout professionnel souhaitant gagner en efficacité bureautique. À partir de 170 000 FCFA en ligne.",
   },
   {
     slug: "eduform-developpement-web-fullstack",
@@ -226,7 +226,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Formation intensive Développement Web Full-Stack (15h). Du HTML/CSS/JavaScript aux frameworks modernes (React, Node.js), bases de données (MySQL, MongoDB) et déploiement (Vercel, cPanel). Projets pratiques à chaque étape, portfolio de 3 projets réels à la clé. Pour débutants souhaitant devenir développeurs web, reconversion professionnelle, entrepreneurs voulant créer leur site ou application. À partir de 225 000 FCFA en ligne.",
+    description: "Formation intensive Développement Web Full-Stack (15h). Du HTML/CSS/JavaScript aux frameworks modernes (React, Node.js), bases de données (MySQL, MongoDB) et déploiement (Vercel, cPanel). Projets pratiques à chaque étape, portfolio de 3 projets réels à la clé. Pour débutants souhaitant devenir développeurs web, reconversion professionnelle, entrepreneurs voulant créer leur site ou application. À partir de 170 000 FCFA en ligne.",
   },
   {
     slug: "eduform-cybersecurite-reseaux",
@@ -235,7 +235,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Programme certifiant Cybersécurité & Réseaux (15h). Comprendre les architectures réseau (TCP/IP, VPN, firewall), administrer les systèmes (Windows Server, Linux), mettre en place des politiques de sécurité et répondre aux incidents cyber. Préparation aux certifications CompTIA Security+ et Network+. Pour techniciens IT, administrateurs systèmes, responsables informatiques et étudiants en informatique. À partir de 225 000 FCFA en ligne.",
+    description: "Programme certifiant Cybersécurité & Réseaux (15h). Comprendre les architectures réseau (TCP/IP, VPN, firewall), administrer les systèmes (Windows Server, Linux), mettre en place des politiques de sécurité et répondre aux incidents cyber. Préparation aux certifications CompTIA Security+ et Network+. Pour techniciens IT, administrateurs systèmes, responsables informatiques et étudiants en informatique. À partir de 170 000 FCFA en ligne.",
   },
 
   // ── Marketing / Communication / Community Management ─────────────────────
@@ -246,7 +246,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Programme certifiant Marketing Digital 3 en 1 (15h). Trois certificats : Community Management (stratégie de contenu, gestion des réseaux sociaux, modération, analytics), SEO & Référencement naturel (audit, optimisation on-page/off-page, Google Search Console) et Publicité Digitale (Google Ads, Meta Ads, campagnes ROI, retargeting). Pour marketing managers, community managers, entrepreneurs et tout professionnel souhaitant développer sa présence en ligne. À partir de 225 000 FCFA en ligne.",
+    description: "Programme certifiant Marketing Digital 3 en 1 (15h). Trois certificats : Community Management (stratégie de contenu, gestion des réseaux sociaux, modération, analytics), SEO & Référencement naturel (audit, optimisation on-page/off-page, Google Search Console) et Publicité Digitale (Google Ads, Meta Ads, campagnes ROI, retargeting). Pour marketing managers, community managers, entrepreneurs et tout professionnel souhaitant développer sa présence en ligne. À partir de 170 000 FCFA en ligne.",
   },
   {
     slug: "eduform-communication-prise-parole",
@@ -255,7 +255,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Formation Communication Professionnelle & Prise de Parole en Public (15h). Techniques de présentation orale, gestion du stress, structuration du discours, communication non verbale, rédaction professionnelle (rapports, emails, notes de synthèse). Ateliers pratiques filmés avec débriefing individualisé. Pour managers, commerciaux, cadres et tout professionnel amené à prendre la parole ou à rédiger des documents professionnels. À partir de 225 000 FCFA en ligne.",
+    description: "Formation Communication Professionnelle & Prise de Parole en Public (15h). Techniques de présentation orale, gestion du stress, structuration du discours, communication non verbale, rédaction professionnelle (rapports, emails, notes de synthèse). Ateliers pratiques filmés avec débriefing individualisé. Pour managers, commerciaux, cadres et tout professionnel amené à prendre la parole ou à rédiger des documents professionnels. À partir de 170 000 FCFA en ligne.",
   },
 
   // ── Management / Leadership / Entrepreneuriat ────────────────────────────
@@ -266,7 +266,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Programme certifiant Management & Leadership 4 en 1 (15h). Quatre certificats : Manager d'Équipe (cohésion, délégation, gestion des conflits), Conduite du Changement (transformation organisationnelle, accompagnement humain), Leadership Stratégique (vision, prise de décision, intelligence émotionnelle) et Pilotage par la Performance (OKR, KPI, reporting managérial). Pour managers, chefs d'équipe, directeurs et cadres souhaitant renforcer leur posture de leadership. À partir de 225 000 FCFA en ligne.",
+    description: "Programme certifiant Management & Leadership 4 en 1 (15h). Quatre certificats : Manager d'Équipe (cohésion, délégation, gestion des conflits), Conduite du Changement (transformation organisationnelle, accompagnement humain), Leadership Stratégique (vision, prise de décision, intelligence émotionnelle) et Pilotage par la Performance (OKR, KPI, reporting managérial). Pour managers, chefs d'équipe, directeurs et cadres souhaitant renforcer leur posture de leadership. À partir de 170 000 FCFA en ligne.",
   },
   {
     slug: "eduform-creation-entreprise-entrepreneuriat",
@@ -275,7 +275,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Formation Création d'Entreprise & Entrepreneuriat (15h). De l'idée au lancement : validation du concept, étude de marché, business plan, choix du statut juridique (SARL, SAS, EI — cadre OHADA), financement (fonds propres, microfinance, investisseurs), marketing de lancement et gestion des premières semaines d'activité. Pour porteurs de projets, étudiants en fin de cursus et salariés souhaitant créer leur propre activité. À partir de 225 000 FCFA en ligne.",
+    description: "Formation Création d'Entreprise & Entrepreneuriat (15h). De l'idée au lancement : validation du concept, étude de marché, business plan, choix du statut juridique (SARL, SAS, EI — cadre OHADA), financement (fonds propres, microfinance, investisseurs), marketing de lancement et gestion des premières semaines d'activité. Pour porteurs de projets, étudiants en fin de cursus et salariés souhaitant créer leur propre activité. À partir de 170 000 FCFA en ligne.",
   },
 
   // ── Langues / Formation linguistique ────────────────────────────────────
@@ -286,7 +286,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Formation Anglais Professionnel — Business English (15h). Communication orale et écrite en anglais dans un contexte professionnel : réunions, présentations, emails, négociations, rapports. Niveau A2 → B2 visé, avec certification de niveau incluse. Pour cadres, commerciaux, professionnels de l'export et tous ceux évoluant dans un environnement international ou bilingue. À partir de 225 000 FCFA en ligne.",
+    description: "Formation Anglais Professionnel — Business English (15h). Communication orale et écrite en anglais dans un contexte professionnel : réunions, présentations, emails, négociations, rapports. Niveau A2 → B2 visé, avec certification de niveau incluse. Pour cadres, commerciaux, professionnels de l'export et tous ceux évoluant dans un environnement international ou bilingue. À partir de 170 000 FCFA en ligne.",
   },
   {
     slug: "eduform-francais-professionnel-redaction",
@@ -295,7 +295,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Formation Français Professionnel & Rédaction Administrative (15h). Maîtriser les écrits professionnels : lettre administrative, note de service, compte-rendu, rapport, procès-verbal, appel d'offres. Correction des erreurs fréquentes, style clair et concis, respect des conventions administratives francophones. Pour agents administratifs, secrétaires, chargés de mission, cadres et fonctionnaires. À partir de 225 000 FCFA en ligne.",
+    description: "Formation Français Professionnel & Rédaction Administrative (15h). Maîtriser les écrits professionnels : lettre administrative, note de service, compte-rendu, rapport, procès-verbal, appel d'offres. Correction des erreurs fréquentes, style clair et concis, respect des conventions administratives francophones. Pour agents administratifs, secrétaires, chargés de mission, cadres et fonctionnaires. À partir de 170 000 FCFA en ligne.",
   },
 
   // ── Agriculture / Agroalimentaire / Agribusiness ─────────────────────────
@@ -306,7 +306,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Programme certifiant Agribusiness & Gestion d'Exploitation (15h). Trois certificats : Gestion Financière de l'Exploitation Agricole (budget, rentabilité, financement agricole), Management de la Chaîne de Valeur (approvisionnement, transformation, commercialisation) et Accès aux Marchés & Exportation (normes sanitaires, certification GlobalG.A.P., contrats export). Pour exploitants agricoles, coopératives, agro-entrepreneurs et cadres du secteur agricole. À partir de 225 000 FCFA en ligne.",
+    description: "Programme certifiant Agribusiness & Gestion d'Exploitation (15h). Trois certificats : Gestion Financière de l'Exploitation Agricole (budget, rentabilité, financement agricole), Management de la Chaîne de Valeur (approvisionnement, transformation, commercialisation) et Accès aux Marchés & Exportation (normes sanitaires, certification GlobalG.A.P., contrats export). Pour exploitants agricoles, coopératives, agro-entrepreneurs et cadres du secteur agricole. À partir de 170 000 FCFA en ligne.",
   },
 
   // ── Juridique / Droit des Affaires / OHADA ───────────────────────────────
@@ -317,7 +317,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Programme certifiant Droit des Affaires OHADA 3 en 1 (15h). Trois certificats : Droit Commercial & Contrats (rédaction et sécurisation des contrats commerciaux, conditions générales de vente, litiges), Droit des Sociétés OHADA (création, gouvernance, transformations, dissolution — SARL, SA, SAS) et Droit du Travail & RH (contrat de travail, rupture, contentieux prud'homal, inspection du travail). Pour juristes, RH, dirigeants, entrepreneurs et responsables achats. À partir de 225 000 FCFA en ligne.",
+    description: "Programme certifiant Droit des Affaires OHADA 3 en 1 (15h). Trois certificats : Droit Commercial & Contrats (rédaction et sécurisation des contrats commerciaux, conditions générales de vente, litiges), Droit des Sociétés OHADA (création, gouvernance, transformations, dissolution — SARL, SA, SAS) et Droit du Travail & RH (contrat de travail, rupture, contentieux prud'homal, inspection du travail). Pour juristes, RH, dirigeants, entrepreneurs et responsables achats. À partir de 170 000 FCFA en ligne.",
   },
 
   // ── Transport / Douane / Commerce international ──────────────────────────
@@ -328,7 +328,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Programme certifiant Commerce International & Douane 3 en 1 (15h). Trois certificats : Techniques du Commerce International (Incoterms, financement des échanges, lettre de crédit documentaire), Procédures Douanières (déclaration en douane, régimes douaniers, contrôle, contentieux) et Transport & Fret International (modes de transport, connaissement, assurance cargo, freight forwarding). Pour transitaires, agents maritimes, importateurs, exportateurs et responsables logistique internationale. À partir de 225 000 FCFA en ligne.",
+    description: "Programme certifiant Commerce International & Douane 3 en 1 (15h). Trois certificats : Techniques du Commerce International (Incoterms, financement des échanges, lettre de crédit documentaire), Procédures Douanières (déclaration en douane, régimes douaniers, contrôle, contentieux) et Transport & Fret International (modes de transport, connaissement, assurance cargo, freight forwarding). Pour transitaires, agents maritimes, importateurs, exportateurs et responsables logistique internationale. À partir de 170 000 FCFA en ligne.",
   },
 
   // ── Tourisme / Hôtellerie / Restauration ────────────────────────────────
@@ -339,7 +339,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Programme certifiant Gestion Hôtelière & Tourisme (15h). Trois certificats : Direction d'Hôtel & Hébergement (revenue management, yield management, gestion des équipes hôtelières), Tourisme & Agences de Voyages (conception de produits touristiques, billetterie, GDS, IATA initiation) et Restauration & Food Cost (gestion d'un restaurant, contrôle des coûts alimentaires, hygiène HACCP). Pour gérants d'hôtels, responsables de réception, agents de voyages et porteurs de projets touristiques. À partir de 225 000 FCFA en ligne.",
+    description: "Programme certifiant Gestion Hôtelière & Tourisme (15h). Trois certificats : Direction d'Hôtel & Hébergement (revenue management, yield management, gestion des équipes hôtelières), Tourisme & Agences de Voyages (conception de produits touristiques, billetterie, GDS, IATA initiation) et Restauration & Food Cost (gestion d'un restaurant, contrôle des coûts alimentaires, hygiène HACCP). Pour gérants d'hôtels, responsables de réception, agents de voyages et porteurs de projets touristiques. À partir de 170 000 FCFA en ligne.",
   },
 
   // ── Énergie / Environnement / Développement durable ─────────────────────
@@ -350,7 +350,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Programme certifiant Énergie Solaire & Renouvelables (15h). Trois certificats : Technicien Solaire Photovoltaïque (dimensionnement, installation, maintenance de systèmes solaires autonomes et raccordés au réseau), Énergies Renouvelables & Efficacité Énergétique (audit énergétique, solutions biogaz, hydraulique, éolien) et Financement de Projets Énergétiques (PPAs, subventions, fonds verts, CCNUCC). Pour techniciens électriciens, ingénieurs, chefs de projets et entrepreneurs du secteur énergie. À partir de 225 000 FCFA en ligne.",
+    description: "Programme certifiant Énergie Solaire & Renouvelables (15h). Trois certificats : Technicien Solaire Photovoltaïque (dimensionnement, installation, maintenance de systèmes solaires autonomes et raccordés au réseau), Énergies Renouvelables & Efficacité Énergétique (audit énergétique, solutions biogaz, hydraulique, éolien) et Financement de Projets Énergétiques (PPAs, subventions, fonds verts, CCNUCC). Pour techniciens électriciens, ingénieurs, chefs de projets et entrepreneurs du secteur énergie. À partir de 170 000 FCFA en ligne.",
   },
 
   // ── Banque / Finance / Microfinance ─────────────────────────────────────
@@ -361,7 +361,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Programme certifiant Banque, Crédit & Microfinance 3 en 1 (15h). Trois certificats : Analyse du Risque Crédit (scoring, instruction d'un dossier, comité de crédit, recouvrement), Opérations Bancaires & Conformité (UEMOA, réglementation BCEAO, AML/CFT, KYC) et Microfinance & Finance Inclusive (SFD, épargne, crédit solidaire, mobile banking). Pour agents de crédit, chargés de clientèle banque, responsables microfinance et gestionnaires de coopératives d'épargne. À partir de 225 000 FCFA en ligne.",
+    description: "Programme certifiant Banque, Crédit & Microfinance 3 en 1 (15h). Trois certificats : Analyse du Risque Crédit (scoring, instruction d'un dossier, comité de crédit, recouvrement), Opérations Bancaires & Conformité (UEMOA, réglementation BCEAO, AML/CFT, KYC) et Microfinance & Finance Inclusive (SFD, épargne, crédit solidaire, mobile banking). Pour agents de crédit, chargés de clientèle banque, responsables microfinance et gestionnaires de coopératives d'épargne. À partir de 170 000 FCFA en ligne.",
   },
 
   // ── Médias / Journalisme / Production audiovisuelle ──────────────────────
@@ -372,7 +372,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Programme certifiant Journalisme & Média Digitale (15h). Techniques rédactionnelles (article de presse, reportage, interview, fact-checking), production vidéo (tournage smartphone pro, montage Capcut/DaVinci Resolve, storytelling), podcast et création de contenu monétisable (YouTube, TikTok, newsletters). Pour journalistes, blogueurs, influenceurs, communicants et créateurs de contenu souhaitant professionnaliser leur pratique. À partir de 225 000 FCFA en ligne.",
+    description: "Programme certifiant Journalisme & Média Digitale (15h). Techniques rédactionnelles (article de presse, reportage, interview, fact-checking), production vidéo (tournage smartphone pro, montage Capcut/DaVinci Resolve, storytelling), podcast et création de contenu monétisable (YouTube, TikTok, newsletters). Pour journalistes, blogueurs, influenceurs, communicants et créateurs de contenu souhaitant professionnaliser leur pratique. À partir de 170 000 FCFA en ligne.",
   },
 
   // ── Data Science, Python & Analyse de Données ───────────────────────────
@@ -383,7 +383,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Programme certifiant Data Science (15h). Trois certificats : Analyse de Données avec Python (pandas, numpy, matplotlib, Jupyter Notebook), SQL & Bases de Données (requêtes, jointures, optimisation, PostgreSQL/MySQL) et Visualisation & Data Storytelling (Tableau, Power BI, présentation des insights à des non-techniciens). Pour analystes, data analysts, comptables, ingénieurs et professionnels souhaitant exploiter la donnée dans leur métier. À partir de 225 000 FCFA en ligne.",
+    description: "Programme certifiant Data Science (15h). Trois certificats : Analyse de Données avec Python (pandas, numpy, matplotlib, Jupyter Notebook), SQL & Bases de Données (requêtes, jointures, optimisation, PostgreSQL/MySQL) et Visualisation & Data Storytelling (Tableau, Power BI, présentation des insights à des non-techniciens). Pour analystes, data analysts, comptables, ingénieurs et professionnels souhaitant exploiter la donnée dans leur métier. À partir de 170 000 FCFA en ligne.",
   },
   {
     slug: "eduform-excel-expert",
@@ -392,7 +392,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Formation Excel Expert (15h). Aller au-delà des formules de base : fonctions avancées (INDEX/EQUIV, RECHERCHEX, formules matricielles), tableaux croisés dynamiques (TCD) approfondis, Power Query pour l'import et la transformation de données, Power Pivot pour la modélisation, et initiation aux macros VBA pour automatiser les tâches répétitives. Pour comptables, contrôleurs de gestion, analystes et tout professionnel utilisant Excel quotidiennement. À partir de 225 000 FCFA en ligne.",
+    description: "Formation Excel Expert (15h). Aller au-delà des formules de base : fonctions avancées (INDEX/EQUIV, RECHERCHEX, formules matricielles), tableaux croisés dynamiques (TCD) approfondis, Power Query pour l'import et la transformation de données, Power Pivot pour la modélisation, et initiation aux macros VBA pour automatiser les tâches répétitives. Pour comptables, contrôleurs de gestion, analystes et tout professionnel utilisant Excel quotidiennement. À partir de 170 000 FCFA en ligne.",
   },
 
   // ── Gestion de Projets — PMP, Agile & Scrum ─────────────────────────────
@@ -403,7 +403,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Programme certifiant Gestion de Projets 3 en 1 (15h). Trois certificats : Chef de Projet PMP/PMI (initiation, planification, exécution, maîtrise et clôture — cadre PMBOK), Méthodes Agile (Scrum, Kanban, sprints, backlog, rôles Product Owner et Scrum Master) et Outils de Pilotage (MS Project, Trello, Asana, Monday.com et reporting). Préparation aux certifications PMP et PSM I incluse. Pour chefs de projet, coordinateurs, cadres et consultants. À partir de 225 000 FCFA en ligne.",
+    description: "Programme certifiant Gestion de Projets 3 en 1 (15h). Trois certificats : Chef de Projet PMP/PMI (initiation, planification, exécution, maîtrise et clôture — cadre PMBOK), Méthodes Agile (Scrum, Kanban, sprints, backlog, rôles Product Owner et Scrum Master) et Outils de Pilotage (MS Project, Trello, Asana, Monday.com et reporting). Préparation aux certifications PMP et PSM I incluse. Pour chefs de projet, coordinateurs, cadres et consultants. À partir de 170 000 FCFA en ligne.",
   },
 
   // ── E-commerce & Business en Ligne ──────────────────────────────────────
@@ -414,7 +414,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Programme certifiant E-commerce & Business Digital (15h). Deux certificats : Création & Gestion d'une Boutique en Ligne (Shopify, WooCommerce, Jumia/local, gestion des commandes, logistique last mile, service client) et Vente en Ligne & Marketing d'Acquisition (SEO produit, ads, email marketing, retargeting, upsell). Pour entrepreneurs, commerçants, créateurs de marque et toute personne souhaitant lancer ou développer une activité de vente en ligne. À partir de 225 000 FCFA en ligne.",
+    description: "Programme certifiant E-commerce & Business Digital (15h). Deux certificats : Création & Gestion d'une Boutique en Ligne (Shopify, WooCommerce, Jumia/local, gestion des commandes, logistique last mile, service client) et Vente en Ligne & Marketing d'Acquisition (SEO produit, ads, email marketing, retargeting, upsell). Pour entrepreneurs, commerçants, créateurs de marque et toute personne souhaitant lancer ou développer une activité de vente en ligne. À partir de 170 000 FCFA en ligne.",
   },
 
   // ── Formation de Formateurs & Ingénierie Pédagogique ────────────────────
@@ -425,7 +425,7 @@ const EDUFORM_PRODUCTS = [
     price: 280000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Programme certifiant Formation de Formateurs (25h). Trois certificats : Conception de Programme de Formation (analyse des besoins, définition des objectifs pédagogiques, structuration du contenu, méthodes actives), Animation de Sessions de Formation (techniques d'animation, gestion de groupe, évaluation des acquis) et e-Learning & Formation à Distance (création de modules e-learning, LMS, tutoriels vidéo, quiz interactifs). Pour formateurs, consultants RH, enseignants et tout expert souhaitant transmettre son savoir de manière professionnelle. À partir de 375 000 FCFA en ligne.",
+    description: "Programme certifiant Formation de Formateurs (25h). Trois certificats : Conception de Programme de Formation (analyse des besoins, définition des objectifs pédagogiques, structuration du contenu, méthodes actives), Animation de Sessions de Formation (techniques d'animation, gestion de groupe, évaluation des acquis) et e-Learning & Formation à Distance (création de modules e-learning, LMS, tutoriels vidéo, quiz interactifs). Pour formateurs, consultants RH, enseignants et tout expert souhaitant transmettre son savoir de manière professionnelle. À partir de 280 000 FCFA en ligne.",
   },
 
   // ── Préparation Concours & Certifications Professionnelles ──────────────
@@ -447,7 +447,7 @@ const EDUFORM_PRODUCTS = [
     price: 280000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Formation Développement Personnel & Intelligence Émotionnelle (25h). Connaissance de soi, gestion des émotions, confiance en soi, techniques de motivation, gestion des relations interpersonnelles et résilience face aux difficultés professionnelles. Ateliers pratiques, tests psychologiques et plan d'action personnel. Pour tout professionnel souhaitant améliorer son équilibre, sa performance et son bien-être au travail. À partir de 375 000 FCFA en ligne.",
+    description: "Formation Développement Personnel & Intelligence Émotionnelle (25h). Connaissance de soi, gestion des émotions, confiance en soi, techniques de motivation, gestion des relations interpersonnelles et résilience face aux difficultés professionnelles. Ateliers pratiques, tests psychologiques et plan d'action personnel. Pour tout professionnel souhaitant améliorer son équilibre, sa performance et son bien-être au travail. À partir de 280 000 FCFA en ligne.",
   },
 
   // ── Immobilier & Urbanisme spécialisé ───────────────────────────────────
@@ -458,7 +458,7 @@ const EDUFORM_PRODUCTS = [
     price: 170000,
     rate: 10,
     siteUrl: "https://ibig-eduform.com",
-    description: "Formation spécialisée Foncier & Droit Immobilier ivoirien (15h). Comprendre et maîtriser le cadre légal et pratique de la propriété foncière en Côte d'Ivoire : types de titres (titre foncier, lettre d'attribution, certificat foncier, droits coutumiers), procédures d'immatriculation, purge des droits coutumiers, permis de construire, règles d'urbanisme (PLU, zones) et contentieux fonciers. Pour agents immobiliers, juristes, investisseurs, promoteurs et particuliers. À partir de 225 000 FCFA en ligne.",
+    description: "Formation spécialisée Foncier & Droit Immobilier ivoirien (15h). Comprendre et maîtriser le cadre légal et pratique de la propriété foncière en Côte d'Ivoire : types de titres (titre foncier, lettre d'attribution, certificat foncier, droits coutumiers), procédures d'immatriculation, purge des droits coutumiers, permis de construire, règles d'urbanisme (PLU, zones) et contentieux fonciers. Pour agents immobiliers, juristes, investisseurs, promoteurs et particuliers. À partir de 170 000 FCFA en ligne.",
   },
 
   // ── Formations PDF officielles — F001 à F056 IBI GROUP ──────────────────

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { fcfa } from "@/lib/format";
 import type { Metadata } from "next";
 import { SetRefCookie } from "./set-ref-cookie";
+import { ShareButtons } from "./share-buttons";
 
 export const dynamic = "force-dynamic";
 
@@ -422,6 +423,13 @@ export default async function OffrePage({
             </ul>
           </div>
         )}
+
+        {/* Partage */}
+        <ShareButtons
+          url={affCode ? `${baseUrl}/offres/${product.slug}?ref=${affCode}` : `${baseUrl}/offres/${product.slug}`}
+          title={product.name}
+          description={product.description}
+        />
 
         {/* CTA bas de page */}
         <div className={`rounded-3xl bg-gradient-to-br ${theme.gradient} p-8 text-white relative overflow-hidden`}>
