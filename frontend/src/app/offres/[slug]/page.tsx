@@ -342,7 +342,7 @@ export default async function OffrePage({
                     return [
                       { icon: "🖥️", label: "E-learning (accès à vie, sans formateur)", perPerson: r5(product.price * 0.50), tag: "Meilleur prix" },
                       { icon: "💻", label: "En ligne — individuel (avec formateur)", perPerson: product.price, tag: null },
-                      { icon: "🏛️", label: "En présentiel — individuel", perPerson: r5(product.price * 1.15), tag: null },
+                      { icon: "🏛️", label: "En présentiel — individuel", perPerson: r5(product.price * 16000 / 11250), tag: null },
                       { icon: "👥", label: "Groupe 3–5 pers (en ligne, / pers)", perPerson: r5(product.price * 0.85), tag: "-15% / pers" },
                       { icon: "👥", label: "Groupe 6–9 pers (en ligne, / pers)", perPerson: r5(product.price * 0.75), tag: "-25% / pers" },
                     ];
