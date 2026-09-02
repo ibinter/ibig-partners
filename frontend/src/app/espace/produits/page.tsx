@@ -103,6 +103,7 @@ export default async function ProduitsPage() {
         totalActive={links.length}
         totalDocumented={totalDocumented}
         marketSectors={marketSectors}
+        affiliateCode={user.code ?? ""}
       />
     </div>
   );

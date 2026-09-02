@@ -51,6 +51,7 @@ interface Props {
   totalActive: number;
   totalDocumented: number;
   marketSectors?: string[];
+  affiliateCode?: string;
 }
 
 const PRICING_LABELS: Record<string, string> = {
@@ -101,12 +102,14 @@ function ProductCard({
   branchGradient,
   branchSlug,
   recommended,
+  affiliateCode,
 }: {
   product: Product;
   branchName: string;
   branchGradient: string;
   branchSlug: string;
   recommended?: boolean;
+  affiliateCode?: string;
 }) {
   const active = product.affiliateUrl !== null;
   const destination = product.siteUrl
@@ -177,7 +180,7 @@ function ProductCard({
         {/* Actions */}
         <div className="flex items-center gap-2 pt-1 border-t border-slate-50">
           <Link
-            href={`/offres/${product.slug}`}
+            href={affiliateCode ? `/offres/${product.slug}?ref=${affiliateCode}` : `/offres/${product.slug}`}
             target="_blank"
             className="flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-800 transition bg-blue-50 hover:bg-blue-100 rounded-lg px-2.5 py-1.5"
           >
@@ -213,7 +216,7 @@ function ProductCard({
   );
 }
 
-export default function ProduitsClient({ branches, totalProducts, totalActive, marketSectors = [] }: Props) {
+export default function ProduitsClient({ branches, totalProducts, totalActive, marketSectors = [], affiliateCode = "" }: Props) {
   const [selectedBranch, setSelectedBranch] = useState<string>("ALL");
   const [filter, setFilter] = useState<"all" | "active" | "inactive">("all");
   const [search, setSearch] = useState("");
@@ -423,6 +426,7 @@ export default function ProduitsClient({ branches, totalProducts, totalActive, m
               branchGradient={p.branchGradient}
               branchSlug={p.branchId}
               recommended={p.recommended}
+              affiliateCode={affiliateCode}
             />
           ))}
           {/* CTA Soumettre une opportunité */}
