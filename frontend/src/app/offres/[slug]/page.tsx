@@ -343,8 +343,8 @@ export default async function OffrePage({
                       { icon: "🖥️", label: "E-learning", perPerson: r5(product.price * 0.50) },
                       { icon: "💻", label: "En ligne — individuel (avec formateur)", perPerson: product.price },
                       { icon: "🏛️", label: "En présentiel — individuel", perPerson: r5(product.price * 16000 / 11250) },
-                      { icon: "👥", label: "Groupe 3–5 pers (en ligne, / pers)", perPerson: r5(product.price * 0.85) },
-                      { icon: "👥", label: "Groupe 6–9 pers (en ligne, / pers)", perPerson: r5(product.price * 0.75) },
+                      { icon: "👥", label: "Groupe 3–5 pers (en ligne, / pers)", perPerson: r5(product.price * 0.70) },
+                      { icon: "👥", label: "Groupe 6–10 pers (en ligne, / pers)", perPerson: r5(product.price * 0.55) },
                     ];
                   })().map((row) => (
                     <tr key={row.label} className="hover:bg-slate-50 transition">
@@ -359,9 +359,13 @@ export default async function OffrePage({
                   ))}
                   <tr className="border-t border-slate-200">
                     <td className="py-3 pr-4 text-slate-700">
-                      <span className="mr-2">🏢</span>Groupe 10+ pers (intra-entreprise)
+                      <span className="mr-2">🏢</span>Groupe 10+ pers (en ligne, / pers)
                     </td>
-                    <td className="py-3 pl-3 text-right font-bold text-slate-500 italic">Sur devis</td>
+                    <td className="py-3 pl-3 text-right font-bold text-slate-900">
+                      {Math.round(product.price * 0.35 / 5000) * 5000 > 0
+                        ? `${(Math.round(product.price * 0.35 / 5000) * 5000).toLocaleString("fr-FR")} FCFA`
+                        : "Sur devis"}
+                    </td>
                   </tr>
                 </tbody>
               </table>
