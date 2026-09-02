@@ -340,6 +340,7 @@ export default async function OffrePage({
                   {(() => {
                     const r5 = (x: number) => Math.round(x / 5000) * 5000;
                     return [
+                      { icon: "🖥️", label: "E-learning", perPerson: r5(product.price * 0.50) },
                       { icon: "💻", label: "En ligne — individuel (avec formateur)", perPerson: product.price },
                       { icon: "🏛️", label: "En présentiel — individuel", perPerson: r5(product.price * 16000 / 11250) },
                       { icon: "👥", label: "Groupe 3–5 pers (en ligne, / pers)", perPerson: r5(product.price * 0.85) },
