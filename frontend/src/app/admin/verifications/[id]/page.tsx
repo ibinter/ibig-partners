@@ -362,6 +362,38 @@ export default async function VerificationDetailPage({
           <Row label="Banque chèque" value={(req as any).chequeBank ?? undefined} />
         </Section>
       )}
+
+      {/* Méthodes secondaires */}
+      {((req as any).payoutMethod2 || (req as any).payoutMethod3) && (
+        <Section title="💳 Méthodes de paiement secondaires">
+          {(req as any).payoutMethod2 && (
+            <div className="mb-3">
+              <p className="text-xs font-bold text-slate-500 mb-1">🥈 Méthode secondaire 1 — {(req as any).payoutMethod2}</p>
+              {(() => {
+                try {
+                  const d = JSON.parse((req as any).payoutDetails2 ?? "{}");
+                  return Object.entries(d).map(([k, v]) => (
+                    <Row key={k} label={k} value={String(v)} />
+                  ));
+                } catch { return null; }
+              })()}
+            </div>
+          )}
+          {(req as any).payoutMethod3 && (
+            <div>
+              <p className="text-xs font-bold text-slate-500 mb-1">🥉 Méthode secondaire 2 — {(req as any).payoutMethod3}</p>
+              {(() => {
+                try {
+                  const d = JSON.parse((req as any).payoutDetails3 ?? "{}");
+                  return Object.entries(d).map(([k, v]) => (
+                    <Row key={k} label={k} value={String(v)} />
+                  ));
+                } catch { return null; }
+              })()}
+            </div>
+          )}
+        </Section>
+      )}
     </div>
   );
 }

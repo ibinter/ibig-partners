@@ -249,6 +249,105 @@ function PaymentSection({ existing }: { existing: Existing }) {
   );
 }
 
+function PaymentFields({ prefix, method }: { prefix: string; method: string }) {
+  const isMobileMoney = ["ORANGE_MONEY","WAVE","MTN_MOMO","MOOV_MONEY","AIRTEL_MONEY","M_PESA"].includes(method);
+  return (
+    <div className="space-y-3 pt-1">
+      {isMobileMoney && (
+        <div className="grid gap-3 sm:grid-cols-2">
+          <F label="Numéro" name={`${prefix}_num`} placeholder="+225 07 00 00 00 00" />
+          <F label="Nom titulaire" name={`${prefix}_name`} placeholder="NOM Prénom" />
+        </div>
+      )}
+      {method === "CINETPAY"      && <F label="Numéro CinetPay"    name={`${prefix}_num`}   placeholder="+225 07 00 00 00 00" />}
+      {method === "KKIAPAY"       && <F label="Numéro KKiaPay"     name={`${prefix}_num`}   placeholder="+229 97 00 00 00" />}
+      {method === "TMONEY"        && <F label="Numéro T-Money"     name={`${prefix}_num`}   placeholder="+228 90 00 00 00" />}
+      {method === "FLOOZ"         && <F label="Numéro Flooz"       name={`${prefix}_num`}   placeholder="+229 97 00 00 00" />}
+      {method === "WESTERN_UNION" && <F label="Nom complet"        name={`${prefix}_name`}  placeholder="NOM Prénom" />}
+      {method === "MONEYGRAM"     && <F label="Nom complet"        name={`${prefix}_name`}  placeholder="NOM Prénom" />}
+      {method === "RIA"           && <F label="Nom complet RIA"    name={`${prefix}_name`}  placeholder="NOM Prénom" />}
+      {method === "EXPRESS_UNION" && <F label="Numéro Express Union" name={`${prefix}_num`} placeholder="+237 6 00 00 00 00" />}
+      {method === "PAYPAL"        && <F label="Email PayPal"       name={`${prefix}_email`} type="email" placeholder="vous@email.com" />}
+      {method === "WISE"          && <F label="Email Wise"         name={`${prefix}_email`} type="email" placeholder="vous@email.com" />}
+      {method === "SKRILL"        && <F label="Email Skrill"       name={`${prefix}_email`} type="email" placeholder="vous@email.com" />}
+      {["BANK_LOCAL","BANK_SEPA","BANK_SWIFT"].includes(method) && (
+        <div className="grid gap-3 sm:grid-cols-2">
+          <F label="Banque" name={`${prefix}_bankName`} />
+          <F label="Pays banque" name={`${prefix}_bankCountry`} />
+          {method !== "BANK_LOCAL" && <>
+            <F label="IBAN" name={`${prefix}_iban`} placeholder="FR76..." />
+            <F label="SWIFT/BIC" name={`${prefix}_swift`} placeholder="BNPAFRPPXXX" />
+          </>}
+          <div className="sm:col-span-2"><F label="Numéro de compte / RIB" name={`${prefix}_rib`} /></div>
+        </div>
+      )}
+      {method === "CRYPTO" && (
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div>
+            <label className="block text-xs font-semibold text-slate-600 mb-1">Crypto</label>
+            <select name={`${prefix}_cryptoCurrency`} className={inputCls}>
+              <option value="">-- Choisir --</option>
+              {["USDT","USDC","BTC","ETH","BNB","TRX","SOL","XRP","LTC","DOGE"].map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-slate-600 mb-1">Réseau</label>
+            <select name={`${prefix}_cryptoNetwork`} className={inputCls}>
+              <option value="">-- Choisir --</option>
+              {["TRC20 (Tron)","ERC20 (Ethereum)","BEP20 (BSC)","Bitcoin (BTC)","Solana","XRP Ledger","Litecoin"].map(n => <option key={n} value={n}>{n}</option>)}
+            </select>
+          </div>
+          <div className="sm:col-span-2"><F label="Adresse wallet" name={`${prefix}_cryptoAddress`} placeholder="0x... / T... / bc1..." /></div>
+        </div>
+      )}
+      {method === "CHEQUE" && (
+        <div className="grid gap-3 sm:grid-cols-2">
+          <F label="À l'ordre de" name={`${prefix}_chequePayable`} placeholder="NOM Prénom ou raison sociale" />
+          <F label="Banque émettrice" name={`${prefix}_chequeBank`} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SecondaryPaymentSection({ slot, label, defaultMethod, defaultDetails }: {
+  slot: "2" | "3"; label: string; defaultMethod?: string | null; defaultDetails?: string | null;
+}) {
+  const parsed = (() => { try { return defaultDetails ? JSON.parse(defaultDetails) : {}; } catch { return {}; } })();
+  const [method, setMethod] = useState(defaultMethod ?? "");
+  const prefix = `sec${slot}`;
+
+  return (
+    <div className="card-premium overflow-hidden border-dashed">
+      <div className="bg-slate-50 border-b border-slate-200 px-5 py-3 flex items-center justify-between">
+        <div>
+          <h3 className="font-semibold text-sm text-slate-700">{label}</h3>
+          <p className="text-xs text-slate-400 mt-0.5">Optionnel — en cas d&apos;indisponibilité de votre méthode principale</p>
+        </div>
+        {method && <span className="text-[10px] font-bold text-teal-600 bg-teal-50 border border-teal-200 rounded-lg px-2 py-0.5">Défini</span>}
+      </div>
+      <div className="p-5 space-y-4">
+        <div>
+          <label className="block text-xs font-semibold text-slate-600 mb-1">Méthode {slot === "2" ? "secondaire 1" : "secondaire 2"}</label>
+          <select name={`payoutMethod${slot}`} value={method} onChange={e => setMethod(e.target.value)} className={inputCls}>
+            <option value="">-- Aucune (optionnel) --</option>
+            {PAYOUT_METHODS.map(g => (
+              <optgroup key={g.group} label={g.group}>
+                {g.options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+              </optgroup>
+            ))}
+          </select>
+        </div>
+        {method && <PaymentFields prefix={prefix} method={method} />}
+        {/* Champs cachés pour préremplir depuis les données existantes */}
+        {Object.entries(parsed).map(([k, v]) => (
+          <input key={k} type="hidden" name={`${prefix}_${k}_prefill`} defaultValue={String(v)} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function IndividualForm({ existing }: { existing: Existing }) {
   return (
     <>
@@ -412,7 +511,22 @@ export function VerificationForm({ initialType, existing }: {
 
       {type === "INDIVIDUAL" ? <IndividualForm existing={existing} /> : <CompanyForm existing={existing} />}
 
+      {/* Méthode principale */}
       <PaymentSection existing={existing} />
+
+      {/* Méthodes secondaires */}
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 space-y-1">
+        <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">💳 Méthodes de paiement de secours (optionnel)</p>
+        <p className="text-xs text-slate-400 mb-4">En cas d&apos;indisponibilité de votre méthode principale, l&apos;équipe utilisera ces alternatives dans l&apos;ordre.</p>
+        <div className="space-y-4">
+          <SecondaryPaymentSection slot="2" label="🥈 Méthode secondaire 1"
+            defaultMethod={(existing as any)?.payoutMethod2}
+            defaultDetails={(existing as any)?.payoutDetails2} />
+          <SecondaryPaymentSection slot="3" label="🥉 Méthode secondaire 2"
+            defaultMethod={(existing as any)?.payoutMethod3}
+            defaultDetails={(existing as any)?.payoutDetails3} />
+        </div>
+      </div>
 
       <p className="text-xs text-muted bg-slate-50 rounded-xl border border-slate-100 px-4 py-3">
         🔒 En soumettant ce formulaire, vous certifiez l&apos;exactitude des informations. Toute fausse déclaration entraîne la suspension immédiate et définitive du compte sans paiement des commissions dues.

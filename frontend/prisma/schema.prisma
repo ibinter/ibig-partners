@@ -154,6 +154,12 @@ model VerificationRequest {
   tmoneyPhone      String?
   floozPhone       String?
 
+  // ─── Méthodes de paiement secondaires (JSON) ──────────────
+  payoutMethod2  String? // méthode secondaire 1
+  payoutDetails2 String? // JSON {num, name, email, address, ...}
+  payoutMethod3  String? // méthode secondaire 2
+  payoutDetails3 String? // JSON
+
   // ─── Pièces justificatives (URLs Cloudinary) ───────────────
   idDocUrl   String? // photo recto/verso CNI ou passeport
   idDocBack  String? // verso si CNI

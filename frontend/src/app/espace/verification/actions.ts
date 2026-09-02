@@ -38,6 +38,21 @@ export async function submitVerification(formData: FormData) {
   const tmoneyPhone           = g("tmoneyPhone");
   const floozPhone            = g("floozPhone");
 
+  // ── Méthodes secondaires (JSON) ──
+  const buildSecondaryDetails = (prefix: string) => {
+    const entries: Record<string, string> = {};
+    for (const [key, val] of formData.entries()) {
+      if (key.startsWith(`${prefix}_`) && !key.endsWith("_prefill") && val) {
+        entries[key.replace(`${prefix}_`, "")] = String(val);
+      }
+    }
+    return Object.keys(entries).length > 0 ? JSON.stringify(entries) : null;
+  };
+  const payoutMethod2  = g("payoutMethod2") || null;
+  const payoutDetails2 = payoutMethod2 ? buildSecondaryDetails("sec2") : null;
+  const payoutMethod3  = g("payoutMethod3") || null;
+  const payoutDetails3 = payoutMethod3 ? buildSecondaryDetails("sec3") : null;
+
   // ── INDIVIDUAL fields ──
   const fullName      = formData.get("fullName")      ? String(formData.get("fullName"))      : null;
   const idType        = formData.get("idType")        ? String(formData.get("idType"))        : null;
@@ -92,6 +107,7 @@ export async function submitVerification(formData: FormData) {
         cryptoCurrency, cryptoNetwork, cryptoAddress,
         chequePayable, chequeBank,
         cinetpayPhone, kkiapayPhone, tmoneyPhone, floozPhone,
+        payoutMethod2, payoutDetails2, payoutMethod3, payoutDetails3,
         status: "PENDING",
         submittedAt: new Date(),
       },
@@ -113,6 +129,7 @@ export async function submitVerification(formData: FormData) {
         cryptoCurrency, cryptoNetwork, cryptoAddress,
         chequePayable, chequeBank,
         cinetpayPhone, kkiapayPhone, tmoneyPhone, floozPhone,
+        payoutMethod2, payoutDetails2, payoutMethod3, payoutDetails3,
         status: "PENDING",
         submittedAt: new Date(),
         reviewNote: null,
