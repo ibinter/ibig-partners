@@ -13,6 +13,7 @@ const NAV: NavItem[] = [
   { href: "/admin/commissions",   label: "Commissions",        icon: "💰", group: "Finance" },
   { href: "/admin/paiements",     label: "Paiements",          icon: "🏦", group: "Finance" },
   { href: "/admin/branches",      label: "Branches & Produits",icon: "🗂️", group: "Catalogue" },
+  { href: "/admin/produits",      label: "Pages de présentation",icon: "📄", group: "Catalogue" },
   { href: "/admin/academie",      label: "Académie IBIG",      icon: "🎓", group: "Catalogue" },
   { href: "/admin/messages",      label: "Messagerie",         icon: "💬", group: "Communication" },
   { href: "/admin/tickets",       label: "Tickets Support",    icon: "🎫", group: "Communication" },

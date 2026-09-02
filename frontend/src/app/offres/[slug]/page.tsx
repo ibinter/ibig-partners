@@ -42,6 +42,19 @@ function getBranchColor(branchName: string) {
   return "from-slate-700 to-slate-900";
 }
 
+type MarketingData = {
+  tagline?: string;
+  bullets?: string[];
+  audience?: string;
+  includes?: string[];
+  imageUrl?: string;
+};
+
+function parseMD(raw: string | null | undefined): MarketingData {
+  try { if (raw) return JSON.parse(raw) as MarketingData; } catch { /* */ }
+  return {};
+}
+
 function parseDescriptionBullets(description: string): string[] {
   return description.split(/\.\s+/).filter(s => s.trim().length > 10).slice(0, 6);
 }
@@ -56,7 +69,7 @@ export default async function OffrePage({
   const { slug } = await params;
   const { ref }  = await searchParams;
 
-  const product = await prisma.product.findUnique({
+  const product = await (prisma as any).product.findUnique({
     where: { slug, active: true },
     include: { branch: true },
   });
@@ -74,20 +87,27 @@ export default async function OffrePage({
     }
   }
 
+  const md         = parseMD(product.marketingData);
   const baseUrl    = process.env.NEXT_PUBLIC_SITE_URL || "https://ibigpartners.com";
   const affCode    = ref?.toUpperCase() ?? null;
   const ctaHref    = affCode
     ? `${baseUrl}/aff/${affCode}?p=${product.slug}`
     : product.siteUrl ?? `${baseUrl}/rejoindre`;
 
-  const suffix     = PRICING_SUFFIX[product.pricingType] ?? "";
-  const priceDisplay = product.price > 0
-    ? `${fcfa(product.price)}${suffix}`
-    : "Sur devis";
-  const isService  = product.pricingType === "SERVICE" || product.price === 0;
-  const emoji      = BRANCH_EMOJI[product.branch.name] ?? "📦";
-  const gradient   = getBranchColor(product.branch.name);
-  const bullets    = parseDescriptionBullets(product.description ?? "");
+  const suffix       = PRICING_SUFFIX[product.pricingType] ?? "";
+  const priceDisplay = product.price > 0 ? `${fcfa(product.price)}${suffix}` : "Sur devis";
+  const isService    = product.pricingType === "SERVICE" || product.price === 0;
+  const emoji        = BRANCH_EMOJI[product.branch.name] ?? "📦";
+  const gradient     = getBranchColor(product.branch.name);
+
+  // Contenu : marketing enrichi en priorité, sinon extrait de la description
+  const tagline  = md.tagline || "";
+  const bullets  = (md.bullets?.filter(Boolean).length ?? 0) > 0
+    ? md.bullets!.filter(Boolean)
+    : parseDescriptionBullets(product.description ?? "");
+  const audience = md.audience || "";
+  const includes = md.includes?.filter(Boolean) ?? [];
+  const imageUrl = md.imageUrl || "";
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -106,6 +126,9 @@ export default async function OffrePage({
           <h1 className="text-2xl sm:text-3xl font-extrabold leading-tight">
             {emoji} {product.name}
           </h1>
+          {tagline && (
+            <p className="mt-3 text-lg text-white/90 font-medium leading-snug">{tagline}</p>
+          )}
           {partnerName && (
             <p className="mt-3 text-sm text-white/70">
               Offre partagée par <strong className="text-white">{partnerName}</strong> — Partenaire IBIG
@@ -116,6 +139,14 @@ export default async function OffrePage({
 
       {/* ── Corps ── */}
       <main className="mx-auto max-w-3xl px-4 py-8 space-y-6">
+
+        {/* Image produit si disponible */}
+        {imageUrl && (
+          <div className="rounded-2xl overflow-hidden shadow-sm border border-slate-200 max-h-64">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={imageUrl} alt={product.name} className="w-full h-full object-cover" />
+          </div>
+        )}
 
         {/* Prix + CTA principal */}
         <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-6">
@@ -162,6 +193,29 @@ export default async function OffrePage({
                 <li key={i} className="flex items-start gap-2 text-sm text-slate-700">
                   <span className="mt-0.5 text-emerald-500 font-bold shrink-0">✓</span>
                   <span>{b.trim().replace(/\.$/, "")}.</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Public cible */}
+        {audience && (
+          <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-5">
+            <h2 className="text-base font-bold text-slate-900 mb-2">🎯 Pour qui ?</h2>
+            <p className="text-sm text-slate-700">{audience}</p>
+          </div>
+        )}
+
+        {/* Ce qui est inclus */}
+        {includes.length > 0 && (
+          <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-5 space-y-2">
+            <h2 className="text-base font-bold text-slate-900">📦 Ce qui est inclus</h2>
+            <ul className="space-y-1.5">
+              {includes.map((item, i) => (
+                <li key={i} className="flex items-center gap-2 text-sm text-slate-700">
+                  <span className="text-blue-500 font-bold shrink-0">✓</span>
+                  {item}
                 </li>
               ))}
             </ul>
