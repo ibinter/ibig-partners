@@ -95,6 +95,15 @@ const BRANCHES_DATA = [
     commissionModel: "10% N1 • 5% N2 • 2% N3 (assurance : 12% N1)",
     order: 10, active: true,
   },
+  {
+    slug: "ibig-emploi-talents", name: "IBIG EMPLOI & TALENTS",
+    tagline: "Recrutement, placement & RH externalisée",
+    description: "IBIG EMPLOI & TALENTS est le pôle ressources humaines du groupe IBIG SARL : recrutement de cadres, techniciens et ouvriers qualifiés, placement de personnel domestique, intérim, mise à disposition d'équipes, externalisation RH, insertion professionnelle et formation. La solution RH complète pour entreprises et candidats.",
+    website: "https://intermark-business.com/emploi",
+    offerType: "Service RH & placement",
+    commissionModel: "10% N1 • 5% N2 • 2% N3",
+    order: 11, active: true,
+  },
 ];
 
 const OLD_SLUGS = [
