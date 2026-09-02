@@ -223,15 +223,27 @@ export default async function OffrePage({
                 </p>
               )}
             </div>
-            <a
-              href={ctaHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white bg-gradient-to-r ${gradient} shadow-md hover:opacity-90 transition-opacity`}
-            >
-              {isService ? "Demander un devis gratuit" : "Je m'inscris maintenant"}
-              <span>→</span>
-            </a>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <a
+                href={ctaHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white bg-gradient-to-r ${gradient} shadow-md hover:opacity-90 transition-opacity`}
+              >
+                {isService ? "Demander un devis gratuit" : "Je m'inscris maintenant"}
+                <span>→</span>
+              </a>
+              {product.siteUrl && (
+                <a
+                  href={product.siteUrl.startsWith("http") ? product.siteUrl : `https://${product.siteUrl}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition border border-slate-200"
+                >
+                  🔗 Détails de l&apos;offre
+                </a>
+              )}
+            </div>
           </div>
         </div>
 
@@ -322,21 +334,6 @@ export default async function OffrePage({
             <span>→</span>
           </a>
         </div>
-
-        {/* Lien vers le site officiel */}
-        {product.siteUrl && (
-          <p className="text-center text-xs text-slate-500">
-            Plus d'informations sur{" "}
-            <a
-              href={product.siteUrl.startsWith("http") ? product.siteUrl : `https://${product.siteUrl}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-blue-600 hover:underline"
-            >
-              {product.siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}
-            </a>
-          </p>
-        )}
 
         {/* ── Rejoindre IBIG Partners ── */}
         <div className="rounded-2xl border-2 border-dashed border-amber-300 bg-amber-50 p-6">

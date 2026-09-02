@@ -176,6 +176,13 @@ function ProductCard({
 
         {/* Actions */}
         <div className="flex items-center gap-2 pt-1 border-t border-slate-50">
+          <Link
+            href={`/offres/${product.slug}`}
+            target="_blank"
+            className="flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-800 transition bg-blue-50 hover:bg-blue-100 rounded-lg px-2.5 py-1.5"
+          >
+            📄 Présenter
+          </Link>
           {destination && (
             <a
               href={destination}
