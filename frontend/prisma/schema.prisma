@@ -198,6 +198,7 @@ model Product {
   rate        Int     @default(8) // taux N1 (%) pour SERVICE/PRODUCT (sinon table standard)
   siteUrl       String? // ex: scolaby.com
   marketingData String? // JSON: { tagline, bullets[], audience, includes[], imageUrl, fetchedAt }
+  category      String? // ex: Comptabilité & Finance, Management & Leadership, QHSE…
   active        Boolean @default(true)
 
   links           AffiliateLink[]
