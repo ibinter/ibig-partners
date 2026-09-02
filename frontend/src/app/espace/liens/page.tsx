@@ -63,6 +63,7 @@ export default async function LiensPage() {
       clicks: l.clicks,
       sales: salesMap.get(l.productId) ?? 0,
       url: `${baseUrl}/aff/${user.code}?p=${l.product.slug}`,
+      offreUrl: `${baseUrl}/offres/${l.product.slug}?ref=${user.code}`,
       affiliateCode: user.code,
       partnerName: `${user.firstName} ${user.lastName}`,
       baseUrl,

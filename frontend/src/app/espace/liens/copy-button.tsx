@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function CopyButton({ text }: { text: string }) {
+export default function CopyButton({ text, label = "Copier" }: { text: string; label?: string }) {
   const [copied, setCopied] = useState(false);
   return (
     <button
@@ -18,7 +18,7 @@ export default function CopyButton({ text }: { text: string }) {
       }}
       className="rounded-lg border border-brand-200 bg-white px-3 py-2 text-sm font-medium text-brand-700 hover:bg-brand-50"
     >
-      {copied ? "✓ Copié" : "Copier"}
+      {copied ? "✓ Copié !" : label}
     </button>
   );
 }
