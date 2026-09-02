@@ -2791,26 +2791,394 @@ const EDUFORM_PRODUCTS = [
   },
 ];
 
+// ── Mapping slug → catégorie ─────────────────────────────────────────────────
+// Chaque slug est assigné à une branche-catégorie. Les slugs non listés
+// tombent dans "metiers" par défaut.
+const SLUG_CATEGORY: Record<string, string> = {
+  // Finance, Comptabilité & Audit
+  "eduform-compta-finance-4en1": "finance",
+  "eduform-daf-dirigeant": "finance",
+  "eduform-audit-controle-4en1": "finance",
+  "eduform-sage100-comptabilite": "finance",
+  "eduform-sage-etats-fiscaux": "finance",
+  "eduform-sap-fi": "finance",
+  "eduform-gestion-financiere-non-financiers": "finance",
+  "eduform-gestionnaire-comptable": "finance",
+  "eduform-fiscalite-pratique-entreprises": "finance",
+  "eduform-fiscalite-petites-entreprises": "finance",
+  "eduform-sycebnl-comptabilite-ong": "finance",
+  "eduform-gestion-tresorerie-budget": "finance",
+  "eduform-ifrs-banques-assurances": "finance",
+  "eduform-audit-controle-interne-pme": "finance",
+  "eduform-finance-pour-non-financiers": "finance",
+  "eduform-gestion-risques-financiers-climat": "finance",
+  "eduform-digitalisation-processus-comptables": "finance",
+  "eduform-audit-commissariat-comptes": "finance",
+  "eduform-conseiller-financier-gestion-patrimoine": "finance",
+  "eduform-responsable-audit-interne": "finance",
+  "eduform-conformite-fiscale-controle-administratif": "finance",
+  "eduform-droit-fiscal-contentieux": "finance",
+  "eduform-gestion-financiere-comptable-ong": "finance",
+  "eduform-tableaux-de-bord-performance": "finance",
+  "eduform-gestion-stocks": "finance",
+
+  // Ressources Humaines & Paie
+  "eduform-expert-rh-3en1": "rh",
+  "eduform-sage100-paie-rh": "rh",
+  "eduform-gestionnaire-personnel": "rh",
+  "eduform-gpec": "rh",
+  "eduform-recrutement-integration-fidelisation": "rh",
+  "eduform-droit-travail-litiges-rh": "rh",
+  "eduform-coaching-gestion-talents": "rh",
+  "eduform-assistant-rh-outils-pratiques": "rh",
+  "eduform-administration-personnel-dossiers-rh": "rh",
+  "eduform-developpement-competences-formation-continue": "rh",
+  "eduform-management-rh-agile-strategique": "rh",
+  "eduform-politique-rh-pme": "rh",
+  "eduform-gestion-conflits-climat-social": "rh",
+  "eduform-iso-30414-indicateurs-rh": "rh",
+  "eduform-tableaux-bord-rh-indicateurs-performance": "rh",
+  "eduform-conformite-rh-inspection-travail": "rh",
+  "eduform-responsable-formation-developpement-rh": "rh",
+  "eduform-specialiste-rh-40": "rh",
+  "eduform-formation-de-formateurs": "rh",
+
+  // Management & Leadership
+  "eduform-management-leadership-4en1": "management",
+  "eduform-leadership-transformationnel": "management",
+  "eduform-leadership-sante": "management",
+  "eduform-time-management-priorites": "management",
+  "eduform-management-interculturel": "management",
+  "eduform-manager-coach-techniques": "management",
+  "eduform-pilotage-performance-tableaux-bord": "management",
+  "eduform-intelligence-emotionnelle-travail": "management",
+  "eduform-leadership-transformation-digitale-ia": "management",
+  "eduform-leadership-management-equipes-projet": "management",
+
+  // Marketing, Commerce & Communication
+  "eduform-marketing-digital-3en1": "marketing",
+  "eduform-communication-prise-parole": "marketing",
+  "eduform-canva-pro": "marketing",
+  "eduform-journalisme-production-media": "marketing",
+  "eduform-marketing-reseaux-sociaux": "marketing",
+  "eduform-branding-identite-visuelle": "marketing",
+  "eduform-marketing-influence-contenu": "marketing",
+  "eduform-techniques-vente-negociation-commerciale": "marketing",
+  "eduform-plan-marketing-action-commerciale": "marketing",
+  "eduform-fidelisation-client-sav": "marketing",
+  "eduform-emailing-newsletter-automatisation-ventes": "marketing",
+  "eduform-analyse-performance-commerciale": "marketing",
+  "eduform-crm-gestion-relation-client": "marketing",
+  "eduform-whatsapp-business-marketing-mobile": "marketing",
+  "eduform-vente-b2b-prospection-grands-comptes": "marketing",
+  "eduform-reponses-appels-offres": "marketing",
+  "eduform-copywriting-contenu-corporate": "marketing",
+  "eduform-e-reputation-communication-crise-ligne": "marketing",
+  "eduform-relations-publiques-communication-institutionnelle": "marketing",
+  "eduform-media-training-porte-parole": "marketing",
+  "eduform-art-oratoire-impact": "marketing",
+  "eduform-communication-interne-art-oratoire": "marketing",
+  "eduform-management-equipe-commerciale": "marketing",
+  "eduform-branding-positionnement-image-marque": "marketing",
+  "eduform-distribution-merchandising-force-vente": "marketing",
+  "eduform-communication-evenementielle-conferences": "marketing",
+  "eduform-video-corporate-pitch-video": "marketing",
+  "eduform-communication-ong-projets-humanitaires": "marketing",
+  "eduform-relations-presse-communiques-medias": "marketing",
+  "eduform-communication-interne-climat-social": "marketing",
+  "eduform-evenementiel-digital-organisation-virtuelle": "marketing",
+  "eduform-ecommerce-business-en-ligne": "marketing",
+  "eduform-gestion-commerciale-ventes": "marketing",
+  "eduform-communication-ecrite-professionnelle": "marketing",
+
+  // Informatique & Digital
+  "eduform-ia-professionnels": "informatique",
+  "eduform-power-bi": "informatique",
+  "eduform-kobotoolbox": "informatique",
+  "eduform-bureautique-microsoft-4en1": "informatique",
+  "eduform-developpement-web-fullstack": "informatique",
+  "eduform-cybersecurite-reseaux": "informatique",
+  "eduform-data-science-python-sql": "informatique",
+  "eduform-excel-expert": "informatique",
+  "eduform-excel-debutant": "informatique",
+  "eduform-excel-intermediaire": "informatique",
+  "eduform-ia-machine-learning-affaires": "informatique",
+  "eduform-blockchain-affaires": "informatique",
+  "eduform-odoo-erp": "informatique",
+  "eduform-wordpress-sites-professionnels": "informatique",
+  "eduform-google-workspace-pme": "informatique",
+  "eduform-python-analyse-donnees": "informatique",
+  "eduform-developpement-mobile-flutter": "informatique",
+  "eduform-cloud-computing-aws-azure": "informatique",
+  "eduform-outils-gestion-projet-digital": "informatique",
+  "eduform-initiation-informatique-debutants": "informatique",
+  "eduform-securite-informatique-protection-donnees": "informatique",
+  "eduform-automatisation-rh-ged": "informatique",
+  "eduform-developpement-web-html-css-javascript": "informatique",
+  "eduform-excel-power-query-analyse": "informatique",
+  "eduform-iso-27001-securite-information": "informatique",
+  "eduform-microsoft-365-outils-collaboratifs": "informatique",
+  "eduform-communication-digitale-slack-chatgpt": "informatique",
+  "eduform-cloud-drive-stockage-partage": "informatique",
+  "eduform-introduction-ia-concepts-outils": "informatique",
+  "eduform-rgpd-afrique-protection-donnees": "informatique",
+  "eduform-responsable-transformation-digitale": "informatique",
+  "eduform-strategie-digitale-transformation": "informatique",
+  "eduform-microsoft-project": "informatique",
+  "eduform-sage100-gescom": "informatique",
+  "eduform-outils-numeriques-gestion-projets": "informatique",
+
+  // Droit & Conformité
+  "eduform-marches-publics-3en1": "droit",
+  "eduform-droit-affaires-ohada-3en1": "droit",
+  "eduform-droit-affaires-redaction-actes": "droit",
+  "eduform-contrats-commerciaux-risques": "droit",
+  "eduform-gestion-juridique-pme-startups": "droit",
+  "eduform-droit-immobilier-litiges-fonciers": "droit",
+  "eduform-droit-bancaire-fintech": "droit",
+  "eduform-droit-penal-affaires": "droit",
+  "eduform-foncier-urbanisme-droit-ci": "droit",
+  "eduform-veille-legale-reglementaire": "droit",
+  "eduform-propriete-intellectuelle-startups": "droit",
+  "eduform-specialiste-passation-marches": "droit",
+
+  // QHSE, Sécurité & Environnement
+  "eduform-qhse-4en1": "qhse",
+  "eduform-haccp-securite-alimentaire": "qhse",
+  "eduform-iso-45001-sante-securite-travail": "qhse",
+  "eduform-technicien-securite-incendie": "qhse",
+  "eduform-iso-9001-management-qualite": "qhse",
+  "eduform-animateur-hse-niveau1": "qhse",
+  "eduform-animateur-hse-niveau2": "qhse",
+  "eduform-rse-developpement-durable": "qhse",
+  "eduform-gestion-risques-qhse-entreprise": "qhse",
+  "eduform-management-environnemental-developpement-durable": "qhse",
+  "eduform-hse-chantiers-btp": "qhse",
+  "eduform-gestion-dechets-environnement": "qhse",
+  "eduform-rse-responsabilite-societale": "qhse",
+  "eduform-hygiene-hospitaliere-infections": "qhse",
+  "eduform-enquetes-accidents-travail": "qhse",
+  "eduform-responsable-qse": "qhse",
+  "eduform-gestion-etablissement-sante-3en1": "qhse",
+
+  // Immobilier & BTP
+  "eduform-immobilier-3en1": "immobilier",
+  "eduform-gestion-copropriete-syndic": "immobilier",
+  "eduform-fiscalite-immobiliere": "immobilier",
+  "eduform-promotion-immobiliere": "immobilier",
+  "eduform-evaluation-expertise-immobiliere": "immobilier",
+  "eduform-bim-building-information-modeling": "immobilier",
+  "eduform-btp-gestion-chantier-3en1": "immobilier",
+  "eduform-btp-presentiel": "immobilier",
+  "eduform-gestion-projets-btp": "immobilier",
+  "eduform-facility-management-maintenance": "immobilier",
+  "eduform-immobilier-social-logement-abordable": "immobilier",
+  "eduform-immobilier-durable-eco-construction": "immobilier",
+
+  // Logistique, Supply Chain & Commerce International
+  "eduform-logistique-supply-chain-4en1": "logistique",
+  "eduform-commerce-international-douane-3en1": "logistique",
+  "eduform-planification-logistique-stock": "logistique",
+  "eduform-logistique-petroliere-produits-dangereux": "logistique",
+  "eduform-logistique-humanitaire-urgence": "logistique",
+
+  // Banque, Assurance & Finance Inclusive
+  "eduform-banque-credit-microfinance-3en1": "banque",
+  "eduform-introduction-metiers-banque-assurance": "banque",
+  "eduform-credits-recouvrement-bancaire": "banque",
+  "eduform-assurances-sinistres-indemnisations": "banque",
+  "eduform-gestion-agence-bancaire": "banque",
+  "eduform-banque-digitale-fintech": "banque",
+  "eduform-lbc-ft-blanchiment-capitaux": "banque",
+  "eduform-gestion-assurances-sinistres": "banque",
+  "eduform-gouvernance-microfinance": "banque",
+  "eduform-certification-amf-preparation": "banque",
+  "eduform-monetique-systemes-paiement": "banque",
+  "eduform-vente-relation-client-banque-assurance": "banque",
+
+  // Développement Personnel, Soft Skills & Langues
+  "eduform-developpement-personnel-professionnel": "devperso",
+  "eduform-gestion-stress-emotions": "devperso",
+  "eduform-motivation-discipline-productivite": "devperso",
+  "eduform-developpement-carriere-employabilite": "devperso",
+  "eduform-confiance-soi-affirmation-personnelle": "devperso",
+  "eduform-resilience-adaptabilite-changement": "devperso",
+  "eduform-orientation-domaine-predilection": "devperso",
+  "eduform-negociation-avancee": "devperso",
+  "eduform-negociation-internationale-diplomatie": "devperso",
+  "eduform-innovation-creativite-entreprise": "devperso",
+  "eduform-accueil-vip-service-excellence": "devperso",
+  "eduform-soft-skills-assistantes-direction": "devperso",
+  "eduform-mindset-entrepreneurial-mentalite-gagnante": "devperso",
+  "eduform-resolution-problemes-design-thinking": "devperso",
+  "eduform-gestion-vie-equilibre-personnel-professionnel": "devperso",
+  "eduform-creativite-initiative-innovation": "devperso",
+  "eduform-leadership-feminin-soft-skills": "devperso",
+  "eduform-marque-personnelle-personal-branding": "devperso",
+  "eduform-anglais-professionnel": "devperso",
+  "eduform-francais-professionnel-redaction": "devperso",
+  "eduform-anglais-debutant": "devperso",
+  "eduform-anglais-intermediaire": "devperso",
+  "eduform-anglais-avance": "devperso",
+  "eduform-anglais-affaires": "devperso",
+
+  // Gestion de Projets, Humanitaire & ONG
+  "eduform-projets-humanitaires-3en1": "projets",
+  "eduform-meal-suivi-evaluation-projets": "projets",
+  "eduform-redaction-propositions-financement-ong": "projets",
+  "eduform-fondamentaux-gestion-projets": "projets",
+  "eduform-gestion-projets-internationaux": "projets",
+  "eduform-gestion-projets-avancee-pmi-prince2": "projets",
+  "eduform-gestion-risques-qualite-projets": "projets",
+  "eduform-partenariats-relations-bailleurs": "projets",
+  "eduform-plaidoyer-communication-ong": "projets",
+  "eduform-leadership-humanitaire-coordination-crise": "projets",
+  "eduform-gestion-associations-ong": "projets",
+  "eduform-gestion-projets-pmp-agile-3en1": "projets",
+  "eduform-planification-suivi-evaluation-se": "projets",
+
+  // Entrepreneuriat, Innovation & Agribusiness
+  "eduform-creation-entreprise-entrepreneuriat": "entrepreneuriat",
+  "eduform-agribusiness-gestion-exploitation": "entrepreneuriat",
+  "eduform-lean-startup-pitch": "entrepreneuriat",
+  "eduform-business-model-canvas-mvp": "entrepreneuriat",
+  "eduform-startup-tech-incubation": "entrepreneuriat",
+  "eduform-strategie-croissance-pme-startups": "entrepreneuriat",
+  "eduform-intelligence-economique-veille": "entrepreneuriat",
+  "eduform-entrepreneuriat-feminin": "entrepreneuriat",
+  "eduform-entrepreneuriat-social-solidaire": "entrepreneuriat",
+  "eduform-plan-affaires-entrepreneurs": "entrepreneuriat",
+  "eduform-fondamentaux-gestion-entreprise": "entrepreneuriat",
+  "eduform-gestion-cooperative-mutuelle": "entrepreneuriat",
+  "eduform-energie-renouvelable-solaire": "entrepreneuriat",
+  "eduform-gestion-hoteliere-tourisme": "entrepreneuriat",
+  "eduform-circuits-touristiques-locaux": "entrepreneuriat",
+
+  // Formations Métiers & Certificats Professionnels
+  "eduform-secretaire-assistant-direction": "metiers",
+  "eduform-gestionnaire-documentaire-archivage": "metiers",
+  "eduform-controleur-gestion-junior": "metiers",
+  "eduform-secretaire-comptable": "metiers",
+  "eduform-community-manager-social-media": "metiers",
+  "eduform-responsable-commercial-business-developer": "metiers",
+  "eduform-gestionnaire-paie-administration-personnel": "metiers",
+  "eduform-assistant-juridique-contentieux": "metiers",
+  "eduform-conseiller-microfinance-inclusion": "metiers",
+  "eduform-technicien-gestion-logistique-transit": "metiers",
+  "eduform-responsable-achats-approvisionnement": "metiers",
+  "eduform-responsable-developpement-durable-rse": "metiers",
+  "eduform-responsable-logistique-transport-maritime": "metiers",
+  "eduform-responsable-marketing-digital-ecommerce": "metiers",
+  "eduform-assistant-administratif-bureautique": "metiers",
+  "eduform-gestionnaire-administratif-logistique": "metiers",
+  "eduform-assistant-polyvalent-pme-ong": "metiers",
+  "eduform-responsable-services-generaux": "metiers",
+  "eduform-assistant-gestion-projets": "metiers",
+  "eduform-assistant-direction-bilingue": "metiers",
+  "eduform-secretaire-medical-administratif": "metiers",
+  "eduform-technicien-energies-renouvelables": "metiers",
+  "eduform-specialiste-gestion-projets-agricoles": "metiers",
+  "eduform-responsable-developpement-touristique": "metiers",
+  "eduform-charge-suivi-reporting-administratif": "metiers",
+  "eduform-gestionnaire-bureau-secretariat-general": "metiers",
+  "eduform-responsable-administratif-operationnel": "metiers",
+  "eduform-assistant-rh-administration-personnel": "metiers",
+  "eduform-charge-accueil-relations-publiques": "metiers",
+  "eduform-secretaire-juridique": "metiers",
+  "eduform-gestionnaire-dossiers-archives-numeriques": "metiers",
+  "eduform-charge-suivi-budgetaire-administratif": "metiers",
+  "eduform-assistant-gestion-appels-offres": "metiers",
+  "eduform-responsable-coordination-administrative-projets": "metiers",
+  "eduform-responsable-administration-generale": "metiers",
+  "eduform-responsable-pilotage-reporting-administratif": "metiers",
+  "eduform-responsable-achats-internationaux-supply-chain": "metiers",
+  "eduform-responsable-export-developpement-international": "metiers",
+  "eduform-charge-clientele-bancaire": "metiers",
+  "eduform-responsable-centre-appels": "metiers",
+  "eduform-gestionnaire-microcredit-finance-inclusive": "metiers",
+  "eduform-specialiste-portefeuille-immobilier": "metiers",
+  "eduform-conseiller-assurance-risques": "metiers",
+
+  // Services & Formats Entreprise
+  "eduform-tarif-groupe-5plus": "services",
+  "eduform-formation-presentiel-standard": "services",
+  "eduform-sur-mesure-entreprise": "services",
+  "eduform-intra-entreprise-presentiel": "services",
+  "eduform-formation-internationale-diaspora": "services",
+  "eduform-deplacement-formateur-international": "services",
+  "eduform-coaching-particulier": "services",
+  "eduform-formation-individuelle-particulier": "services",
+  "eduform-libre-choix-sur-mesure": "services",
+};
+
+const CATEGORY_BRANCHES: Record<string, { slug: string; label: string }> = {
+  finance:       { slug: "eduform-finance",       label: "EDUFORM — Finance, Comptabilité & Audit" },
+  rh:            { slug: "eduform-rh",            label: "EDUFORM — Ressources Humaines & Paie" },
+  management:    { slug: "eduform-management",    label: "EDUFORM — Management & Leadership" },
+  marketing:     { slug: "eduform-marketing",     label: "EDUFORM — Marketing, Commerce & Communication" },
+  informatique:  { slug: "eduform-informatique",  label: "EDUFORM — Informatique & Digital" },
+  droit:         { slug: "eduform-droit",         label: "EDUFORM — Droit, Conformité & Marchés Publics" },
+  qhse:          { slug: "eduform-qhse",          label: "EDUFORM — QHSE, Santé & Environnement" },
+  immobilier:    { slug: "eduform-immobilier",    label: "EDUFORM — Immobilier & BTP" },
+  logistique:    { slug: "eduform-logistique",    label: "EDUFORM — Logistique & Supply Chain" },
+  banque:        { slug: "eduform-banque",        label: "EDUFORM — Banque, Assurance & Finance Inclusive" },
+  devperso:      { slug: "eduform-devperso",      label: "EDUFORM — Développement Personnel & Soft Skills" },
+  projets:       { slug: "eduform-projets",       label: "EDUFORM — Gestion de Projets, Humanitaire & ONG" },
+  entrepreneuriat: { slug: "eduform-entrepreneuriat", label: "EDUFORM — Entrepreneuriat, Innovation & Agribusiness" },
+  metiers:       { slug: "eduform-metiers",       label: "EDUFORM — Formations Métiers & Certificats Professionnels" },
+  services:      { slug: "eduform-services",      label: "EDUFORM — Services & Formats Entreprise" },
+};
+
 export async function POST() {
   try {
     if (!(await isSyncAuthorized())) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
 
-    const result = await syncBranchWithFeed("ibig-eduform", "IBIG EDUFORM", EDUFORM_PRODUCTS, { notify: true });
-    if (!result.ok) {
-      return NextResponse.json({ error: result.error }, { status: result.status });
+    // Dédupliquer par slug (au cas où un slug apparaît deux fois dans l'array)
+    const seen = new Set<string>();
+    const unique = EDUFORM_PRODUCTS.filter(p => {
+      if (seen.has(p.slug)) return false;
+      seen.add(p.slug);
+      return true;
+    });
+
+    // Grouper par catégorie
+    const grouped: Record<string, typeof EDUFORM_PRODUCTS> = {};
+    for (const p of unique) {
+      const cat = SLUG_CATEGORY[p.slug] ?? "metiers";
+      if (!grouped[cat]) grouped[cat] = [];
+      grouped[cat].push(p);
     }
 
-    const { diff, notified } = result;
+    // Synchroniser chaque branche-catégorie en parallèle
+    const results = await Promise.all(
+      Object.entries(grouped).map(([catKey, products]) => {
+        const branch = CATEGORY_BRANCHES[catKey] ?? { slug: `eduform-${catKey}`, label: `EDUFORM — ${catKey}` };
+        return syncBranchWithFeed(branch.slug, branch.label, products, { notify: false });
+      })
+    );
+
+    const errors = results.filter(r => !r.ok);
+    if (errors.length > 0) {
+      const firstErr = errors[0] as { ok: false; error: string; status: number };
+      return NextResponse.json({ error: firstErr.error, partialErrors: errors.length }, { status: firstErr.status });
+    }
+
+    const totalAdded   = results.filter(r => r.ok).reduce((s, r) => s + (r as any).diff.added.length, 0);
+    const totalUpdated = results.filter(r => r.ok).reduce((s, r) => s + (r as any).diff.updated.length, 0);
+    const totalRemoved = results.filter(r => r.ok).reduce((s, r) => s + (r as any).diff.removed, 0);
+    const totalTotal   = results.filter(r => r.ok).reduce((s, r) => s + (r as any).diff.total, 0);
+    const branches     = Object.keys(grouped).length;
+
     return NextResponse.json({
       ok: true,
-      upserted: diff.total,
-      added: diff.added.length,
-      updated: diff.updated.length,
-      deleted: diff.removed,
-      notified,
-      message: `${diff.total} produits IBIG EDUFORM synchronisés (${diff.added.length} nouveau(x), ${diff.updated.length} mis à jour, ${diff.removed} retiré(s)).`,
+      branches,
+      upserted: totalTotal,
+      added: totalAdded,
+      updated: totalUpdated,
+      deleted: totalRemoved,
+      message: `${totalTotal} formations EDUFORM synchronisées dans ${branches} branches-catégories (${totalAdded} ajoutée(s), ${totalUpdated} mise(s) à jour, ${totalRemoved} retirée(s)).`,
     });
   } catch (err: any) {
     console.error("sync-eduform error:", err);
