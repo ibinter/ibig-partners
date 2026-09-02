@@ -86,6 +86,15 @@ const BRANCHES_DATA = [
     commissionModel: "10% N1 • 5% N2 • 2% N3",
     order: 9, active: true,
   },
+  {
+    slug: "ibig-financement", name: "IBIG FINANCEMENT",
+    tagline: "Épargne, crédit, assurance & investissement",
+    description: "IBIG FINANCEMENT accompagne particuliers et entreprises dans tous leurs besoins financiers : tontines digitales, plans d'épargne, accompagnement crédit (personnel, PME, immobilier, leasing), souscription d'assurances (vie, auto, santé, voyage), placement OPCVM, obligations d'État et conseil en gestion de patrimoine. Intermédiation financière au service de l'Afrique.",
+    website: "https://intermark-business.com/financement",
+    offerType: "Service financier & assurance",
+    commissionModel: "10% N1 • 5% N2 • 2% N3 (assurance : 12% N1)",
+    order: 10, active: true,
+  },
 ];
 
 const OLD_SLUGS = [
