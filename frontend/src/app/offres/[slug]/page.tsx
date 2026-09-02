@@ -266,7 +266,7 @@ export default async function OffrePage({
               >
                 {ctaLabel} →
               </a>
-              {product.siteUrl && (
+              {isService && product.siteUrl && (
                 <a
                   href={product.siteUrl.startsWith("http") ? product.siteUrl : `https://${product.siteUrl}`}
                   target="_blank"
@@ -384,7 +384,7 @@ export default async function OffrePage({
               >
                 {ctaLabel} →
               </a>
-              {product.siteUrl && (
+              {isService && product.siteUrl && (
                 <a
                   href={product.siteUrl.startsWith("http") ? product.siteUrl : `https://${product.siteUrl}`}
                   target="_blank"
