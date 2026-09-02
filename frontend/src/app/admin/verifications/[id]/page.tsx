@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { requireAdmin, getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Badge, Card, PageHeader } from "@/components/ui";
@@ -13,6 +14,42 @@ function Row({ label, value }: { label: string; value?: string | null }) {
     <div className="grid grid-cols-3 gap-2 py-2 border-b border-slate-50 last:border-0">
       <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{label}</span>
       <span className="col-span-2 text-sm text-slate-800 break-words">{value}</span>
+    </div>
+  );
+}
+
+function DocCard({ label, url }: { label: string; url: string }) {
+  const isPdf = url.toLowerCase().includes(".pdf") || url.toLowerCase().includes("/pdf");
+  const isImage = !isPdf;
+  return (
+    <div className="rounded-xl border border-slate-200 overflow-hidden bg-white">
+      <div className="bg-slate-50 border-b border-slate-100 px-3 py-2">
+        <p className="text-[11px] font-bold text-slate-600 uppercase tracking-wide">{label}</p>
+      </div>
+      {isImage ? (
+        <a href={url} target="_blank" rel="noopener noreferrer" className="block hover:opacity-90 transition-opacity">
+          <div className="relative w-full h-48 bg-slate-100">
+            <Image
+              src={url}
+              alt={label}
+              fill
+              className="object-contain p-2"
+              unoptimized
+            />
+          </div>
+          <div className="px-3 py-2 text-center">
+            <span className="text-[11px] text-blue-600 font-medium">🔍 Voir en plein écran →</span>
+          </div>
+        </a>
+      ) : (
+        <div className="px-3 py-4 text-center space-y-2">
+          <p className="text-2xl">📄</p>
+          <a href={url} target="_blank" rel="noopener noreferrer"
+            className="inline-block rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-700 transition-colors">
+            Ouvrir le document →
+          </a>
+        </div>
+      )}
     </div>
   );
 }
@@ -259,6 +296,30 @@ export default async function VerificationDetailPage({
               ⚠️ L&apos;affilié n&apos;a pas encore complété les détails de son dossier KYC dans son espace.
             </p>
           )}
+        </Section>
+      )}
+
+      {/* Pièces justificatives */}
+      {(req.idDocUrl || req.idDocBack || req.cvFileUrl) && (
+        <Section title="📎 Pièces justificatives">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 pt-1">
+            {req.idDocUrl && (
+              <DocCard label="Pièce d'identité — Recto" url={req.idDocUrl} />
+            )}
+            {req.idDocBack && (
+              <DocCard label="Pièce d'identité — Verso" url={req.idDocBack} />
+            )}
+            {req.cvFileUrl && (
+              <DocCard label="CV / Document" url={req.cvFileUrl} />
+            )}
+          </div>
+        </Section>
+      )}
+      {!(req.idDocUrl || req.idDocBack || req.cvFileUrl) && (
+        <Section title="📎 Pièces justificatives">
+          <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2">
+            ⚠️ Aucun document n&apos;a encore été soumis par ce partenaire.
+          </p>
         </Section>
       )}
 
