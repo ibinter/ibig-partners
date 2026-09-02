@@ -375,6 +375,92 @@ const EDUFORM_PRODUCTS = [
     description: "Programme certifiant Journalisme & Média Digitale (40h). Techniques rédactionnelles (article de presse, reportage, interview, fact-checking), production vidéo (tournage smartphone pro, montage Capcut/DaVinci Resolve, storytelling), podcast et création de contenu monétisable (YouTube, TikTok, newsletters). Pour journalistes, blogueurs, influenceurs, communicants et créateurs de contenu souhaitant professionnaliser leur pratique. À partir de 200 000 FCFA en ligne.",
   },
 
+  // ── Data Science, Python & Analyse de Données ───────────────────────────
+  {
+    slug: "eduform-data-science-python-sql",
+    name: "Data Science — Python, SQL & Analyse de Données",
+    pricingType: "COURSE",
+    price: 375000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Programme certifiant Data Science (65h). Trois certificats : Analyse de Données avec Python (pandas, numpy, matplotlib, Jupyter Notebook), SQL & Bases de Données (requêtes, jointures, optimisation, PostgreSQL/MySQL) et Visualisation & Data Storytelling (Tableau, Power BI, présentation des insights à des non-techniciens). Pour analystes, data analysts, comptables, ingénieurs et professionnels souhaitant exploiter la donnée dans leur métier. À partir de 375 000 FCFA en ligne.",
+  },
+  {
+    slug: "eduform-excel-expert",
+    name: "Excel Expert — Formules, TCD & Macros VBA",
+    pricingType: "COURSE",
+    price: 75000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Formation Excel Expert (14h). Aller au-delà des formules de base : fonctions avancées (INDEX/EQUIV, RECHERCHEX, formules matricielles), tableaux croisés dynamiques (TCD) approfondis, Power Query pour l'import et la transformation de données, Power Pivot pour la modélisation, et initiation aux macros VBA pour automatiser les tâches répétitives. Pour comptables, contrôleurs de gestion, analystes et tout professionnel utilisant Excel quotidiennement. À partir de 75 000 FCFA en ligne.",
+  },
+
+  // ── Gestion de Projets — PMP, Agile & Scrum ─────────────────────────────
+  {
+    slug: "eduform-gestion-projets-pmp-agile-3en1",
+    name: "Gestion de Projets PMP, Agile & Scrum 3 en 1",
+    pricingType: "COURSE",
+    price: 325000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Programme certifiant Gestion de Projets 3 en 1 (55h). Trois certificats : Chef de Projet PMP/PMI (initiation, planification, exécution, maîtrise et clôture — cadre PMBOK), Méthodes Agile (Scrum, Kanban, sprints, backlog, rôles Product Owner et Scrum Master) et Outils de Pilotage (MS Project, Trello, Asana, Monday.com et reporting). Préparation aux certifications PMP et PSM I incluse. Pour chefs de projet, coordinateurs, cadres et consultants. À partir de 325 000 FCFA en ligne.",
+  },
+
+  // ── E-commerce & Business en Ligne ──────────────────────────────────────
+  {
+    slug: "eduform-ecommerce-business-en-ligne",
+    name: "E-commerce & Business en Ligne",
+    pricingType: "COURSE",
+    price: 200000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Programme certifiant E-commerce & Business Digital (40h). Deux certificats : Création & Gestion d'une Boutique en Ligne (Shopify, WooCommerce, Jumia/local, gestion des commandes, logistique last mile, service client) et Vente en Ligne & Marketing d'Acquisition (SEO produit, ads, email marketing, retargeting, upsell). Pour entrepreneurs, commerçants, créateurs de marque et toute personne souhaitant lancer ou développer une activité de vente en ligne. À partir de 200 000 FCFA en ligne.",
+  },
+
+  // ── Formation de Formateurs & Ingénierie Pédagogique ────────────────────
+  {
+    slug: "eduform-formation-de-formateurs",
+    name: "Formation de Formateurs & Ingénierie Pédagogique",
+    pricingType: "COURSE",
+    price: 275000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Programme certifiant Formation de Formateurs (55h). Trois certificats : Conception de Programme de Formation (analyse des besoins, définition des objectifs pédagogiques, structuration du contenu, méthodes actives), Animation de Sessions de Formation (techniques d'animation, gestion de groupe, évaluation des acquis) et e-Learning & Formation à Distance (création de modules e-learning, LMS, tutoriels vidéo, quiz interactifs). Pour formateurs, consultants RH, enseignants et tout expert souhaitant transmettre son savoir de manière professionnelle. À partir de 275 000 FCFA en ligne.",
+  },
+
+  // ── Préparation Concours & Certifications Professionnelles ──────────────
+  {
+    slug: "eduform-preparation-concours-professionnels",
+    name: "Préparation Concours & Certifications Professionnelles",
+    pricingType: "COURSE",
+    price: 150000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Programme d'accompagnement à la préparation des concours professionnels et certifications : concours de la fonction publique ivoirienne (ITS, INFAS, ENSET, CAFOP), examens comptables (DSCG, CPA Afrique), certifications IT (Microsoft, Cisco, PMI) et certifications en langues (TOEIC, DELF). Révisions intensives, annales corrigées, simulations d'examen et coaching individuel. Pour candidats souhaitant maximiser leurs chances de réussite. À partir de 150 000 FCFA selon le concours visé.",
+  },
+
+  // ── Développement Personnel & Bien-être Professionnel ───────────────────
+  {
+    slug: "eduform-developpement-personnel-professionnel",
+    name: "Développement Personnel & Intelligence Émotionnelle",
+    pricingType: "COURSE",
+    price: 100000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Formation Développement Personnel & Intelligence Émotionnelle (14h). Connaissance de soi, gestion des émotions, confiance en soi, techniques de motivation, gestion des relations interpersonnelles et résilience face aux difficultés professionnelles. Ateliers pratiques, tests psychologiques et plan d'action personnel. Pour tout professionnel souhaitant améliorer son équilibre, sa performance et son bien-être au travail. À partir de 100 000 FCFA en ligne.",
+  },
+
+  // ── Immobilier & Urbanisme spécialisé ───────────────────────────────────
+  {
+    slug: "eduform-foncier-urbanisme-droit-ci",
+    name: "Foncier, Urbanisme & Droit Immobilier en Côte d'Ivoire",
+    pricingType: "COURSE",
+    price: 200000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Formation spécialisée Foncier & Droit Immobilier ivoirien (28h). Comprendre et maîtriser le cadre légal et pratique de la propriété foncière en Côte d'Ivoire : types de titres (titre foncier, lettre d'attribution, certificat foncier, droits coutumiers), procédures d'immatriculation, purge des droits coutumiers, permis de construire, règles d'urbanisme (PLU, zones) et contentieux fonciers. Pour agents immobiliers, juristes, investisseurs, promoteurs et particuliers. À partir de 200 000 FCFA en ligne.",
+  },
+
   // ── Formats complémentaires (entreprise, présentiel, groupe, international) ──
 
   // ── Tarif Groupe (5 personnes et plus) ──────────────────────────────────
