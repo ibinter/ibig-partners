@@ -320,6 +320,64 @@ export default async function OffrePage({
           </div>
         )}
 
+        {/* Tableau des tarifs — formations uniquement */}
+        {isCourse && (
+          <div className="rounded-3xl bg-white shadow-sm border border-slate-100 p-7">
+            <div className="flex items-center gap-3 mb-5">
+              <span className="text-2xl">💰</span>
+              <h2 className="text-base font-extrabold text-slate-900">Tarifs & Modalités</h2>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-slate-100">
+                    <th className="text-left py-2 pr-4 text-xs font-bold uppercase tracking-wide text-slate-400">Modalité</th>
+                    <th className="text-right py-2 px-3 text-xs font-bold uppercase tracking-wide text-slate-400">Par personne</th>
+                    <th className="text-right py-2 pl-3 text-xs font-bold uppercase tracking-wide text-slate-400">Économie</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50">
+                  {[
+                    { icon: "🖥️", label: "E-learning (accès à vie)", perPerson: Math.round(product.price * 0.50 / 1000) * 1000, tag: "Meilleur prix" },
+                    { icon: "💻", label: "En ligne — individuel", perPerson: product.price, tag: null },
+                    { icon: "🏛️", label: "En présentiel — individuel", perPerson: Math.round(product.price * 1.15 / 1000) * 1000, tag: null },
+                    { icon: "👥", label: "Groupe 3–5 pers (en ligne)", perPerson: Math.round(product.price * 0.85 / 1000) * 1000, tag: "-15% / pers" },
+                    { icon: "👥", label: "Groupe 6–9 pers (en ligne)", perPerson: Math.round(product.price * 0.75 / 1000) * 1000, tag: "-25% / pers" },
+                  ].map((row) => (
+                    <tr key={row.label} className="hover:bg-slate-50 transition">
+                      <td className="py-3 pr-4 text-slate-700">
+                        <span className="mr-2">{row.icon}</span>
+                        {row.label}
+                        {row.tag && row.tag === "Meilleur prix" && (
+                          <span className="ml-2 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold text-white" style={{ background: theme.accent }}>{row.tag}</span>
+                        )}
+                      </td>
+                      <td className="py-3 px-3 text-right font-bold text-slate-900">
+                        {row.perPerson.toLocaleString("fr-FR")} FCFA
+                      </td>
+                      <td className="py-3 pl-3 text-right text-xs text-slate-400">
+                        {row.perPerson < product.price
+                          ? <span className="text-emerald-600 font-semibold">−{((1 - row.perPerson / product.price) * 100).toFixed(0)}%</span>
+                          : row.perPerson > product.price
+                          ? <span className="text-slate-400">+{(((row.perPerson / product.price) - 1) * 100).toFixed(0)}%</span>
+                          : <span className="text-slate-400">—</span>}
+                      </td>
+                    </tr>
+                  ))}
+                  <tr className="border-t border-slate-200">
+                    <td className="py-3 pr-4 text-slate-700">
+                      <span className="mr-2">🏢</span>Groupe 10+ pers (intra-entreprise)
+                    </td>
+                    <td className="py-3 px-3 text-right font-bold text-slate-500 italic">Sur devis</td>
+                    <td className="py-3 pl-3 text-right text-xs text-emerald-600 font-semibold">Meilleur tarif</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-4 text-xs text-slate-400 italic">* Tarifs indicatifs. Contactez-nous pour un devis personnalisé selon vos besoins.</p>
+          </div>
+        )}
+
         {/* Badges garanties */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {badges.map(g => (
