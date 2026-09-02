@@ -333,38 +333,26 @@ export default async function OffrePage({
                 <thead>
                   <tr className="border-b border-slate-100">
                     <th className="text-left py-2 pr-4 text-xs font-bold uppercase tracking-wide text-slate-400">Modalité</th>
-                    <th className="text-right py-2 px-3 text-xs font-bold uppercase tracking-wide text-slate-400">Par personne</th>
-                    <th className="text-right py-2 pl-3 text-xs font-bold uppercase tracking-wide text-slate-400">Économie</th>
+                    <th className="text-right py-2 pl-3 text-xs font-bold uppercase tracking-wide text-slate-400">Par personne</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50">
                   {(() => {
                     const r5 = (x: number) => Math.round(x / 5000) * 5000;
                     return [
-                      { icon: "🖥️", label: "E-learning (accès à vie, sans formateur)", perPerson: r5(product.price * 0.50), tag: "Meilleur prix" },
-                      { icon: "💻", label: "En ligne — individuel (avec formateur)", perPerson: product.price, tag: null },
-                      { icon: "🏛️", label: "En présentiel — individuel", perPerson: r5(product.price * 16000 / 11250), tag: null },
-                      { icon: "👥", label: "Groupe 3–5 pers (en ligne, / pers)", perPerson: r5(product.price * 0.85), tag: "-15% / pers" },
-                      { icon: "👥", label: "Groupe 6–9 pers (en ligne, / pers)", perPerson: r5(product.price * 0.75), tag: "-25% / pers" },
+                      { icon: "💻", label: "En ligne — individuel (avec formateur)", perPerson: product.price },
+                      { icon: "🏛️", label: "En présentiel — individuel", perPerson: r5(product.price * 16000 / 11250) },
+                      { icon: "👥", label: "Groupe 3–5 pers (en ligne, / pers)", perPerson: r5(product.price * 0.85) },
+                      { icon: "👥", label: "Groupe 6–9 pers (en ligne, / pers)", perPerson: r5(product.price * 0.75) },
                     ];
                   })().map((row) => (
                     <tr key={row.label} className="hover:bg-slate-50 transition">
                       <td className="py-3 pr-4 text-slate-700">
                         <span className="mr-2">{row.icon}</span>
                         {row.label}
-                        {row.tag && row.tag === "Meilleur prix" && (
-                          <span className="ml-2 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold text-white" style={{ background: theme.accent }}>{row.tag}</span>
-                        )}
                       </td>
-                      <td className="py-3 px-3 text-right font-bold text-slate-900">
+                      <td className="py-3 pl-3 text-right font-bold text-slate-900">
                         {row.perPerson.toLocaleString("fr-FR")} FCFA
-                      </td>
-                      <td className="py-3 pl-3 text-right text-xs text-slate-400">
-                        {row.perPerson < product.price
-                          ? <span className="text-emerald-600 font-semibold">−{((1 - row.perPerson / product.price) * 100).toFixed(0)}%</span>
-                          : row.perPerson > product.price
-                          ? <span className="text-slate-400">+{(((row.perPerson / product.price) - 1) * 100).toFixed(0)}%</span>
-                          : <span className="text-slate-400">—</span>}
                       </td>
                     </tr>
                   ))}
@@ -372,8 +360,7 @@ export default async function OffrePage({
                     <td className="py-3 pr-4 text-slate-700">
                       <span className="mr-2">🏢</span>Groupe 10+ pers (intra-entreprise)
                     </td>
-                    <td className="py-3 px-3 text-right font-bold text-slate-500 italic">Sur devis</td>
-                    <td className="py-3 pl-3 text-right text-xs text-emerald-600 font-semibold">Meilleur tarif</td>
+                    <td className="py-3 pl-3 text-right font-bold text-slate-500 italic">Sur devis</td>
                   </tr>
                 </tbody>
               </table>
