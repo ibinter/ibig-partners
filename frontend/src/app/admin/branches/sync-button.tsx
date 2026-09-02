@@ -177,3 +177,23 @@ export function SyncDigitalKitsButton() {
     />
   );
 }
+
+export function SyncFinancementButton() {
+  return (
+    <SyncButton
+      label="Sync FINANCEMENT"
+      endpoint="/api/admin/sync-financement"
+      className="rounded-lg border border-green-300 bg-green-50 px-4 py-2 text-sm font-semibold text-green-700 hover:bg-green-100 disabled:opacity-50"
+    />
+  );
+}
+
+export function SyncEmploiButton() {
+  return (
+    <SyncButton
+      label="Sync EMPLOI & TALENTS"
+      endpoint="/api/admin/sync-emploi"
+      className="rounded-lg border border-fuchsia-300 bg-fuchsia-50 px-4 py-2 text-sm font-semibold text-fuchsia-700 hover:bg-fuchsia-100 disabled:opacity-50"
+    />
+  );
+}
