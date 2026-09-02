@@ -3151,13 +3151,13 @@ export async function POST() {
       grouped[cat].push(p);
     }
 
-    // Synchroniser chaque branche-catégorie en parallèle
-    const results = await Promise.all(
-      Object.entries(grouped).map(([catKey, products]) => {
-        const branch = CATEGORY_BRANCHES[catKey] ?? { slug: `eduform-${catKey}`, label: `EDUFORM — ${catKey}` };
-        return syncBranchWithFeed(branch.slug, branch.label, products, { notify: false });
-      })
-    );
+    // Synchroniser chaque branche-catégorie séquentiellement (évite le timeout Vercel)
+    const results = [];
+    for (const [catKey, products] of Object.entries(grouped)) {
+      const branch = CATEGORY_BRANCHES[catKey] ?? { slug: `eduform-${catKey}`, label: `EDUFORM — ${catKey}` };
+      const result = await syncBranchWithFeed(branch.slug, branch.label, products, { notify: false });
+      results.push(result);
+    }
 
     const errors = results.filter(r => !r.ok);
     if (errors.length > 0) {
