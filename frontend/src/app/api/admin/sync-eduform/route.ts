@@ -461,6 +461,322 @@ const EDUFORM_PRODUCTS = [
     description: "Formation spécialisée Foncier & Droit Immobilier ivoirien (28h). Comprendre et maîtriser le cadre légal et pratique de la propriété foncière en Côte d'Ivoire : types de titres (titre foncier, lettre d'attribution, certificat foncier, droits coutumiers), procédures d'immatriculation, purge des droits coutumiers, permis de construire, règles d'urbanisme (PLU, zones) et contentieux fonciers. Pour agents immobiliers, juristes, investisseurs, promoteurs et particuliers. À partir de 200 000 FCFA en ligne.",
   },
 
+  // ── Formations PDF officielles — F001 à F056 IBI GROUP ──────────────────
+
+  // Art Oratoire & Communication
+  {
+    slug: "eduform-art-oratoire-impact",
+    name: "Maîtrise de l'Art Oratoire — Communiquer avec Impact",
+    pricingType: "COURSE",
+    price: 90000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Maîtrise de l'Art Oratoire (30h). Prendre la parole en public avec confiance et conviction : techniques de prise de parole, gestion du stress et des émotions, structuration du discours, langage corporel et voix, improvisation et gestion des questions difficiles. Pour managers, commerciaux, formateurs et toute personne souhaitant s'exprimer avec impact en réunion, conférence ou présentation. Code officiel : F001-IBI. À partir de 90 000 FCFA.",
+  },
+  {
+    slug: "eduform-communication-interne-art-oratoire",
+    name: "Communication Interne, Engagement des Employés & Art Oratoire",
+    pricingType: "COURSE",
+    price: 105000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Communication Interne & Art Oratoire (35h). Dynamiser la culture d'entreprise et maîtriser la présentation en public : stratégies de communication interne, engagement des équipes, création d'une culture collaborative, techniques oratoires et gestion des prises de parole formelles. Pour DRH, managers, chefs d'équipe et responsables communication. Code officiel : F012-IBI. À partir de 105 000 FCFA.",
+  },
+
+  // Excel — Niveaux Débutant et Intermédiaire
+  {
+    slug: "eduform-excel-debutant",
+    name: "Excel Niveau Débutant",
+    pricingType: "COURSE",
+    price: 120000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Excel Niveau Débutant (40h). Prise en main complète d'Excel pour les non-initiés : interface, saisie et mise en forme, formules de base (SOMME, MOYENNE, SI, NB.SI), gestion des feuilles et classeurs, création de graphiques simples, impression et mise en page. Pour secrétaires, assistants, gestionnaires débutants et tout professionnel souhaitant maîtriser Excel. Code officiel : F007-01-IBI. À partir de 120 000 FCFA.",
+  },
+  {
+    slug: "eduform-excel-intermediaire",
+    name: "Excel Niveau Intermédiaire",
+    pricingType: "COURSE",
+    price: 90000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Excel Niveau Intermédiaire (30h). Aller plus loin avec Excel : fonctions avancées (RECHERCHEV/RECHERCHEH, INDEX/EQUIV, SIERREUR), tableaux de données, tableaux croisés dynamiques (TCD) de base, graphiques avancés, validation de données, protection de feuilles et introduction aux macros. Prérequis : niveau Débutant ou équivalent. Code officiel : F007-02-IBI. À partir de 90 000 FCFA.",
+  },
+
+  // Marketing & Digital
+  {
+    slug: "eduform-marketing-reseaux-sociaux",
+    name: "Marketing des Réseaux Sociaux",
+    pricingType: "COURSE",
+    price: 90000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Marketing des Réseaux Sociaux (30h). Créer et gérer une présence efficace sur les réseaux sociaux : stratégie de contenu, algorithmes et bonnes pratiques par plateforme (Facebook, Instagram, LinkedIn, TikTok, WhatsApp Business), publicité payante (Facebook Ads, Instagram Ads), community management, analytics et mesure de performance. Pour entrepreneurs, commerciaux, community managers et responsables marketing. Code officiel : F010-IBI. À partir de 90 000 FCFA.",
+  },
+  {
+    slug: "eduform-strategie-digitale-transformation",
+    name: "Stratégie Digitale & Transformation Numérique",
+    pricingType: "COURSE",
+    price: 105000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Stratégie Digitale & Transformation Numérique (35h). Conduire la transformation numérique de son organisation : diagnostic digital, définition de la stratégie digitale, outils de productivité (ERP, CRM, cloud), marketing digital, cybersécurité, gestion du changement et conduite de projet digital. Pour dirigeants, directeurs, managers et responsables IT souhaitant piloter la digitalisation. Code officiel : F038-IBI. À partir de 105 000 FCFA.",
+  },
+  {
+    slug: "eduform-ia-machine-learning-affaires",
+    name: "Intelligence Artificielle & Machine Learning pour les Affaires",
+    pricingType: "COURSE",
+    price: 135000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — IA & Machine Learning pour les Affaires (45h). Comprendre et utiliser l'IA dans son activité professionnelle sans coder : fondamentaux de l'IA et du Machine Learning, outils IA (ChatGPT, Copilot, Gemini), IA générative pour la rédaction et la création de contenu, automatisation des processus métier, IA pour l'analyse de données et la prise de décision. Pour décideurs, managers, entrepreneurs et professionnels non-techniques. Code officiel : F036-IBI. À partir de 135 000 FCFA.",
+  },
+  {
+    slug: "eduform-blockchain-affaires",
+    name: "Blockchain et Applications dans les Affaires",
+    pricingType: "COURSE",
+    price: 60000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Blockchain et Applications dans les Affaires (30h). Comprendre la technologie blockchain et ses cas d'usage concrets : fonctionnement de la blockchain, cryptomonnaies et tokens, smart contracts, applications en finance (DeFi), supply chain, santé, immobilier et secteur public. Pour dirigeants, cadres, juristes et professionnels souhaitant intégrer la blockchain dans leur stratégie. Code officiel : F047-IBI. À partir de 60 000 FCFA.",
+  },
+
+  // Tableaux de Bord & Performance
+  {
+    slug: "eduform-tableaux-de-bord-performance",
+    name: "Tableaux de Bord — Outils & Techniques de Suivi de Performance",
+    pricingType: "COURSE",
+    price: 105000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Tableaux de Bord & Suivi de Performance (35h). Concevoir et exploiter des tableaux de bord efficaces : définition des KPI et indicateurs de performance, conception sous Excel et Power BI, tableaux de bord financiers, commerciaux, RH et opérationnels, reporting à la direction, lecture et analyse des données. Pour contrôleurs de gestion, DAF, managers et responsables qualité. Code officiel : F056-IBI. À partir de 105 000 FCFA.",
+  },
+
+  // Finance & Gestion
+  {
+    slug: "eduform-gestion-financiere-non-financiers",
+    name: "Gestion Financière pour Non-Financiers",
+    pricingType: "COURSE",
+    price: 75000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Gestion Financière pour Non-Financiers (25h). Lire et comprendre les états financiers sans être comptable : lecture d'un bilan et d'un compte de résultat, notions de trésorerie et de rentabilité, analyse de ratios clés, gestion d'un budget de service, prise de décisions financières éclairées. Pour managers, chefs de projet, commerciaux, dirigeants de TPE/PME. Code officiel : F039-IBI. À partir de 75 000 FCFA.",
+  },
+  {
+    slug: "eduform-gestionnaire-comptable",
+    name: "Gestionnaire Comptable",
+    pricingType: "COURSE",
+    price: 150000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Gestionnaire Comptable (50h). Maîtriser la comptabilité générale et les tâches d'un gestionnaire comptable au quotidien : tenue de la comptabilité (SYSCOHADA), saisie des opérations, rapprochement bancaire, déclarations fiscales et sociales courantes (TVA, CNPS, impôts), préparation des états financiers, archivage. Pour assistants comptables, gestionnaires administratifs et financiers débutants. Code officiel : F024-IBI. À partir de 150 000 FCFA.",
+  },
+  {
+    slug: "eduform-gestion-stocks",
+    name: "Gestion des Stocks",
+    pricingType: "COURSE",
+    price: 120000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Gestion des Stocks (40h). Maîtriser la gestion physique et administrative des stocks : réception, stockage et gestion des sorties, méthodes de valorisation (FIFO, CMUP), niveaux de réapprovisionnement, inventaires, logiciels de gestion de stock, optimisation des coûts de stockage et prévention des ruptures. Pour gestionnaires de stocks, magasiniers, responsables entrepôts et logisticiens. Code officiel : F026-IBI. À partir de 120 000 FCFA.",
+  },
+  {
+    slug: "eduform-plan-affaires-entrepreneurs",
+    name: "Élaboration d'un Plan d'Affaires — Guide pour Entrepreneurs",
+    pricingType: "COURSE",
+    price: 105000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Plan d'Affaires Entrepreneurs (35h). Construire un business plan solide étape par étape : présentation du projet, étude de marché et analyse concurrentielle, modèle économique (Business Model Canvas), plan opérationnel, prévisions financières (compte de résultat prévisionnel, plan de trésorerie, seuil de rentabilité), montage du dossier de financement. Pour porteurs de projets, entrepreneurs et créateurs d'entreprise. Code officiel : F053-IBI. À partir de 105 000 FCFA.",
+  },
+  {
+    slug: "eduform-gestion-commerciale-ventes",
+    name: "Maîtriser la Gestion Commerciale — Stratégies pour Accroître les Ventes",
+    pricingType: "COURSE",
+    price: 105000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Gestion Commerciale & Ventes (35h). Structurer et piloter son activité commerciale : prospection et gestion du portefeuille clients, techniques de vente (SPIN, CAP SONCAS), négociation commerciale, gestion de la relation client (CRM), tableaux de bord commerciaux, pipeline de vente, fidélisation et développement du chiffre d'affaires. Pour commerciaux, responsables des ventes, gérants de boutique et entrepreneurs. Code officiel : F052-IBI. À partir de 105 000 FCFA.",
+  },
+
+  // RH & Management
+  {
+    slug: "eduform-gestionnaire-personnel",
+    name: "Gestionnaire de Personnel",
+    pricingType: "COURSE",
+    price: 105000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Gestionnaire de Personnel (35h). Gérer le personnel au quotidien : recrutement et intégration, contrats de travail et droit du travail ivoirien, suivi des absences et congés, gestion de la paie de base, discipline et procédures, relation avec l'inspection du travail et la CNPS, classement et archivage RH. Pour assistants RH, gestionnaires administratifs, chefs d'entreprise. Code officiel : F004-IBI. À partir de 105 000 FCFA.",
+  },
+  {
+    slug: "eduform-gpec",
+    name: "GPEC — Gestion Prévisionnelle des Emplois et des Compétences",
+    pricingType: "COURSE",
+    price: 90000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — GPEC pour un Développement Humain Durable (30h). Anticiper et piloter les besoins en ressources humaines : cartographie des emplois et des compétences, référentiels métiers, analyse des écarts, plans de formation, mobilité interne, gestion des talents et succession planning. Pour DRH, responsables RH, consultants et directeurs généraux. Code officiel : F014-IBI. À partir de 90 000 FCFA.",
+  },
+  {
+    slug: "eduform-leadership-transformationnel",
+    name: "Leadership Transformationnel & Management du Changement",
+    pricingType: "COURSE",
+    price: 120000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Leadership Transformationnel (40h). Piloter l'innovation et la croissance : styles de leadership, leadership transformationnel vs transactionnel, conduite du changement (modèles Kotter & Lewin), gestion des résistances, communication du changement, motivation des équipes et création d'une culture d'innovation. Pour managers, cadres, directeurs et chefs de projet. Code officiel : F013-IBI. À partir de 120 000 FCFA.",
+  },
+  {
+    slug: "eduform-leadership-feminin",
+    name: "Leadership Féminin & Empowerment",
+    pricingType: "COURSE",
+    price: 75000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Formation Certifiante — Leadership Féminin & Empowerment (25h). Affirmer son leadership au féminin : connaissance de soi et confiance en soi, biais de genre en entreprise, réseautage et visibilité professionnelle, négociation salariale, équilibre vie pro/vie perso, mentorat et modèles inspirants d'Afrique et d'ailleurs. Pour femmes cadres, entrepreneures, managers et jeunes professionnelles ambitieuses. Code officiel : F048-IBI. À partir de 75 000 FCFA.",
+  },
+
+  // Associations & ONG
+  {
+    slug: "eduform-gestion-associations-ong",
+    name: "Gestion & Renforcement des Capacités pour Associations et ONG",
+    pricingType: "COURSE",
+    price: 120000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Gestion des Associations et ONG (40h). Renforcer les capacités organisationnelles des associations et ONG : gouvernance associative, gestion administrative et financière (SYCEBNL), montage de projets et recherche de financements, reporting aux bailleurs, gestion des ressources humaines bénévoles et salariées, communication institutionnelle. Pour responsables d'associations, coordinateurs de projets et agents de développement. Code officiel : F015-IBI. À partir de 120 000 FCFA.",
+  },
+  {
+    slug: "eduform-gouvernance-microfinance",
+    name: "Gouvernance & Management des Institutions de Microfinance",
+    pricingType: "COURSE",
+    price: 90000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Gouvernance & Management Microfinance (30h). Maîtriser la gouvernance et la gestion des IMF (Institutions de Microfinance) : cadre réglementaire UEMOA/BCEAO, gouvernance et conseil d'administration, gestion du risque de crédit, gestion de la liquidité, taux d'intérêt et durabilité, systèmes d'information de gestion (SIG). Pour dirigeants de SFD, agents de crédit, membres de CA et contrôleurs. Code officiel : F011-IBI. À partir de 90 000 FCFA.",
+  },
+
+  // Langues — Anglais Niveaux
+  {
+    slug: "eduform-anglais-debutant",
+    name: "Anglais — Les Fondamentaux pour Débutants",
+    pricingType: "COURSE",
+    price: 120000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Anglais pour Débutants (40h). Acquérir les bases solides de la langue anglaise : alphabet et prononciation, vocabulaire quotidien et professionnel, grammaire de base (présent, passé, futur), conversations simples, compréhension orale et écrite élémentaire. Pour tout professionnel n'ayant aucune ou très peu de connaissance en anglais souhaitant progresser à son rythme. Code officiel : F016-IBI. À partir de 120 000 FCFA.",
+  },
+  {
+    slug: "eduform-anglais-intermediaire",
+    name: "Anglais Niveau Intermédiaire",
+    pricingType: "COURSE",
+    price: 90000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Anglais Niveau Intermédiaire (30h). Consolider et approfondir ses compétences en anglais : grammaire intermédiaire, expression orale (conversations professionnelles, réunions, présentations), compréhension de textes professionnels, rédaction d'emails professionnels simples. Prérequis : niveau débutant acquis. Code officiel : F032-IBI. À partir de 90 000 FCFA.",
+  },
+  {
+    slug: "eduform-anglais-avance",
+    name: "Anglais Niveau Avancé",
+    pricingType: "COURSE",
+    price: 90000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Anglais Niveau Avancé (30h). Maîtriser l'anglais à un niveau professionnel élevé : argumentation et débat, rédaction de rapports et présentations complexes, compréhension de documents techniques, négociation en anglais, préparation à des certifications internationales (TOEIC, IELTS). Prérequis : niveau intermédiaire acquis. Code officiel : F033-IBI. À partir de 90 000 FCFA.",
+  },
+  {
+    slug: "eduform-anglais-affaires",
+    name: "Anglais des Affaires",
+    pricingType: "COURSE",
+    price: 75000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Anglais des Affaires (25h). Maîtriser l'anglais dans un contexte professionnel et commercial : vocabulaire business (finance, RH, marketing, vente), email et correspondance professionnelle, réunions et conférences en anglais, présentations orales, négociation commerciale et networking international. Pour commerciaux, cadres, responsables export et tous professionnels en contact avec des partenaires anglophones. Code officiel : F031-IBI. À partir de 75 000 FCFA.",
+  },
+
+  // QHSE & HSE standalone
+  {
+    slug: "eduform-animateur-hse-niveau1",
+    name: "Devenir Animateur HSE — Niveau 1",
+    pricingType: "COURSE",
+    price: 45000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Formation Certifiante — Animateur HSE Niveau 1 (15h). Initiation aux métiers de la santé, sécurité et environnement en entreprise : réglementation HSE de base, identification des risques professionnels, sensibilisation du personnel, gestion des EPI, premiers secours et procédures d'urgence. Pour personnels de terrain souhaitant acquérir les bases HSE. Code officiel : F023-IBI. À partir de 45 000 FCFA.",
+  },
+  {
+    slug: "eduform-animateur-hse-niveau2",
+    name: "Devenir Animateur HSE — Niveau 2",
+    pricingType: "COURSE",
+    price: 30000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Formation Certifiante — Animateur HSE Niveau 2 (10h). Approfondissement du rôle d'animateur HSE : analyse des accidents du travail, plan d'action sécurité, animation de causeries sécurité, suivi des indicateurs HSE, communication auprès des équipes et interface avec les responsables QHSE. Prérequis : Animateur HSE Niveau 1 ou équivalent. Code officiel : F028-IBI. À partir de 30 000 FCFA.",
+  },
+
+  // Développement Durable & RSE
+  {
+    slug: "eduform-rse-developpement-durable",
+    name: "Développement Durable & Responsabilité Sociétale des Entreprises (RSE)",
+    pricingType: "COURSE",
+    price: 105000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — RSE & Développement Durable (35h). Intégrer la durabilité dans la stratégie d'entreprise : fondamentaux du développement durable, normes RSE (ISO 26000, GRI, Pacte Mondial ONU), bilan carbone et empreinte environnementale, chaîne d'approvisionnement responsable, reporting extra-financier, communication RSE et avantages concurrentiels. Pour directeurs généraux, responsables RSE, DAF et managers. Code officiel : F037-IBI. À partir de 105 000 FCFA.",
+  },
+
+  // Santé & Sécurité Sectorielle
+  {
+    slug: "eduform-leadership-sante",
+    name: "Gestion & Leadership dans le Secteur de la Santé",
+    pricingType: "COURSE",
+    price: 105000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Gestion & Leadership Santé (35h). Piloter une structure de santé avec efficacité : gouvernance hospitalière, management des équipes soignantes, gestion financière d'un établissement de santé, qualité et accréditation, gestion des ressources médicales et pharmaceutiques, leadership en situation de crise sanitaire. Pour directeurs d'hôpitaux, médecins-chefs, responsables de cliniques, pharmaciens et cadres de santé. Code officiel : F041-IBI. À partir de 105 000 FCFA.",
+  },
+
+  // Négociation & Soft Skills
+  {
+    slug: "eduform-negociation-avancee",
+    name: "Techniques Avancées de Négociation",
+    pricingType: "COURSE",
+    price: 75000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Techniques Avancées de Négociation (25h). Maîtriser l'art de la négociation dans tous contextes professionnels : stratégies de négociation (BATNA, ZOPA), préparation et planification, techniques de persuasion, gestion des conflits et situations difficiles, négociation interculturelle, simulation de négociations commerciales, salariales et diplomatiques. Pour commerciaux, DRH, acheteurs, cadres et dirigeants. Code officiel : F042-IBI. À partir de 75 000 FCFA.",
+  },
+  {
+    slug: "eduform-innovation-creativite-entreprise",
+    name: "Innovation & Créativité en Entreprise",
+    pricingType: "COURSE",
+    price: 75000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Innovation & Créativité en Entreprise (25h). Développer une culture de l'innovation dans son organisation : Design Thinking, Lean Startup, brainstorming et techniques de créativité, gestion du cycle d'innovation, protection de la propriété intellectuelle (OAPI), mise en place d'une cellule innovation, innovation digitale et ouverte. Pour managers, entrepreneurs, chefs de projet et responsables R&D. Code officiel : F044-IBI. À partir de 75 000 FCFA.",
+  },
+  {
+    slug: "eduform-orientation-domaine-predilection",
+    name: "Découverte de Votre Domaine de Prédilection Professionnel",
+    pricingType: "COURSE",
+    price: 75000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Formation Pratique — Découverte de Son Domaine de Prédilection Professionnel (25h). Un guide pour trouver sa voie professionnelle : connaissance de soi (tests de personnalité, MBTI, forces et talents), exploration des métiers porteurs en Afrique, alignement valeurs-compétences-marché, construction de son projet professionnel, plan d'action concret. Pour étudiants, jeunes actifs en reconversion et professionnels en quête de sens. Code officiel : F043-IBI. À partir de 75 000 FCFA.",
+  },
+
+  // Fondamentaux Gestion d'Entreprise
+  {
+    slug: "eduform-fondamentaux-gestion-entreprise",
+    name: "Fondamentaux de la Gestion d'Entreprise — Stratégies pour le Succès",
+    pricingType: "COURSE",
+    price: 135000,
+    rate: 10,
+    siteUrl: "https://ibig-eduform.com",
+    description: "Certificat Pratique — Fondamentaux de la Gestion d'Entreprise (45h). Les bases indispensables pour gérer une entreprise avec succès : gestion financière et comptabilité de base, marketing et vente, management des équipes, gestion de la relation client, droit des affaires OHADA, fiscalité des entreprises, outils numériques de gestion. Pour chefs d'entreprise, gérants de TPE/PME, repreneurs et porteurs de projets. Code officiel : F051-IBI. À partir de 135 000 FCFA.",
+  },
+
   // ── Formats complémentaires (entreprise, présentiel, groupe, international) ──
 
   // ── Tarif Groupe (5 personnes et plus) ──────────────────────────────────
