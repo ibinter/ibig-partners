@@ -16,9 +16,14 @@ type Existing = {
   compteContrib?: string | null; legalRep?: string | null; legalRepTitle?: string | null;
   companyCountry?: string | null; companyCity?: string | null; companyAddress?: string | null;
   companyEmail?: string | null; companyWhatsapp?: string | null; companyPhone2?: string | null;
-  payoutMethod?: string | null; mobileMoneyNum?: string | null; paypalEmail?: string | null;
+  payoutMethod?: string | null; mobileMoneyNum?: string | null; mobileMoneyOperator?: string | null;
+  paypalEmail?: string | null; wiseEmail?: string | null; skrillEmail?: string | null;
   rib?: string | null; bankName?: string | null; bankCountry?: string | null;
-  swift?: string | null; iban?: string | null; westernUnionName?: string | null;
+  swift?: string | null; iban?: string | null; bankAccountNum?: string | null; bankBranch?: string | null;
+  westernUnionName?: string | null; moneyGramName?: string | null; riaName?: string | null; expressUnionNum?: string | null;
+  cryptoCurrency?: string | null; cryptoNetwork?: string | null; cryptoAddress?: string | null;
+  chequePayable?: string | null; chequeBank?: string | null;
+  cinetpayPhone?: string | null; kkiapayPhone?: string | null; tmoneyPhone?: string | null; floozPhone?: string | null;
 } | null;
 
 const inputCls = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-ink placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100";
@@ -76,33 +81,167 @@ function Section({ title, color = "slate", children }: { title: string; color?: 
   );
 }
 
+const PAYOUT_METHODS = [
+  { group: "📱 Mobile Money Afrique", options: [
+    { value: "ORANGE_MONEY", label: "Orange Money" },
+    { value: "WAVE", label: "Wave" },
+    { value: "MTN_MOMO", label: "MTN Mobile Money" },
+    { value: "MOOV_MONEY", label: "Moov Money" },
+    { value: "AIRTEL_MONEY", label: "Airtel Money" },
+    { value: "M_PESA", label: "M-Pesa" },
+    { value: "TMONEY", label: "T-Money (Togo)" },
+    { value: "FLOOZ", label: "Flooz (Bénin/Togo)" },
+    { value: "CINETPAY", label: "CinetPay" },
+    { value: "KKIAPAY", label: "KKiaPay" },
+  ]},
+  { group: "🏦 Virement bancaire", options: [
+    { value: "BANK_LOCAL", label: "Virement bancaire local" },
+    { value: "BANK_SEPA", label: "Virement SEPA (Europe)" },
+    { value: "BANK_SWIFT", label: "Virement SWIFT/IBAN (international)" },
+  ]},
+  { group: "🌍 Transfert international", options: [
+    { value: "WESTERN_UNION", label: "Western Union" },
+    { value: "MONEYGRAM", label: "MoneyGram" },
+    { value: "RIA", label: "RIA Money Transfer" },
+    { value: "EXPRESS_UNION", label: "Express Union" },
+  ]},
+  { group: "💻 Portefeuilles numériques", options: [
+    { value: "PAYPAL", label: "PayPal" },
+    { value: "WISE", label: "Wise (TransferWise)" },
+    { value: "SKRILL", label: "Skrill" },
+  ]},
+  { group: "₿ Crypto-monnaies", options: [
+    { value: "CRYPTO", label: "Crypto-monnaie (Bitcoin, USDT, ETH…)" },
+  ]},
+  { group: "📄 Chèque", options: [
+    { value: "CHEQUE", label: "Chèque bancaire" },
+  ]},
+];
+
 function PaymentSection({ existing }: { existing: Existing }) {
   const [method, setMethod] = useState(existing?.payoutMethod ?? "ORANGE_MONEY");
-  const isMobile = ["ORANGE_MONEY", "WAVE", "MTN_MOMO"].includes(method);
+
+  const isMobileMoney = ["ORANGE_MONEY","WAVE","MTN_MOMO","MOOV_MONEY","AIRTEL_MONEY","M_PESA"].includes(method);
+  const isCinetpay = method === "CINETPAY";
+  const isKkiapay = method === "KKIAPAY";
+  const isTmoney = method === "TMONEY";
+  const isFlooz = method === "FLOOZ";
+  const isBank = ["BANK_LOCAL","BANK_SEPA","BANK_SWIFT"].includes(method);
+  const isWesternUnion = method === "WESTERN_UNION";
+  const isMoneygram = method === "MONEYGRAM";
+  const isRia = method === "RIA";
+  const isExpressUnion = method === "EXPRESS_UNION";
+  const isPaypal = method === "PAYPAL";
+  const isWise = method === "WISE";
+  const isSkrill = method === "SKRILL";
+  const isCrypto = method === "CRYPTO";
+  const isCheque = method === "CHEQUE";
 
   return (
     <div className="card-premium overflow-hidden">
       <div className="bg-gradient-to-r from-emerald-600 to-teal-600 px-5 py-3 border-b border-emerald-700">
         <h3 className="font-semibold text-sm text-white">💰 Coordonnées de paiement des commissions</h3>
-        <p className="text-xs text-emerald-100 mt-0.5">Comment souhaitez-vous recevoir vos commissions ?</p>
+        <p className="text-xs text-emerald-100 mt-0.5">Choisissez comment vous souhaitez recevoir vos commissions.</p>
       </div>
       <div className="p-5 space-y-4">
         <div>
           <label className="block text-xs font-semibold text-slate-600 mb-1">Méthode préférée <span className="text-rose-500">*</span></label>
           <select name="payoutMethod" value={method} required onChange={e => setMethod(e.target.value)} className={inputCls}>
-            <option value="ORANGE_MONEY">Orange Money</option>
-            <option value="WAVE">Wave</option>
-            <option value="MTN_MOMO">MTN MoMo</option>
-            <option value="BANK">Virement bancaire</option>
+            {PAYOUT_METHODS.map(g => (
+              <optgroup key={g.group} label={g.group}>
+                {g.options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+              </optgroup>
+            ))}
           </select>
         </div>
 
-        {isMobile && <F label="Numéro Mobile Money" name="mobileMoneyNum" defaultValue={existing?.mobileMoneyNum} required placeholder="+225 07 00 00 00 00" />}
-        {method === "BANK" && (
+        {/* Mobile Money classique */}
+        {isMobileMoney && (
           <div className="grid gap-4 sm:grid-cols-2">
-            <F label="RIB complet" name="rib" defaultValue={existing?.rib} />
-            <F label="Nom de la banque" name="bankName" defaultValue={existing?.bankName} />
-            <F label="Pays de la banque" name="bankCountry" defaultValue={existing?.bankCountry} />
+            <F label="Numéro Mobile Money" name="mobileMoneyNum" defaultValue={existing?.mobileMoneyNum} required placeholder="+225 07 00 00 00 00" />
+            <F label="Nom du titulaire du compte" name="mobileMoneyOperator" defaultValue={existing?.mobileMoneyOperator} placeholder="Ex: KOUAKOU Jean" />
+          </div>
+        )}
+
+        {/* CinetPay */}
+        {isCinetpay && <F label="Numéro CinetPay" name="cinetpayPhone" defaultValue={existing?.cinetpayPhone} required placeholder="+225 07 00 00 00 00" />}
+
+        {/* KKiaPay */}
+        {isKkiapay && <F label="Numéro KKiaPay" name="kkiapayPhone" defaultValue={existing?.kkiapayPhone} required placeholder="+229 97 00 00 00" />}
+
+        {/* T-Money */}
+        {isTmoney && <F label="Numéro T-Money" name="tmoneyPhone" defaultValue={existing?.tmoneyPhone} required placeholder="+228 90 00 00 00" />}
+
+        {/* Flooz */}
+        {isFlooz && <F label="Numéro Flooz" name="floozPhone" defaultValue={existing?.floozPhone} required placeholder="+229 97 00 00 00" />}
+
+        {/* Banque */}
+        {isBank && (
+          <div className="grid gap-4 sm:grid-cols-2">
+            <F label="Nom de la banque" name="bankName" defaultValue={existing?.bankName} required />
+            <F label="Pays de la banque" name="bankCountry" defaultValue={existing?.bankCountry} required />
+            <F label="Numéro de compte" name="bankAccountNum" defaultValue={existing?.bankAccountNum} />
+            <F label="Code agence / Branche" name="bankBranch" defaultValue={existing?.bankBranch} />
+            {method !== "BANK_LOCAL" && <>
+              <F label="IBAN" name="iban" defaultValue={existing?.iban} placeholder="FR76 3000 6000 0112 3456 7890 189" />
+              <F label="Code SWIFT/BIC" name="swift" defaultValue={existing?.swift} placeholder="BNPAFRPPXXX" />
+            </>}
+            <div className="sm:col-span-2"><F label="RIB complet" name="rib" defaultValue={existing?.rib} /></div>
+          </div>
+        )}
+
+        {/* Western Union */}
+        {isWesternUnion && <F label="Nom complet (tel que sur pièce d'identité)" name="westernUnionName" defaultValue={existing?.westernUnionName} required placeholder="NOM Prénom" />}
+
+        {/* MoneyGram */}
+        {isMoneygram && <F label="Nom complet MoneyGram" name="moneyGramName" defaultValue={existing?.moneyGramName} required placeholder="NOM Prénom" />}
+
+        {/* RIA */}
+        {isRia && <F label="Nom complet RIA" name="riaName" defaultValue={existing?.riaName} required placeholder="NOM Prénom" />}
+
+        {/* Express Union */}
+        {isExpressUnion && <F label="Numéro Express Union" name="expressUnionNum" defaultValue={existing?.expressUnionNum} required placeholder="+237 6 00 00 00 00" />}
+
+        {/* PayPal */}
+        {isPaypal && <F label="Adresse email PayPal" name="paypalEmail" defaultValue={existing?.paypalEmail} required type="email" placeholder="vous@email.com" />}
+
+        {/* Wise */}
+        {isWise && <F label="Email Wise (TransferWise)" name="wiseEmail" defaultValue={existing?.wiseEmail} required type="email" placeholder="vous@email.com" />}
+
+        {/* Skrill */}
+        {isSkrill && <F label="Email Skrill" name="skrillEmail" defaultValue={existing?.skrillEmail} required type="email" placeholder="vous@email.com" />}
+
+        {/* Crypto */}
+        {isCrypto && (
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="block text-xs font-semibold text-slate-600 mb-1">Crypto-monnaie <span className="text-rose-500">*</span></label>
+              <select name="cryptoCurrency" defaultValue={existing?.cryptoCurrency ?? ""} required className={inputCls}>
+                <option value="">-- Choisir --</option>
+                {["USDT","USDC","BTC","ETH","BNB","TRX","SOL","XRP","LTC","DOGE"].map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-600 mb-1">Réseau <span className="text-rose-500">*</span></label>
+              <select name="cryptoNetwork" defaultValue={existing?.cryptoNetwork ?? ""} required className={inputCls}>
+                <option value="">-- Choisir --</option>
+                {["TRC20 (Tron)","ERC20 (Ethereum)","BEP20 (BSC)","Bitcoin (BTC)","Solana","XRP Ledger","Litecoin"].map(n => <option key={n} value={n}>{n}</option>)}
+              </select>
+            </div>
+            <div className="sm:col-span-2">
+              <F label="Adresse du wallet (copiez-collez exactement)" name="cryptoAddress" defaultValue={existing?.cryptoAddress} required placeholder="0x... / T... / bc1..." />
+            </div>
+            <div className="sm:col-span-2 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-700">
+              ⚠️ Vérifiez soigneusement votre adresse et le réseau. Toute erreur entraîne une perte définitive des fonds.
+            </div>
+          </div>
+        )}
+
+        {/* Chèque */}
+        {isCheque && (
+          <div className="grid gap-4 sm:grid-cols-2">
+            <F label="Libellé du chèque (à l'ordre de)" name="chequePayable" defaultValue={existing?.chequePayable} required placeholder="NOM Prénom ou raison sociale" />
+            <F label="Banque émettrice" name="chequeBank" defaultValue={existing?.chequeBank} />
           </div>
         )}
       </div>

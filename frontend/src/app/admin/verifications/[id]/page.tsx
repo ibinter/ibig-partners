@@ -327,9 +327,39 @@ export default async function VerificationDetailPage({
       {req.payoutMethod && (
         <Section title="💰 Coordonnées de paiement">
           <Row label="Méthode" value={req.payoutMethod ?? undefined} />
-          <Row label="Mobile Money" value={req.mobileMoneyNum ?? undefined} />
+          {/* Mobile Money */}
+          <Row label="Numéro Mobile Money" value={(req as any).mobileMoneyNum ?? undefined} />
+          <Row label="Titulaire Mobile Money" value={(req as any).mobileMoneyOperator ?? undefined} />
+          <Row label="Numéro CinetPay" value={(req as any).cinetpayPhone ?? undefined} />
+          <Row label="Numéro KKiaPay" value={(req as any).kkiapayPhone ?? undefined} />
+          <Row label="Numéro T-Money" value={(req as any).tmoneyPhone ?? undefined} />
+          <Row label="Numéro Flooz" value={(req as any).floozPhone ?? undefined} />
+          {/* Banque */}
           <Row label="Banque" value={req.bankName ?? undefined} />
+          <Row label="Pays banque" value={req.bankCountry ?? undefined} />
+          <Row label="N° de compte" value={(req as any).bankAccountNum ?? undefined} />
+          <Row label="Agence / Branche" value={(req as any).bankBranch ?? undefined} />
+          <Row label="RIB" value={req.rib ?? undefined} />
           <Row label="IBAN" value={req.iban ?? undefined} />
+          <Row label="SWIFT/BIC" value={req.swift ?? undefined} />
+          {/* Transfert international */}
+          <Row label="Western Union" value={req.westernUnionName ?? undefined} />
+          <Row label="MoneyGram" value={(req as any).moneyGramName ?? undefined} />
+          <Row label="RIA" value={(req as any).riaName ?? undefined} />
+          <Row label="Express Union" value={(req as any).expressUnionNum ?? undefined} />
+          {/* Portefeuilles */}
+          <Row label="PayPal" value={req.paypalEmail ?? undefined} />
+          <Row label="Wise" value={(req as any).wiseEmail ?? undefined} />
+          <Row label="Skrill" value={(req as any).skrillEmail ?? undefined} />
+          {/* Crypto */}
+          {(req as any).cryptoAddress && <>
+            <Row label="Crypto" value={(req as any).cryptoCurrency ?? undefined} />
+            <Row label="Réseau" value={(req as any).cryptoNetwork ?? undefined} />
+            <Row label="Adresse wallet" value={(req as any).cryptoAddress ?? undefined} />
+          </>}
+          {/* Chèque */}
+          <Row label="Chèque à l'ordre de" value={(req as any).chequePayable ?? undefined} />
+          <Row label="Banque chèque" value={(req as any).chequeBank ?? undefined} />
         </Section>
       )}
     </div>

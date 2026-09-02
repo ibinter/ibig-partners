@@ -10,15 +10,33 @@ export async function submitVerification(formData: FormData) {
   const partnerType = String(formData.get("partnerType") ?? "INDIVIDUAL");
 
   // ── Shared payment fields ──
-  const payoutMethod = String(formData.get("payoutMethod") ?? "ORANGE_MONEY");
-  const mobileMoneyNum = formData.get("mobileMoneyNum") ? String(formData.get("mobileMoneyNum")) : null;
-  const paypalEmail    = formData.get("paypalEmail")    ? String(formData.get("paypalEmail"))    : null;
-  const rib            = formData.get("rib")            ? String(formData.get("rib"))            : null;
-  const bankName       = formData.get("bankName")       ? String(formData.get("bankName"))       : null;
-  const bankCountry    = formData.get("bankCountry")    ? String(formData.get("bankCountry"))    : null;
-  const swift          = formData.get("swift")          ? String(formData.get("swift"))          : null;
-  const iban           = formData.get("iban")           ? String(formData.get("iban"))           : null;
-  const westernUnionName = formData.get("westernUnionName") ? String(formData.get("westernUnionName")) : null;
+  const g = (k: string) => formData.get(k) ? String(formData.get(k)) : null;
+  const payoutMethod          = String(formData.get("payoutMethod") ?? "ORANGE_MONEY");
+  const mobileMoneyNum        = g("mobileMoneyNum");
+  const mobileMoneyOperator   = g("mobileMoneyOperator");
+  const paypalEmail           = g("paypalEmail");
+  const wiseEmail             = g("wiseEmail");
+  const skrillEmail           = g("skrillEmail");
+  const rib                   = g("rib");
+  const bankName              = g("bankName");
+  const bankCountry           = g("bankCountry");
+  const swift                 = g("swift");
+  const iban                  = g("iban");
+  const bankAccountNum        = g("bankAccountNum");
+  const bankBranch            = g("bankBranch");
+  const westernUnionName      = g("westernUnionName");
+  const moneyGramName         = g("moneyGramName");
+  const riaName               = g("riaName");
+  const expressUnionNum       = g("expressUnionNum");
+  const cryptoCurrency        = g("cryptoCurrency");
+  const cryptoNetwork         = g("cryptoNetwork");
+  const cryptoAddress         = g("cryptoAddress");
+  const chequePayable         = g("chequePayable");
+  const chequeBank            = g("chequeBank");
+  const cinetpayPhone         = g("cinetpayPhone");
+  const kkiapayPhone          = g("kkiapayPhone");
+  const tmoneyPhone           = g("tmoneyPhone");
+  const floozPhone            = g("floozPhone");
 
   // ── INDIVIDUAL fields ──
   const fullName      = formData.get("fullName")      ? String(formData.get("fullName"))      : null;
@@ -67,8 +85,13 @@ export async function submitVerification(formData: FormData) {
         companyCountry, companyCity, companyAddress, companyEmail,
         companyWhatsapp, companyPhone2,
         // payment
-        payoutMethod, mobileMoneyNum, paypalEmail,
-        rib, bankName, bankCountry, swift, iban, westernUnionName,
+        payoutMethod, mobileMoneyNum, mobileMoneyOperator,
+        paypalEmail, wiseEmail, skrillEmail,
+        rib, bankName, bankCountry, swift, iban, bankAccountNum, bankBranch,
+        westernUnionName, moneyGramName, riaName, expressUnionNum,
+        cryptoCurrency, cryptoNetwork, cryptoAddress,
+        chequePayable, chequeBank,
+        cinetpayPhone, kkiapayPhone, tmoneyPhone, floozPhone,
         status: "PENDING",
         submittedAt: new Date(),
       },
@@ -83,8 +106,13 @@ export async function submitVerification(formData: FormData) {
         companyCountry, companyCity, companyAddress, companyEmail,
         companyWhatsapp, companyPhone2,
         // payment
-        payoutMethod, mobileMoneyNum, paypalEmail,
-        rib, bankName, bankCountry, swift, iban, westernUnionName,
+        payoutMethod, mobileMoneyNum, mobileMoneyOperator,
+        paypalEmail, wiseEmail, skrillEmail,
+        rib, bankName, bankCountry, swift, iban, bankAccountNum, bankBranch,
+        westernUnionName, moneyGramName, riaName, expressUnionNum,
+        cryptoCurrency, cryptoNetwork, cryptoAddress,
+        chequePayable, chequeBank,
+        cinetpayPhone, kkiapayPhone, tmoneyPhone, floozPhone,
         status: "PENDING",
         submittedAt: new Date(),
         reviewNote: null,

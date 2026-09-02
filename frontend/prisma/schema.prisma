@@ -120,15 +120,39 @@ model VerificationRequest {
   companyPhone2   String?
 
   // ─── Coordonnees bancaires / paiement ──────────────────────
-  payoutMethod    String? // methode preferee
-  mobileMoneyNum  String? // Orange Money / Wave / MTN MoMo
-  paypalEmail     String?
-  rib             String?
-  bankName        String?
-  bankCountry     String?
-  swift           String?
-  iban            String?
+  payoutMethod     String? // methode preferee
+  // Mobile Money Afrique
+  mobileMoneyNum   String? // numéro principal (Orange/Wave/MTN/Moov/Airtel/M-Pesa...)
+  mobileMoneyOperator String? // opérateur exact
+  // Transfert international
   westernUnionName String?
+  moneyGramName    String?
+  riaName          String?
+  expressUnionNum  String?
+  // Banque
+  rib              String?
+  bankName         String?
+  bankCountry      String?
+  swift            String?
+  iban             String?
+  bankAccountNum   String?
+  bankBranch       String?
+  // Portefeuilles numériques
+  paypalEmail      String?
+  wiseEmail        String?
+  skrillEmail      String?
+  // Crypto
+  cryptoCurrency   String? // BTC, USDT, ETH, BNB, USDC...
+  cryptoNetwork    String? // TRC20, ERC20, BEP20...
+  cryptoAddress    String?
+  // Chèque
+  chequePayable    String? // libellé du chèque
+  chequeBank       String?
+  // CinetPay / Kkiapay / Tmoney / Flooz (paiements locaux Afrique)
+  cinetpayPhone    String?
+  kkiapayPhone     String?
+  tmoneyPhone      String?
+  floozPhone       String?
 
   // ─── Pièces justificatives (URLs Cloudinary) ───────────────
   idDocUrl   String? // photo recto/verso CNI ou passeport
