@@ -9,7 +9,7 @@ export const dynamic = "force-static";
 export const metadata: Metadata = {
   title: "IBIG PARTNERS — Pan-African Affiliate Program",
   description:
-    "Join the IBIG SARL affiliate program: one account to promote 14 business software products, training, real estate and services across Africa and the diaspora.",
+    "Join the IBIG SARL affiliate program: one account to promote 14 business software, training, real estate, financing, employment & HR and 55 services across 11 branches — Africa and the diaspora.",
   alternates: {
     canonical: "https://ibigpartners.com/en",
     languages: {
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "IBIG PARTNERS — Pan-African Affiliate Program",
     description:
-      "One account for the entire IBIG ecosystem: 14 business software products, training, real estate and services, with transparent 3-level commissions.",
+      "One account for the entire IBIG ecosystem: 14 business software, training, real estate, financing & insurance, employment & HR and 55 services across 11 branches — with transparent 3-level commissions.",
     siteName: "IBIG PARTNERS",
     locale: "en_US",
     type: "website",
@@ -33,7 +33,7 @@ const REASSURANCE = ["Free", "Sign up in 2 min", "No credit card", "No commitmen
 
 /* ── Hero stats bar ── */
 const STATS: { val: string; label: string }[] = [
-  { val: "9", label: "Group branches" },
+  { val: "11", label: "Group branches" },
   { val: "3", label: "Commission levels" },
   { val: "50%", label: "Up to, on N1" },
   { val: "7 days", label: "Payout window" },
@@ -132,8 +132,9 @@ export default function EnglishHomePage() {
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-brand-100 sm:text-xl">
               IBIG PARTNERS is the affiliate program of the IBIG SARL group. Promote 14 business
-              software products, professional training, real estate and services — all from a single
-              partner account, and earn commissions on every sale.
+              software, professional training, real estate, financing &amp; insurance, employment &amp; HR
+              and 55+ services across 11 branches — all from a single partner account, and earn
+              commissions on every sale.
             </p>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
