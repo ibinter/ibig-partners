@@ -525,7 +525,7 @@ export default async function HomePage() {
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             {[
               {
-                delay: 0, icon: "graduation", label: "Spécialiste Formation", sub: "IBIG EDUFORM — 4 formations vendues",
+                delay: 0, icon: "graduation" as IconName, label: "Spécialiste Formation", sub: "IBIG EDUFORM — 4 formations vendues",
                 rows: [
                   { text: `2 × MBA Accéléré × 10%`,         val: fcfa(100000), color: "text-amber-400" },
                   { text: `2 × Formation Dev Web × 10%`,    val: fcfa(40000),  color: "text-amber-400" },
@@ -534,7 +534,7 @@ export default async function HomePage() {
                 border: "border-white/10 bg-white/5",
               },
               {
-                delay: 120, icon: "rocket", label: "Expert Digital", sub: "IBIG DIGITAL — 2 packs vendus",
+                delay: 120, icon: "rocket" as IconName, label: "Expert Digital", sub: "IBIG DIGITAL — 2 packs vendus",
                 badge: "Populaire",
                 rows: [
                   { text: `1 × Pack Digital 360 × 10%`,      val: fcfa(125000), color: "text-indigo-400" },
@@ -545,7 +545,7 @@ export default async function HomePage() {
                 border: "border-gold-400/30 bg-gradient-to-br from-white/10 to-gold-500/5 ring-1 ring-gold-400/20",
               },
               {
-                delay: 240, icon: "home", label: "Ambassadeur Immo", sub: "IBIG IMMO TRUST — 2 transactions",
+                delay: 240, icon: "home" as IconName, label: "Ambassadeur Immo", sub: "IBIG IMMO TRUST — 2 transactions",
                 rows: [
                   { text: `1 Mandat de vente × 5%`,          val: fcfa(100000), color: "text-violet-400" },
                   { text: `1 BTP Construction × 5%`,         val: fcfa(250000), color: "text-violet-400" },
@@ -554,7 +554,7 @@ export default async function HomePage() {
                 total: fcfa(410000), totalColor: "text-violet-400",
                 border: "border-violet-400/20 bg-white/5",
               },
-            ].map((scenario: { delay: number; icon: IconName; label: string; sub: string; badge?: string; rows: { text: string; val: string; color: string }[]; total: string; totalColor: string; border: string }) => (
+            ].map((scenario) => (
               <ScrollReveal key={scenario.label} animation="scale-in" delay={scenario.delay}>
                 <div className={`flex h-full flex-col rounded-2xl border p-6 backdrop-blur-sm ${scenario.border}`}>
                   {scenario.badge && (
