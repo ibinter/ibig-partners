@@ -252,13 +252,21 @@ export default async function OffrePage({
 
           {/* Prix + CTA hero */}
           <div className="flex flex-col sm:flex-row items-start sm:items-stretch gap-4">
-            {/* Card prix */}
-            <div className="rounded-2xl bg-white/15 border border-white/25 backdrop-blur-sm px-6 py-5 min-w-[180px]">
-              <p className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-white/50 mb-1">Prix de référence</p>
-              <p className="text-4xl font-extrabold text-white leading-none">{priceDisplay}</p>
-              {isService && <p className="text-xs text-white/55 mt-2 font-medium">Devis gratuit · Sous 24h</p>}
-              {isCourse && <p className="text-xs text-white/55 mt-2 font-medium">Voir tableau des tarifs ci-dessous</p>}
-            </div>
+            {/* Card prix — masquée pour les formations (tableau des tarifs suffit) */}
+            {!isCourse && (
+              <div className="rounded-2xl bg-white/15 border border-white/25 backdrop-blur-sm px-6 py-5 min-w-[180px]">
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-white/50 mb-1">Prix de référence</p>
+                <p className="text-4xl font-extrabold text-white leading-none">{priceDisplay}</p>
+                {isService && <p className="text-xs text-white/55 mt-2 font-medium">Devis gratuit · Sous 24h</p>}
+              </div>
+            )}
+            {isCourse && (
+              <div className="rounded-2xl bg-white/15 border border-white/25 backdrop-blur-sm px-6 py-5">
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-white/50 mb-1">Tarification</p>
+                <p className="text-lg font-extrabold text-white leading-snug">Plusieurs formules disponibles</p>
+                <p className="text-xs text-white/55 mt-1 font-medium">↓ Voir le tableau des tarifs ci-dessous</p>
+              </div>
+            )}
 
             {/* CTAs */}
             <div className="flex flex-col gap-3 flex-1">
@@ -446,10 +454,19 @@ export default async function OffrePage({
               {/* Card CTA sidebar */}
               <div className="rounded-3xl overflow-hidden shadow-xl border border-slate-100 bg-white">
                 <div className={`bg-gradient-to-br ${theme.gradient} px-5 py-6 text-white text-center`}>
-                  <p className="text-[10px] font-extrabold uppercase tracking-widest text-white/60 mb-1">Prix de référence</p>
-                  <p className="text-4xl font-extrabold">{priceDisplay}</p>
-                  {isService && <p className="text-xs text-white/60 mt-1">Devis gratuit · Sous 24h</p>}
-                  {isCourse && <p className="text-xs text-white/60 mt-1">Voir tableau des tarifs</p>}
+                  {isCourse ? (
+                    <>
+                      <p className="text-[10px] font-extrabold uppercase tracking-widest text-white/60 mb-1">Tarification</p>
+                      <p className="text-xl font-extrabold leading-snug">Plusieurs formules disponibles</p>
+                      <p className="text-xs text-white/60 mt-1">↓ Voir tableau des tarifs</p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-[10px] font-extrabold uppercase tracking-widest text-white/60 mb-1">Prix de référence</p>
+                      <p className="text-4xl font-extrabold">{priceDisplay}</p>
+                      {isService && <p className="text-xs text-white/60 mt-1">Devis gratuit · Sous 24h</p>}
+                    </>
+                  )}
                 </div>
                 <div className="p-5 space-y-3">
                   <a
