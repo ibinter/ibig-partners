@@ -244,7 +244,11 @@ function ProductCard({
         {/* Prix + Commission */}
         {isCourse ? (
           /* Formation : affichage simplifié — le détail est dans le panel */
-          <div className="flex items-center gap-2 mt-auto rounded-xl bg-emerald-50 border border-emerald-100 px-3 py-2.5">
+          <button
+            type="button"
+            onClick={() => setShowDetail(v => !v)}
+            className="flex items-center gap-2 mt-auto rounded-xl bg-emerald-50 border border-emerald-100 px-3 py-2.5 hover:bg-emerald-100 transition w-full text-left"
+          >
             <span className="text-emerald-600 text-base">💰</span>
             <div className="flex-1 min-w-0">
               <p className="text-[10px] font-bold uppercase tracking-wide text-emerald-500">Commission N1</p>
@@ -252,10 +256,10 @@ function ProductCard({
                 {Math.round(product.rate * 100)}% par participant · par formule
               </p>
             </div>
-            <p className="text-[10px] font-semibold text-emerald-400 text-right shrink-0">
-              Voir détail →
+            <p className="text-[10px] font-semibold text-emerald-500 text-right shrink-0">
+              {showDetail ? "Masquer ↑" : "Voir détail ↓"}
             </p>
-          </div>
+          </button>
         ) : (
           <div className="grid grid-cols-2 gap-2 mt-auto">
             <div className="rounded-xl bg-slate-50 px-3 py-2">
