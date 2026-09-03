@@ -161,6 +161,75 @@ export default async function ReseauPage() {
         )}
       </div>
 
+      {/* ── Kit de recrutement boosté ── */}
+      <div className="rounded-2xl border border-blue-100 bg-blue-50 p-5 shadow-sm">
+        <div className="flex items-start gap-3 mb-4">
+          <span className="text-2xl shrink-0">🚀</span>
+          <div>
+            <h3 className="font-semibold text-slate-800 text-sm">Kit de recrutement — Messages prêts à l&apos;emploi</h3>
+            <p className="text-xs text-slate-500 mt-0.5">Copiez et envoyez directement à vos contacts. Chaque clic sur votre lien est tracké.</p>
+          </div>
+        </div>
+
+        {/* Page publique */}
+        <div className="rounded-xl bg-white border border-blue-200 p-4 mb-3">
+          <p className="text-xs font-bold text-blue-700 uppercase tracking-wide mb-1">Votre page publique partageable</p>
+          <p className="text-xs text-slate-500 mb-2">Envoyez cette URL à vos prospects — elle affiche votre profil et vos produits IBIG.</p>
+          <div className="flex items-center gap-2 rounded-lg bg-slate-50 border border-slate-200 px-3 py-2">
+            <span className="font-mono text-xs text-slate-600 flex-1 truncate">{baseUrl}/p/{user.code.toLowerCase()}</span>
+            <CopyButton text={`${baseUrl}/p/${user.code.toLowerCase()}`} />
+          </div>
+        </div>
+
+        {/* Messages pré-rédigés */}
+        <div className="space-y-3">
+          {/* WhatsApp court */}
+          <div className="rounded-xl bg-white border border-emerald-200 p-4">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-bold text-emerald-700">📲 Message WhatsApp court</p>
+              <CopyButton text={`Bonjour ! Je suis partenaire officiel IBIG PARTNERS — un groupe ivoirien de 11 branches (assurance, immobilier, finance, formation…). Tu peux gagner des commissions en présentant leurs services à tes contacts. C'est gratuit pour rejoindre. Regarde ma page : ${baseUrl}/p/${user.code.toLowerCase()}`} />
+            </div>
+            <p className="text-xs text-slate-600 leading-relaxed italic">
+              «&nbsp;Bonjour ! Je suis partenaire officiel IBIG PARTNERS — un groupe ivoirien de 11 branches (assurance, immobilier, finance, formation…). Tu peux gagner des commissions en présentant leurs services à tes contacts. C&apos;est gratuit pour rejoindre. Regarde ma page : {baseUrl}/p/{user.code.toLowerCase()}&nbsp;»
+            </p>
+          </div>
+
+          {/* WhatsApp long */}
+          <div className="rounded-xl bg-white border border-emerald-200 p-4">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-bold text-emerald-700">📲 Message WhatsApp détaillé</p>
+              <CopyButton text={`Bonjour ${"{prénom}"} !\n\nJe voulais te parler d'une opportunité sérieuse qui m'a permis de générer des revenus complémentaires.\n\nJe suis partenaire IBIG PARTNERS, le réseau d'affiliation du Groupe IBIG (11 branches : assurance, immobilier, financement, formation, emploi…). Je touche des commissions à chaque fois qu'un client souscrit à un service IBIG via mon lien.\n\nLe programme est :\n✅ Gratuit pour rejoindre\n✅ Commissions sur 3 niveaux (tu gagnes aussi quand TES filleuls vendent)\n✅ Paiement rapide sur Orange Money / Wave\n\nTu veux qu'on en discute ? Voici ma page : ${baseUrl}/p/${user.code.toLowerCase()}\n\nCode parrain : ${user.code}`} />
+            </div>
+            <p className="text-xs text-slate-600 leading-relaxed italic whitespace-pre-line">
+              {`« Bonjour [prénom] !\n\nJe voulais te parler d'une opportunité sérieuse…\nIBIG PARTNERS : 11 branches, commissions sur 3 niveaux,\ngratuit pour rejoindre, paiement Orange Money / Wave.\n\nMa page : ${baseUrl}/p/${user.code.toLowerCase()} · Code : ${user.code} »`}
+            </p>
+          </div>
+
+          {/* Email */}
+          <div className="rounded-xl bg-white border border-violet-200 p-4">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-bold text-violet-700">📧 Email de recrutement</p>
+              <CopyButton text={`Objet : Opportunité de revenus complémentaires — IBIG PARTNERS\n\nBonjour,\n\nJe me permets de vous contacter car je pense que cette opportunité peut vous intéresser.\n\nIBIG PARTNERS est le programme d'affiliation du Groupe IBIG (Abidjan), qui couvre 11 domaines : assurance, immobilier, financement, formation professionnelle, emploi & RH, et plus.\n\nEn tant que partenaire, vous percevez des commissions chaque fois qu'un client souscrit à un service IBIG via votre lien personnel. Les commissions sont cumulables sur 3 niveaux (vous gagnez aussi quand vos filleuls vendent).\n\nL'adhésion est entièrement gratuite. Les paiements se font via Orange Money ou Wave.\n\nPour en savoir plus sur mon profil et les produits disponibles :\n${baseUrl}/p/${user.code.toLowerCase()}\n\nCode parrain : ${user.code}\n\nCordialement,\n${user.firstName} ${user.lastName}`} />
+            </div>
+            <p className="text-xs text-slate-500">Objet : <em>Opportunité de revenus complémentaires — IBIG PARTNERS</em><br/>Corps complet copié dans le presse-papier.</p>
+          </div>
+
+          {/* Lien inscription direct */}
+          <div className="rounded-xl bg-white border border-amber-200 p-4">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-bold text-amber-700">🔗 Lien d&apos;inscription direct (formulaire)</p>
+              <CopyButton text={referralUrl} />
+            </div>
+            <p className="text-xs text-slate-500">Envoie ce lien pour que ton contact s&apos;inscrit directement avec ton code.</p>
+            <p className="font-mono text-[11px] text-slate-600 mt-1 truncate">{referralUrl}</p>
+          </div>
+        </div>
+
+        <p className="mt-3 text-[10px] text-slate-400 text-center">
+          Chaque inscription via ton lien est automatiquement rattachée à ton réseau N1.
+        </p>
+      </div>
+
       {/* ── Conseils de recrutement ── */}
       <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
         <div className="bg-gradient-to-r from-blue-600 to-violet-700 px-5 py-3">
