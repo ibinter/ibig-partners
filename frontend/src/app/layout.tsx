@@ -22,11 +22,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "IBIG PARTNERS — Programme d'Affiliation Panafricain",
   description:
-    "Programme d'affiliation panafricain : un seul compte pour accéder à 14 logiciels et ERP SaaS, formations, immobilier et services des 9 branches IBIG SARL.",
+    "Programme d'affiliation panafricain : un seul compte pour accéder à 14 logiciels et ERP SaaS, formations, immobilier et services des 11 branches IBIG SARL.",
   openGraph: {
     title: "IBIG PARTNERS — Programme d'Affiliation Panafricain",
     description:
-      "Un seul compte pour promouvoir 14 logiciels et ERP SaaS, formations, immobilier et services des 9 branches d'IBIG SARL, avec des commissions transparentes.",
+      "Un seul compte pour promouvoir 14 logiciels et ERP SaaS, formations, immobilier et services des 11 branches d'IBIG SARL, avec des commissions transparentes.",
     siteName: "IBIG PARTNERS",
     locale: "fr_FR",
     type: "website",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "IBIG PARTNERS — Programme d'Affiliation Panafricain",
     description:
-      "Un seul compte pour promouvoir 14 logiciels et ERP SaaS, formations, immobilier et services des 9 branches d'IBIG SARL.",
+      "Un seul compte pour promouvoir 14 logiciels et ERP SaaS, formations, immobilier et services des 11 branches d'IBIG SARL.",
   },
   manifest: "/manifest.webmanifest",
   appleWebApp: {

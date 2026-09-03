@@ -84,7 +84,7 @@ const KB: KbEntry[] = [
   {
     keywords: ["produits ibig", "quels produits", "catalogue", "liste des produits", "que vend", "offres", "branches"],
     answer:
-      "🗂️ Le groupe IBIG SARL propose 9 branches :\n\n• IBIG SOFT — 14 logiciels/ERP SaaS (Scolaby, Fleet 360, Lokativo, GESCOMXEL, Zelivry, STOCKFLOW ERP, CONSTRUIRO, SANTAREX, AGRIFRIK, GESTMONEY, ANOUANZÊ, FactPro, SECRETIS, DocPro)\n• IBIG EDUFORM — formations professionnelles certifiantes (catalogue + formats sur mesure, présentiel, international, individuel)\n• IBIG IMMO TRUST — immobilier (vente, location, gérance, diaspora, foncier)\n• IBIG MARKET — commerce en ligne et en magasin\n• IBIG DIGITAL — création digitale et communication visuelle\n• IBIG DIGITAL KITS — transformation numérique (ERP, apps, IA, chatbots)\n• IBIG CONSEIL+ — structuration, comptabilité, juridique\n• IBIG PARTNERS — le programme d'affiliation lui-même\n• IBIG MULTISERVICES — événementiel, logistique, BTP, placement\n\nActivez les produits qui vous intéressent dans « Mes Produits », puis partagez vos liens d'affiliation. Consultez l'onglet Produits pour le détail et les prix.",
+      "🗂️ Le groupe IBIG SARL propose 11 branches :\n\n• IBIG SOFT — 14 logiciels/ERP SaaS (Scolaby, Fleet 360, Lokativo, GESCOMXEL, Zelivry, STOCKFLOW ERP, CONSTRUIRO, SANTAREX, AGRIFRIK, GESTMONEY, ANOUANZÊ, FactPro, SECRETIS, DocPro)\n• IBIG EDUFORM — formations professionnelles certifiantes (catalogue + formats sur mesure, présentiel, international, individuel)\n• IBIG IMMO TRUST — immobilier (vente, location, gérance, diaspora, foncier)\n• IBIG MARKET — commerce en ligne et en magasin\n• IBIG DIGITAL — création digitale et communication visuelle\n• IBIG DIGITAL KITS — transformation numérique (ERP, apps, IA, chatbots)\n• IBIG CONSEIL+ — structuration, comptabilité, juridique\n• IBIG FINANCEMENT — crédit PME, leasing, assurances (santé, vie, auto, RC pro), épargne retraite, levée de fonds — 20 offres\n• IBIG EMPLOI & TALENTS — recrutement CDI/CDD, placement cadres, externalisation RH, coaching, audit RH, GPEC — 20 offres\n• IBIG PARTNERS — le programme d'affiliation lui-même\n• IBIG MULTISERVICES — événementiel, déménagement, maintenance, gardiennage, transport VIP — 55 services\n\nActivez les produits qui vous intéressent dans « Mes Produits », puis partagez vos liens d'affiliation. Consultez l'onglet Produits pour le détail et les prix.",
   },
   {
     keywords: ["immo trust", "immobilier", "immo", "bien", "vente bien", "location", "gerance", "agence"],
@@ -185,7 +185,7 @@ const KB: KbEntry[] = [
 
 // Réponse par défaut quand aucune correspondance fiable n'est trouvée
 const DEFAULT_ANSWER =
-  "Je suis l'assistant de formation IBIG PARTNERS. Je peux vous aider sur :\n\n• Les produits des 9 branches (logiciels, formations, immobilier, digital, conseil, multiservices…)\n• Les commissions sur 3 niveaux et les taux\n• Les statuts et comment progresser\n• Les paiements et la vérification du compte\n• Les techniques de vente et le recrutement de filleuls\n\nReformulez votre question avec un de ces sujets, ou consultez le « Guide Commissions » et l'Académie pour aller plus loin.";
+  "Je suis l'assistant de formation IBIG PARTNERS. Je peux vous aider sur :\n\n• Les produits des 11 branches (logiciels, formations, immobilier, financement, emploi & RH, digital, conseil, multiservices…)\n• Les commissions sur 3 niveaux et les taux\n• Les statuts et comment progresser\n• Les paiements et la vérification du compte\n• Les techniques de vente et le recrutement de filleuls\n\nReformulez votre question avec un de ces sujets, ou consultez le « Guide Commissions » et l'Académie pour aller plus loin.";
 
 const GREETING_ANSWER =
   "Bonjour 👋 Je suis votre assistant de formation IBIG PARTNERS. Posez-moi une question sur les produits, les commissions, les statuts, les paiements ou la vente — je vous réponds tout de suite !";
@@ -229,7 +229,7 @@ function findBestAnswer(message: string): string {
 const SYSTEM_PROMPT = `Tu es l'assistant de formation officiel d'IBIG PARTNERS, le programme d'affiliation multi-niveaux panafricain et international d'INTERMARK BUSINESS INTERNATIONAL GROUP SARL (IBIG SARL), basé à Abidjan, Côte d'Ivoire — ouvert sans limite de pays, en Afrique comme dans la diaspora.
 
 Tu aides les partenaires affiliés à :
-- Comprendre les 9 branches et le catalogue de produits IBIG (IBIG SOFT, IBIG EDUFORM, IBIG IMMO TRUST, IBIG MARKET, IBIG DIGITAL, IBIG DIGITAL KITS, IBIG CONSEIL+, IBIG PARTNERS, IBIG MULTISERVICES) — le catalogue exact avec prix et taux réels t'est fourni ci-dessous, utilise-le en priorité
+- Comprendre les 11 branches et le catalogue de produits IBIG (IBIG SOFT, IBIG EDUFORM, IBIG IMMO TRUST, IBIG MARKET, IBIG DIGITAL, IBIG DIGITAL KITS, IBIG CONSEIL+, IBIG FINANCEMENT, IBIG EMPLOI & TALENTS, IBIG PARTNERS, IBIG MULTISERVICES) — le catalogue exact avec prix et taux réels t'est fourni ci-dessous, utilise-le en priorité
 - Maîtriser les commissions sur 3 niveaux (N1, N2=50% de N1, N3=25% de N1, sauf abonnements et formations qui suivent des barèmes dédiés)
 - Progresser dans les statuts : Starter → Silver (10 ventes, +2%) → Gold (25 ventes + 10 filleuls + 20 actifs, +5%) → Master (50 ventes + 25 filleuls + 50 actifs, +8%) → Elite (100 ventes + 50 filleuls + 100 actifs, +12%)
 - Vendre et recruter efficacement

@@ -113,7 +113,7 @@ export default function TourPreview() {
             ))}
           </div>
           <div className="mt-3 flex flex-wrap gap-2 text-xs font-semibold">
-            <span className="rounded-full bg-pink-100 px-3 py-1 text-pink-800">📦 Couvre les 9 branches</span>
+            <span className="rounded-full bg-pink-100 px-3 py-1 text-pink-800">📦 Couvre les 11 branches</span>
             <span className="rounded-full bg-pink-100 px-3 py-1 text-pink-800">🔐 Contenu filtré par statut affilié</span>
             <span className="rounded-full bg-pink-100 px-3 py-1 text-pink-800">⭐ Modules mis en avant</span>
           </div>
@@ -132,7 +132,7 @@ export default function TourPreview() {
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
             {[
               { icon: "💬", label: "Réponses instantanées",      desc: "Aucune attente, disponible à toute heure" },
-              { icon: "📦", label: "Connaissance produits",       desc: "Tous les 330+ produits des 9 branches" },
+              { icon: "📦", label: "Connaissance produits",       desc: "Tous les 330+ produits des 11 branches" },
               { icon: "💡", label: "Conseils de vente",           desc: "Scripts, objections, argumentaires" },
               { icon: "🎓", label: "Aide à la formation",         desc: "Explique les modules, résume les contenus" },
             ].map((f) => (
@@ -219,7 +219,7 @@ export default function TourPreview() {
             {[
               { icon: "🔗", label: "Lien unique par produit",    desc: "ibigpartners.com/go/[CODE]-[PRODUIT] — traçabilité totale" },
               { icon: "📱", label: "QR Code téléchargeable",     desc: "Pour cartes de visite, affiches, présentations" },
-              { icon: "✅", label: "Activation en un clic",      desc: "Choisissez les produits à promouvoir parmi les 9 branches" },
+              { icon: "✅", label: "Activation en un clic",      desc: "Choisissez les produits à promouvoir parmi les 11 branches" },
               { icon: "📊", label: "Suivi des clics & ventes",   desc: "Statistiques en temps réel dans le tableau de bord" },
             ].map((f) => (
               <div key={f.label} className="flex items-start gap-2 rounded-xl bg-white/60 px-3 py-2.5">
@@ -376,21 +376,23 @@ export default function TourPreview() {
         </div>
       </div>
 
-      {/* Résumé des 9 branches */}
+      {/* Résumé des 11 branches */}
       <div className="rounded-2xl border border-slate-100 bg-white p-6">
-        <h3 className="font-semibold text-slate-800 mb-1">Les 9 branches du groupe IBIG</h3>
+        <h3 className="font-semibold text-slate-800 mb-1">Les 11 branches du groupe IBIG</h3>
         <p className="text-xs text-slate-400 mb-4">330+ produits & services · commissions sur 3 niveaux (N1 / N2 / N3)</p>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {[
-            { icon: "💻", name: "IBIG SOFT",          desc: "14 logiciels de gestion (ERP, CRM, compta…)",    taux: "20 % / 10 % / 5 %" },
-            { icon: "🎓", name: "IBIG EDUFORM",        desc: "10 formations professionnelles certifiées",       taux: "10 % / 5 % / 2,5 %" },
-            { icon: "🏠", name: "IBIG IMMO TRUST",     desc: "Immobilier, gestion locative, investissement",    taux: "10 % / 5 % / 2,5 %" },
-            { icon: "🛒", name: "IBIG MARKET",         desc: "Marketplace produits (alimentation, mode…)",      taux: "8 % / 4 % / 2 %" },
-            { icon: "🌐", name: "IBIG DIGITAL",        desc: "10 services web & marketing digital",             taux: "10 % / 5 % / 2 %" },
-            { icon: "⚙️", name: "IBIG DIGITAL KITS",   desc: "8 services tech (dev web, ERP, cybersécurité)",   taux: "10 % / 5 % / 2 %" },
-            { icon: "📋", name: "IBIG CONSEIL+",       desc: "6 missions de conseil & audit stratégique",       taux: "10 % / 5 % / 2,5 %" },
-            { icon: "🔧", name: "IBIG MULTISERVICES",  desc: "6 services BTP, maintenance, logistique",         taux: "10 % / 5 % / 2 %" },
-            { icon: "🌍", name: "IBIG INTERNATIONAL",  desc: "Commerce international & import-export",          taux: "Sur devis" },
+            { icon: "💻", name: "IBIG SOFT",             desc: "14 logiciels de gestion SaaS (ERP, compta, RH…)", taux: "20 % / 10 % / 5 %" },
+            { icon: "🎓", name: "IBIG EDUFORM",           desc: "10 formations professionnelles certifiantes",      taux: "10 % / 5 % / 2 %" },
+            { icon: "🏠", name: "IBIG IMMO TRUST",        desc: "Immobilier, gestion locative, diaspora",           taux: "10 % / 5 % / 2,5 %" },
+            { icon: "🛒", name: "IBIG MARKET",            desc: "E-commerce : IT, mobilier, fournitures",           taux: "8 % / 4 % / 2 %" },
+            { icon: "🌐", name: "IBIG DIGITAL",           desc: "10 services web & marketing digital",              taux: "10 % / 5 % / 2 %" },
+            { icon: "⚙️", name: "IBIG DIGITAL KITS",      desc: "8 services tech (dev web, ERP, cybersécurité)",    taux: "10 % / 5 % / 2 %" },
+            { icon: "📋", name: "IBIG CONSEIL+",          desc: "6 missions de conseil & audit stratégique",        taux: "10 % / 5 % / 2 %" },
+            { icon: "🏦", name: "IBIG FINANCEMENT",       desc: "20 offres : crédit PME, assurances, épargne",      taux: "5 % / 2,5 % / 1 %" },
+            { icon: "👔", name: "IBIG EMPLOI & TALENTS",  desc: "20 offres : recrutement, RH, coaching, GPEC",      taux: "10 % / 5 % / 2 %" },
+            { icon: "🔧", name: "IBIG MULTISERVICES",     desc: "55 services : événementiel, gardiennage, transport", taux: "10 % / 5 % / 2 %" },
+            { icon: "🌍", name: "IBIG PARTNERS",          desc: "Programme d'affiliation multi-niveaux",             taux: "Variable / branche" },
           ].map((b) => (
             <div key={b.name} className="flex items-start gap-3 rounded-xl border border-slate-100 bg-slate-50 p-3">
               <span className="text-2xl shrink-0">{b.icon}</span>
@@ -417,7 +419,7 @@ export default function TourPreview() {
           <div className="mt-4 flex flex-col gap-2">
             {[
               { day: "Jour 1",   icon: "🔐", action: "Compléter le KYC",                       detail: "Soumettre pièce d'identité + coordonnées de paiement" },
-              { day: "Jour 1–2", icon: "📦", action: "Parcourir le catalogue",                  detail: "Explorer les 330+ produits des 9 branches disponibles" },
+              { day: "Jour 1–2", icon: "📦", action: "Parcourir le catalogue",                  detail: "Explorer les 330+ produits des 11 branches disponibles" },
               { day: "Jour 2",   icon: "🔗", action: "Activer ses liens d'affiliation",         detail: "Sélectionner les produits à promouvoir et générer les liens" },
               { day: "Jour 3",   icon: "💬", action: "Partager à 10 contacts de confiance",     detail: "WhatsApp, réseaux sociaux, SMS — avec les scripts du Kit Marketing" },
               { day: "Jour 4–5", icon: "👥", action: "Recruter son 1er filleul",               detail: "Partager son lien de parrainage et accompagner l'inscription" },
