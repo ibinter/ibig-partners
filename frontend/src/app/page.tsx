@@ -178,7 +178,7 @@ export default async function HomePage() {
         {/* Stats bar */}
         <div className="mx-auto mt-6 grid grid-cols-2 gap-4 border-t border-white/10 pt-6 sm:mt-8 sm:flex sm:flex-wrap sm:justify-center sm:gap-10 sm:pt-8">
           {[
-            { val: String(branches.length || 11), label: "Branches du groupe" },
+            { val: String(branches.length || 10), label: "Branches du groupe" },
             { val: "3",   label: "Niveaux de commission" },
             { val: "50%", label: "Commission max N1" },
             { val: "7j",  label: "Délai de paiement" },
@@ -315,7 +315,7 @@ export default async function HomePage() {
             <div className="text-center">
               <SectionEyebrow className="bg-violet-50 text-violet-600">INTERMARK BUSINESS INTERNATIONAL GROUP SARL</SectionEyebrow>
               <h2 className="mt-4 text-3xl font-extrabold text-ink sm:text-4xl">
-                {branches.length || "9"} branches à promouvoir
+                {branches.length || "10"} branches à promouvoir
               </h2>
               <p className="mx-auto mt-3 max-w-2xl text-muted">
                 Chaque branche dispose de sa ligne de produits et de son propre modèle
