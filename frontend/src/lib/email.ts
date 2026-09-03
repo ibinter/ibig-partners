@@ -109,6 +109,76 @@ function fcfaFmt(n: number) {
   return new Intl.NumberFormat("fr-FR").format(n) + " FCFA";
 }
 
+// ─── E-mail : Inscription reçue — en attente de validation admin ─────────
+
+export async function sendRegistrationReceivedEmail(opts: {
+  to: string;
+  firstName: string;
+  code: string;
+  sponsorName?: string;
+}): Promise<EmailResult> {
+  const html = layout(`
+    <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
+      ${opts.firstName}, votre inscription est bien reçue ✅
+    </h2>
+    <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
+      Merci de rejoindre <strong>IBIG PARTNERS</strong> ! Votre dossier est en cours
+      d'examen par notre équipe. Vous recevrez un e-mail de confirmation dès que
+      votre compte sera activé — généralement sous <strong>24 à 48 heures</strong>.
+    </p>
+
+    <div style="background:#f0f4ff;border-radius:10px;padding:20px 24px;margin-bottom:24px;">
+      <p style="margin:0 0 6px;font-size:13px;color:#5b6577;text-transform:uppercase;letter-spacing:0.5px;">
+        Votre code d'affiliation (réservé)
+      </p>
+      <p style="margin:0;font-size:28px;font-weight:800;color:#0b5fff;letter-spacing:2px;">
+        ${opts.code}
+      </p>
+      <p style="margin:6px 0 0;font-size:13px;color:#5b6577;">
+        Conservez ce code — il sera actif dès la validation de votre compte.
+      </p>
+    </div>
+
+    ${opts.sponsorName ? `
+    <p style="color:#5b6577;font-size:14px;margin:0 0 16px;">
+      Vous avez été parrainé(e) par <strong>${opts.sponsorName}</strong>.
+    </p>
+    ` : ""}
+
+    <div style="background:#fffbeb;border-radius:10px;padding:16px 20px;margin-bottom:24px;border:1px solid #fde68a;">
+      <p style="margin:0 0 6px;font-size:13px;font-weight:700;color:#92400e;">
+        ⏳ En attendant la validation, préparez-vous :
+      </p>
+      <p style="margin:0;font-size:14px;color:#92400e;line-height:1.8;">
+        1. Préparez votre pièce d'identité (CNI ou passeport)<br/>
+        2. Notez vos coordonnées de paiement (Orange Money, Wave, banque…)<br/>
+        3. Réfléchissez à votre premier réseau de prospects
+      </p>
+    </div>
+
+    <p style="color:#5b6577;font-size:14px;line-height:1.6;margin:0 0 24px;">
+      Dès activation, vous aurez accès à votre espace partenaire, vos liens
+      d'affiliation, le kit marketing et l'académie IBIG.
+    </p>
+
+    ${btn("Accéder à mon espace (lecture)", `${SITE}/espace`)}
+
+    <hr style="margin:28px 0;border:none;border-top:1px solid #e2e8f0;" />
+    <p style="margin:0;font-size:13px;color:#94a3b8;">
+      Une question ? WhatsApp :
+      <a href="https://wa.me/2250778882592" style="color:#0b5fff;font-weight:600;">+225 07 78 88 25 92</a>
+      &nbsp;·&nbsp;
+      <a href="mailto:support@ibigpartners.com" style="color:#0b5fff;">support@ibigpartners.com</a>
+    </p>
+  `);
+
+  return sendEmail({
+    to: opts.to,
+    subject: `✅ Inscription IBIG PARTNERS reçue — validation sous 24-48h`,
+    html,
+  });
+}
+
 // ─── E-mail 1 : Bienvenue à l'inscription ────────────────────────────────
 
 export async function sendWelcomeEmail(opts: {

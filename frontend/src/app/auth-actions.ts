@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import {
   createSession,
@@ -10,6 +11,7 @@ import {
   verifyPassword,
 } from "@/lib/auth";
 import { createAndSendOtp } from "@/lib/otp";
+import { sendRegistrationReceivedEmail } from "@/lib/email";
 
 function slugifyName(s: string): string {
   return s
@@ -154,6 +156,25 @@ export async function registerAction(_prev: unknown, formData: FormData) {
         "votre compte doit être vérifié. Envoyez vos documents dès maintenant, c'est rapide et sécurisé.",
       url: "/espace/verification",
     },
+  });
+
+  // Lookup sponsor name for the confirmation email
+  let sponsorName: string | undefined;
+  if (sponsorId) {
+    const sponsor = await prisma.user.findUnique({
+      where: { id: sponsorId },
+      select: { firstName: true, lastName: true },
+    });
+    if (sponsor) sponsorName = `${sponsor.firstName} ${sponsor.lastName}`;
+  }
+
+  after(async () => {
+    await sendRegistrationReceivedEmail({
+      to: user.email,
+      firstName: user.firstName,
+      code: user.code,
+      sponsorName,
+    });
   });
 
   await createSession({ userId: user.id, role: user.role });
