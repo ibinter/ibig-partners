@@ -1,28 +1,45 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- Fond carré arrondi navy -->
-  <rect width="512" height="512" rx="96" fill="#041B4D"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 300">
+  <!--
+    IBIG PARTNERS — monogramme "iP"
+    Navy #1B2B8F | Orange #FF3300
+    cx=145 cy=138 R_outer=80 R_inner=44
+    Stem: x=18 w=47 right=65 = cx-R=65 (tangent)
+  -->
+  <defs>
+    <clipPath id="right"><rect x="145" y="0" width="120" height="300"/></clipPath>
+    <clipPath id="inner"><circle cx="145" cy="138" r="44"/></clipPath>
+  </defs>
 
-  <!-- Cercle principal bleu -->
-  <circle cx="210" cy="256" r="150" fill="none" stroke="#ffffff" stroke-width="18"/>
+  <!-- Tige "i" navy -->
+  <rect x="18" y="55" width="47" height="183" rx="23" fill="#1B2B8F"/>
 
-  <!-- Arc orange (partie droite du cercle) -->
-  <path d="M 210 106 A 150 150 0 0 1 360 256" fill="none" stroke="#FF6A00" stroke-width="18" stroke-linecap="round"/>
+  <!-- Cercle plein navy (base) -->
+  <circle cx="145" cy="138" r="80" fill="#1B2B8F"/>
 
-  <!-- Lettre i (point + barre) -->
-  <circle cx="174" cy="190" r="16" fill="#FF6A00"/>
-  <rect x="162" y="220" width="24" height="100" rx="12" fill="#ffffff"/>
+  <!-- Demi-cercle droit orange -->
+  <circle cx="145" cy="138" r="80" fill="#FF3300" clip-path="url(#right)"/>
 
-  <!-- Lettre P (barre verticale + demi-cercle) -->
-  <rect x="206" y="210" width="22" height="110" rx="11" fill="#ffffff"/>
-  <path d="M 228 210 h 32 a 36 36 0 0 1 0 72 h -32 z" fill="#ffffff"/>
+  <!-- Creux blanc -->
+  <circle cx="145" cy="138" r="44" fill="white"/>
 
-  <!-- Poignée de mains stylisée -->
-  <g transform="translate(250, 340) scale(0.55)">
-    <!-- Main gauche -->
-    <path d="M -80 0 C -80 -20 -60 -30 -40 -20 L 0 10 L 20 -10 C 30 -20 50 -15 50 5 L 30 30 L -20 30 Z" fill="#FF6A00" opacity="0.9"/>
-    <!-- Main droite -->
-    <path d="M 80 0 C 80 -20 60 -30 40 -20 L 0 10 L -20 -10 C -30 -20 -50 -15 -50 5 L -30 30 L 20 30 Z" fill="#ffffff" opacity="0.9"/>
-    <!-- Zone de jonction -->
-    <ellipse cx="0" cy="5" rx="22" ry="16" fill="#FF6A00" opacity="0.7"/>
+  <!-- Descente "p" orange (150° → x≈185 y≈207) -->
+  <rect x="161" y="196" width="47" height="88" rx="23" fill="#FF3300"/>
+
+  <!-- Dot "i" orange -->
+  <circle cx="41" cy="31" r="22" fill="#FF3300"/>
+
+  <!-- Poignée de mains -->
+  <g clip-path="url(#inner)">
+    <!-- Main navy (gauche) -->
+    <path d="M 101 162 L 101 146 C 101 124 117 113 131 121
+             L 143 131 C 145 115 161 113 162 128 L 162 162 Z"
+          fill="#1B2B8F"/>
+    <!-- Main orange (droite) -->
+    <path d="M 189 162 L 189 146 C 189 124 173 113 159 121
+             L 147 131 C 145 115 129 113 128 128 L 128 162 Z"
+          fill="#FF3300"/>
+    <!-- Ligne blanche centrale -->
+    <rect x="142" y="111" width="6" height="53" fill="white"/>
   </g>
+
 </svg>

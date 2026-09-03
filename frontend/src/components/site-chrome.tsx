@@ -8,8 +8,8 @@ type Lang = "fr" | "en";
 export function Logo({ light = false, lang = "fr" }: { light?: boolean; lang?: Lang }) {
   return (
     <Link href={lang === "en" ? "/en" : "/"} className="group flex shrink-0 items-center gap-2.5 transition-transform hover:scale-[1.02]">
-      <span className="relative inline-flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl shadow-lg shadow-[#041B4D]/40 ring-2 ring-[#FF6A00]/30">
-        <Image src="/icon.svg" alt="IBIG PARTNERS" width={48} height={48} priority />
+      <span className="relative inline-flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl">
+        <Image src="/logo.png" alt="IBIG PARTNERS" width={48} height={48} priority className="object-contain" />
       </span>
       <span className="flex flex-col leading-none">
         <span
