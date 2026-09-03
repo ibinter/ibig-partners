@@ -475,7 +475,7 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
     return (
       <div
         key={role}
-        className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden px-6 pb-24 pt-16 sm:py-24 sm:pb-28 lg:py-28 lg:pb-32 text-center"
+        className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden px-4 pb-20 pt-12 sm:px-8 sm:py-20 sm:pb-24 lg:py-24 lg:pb-28 text-center"
         style={{ background: slide.bg ?? "linear-gradient(135deg,#041B4D 0%,#0b3a8a 100%)", ...s }}
       >
         {/* Illustration de fond */}
@@ -508,7 +508,7 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
           </div>
 
           <h1
-            className="mx-auto max-w-3xl text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl"
+            className="mx-auto max-w-3xl text-2xl font-extrabold leading-tight text-white sm:text-4xl lg:text-5xl xl:text-6xl"
             style={{ textWrap: "balance" } as React.CSSProperties}
           >
             {slide.titleLead}{" "}
@@ -518,63 +518,97 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
             {slide.titleTail ? ` ${slide.titleTail}` : ""}
           </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/75 sm:text-xl">
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75 sm:mt-6 sm:text-lg">
             {slide.desc}
           </p>
 
           {slide.stat && (
-            <div className="mt-7 flex justify-center">
-              <div className={`inline-flex items-center gap-3 rounded-2xl px-6 py-3 ring-1 backdrop-blur-sm ${stat}`}>
-                <span className="text-3xl font-extrabold tabular-nums">{slide.stat}</span>
-                <span className="text-sm font-medium opacity-80">{slide.statLabel}</span>
+            <div className="mt-4 flex justify-center sm:mt-6">
+              <div className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 ring-1 backdrop-blur-sm sm:gap-3 sm:rounded-2xl sm:px-6 sm:py-3 ${stat}`}>
+                <span className="text-xl font-extrabold tabular-nums sm:text-3xl">{slide.stat}</span>
+                <span className="text-xs font-medium opacity-80 sm:text-sm">{slide.statLabel}</span>
               </div>
             </div>
           )}
 
-          {children && <div className="mt-9">{children}</div>}
+          {children && <div className="mt-6 sm:mt-9">{children}</div>}
         </div>
       </div>
     );
   };
 
   return (
-    <div className="relative w-full overflow-hidden" style={{ minHeight: "620px" }}>
-      {/* Slide courant */}
+    <div className="relative w-full overflow-hidden" style={{ minHeight: "clamp(560px,90vh,720px)" }}>
       {renderSlide(cur, "current")}
-
-      {/* Slide entrant (monté uniquement pendant la transition) */}
       {next !== null && renderSlide(next, "entering")}
 
-      {/* Navigation */}
-      <div className="absolute bottom-7 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2.5">
-        <button
-          onClick={() => handleNav((cur - 1 + count) % count)}
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white text-xl backdrop-blur-sm transition-all hover:bg-white/30 hover:scale-110 active:scale-95"
-          aria-label="Précédent"
-        >‹</button>
+      {/* ── Navigation ── */}
+      <div className="absolute bottom-5 left-1/2 z-30 -translate-x-1/2">
 
-        {slides.map((_, i) => (
+        {/* Mobile : flèches + compteur + barre de progression */}
+        <div className="flex sm:hidden items-center gap-3">
           <button
-            key={i}
-            onClick={() => handleNav(i)}
-            aria-label={`Slide ${i + 1}`}
-            className={`rounded-full transition-all duration-400 ${
-              i === cur
-                ? "w-8 h-2.5 bg-orange-400 shadow-lg shadow-orange-500/50"
-                : "w-2 h-2 bg-white/20 hover:bg-white/50 hover:scale-125"
-            }`}
-          />
-        ))}
+            onClick={() => handleNav((cur - 1 + count) % count)}
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white text-lg backdrop-blur-sm active:scale-90"
+            aria-label="Précédent"
+          >‹</button>
 
-        <button
-          onClick={() => handleNav((cur + 1) % count)}
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white text-xl backdrop-blur-sm transition-all hover:bg-white/30 hover:scale-110 active:scale-95"
-          aria-label="Suivant"
-        >›</button>
+          {/* Barre de progression mobile */}
+          <div className="flex items-center gap-1.5">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => handleNav(i)}
+                aria-label={`Slide ${i + 1}`}
+                className={`rounded-full transition-all duration-300 ${
+                  i === cur ? "w-5 h-1.5 bg-orange-400" : "w-1.5 h-1.5 bg-white/25"
+                }`}
+              />
+            ))}
+          </div>
 
-        <span className="ml-2 text-xs font-semibold tabular-nums text-white/35">
-          {String(cur + 1).padStart(2, "0")}&thinsp;/&thinsp;{String(count).padStart(2, "0")}
-        </span>
+          <button
+            onClick={() => handleNav((cur + 1) % count)}
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white text-lg backdrop-blur-sm active:scale-90"
+            aria-label="Suivant"
+          >›</button>
+
+          <span className="text-xs font-semibold tabular-nums text-white/40">
+            {cur + 1}/{count}
+          </span>
+        </div>
+
+        {/* Desktop : dots complets */}
+        <div className="hidden sm:flex items-center gap-2.5">
+          <button
+            onClick={() => handleNav((cur - 1 + count) % count)}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white text-xl backdrop-blur-sm transition-all hover:bg-white/30 hover:scale-110 active:scale-95"
+            aria-label="Précédent"
+          >‹</button>
+
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => handleNav(i)}
+              aria-label={`Slide ${i + 1}`}
+              className={`rounded-full transition-all duration-300 ${
+                i === cur
+                  ? "w-8 h-2.5 bg-orange-400 shadow-lg shadow-orange-500/50"
+                  : "w-2 h-2 bg-white/20 hover:bg-white/50 hover:scale-125"
+              }`}
+            />
+          ))}
+
+          <button
+            onClick={() => handleNav((cur + 1) % count)}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white text-xl backdrop-blur-sm transition-all hover:bg-white/30 hover:scale-110 active:scale-95"
+            aria-label="Suivant"
+          >›</button>
+
+          <span className="ml-1 text-xs font-semibold tabular-nums text-white/35">
+            {String(cur + 1).padStart(2, "0")}&thinsp;/&thinsp;{String(count).padStart(2, "0")}
+          </span>
+        </div>
       </div>
     </div>
   );
