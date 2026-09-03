@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { MobileMenu } from "./mobile-menu";
 import { LangSwitcher } from "./lang-switcher";
 
@@ -7,9 +8,8 @@ type Lang = "fr" | "en";
 export function Logo({ light = false, lang = "fr" }: { light?: boolean; lang?: Lang }) {
   return (
     <Link href={lang === "en" ? "/en" : "/"} className="group flex shrink-0 items-center gap-2.5 transition-transform hover:scale-[1.02]">
-      <span className="relative inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-brand-500 via-brand-600 to-brand-800 text-white font-extrabold text-sm shadow-md shadow-brand-700/30 ring-1 ring-white/10">
-        <span className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-        <span className="relative">iB</span>
+      <span className="relative inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl shadow-md shadow-brand-700/30 ring-1 ring-white/10">
+        <Image src="/icon.svg" alt="IBIG PARTNERS" width={40} height={40} priority />
       </span>
       <span className={`whitespace-nowrap font-extrabold tracking-tight leading-none ${light ? "text-white" : "text-ink"}`}>
         IBIG <span className={light ? "text-gold-400" : "text-brand-600"}>PARTNERS</span>
