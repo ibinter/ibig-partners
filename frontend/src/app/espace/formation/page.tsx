@@ -213,6 +213,14 @@ const FAQ_ITEMS = [
     q: "Comment fonctionne le CRM de suivi des prospects ?",
     a: "Dans 'Mes Prospects', vous gérez un pipeline Kanban : Contacté → Intéressé → Devis → Converti. Pour chaque prospect, vous pouvez enregistrer l'historique de vos échanges (appels, emails, réunions), programmer des rappels et exporter votre liste en CSV. Des relances automatiques vous alertent si un prospect n'a pas été contacté depuis un certain nombre de jours selon son stade.",
   },
+  {
+    q: "Comment répondre si un prospect me demande si c'est un Ponzi ?",
+    a: "Répondez avec confiance : IBIG PARTNERS est un programme d'affiliation — pas un Ponzi, pas un MLM pyramidal. Les 3 points clés à expliquer : (1) L'inscription est gratuite, vous n'investissez rien. (2) Vous êtes payé uniquement sur des ventes réelles de produits existants (logiciels utilisés par de vraies entreprises, formations dispensées en salle, biens immobiliers livrés). (3) Si personne ne vend rien, personne n'est payé — il n'y a pas de 'rendement garanti'. Le modèle est identique à celui d'Amazon Associates ou de Shopify Affiliates. Proposez à votre prospect de visiter les sites des branches (ibigsoft.com, ibig-eduform.com…) pour voir les produits par lui-même.",
+  },
+  {
+    q: "Comment prouver la légitimité d'IBIG à un prospect sceptique ?",
+    a: "Plusieurs preuves concrètes : (1) Les sites des branches existent et présentent des produits réels avec des démonstrations. (2) IBIG SARL est une société enregistrée en Côte d'Ivoire — vous pouvez orienter votre prospect vers une prise de contact directe avec l'équipe. (3) Les commissions viennent d'actes commerciaux documentés — chaque vente génère une confirmation écrite avec référence. (4) Aucun frais d'adhésion, aucun achat minimum — un schéma de Ponzi fait toujours payer l'entrée. Si votre prospect reste sceptique, proposez-lui un rendez-vous avec l'équipe IBIG ou de tester lui-même un produit avant de décider.",
+  },
 ];
 
 const STATUS_ORDER = ["STARTER", "SILVER", "GOLD", "MASTER", "ELITE"];

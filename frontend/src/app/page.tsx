@@ -796,6 +796,75 @@ export default async function HomePage() {
       {/* ═══════════ FORMATION (NEW) ═══════════ */}
       <AffiliateTraining />
 
+      {/* ═══════════ CONFIANCE & TRANSPARENCE ═══════════ */}
+      <section id="transparence" className="bg-slate-50 py-20">
+        <div className="mx-auto max-w-5xl px-4">
+          <ScrollReveal animation="fade-up">
+            <div className="text-center mb-12">
+              <span className="label-caps inline-block rounded-full px-4 py-1.5 bg-emerald-50 text-emerald-600">
+                Programme d&apos;affiliation — pas un Ponzi
+              </span>
+              <h2 className="mt-4 text-3xl font-extrabold text-ink sm:text-4xl">
+                Pourquoi IBIG PARTNERS est légitime
+              </h2>
+              <p className="mx-auto mt-3 max-w-2xl text-muted">
+                Un système de Ponzi n&apos;a aucun produit réel. Ici, chaque commission est liée à une vente réelle.
+                Voici les preuves concrètes.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {([
+              {
+                icon: "✅",
+                title: "Inscription 100% gratuite",
+                desc: "Aucun frais d'entrée, aucun achat obligatoire, aucun stock à constituer. Vous ne risquez rien financièrement.",
+              },
+              {
+                icon: "🛍️",
+                title: "Des produits réels et livrables",
+                desc: "Logiciels SaaS, formations certifiantes, transactions immobilières, services digitaux — des clients les utilisent aujourd'hui.",
+              },
+              {
+                icon: "💰",
+                title: "Commission = vente, pas recrutement",
+                desc: "Si personne ne vend rien, personne n'est payé. Vos gains viennent du chiffre d'affaires généré, jamais de l'inscription d'un nouveau membre.",
+              },
+              {
+                icon: "📋",
+                title: "Taux publics et transparents",
+                desc: "20% N1, 10% N2, 5% N3 — tout est affiché publiquement. Aucune promesse de rendement garanti. Zéro opacité.",
+              },
+              {
+                icon: "🏢",
+                title: "Entreprise enregistrée en Côte d'Ivoire",
+                desc: "IBIG SARL — Intermark Business International Group — est une société légalement constituée avec des activités physiques vérifiables.",
+              },
+              {
+                icon: "🌍",
+                title: "10 branches indépendantes du programme",
+                desc: "IBIG SOFT, EDUFORM, IMMO TRUST… existent et fonctionnent avec ou sans partenaires affiliés. Le produit précède le programme.",
+              },
+            ] as { icon: string; title: string; desc: string }[]).map((item, i) => (
+              <ScrollReveal key={item.title} animation="fade-up" delay={i * 60}>
+                <div className="card-premium flex flex-col gap-3 p-6 h-full">
+                  <span className="text-3xl">{item.icon}</span>
+                  <h3 className="font-bold text-ink">{item.title}</h3>
+                  <p className="text-sm text-muted leading-relaxed">{item.desc}</p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+
+          <ScrollReveal animation="fade-up" delay={200}>
+            <div className="mt-10 rounded-2xl border border-emerald-200 bg-emerald-50 px-6 py-5 text-sm text-emerald-800 leading-relaxed">
+              <strong>En résumé :</strong> IBIG PARTNERS est un programme d&apos;affiliation classique — le même modèle utilisé par Amazon, Shopify ou Booking.com. La différence est que nous promouvons des produits africains, pour un marché africain, avec des commissions versées en monnaie locale (FCFA). Si vous avez le moindre doute, contactez-nous directement — nous répondons sous 24h.
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
       {/* ═══════════ FAQ ═══════════ */}
       <section id="faq" className="bg-white py-24">
         <div className="mx-auto max-w-3xl px-4">

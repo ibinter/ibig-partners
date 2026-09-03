@@ -44,8 +44,16 @@ const FAQS = [
     a: "Chaque partenaire reçoit un lien d'affiliation unique. Quand quelqu'un s'inscrit via votre lien, il devient votre filleul Niveau 1. Ses propres filleuls deviennent vos Niveau 2, et ainsi de suite sur 3 niveaux.",
   },
   {
-    q: "Est-ce un système pyramidal / une arnaque ?",
-    a: "Non. Vous n'êtes jamais payé pour recruter quelqu'un — vos commissions viennent uniquement de ventes réelles de produits et services (logiciels, formations, immobilier, etc.) livrés par IBIG SARL, une entreprise enregistrée en Côte d'Ivoire. Aucun frais d'entrée, aucun stock à acheter : c'est un programme d'affiliation classique, pas un système pyramidal.",
+    q: "Est-ce un système pyramidal ou un Ponzi ?",
+    a: "Non — et c'est une distinction importante. Un système de Ponzi ou pyramidal rémunère les participants avec l'argent des nouveaux inscrits, sans produit réel. IBIG PARTNERS fonctionne à l'inverse : (1) L'inscription est 100% gratuite — vous n'investissez rien. (2) Vous n'êtes jamais payé pour avoir recruté quelqu'un : votre commission vient uniquement d'une vente réelle d'un produit ou service (logiciel, formation, bien immobilier, prestation digitale…). (3) Ces produits existent indépendamment du programme : IBIG SOFT, EDUFORM, IMMO TRUST, DIGITAL fonctionnent avec de vrais clients, que vous soyez partenaire ou non. (4) Les taux de commission sont publics, plafonnés et calculables à l'avance — aucune promesse de rendement garanti. En résumé : si personne ne vend rien, personne n'est payé. C'est la définition d'un programme d'affiliation légitime.",
+  },
+  {
+    q: "Comment savoir qu'IBIG SARL est une vraie entreprise ?",
+    a: "IBIG SARL — Intermark Business International Group — est une société enregistrée en Côte d'Ivoire. Le groupe opère plusieurs branches actives avec des clients réels : IBIG SOFT commercialise 14 logiciels SaaS utilisés par des entreprises ivoiriennes, IBIG EDUFORM dispense des formations certifiantes en présentiel, IBIG IMMO TRUST accompagne des transactions immobilières documentées. Vous pouvez contacter l'équipe, visiter les sites de chaque branche et vérifier les réalisations. Aucun produit n'est virtuel ou hypothétique.",
+  },
+  {
+    q: "Pourquoi y a-t-il des niveaux de parrainage (N1, N2, N3) ? N'est-ce pas du MLM ?",
+    a: "Les commissions multi-niveaux existent dans l'affiliation classique : Amazon, Shopify, HubSpot et la plupart des SaaS B2B les pratiquent. Ce qui différencie l'affiliation du MLM illégal : dans l'affiliation, 100% des revenus viennent de la vente de produits à des clients finaux, pas du recrutement de nouveaux membres. Chez IBIG, le N2 et N3 récompensent le travail de développement commercial — si votre filleul vend un logiciel à une école, vous touchez un petit pourcentage car vous avez indirectement contribué à cette vente. Cela reste légal et transparent.",
   },
   {
     q: "Le programme est-il nouveau ? Est-ce risqué de rejoindre maintenant ?",
