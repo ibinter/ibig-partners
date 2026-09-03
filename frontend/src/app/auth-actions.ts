@@ -2,7 +2,6 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import {
   createSession,
@@ -10,7 +9,6 @@ import {
   hashPassword,
   verifyPassword,
 } from "@/lib/auth";
-import { sendWelcomeEmail } from "@/lib/email";
 import { createAndSendOtp } from "@/lib/otp";
 
 function slugifyName(s: string): string {
@@ -160,15 +158,6 @@ export async function registerAction(_prev: unknown, formData: FormData) {
 
   await createSession({ userId: user.id, role: user.role });
   store.delete("ibig_ref");
-
-  // Email de bienvenue (non bloquant)
-  let sponsorName: string | undefined;
-  if (sponsorId) {
-    const sp = await prisma.user.findUnique({ where: { id: sponsorId }, select: { firstName: true, lastName: true } });
-    if (sp) sponsorName = `${sp.firstName} ${sp.lastName}`;
-  }
-  // after() : l'e-mail part après la réponse et survit au serverless Vercel.
-  after(() => sendWelcomeEmail({ to: email, firstName, code, sponsorName }));
 
   redirect("/espace?bienvenue=1");
 }
