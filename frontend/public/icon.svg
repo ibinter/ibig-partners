@@ -1,45 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 300">
-  <!--
-    IBIG PARTNERS — monogramme "iP"
-    Navy #1B2B8F | Orange #FF3300
-    cx=145 cy=138 R_outer=80 R_inner=44
-    Stem: x=18 w=47 right=65 = cx-R=65 (tangent)
-  -->
-  <defs>
-    <clipPath id="right"><rect x="145" y="0" width="120" height="300"/></clipPath>
-    <clipPath id="inner"><circle cx="145" cy="138" r="44"/></clipPath>
-  </defs>
-
-  <!-- Tige "i" navy -->
-  <rect x="18" y="55" width="47" height="183" rx="23" fill="#1B2B8F"/>
-
-  <!-- Cercle plein navy (base) -->
-  <circle cx="145" cy="138" r="80" fill="#1B2B8F"/>
-
-  <!-- Demi-cercle droit orange -->
-  <circle cx="145" cy="138" r="80" fill="#FF3300" clip-path="url(#right)"/>
-
-  <!-- Creux blanc -->
-  <circle cx="145" cy="138" r="44" fill="white"/>
-
-  <!-- Descente "p" orange (150° → x≈185 y≈207) -->
-  <rect x="161" y="196" width="47" height="88" rx="23" fill="#FF3300"/>
-
-  <!-- Dot "i" orange -->
-  <circle cx="41" cy="31" r="22" fill="#FF3300"/>
-
-  <!-- Poignée de mains -->
-  <g clip-path="url(#inner)">
-    <!-- Main navy (gauche) -->
-    <path d="M 101 162 L 101 146 C 101 124 117 113 131 121
-             L 143 131 C 145 115 161 113 162 128 L 162 162 Z"
-          fill="#1B2B8F"/>
-    <!-- Main orange (droite) -->
-    <path d="M 189 162 L 189 146 C 189 124 173 113 159 121
-             L 147 131 C 145 115 129 113 128 128 L 128 162 Z"
-          fill="#FF3300"/>
-    <!-- Ligne blanche centrale -->
-    <rect x="142" y="111" width="6" height="53" fill="white"/>
-  </g>
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#041B4D"/>
+  <rect x="60" y="120" width="100" height="390" rx="50" fill="#FF6A00"/>
+  <circle cx="110" cy="68" r="52" fill="#FF6A00"/>
+  <circle cx="330" cy="280" r="170" fill="#FF6A00"/>
+  <circle cx="330" cy="280" r="92" fill="#041B4D"/>
+  <rect x="348" y="410" width="100" height="180" rx="50" fill="#FF6A00"/>
 </svg>
