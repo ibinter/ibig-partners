@@ -387,142 +387,169 @@ const ILLUSTRATIONS: Record<number, React.ReactNode> = {
   ),
 };
 
+/* ── Durée de la transition ── */
+const DUR = 800; // ms
+
 interface Props {
   slides?: HeroSlide[];
   children?: React.ReactNode;
 }
 
 export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
-  const count = slides.length;
-  const [idx, setIdx] = useState(0);
-  const [moving, setMoving] = useState(false);
+  const count  = slides.length;
+  const [cur,  setCur]  = useState(0);   // slide visible
+  const [next, setNext] = useState<number | null>(null); // slide entrante
+  const [dir,  setDir]  = useState<1 | -1>(1); // 1 = gauche→droite, -1 = droite→gauche
+  const [phase, setPhase] = useState<"idle" | "run">("idle");
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const animRef  = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const goto = useCallback((to: number, direction: 1 | -1 = 1) => {
+    if (phase !== "idle" || to === cur) return;
+    setNext(to);
+    setDir(direction);
+    setPhase("run");
+    animRef.current = setTimeout(() => {
+      setCur(to);
+      setNext(null);
+      setPhase("idle");
+    }, DUR);
+  }, [phase, cur]);
 
   const startTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
-      setMoving(true);
-      setTimeout(() => {
-        setIdx((i) => (i + 1) % count);
-        setMoving(false);
-      }, 650);
+      goto((cur + 1) % count, 1);
     }, 6500);
-  }, [count]);
+  }, [cur, count, goto]);
 
   useEffect(() => {
     startTimer();
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+      if (animRef.current)  clearTimeout(animRef.current);
+    };
   }, [startTimer]);
 
   const handleNav = (to: number) => {
-    if (moving || to === idx) return;
-    setMoving(true);
-    setTimeout(() => {
-      setIdx(((to % count) + count) % count);
-      setMoving(false);
-    }, 650);
+    const d: 1 | -1 = to > cur ? 1 : -1;
+    goto(to, d);
     startTimer();
+  };
+
+  // Styles d'animation par rôle + phase
+  const style = {
+    // Slide en cours — reste visible, sort vers la gauche quand la transition joue
+    current: (active: boolean): React.CSSProperties => ({
+      opacity:   active ? 0 : 1,
+      transform: active
+        ? `translateX(${dir * -8}%) scale(0.97)`
+        : "translateX(0%) scale(1)",
+      transition: active
+        ? `opacity ${DUR}ms cubic-bezier(0.4,0,0.2,1), transform ${DUR}ms cubic-bezier(0.4,0,0.2,1)`
+        : "none",
+      zIndex: 1,
+    }),
+    // Slide entrante — entre depuis la droite (ou gauche) et glisse au centre
+    entering: (active: boolean): React.CSSProperties => ({
+      opacity:   active ? 1 : 0,
+      transform: active
+        ? "translateX(0%) scale(1)"
+        : `translateX(${dir * 6}%) scale(1.02)`,
+      transition: active
+        ? `opacity ${DUR}ms cubic-bezier(0.22,1,0.36,1), transform ${DUR}ms cubic-bezier(0.22,1,0.36,1)`
+        : "none",
+      zIndex: 2,
+    }),
+  };
+
+  const renderSlide = (i: number, role: "current" | "entering") => {
+    const slide = slides[i];
+    const accent = slide.accent ?? "orange";
+    const grad   = HIGHLIGHT_GRAD[accent] ?? HIGHLIGHT_GRAD.orange;
+    const stat   = STAT_CLS[accent] ?? STAT_CLS.orange;
+    const illus  = ILLUSTRATIONS[i] ?? ILLUSTRATIONS[0];
+    const active = phase === "run";
+    const s = role === "current" ? style.current(active) : style.entering(active);
+
+    return (
+      <div
+        key={role}
+        className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden px-6 pb-24 pt-16 sm:py-24 sm:pb-28 lg:py-28 lg:pb-32 text-center"
+        style={{ background: slide.bg ?? "linear-gradient(135deg,#041B4D 0%,#0b3a8a 100%)", ...s }}
+      >
+        {/* Illustration de fond */}
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-30">
+          <div className="h-full w-full max-w-2xl">{illus}</div>
+        </div>
+
+        {/* Décors géométriques */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-white/5 animate-float" />
+          <div className="absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-white/5 animate-float" style={{ animationDelay: "1.5s" }} />
+          <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/5" />
+          <div className="absolute left-1/2 top-1/2 h-[350px] w-[350px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/5" />
+          <div className="absolute inset-0 opacity-[0.035]"
+            style={{ backgroundImage: "radial-gradient(circle,#fff 1px,transparent 1px)", backgroundSize: "32px 32px" }} />
+        </div>
+
+        {/* Contenu */}
+        <div className="relative z-10 mx-auto w-full max-w-4xl">
+          <div className="mb-6 flex flex-wrap items-center justify-center gap-3">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-widest text-white/80 backdrop-blur-sm">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-orange-400" />
+              {slide.eyebrow}
+            </span>
+            {slide.tag && (
+              <span className="rounded-full bg-orange-500 px-4 py-1.5 text-xs font-bold text-white shadow-lg shadow-orange-500/30">
+                {slide.tag}
+              </span>
+            )}
+          </div>
+
+          <h1
+            className="mx-auto max-w-3xl text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl"
+            style={{ textWrap: "balance" } as React.CSSProperties}
+          >
+            {slide.titleLead}{" "}
+            <span className={`bg-gradient-to-r ${grad} bg-clip-text text-transparent`}>
+              {slide.titleHighlight}
+            </span>
+            {slide.titleTail ? ` ${slide.titleTail}` : ""}
+          </h1>
+
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/75 sm:text-xl">
+            {slide.desc}
+          </p>
+
+          {slide.stat && (
+            <div className="mt-7 flex justify-center">
+              <div className={`inline-flex items-center gap-3 rounded-2xl px-6 py-3 ring-1 backdrop-blur-sm ${stat}`}>
+                <span className="text-3xl font-extrabold tabular-nums">{slide.stat}</span>
+                <span className="text-sm font-medium opacity-80">{slide.statLabel}</span>
+              </div>
+            </div>
+          )}
+
+          {children && <div className="mt-9">{children}</div>}
+        </div>
+      </div>
+    );
   };
 
   return (
     <div className="relative w-full overflow-hidden" style={{ minHeight: "620px" }}>
+      {/* Slide courant */}
+      {renderSlide(cur, "current")}
 
-      {/* ── Rail ── */}
-      <div
-        className="flex transition-transform"
-        style={{
-          width: `${count * 100}%`,
-          transform: `translateX(-${(idx * 100) / count}%)`,
-          transitionDuration: "650ms",
-          transitionTimingFunction: "cubic-bezier(0.4,0,0.2,1)",
-        }}
-      >
-        {slides.map((slide, i) => {
-          const accent = slide.accent ?? "orange";
-          const grad   = HIGHLIGHT_GRAD[accent] ?? HIGHLIGHT_GRAD.orange;
-          const stat   = STAT_CLS[accent] ?? STAT_CLS.orange;
-          const illus  = ILLUSTRATIONS[i] ?? ILLUSTRATIONS[0];
+      {/* Slide entrant (monté uniquement pendant la transition) */}
+      {next !== null && renderSlide(next, "entering")}
 
-          return (
-            <div
-              key={i}
-              className="relative flex flex-col items-center justify-center overflow-hidden px-6 pb-24 pt-16 sm:py-24 sm:pb-28 lg:py-28 lg:pb-32 text-center"
-              style={{
-                width: `${100 / count}%`,
-                background: slide.bg ?? "linear-gradient(135deg,#041B4D 0%,#0b3a8a 100%)",
-              }}
-            >
-              {/* ── Illustration de fond ── */}
-              <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-30">
-                <div className="h-full w-full max-w-2xl">
-                  {illus}
-                </div>
-              </div>
-
-              {/* ── Décors géométriques ── */}
-              <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full bg-white/5 animate-float" />
-                <div className="absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-white/5 animate-float" style={{ animationDelay: "1.5s" }} />
-                <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/5" />
-                <div className="absolute left-1/2 top-1/2 h-[350px] w-[350px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/5" />
-                {/* Trame points */}
-                <div className="absolute inset-0 opacity-[0.035]"
-                  style={{ backgroundImage: "radial-gradient(circle,#fff 1px,transparent 1px)", backgroundSize: "32px 32px" }} />
-              </div>
-
-              {/* ── Contenu centré ── */}
-              <div className="relative z-10 mx-auto w-full max-w-4xl">
-                {/* Eyebrow */}
-                <div className="mb-6 flex flex-wrap items-center justify-center gap-3">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-widest text-white/80 backdrop-blur-sm">
-                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-orange-400" />
-                    {slide.eyebrow}
-                  </span>
-                  {slide.tag && (
-                    <span className="rounded-full bg-orange-500 px-4 py-1.5 text-xs font-bold text-white shadow-lg shadow-orange-500/30">
-                      {slide.tag}
-                    </span>
-                  )}
-                </div>
-
-                {/* Titre */}
-                <h1 className="mx-auto max-w-3xl text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl"
-                  style={{ textWrap: "balance" } as React.CSSProperties}>
-                  {slide.titleLead}{" "}
-                  <span className={`bg-gradient-to-r ${grad} bg-clip-text text-transparent`}>
-                    {slide.titleHighlight}
-                  </span>
-                  {slide.titleTail ? ` ${slide.titleTail}` : ""}
-                </h1>
-
-                {/* Description */}
-                <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/75 sm:text-xl">
-                  {slide.desc}
-                </p>
-
-                {/* Badge stat */}
-                {slide.stat && (
-                  <div className="mt-7 flex justify-center">
-                    <div className={`inline-flex items-center gap-3 rounded-2xl px-6 py-3 ring-1 backdrop-blur-sm ${stat}`}>
-                      <span className="text-3xl font-extrabold tabular-nums">{slide.stat}</span>
-                      <span className="text-sm font-medium opacity-80">{slide.statLabel}</span>
-                    </div>
-                  </div>
-                )}
-
-                {/* CTAs et éléments communs */}
-                {children && <div className="mt-9">{children}</div>}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* ── Navigation en overlay ── */}
-      <div className="absolute bottom-7 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5">
+      {/* Navigation */}
+      <div className="absolute bottom-7 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2.5">
         <button
-          onClick={() => handleNav((idx - 1 + count) % count)}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm hover:bg-white/30 transition-all text-lg font-light"
+          onClick={() => handleNav((cur - 1 + count) % count)}
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white text-xl backdrop-blur-sm transition-all hover:bg-white/30 hover:scale-110 active:scale-95"
           aria-label="Précédent"
         >‹</button>
 
@@ -531,20 +558,22 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
             key={i}
             onClick={() => handleNav(i)}
             aria-label={`Slide ${i + 1}`}
-            className={`rounded-full transition-all duration-300 ${
-              i === idx ? "w-8 h-2 bg-orange-400 shadow-lg shadow-orange-500/40" : "w-2 h-2 bg-white/25 hover:bg-white/50"
+            className={`rounded-full transition-all duration-400 ${
+              i === cur
+                ? "w-8 h-2.5 bg-orange-400 shadow-lg shadow-orange-500/50"
+                : "w-2 h-2 bg-white/20 hover:bg-white/50 hover:scale-125"
             }`}
           />
         ))}
 
         <button
-          onClick={() => handleNav((idx + 1) % count)}
-          className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm hover:bg-white/30 transition-all text-lg font-light"
+          onClick={() => handleNav((cur + 1) % count)}
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white text-xl backdrop-blur-sm transition-all hover:bg-white/30 hover:scale-110 active:scale-95"
           aria-label="Suivant"
         >›</button>
 
-        <span className="ml-1 text-xs font-semibold text-white/35 tabular-nums">
-          {String(idx + 1).padStart(2, "0")}&thinsp;/&thinsp;{String(count).padStart(2, "0")}
+        <span className="ml-2 text-xs font-semibold tabular-nums text-white/35">
+          {String(cur + 1).padStart(2, "0")}&thinsp;/&thinsp;{String(count).padStart(2, "0")}
         </span>
       </div>
     </div>
