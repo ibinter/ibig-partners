@@ -20,6 +20,7 @@ import { SoftwareCatalog } from "@/components/software-catalog";
 import { MarketingKitPacks } from "@/components/marketing-kit-packs";
 import { AffiliateTraining } from "@/components/affiliate-training";
 import { CommissionDetails } from "@/components/commission-details";
+import { BranchEcosystem } from "@/components/branch-ecosystem";
 export const dynamic = "force-dynamic";
 
 const HERO_SLIDES: HeroSlide[] = [
@@ -404,6 +405,9 @@ export default async function HomePage() {
       </section>
 
 
+      {/* ═══════════ ÉCOSYSTÈME COMPLET — 10 BRANCHES ═══════════ */}
+      <BranchEcosystem />
+
       {/* ═══════════ CATALOGUE LOGICIELS (NEW) ═══════════ */}
       <SoftwareCatalog />
 
@@ -513,37 +517,41 @@ export default async function HomePage() {
                 Combien puis-je gagner&nbsp;?
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-brand-200">
-                Scénarios réalistes sur IBIG SOFT — 14 logiciels métiers, de Scolaby (dès {fcfa(10000)}/mois) à IBIG FactPro (dès {fcfa(4900)}/mois).
+                Scénarios réalistes sur plusieurs branches IBIG — logiciels SaaS, formations, digital, immobilier et services.
               </p>
             </div>
           </ScrollReveal>
 
           <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {[
+            [
               {
-                delay: 0, icon: "trending" as IconName, label: "Débutant", sub: "3 ventes directes",
-                rows: [{ text: `3 × ${fcfa(10000)} × 20%`, val: fcfa(6000), color: "text-emerald-400" }],
-                total: fcfa(6000), totalColor: "text-emerald-400",
+                delay: 0, icon: "graduation" as IconName, label: "Spécialiste Formation", sub: "IBIG EDUFORM — 4 formations vendues",
+                rows: [
+                  { text: `2 × MBA Accéléré × 10%`,         val: fcfa(100000), color: "text-amber-400" },
+                  { text: `2 × Formation Dev Web × 10%`,    val: fcfa(40000),  color: "text-amber-400" },
+                ],
+                total: fcfa(140000), totalColor: "text-amber-400",
                 border: "border-white/10 bg-white/5",
               },
               {
-                delay: 120, icon: "rocket" as IconName, label: "Actif Silver", sub: "5 ventes + 2 filleuls",
+                delay: 120, icon: "rocket" as IconName, label: "Expert Digital", sub: "IBIG DIGITAL — 2 packs vendus",
                 badge: "Populaire",
                 rows: [
-                  { text: `5 × ${fcfa(10000)} × 20%`, val: fcfa(10000), color: "text-emerald-400" },
-                  { text: `N2 : 4 ventes × 10%`,       val: fcfa(4000), color: "text-sky-400" },
+                  { text: `1 × Pack Digital 360 × 10%`,      val: fcfa(125000), color: "text-indigo-400" },
+                  { text: `1 × App Android+iOS × 10%`,       val: fcfa(150000), color: "text-indigo-400" },
+                  { text: `N2 : 1 Pack Lancement × 10%`,     val: fcfa(52500),  color: "text-sky-400" },
                 ],
-                total: fcfa(14000), totalColor: "text-gold-400",
+                total: fcfa(327500), totalColor: "text-gold-400",
                 border: "border-gold-400/30 bg-gradient-to-br from-white/10 to-gold-500/5 ring-1 ring-gold-400/20",
               },
               {
-                delay: 240, icon: "trophy" as IconName, label: "Master Gold", sub: "10 ventes + réseau actif",
+                delay: 240, icon: "home" as IconName, label: "Ambassadeur Immo", sub: "IBIG IMMO TRUST — 2 transactions",
                 rows: [
-                  { text: `10 × ${fcfa(10000)} × 25%`, val: fcfa(25000), color: "text-emerald-400" },
-                  { text: `N2 : 10 ventes × 10%`,       val: fcfa(10000), color: "text-sky-400" },
-                  { text: `N3 : 6 ventes × 5%`,         val: fcfa(3000),  color: "text-violet-400" },
+                  { text: `1 Mandat de vente × 5%`,          val: fcfa(100000), color: "text-violet-400" },
+                  { text: `1 BTP Construction × 5%`,         val: fcfa(250000), color: "text-violet-400" },
+                  { text: `N2 : 1 transaction × 3%`,         val: fcfa(60000),  color: "text-pink-400" },
                 ],
-                total: fcfa(38000), totalColor: "text-violet-400",
+                total: fcfa(410000), totalColor: "text-violet-400",
                 border: "border-violet-400/20 bg-white/5",
               },
             ].map((scenario) => (
