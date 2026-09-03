@@ -1569,3 +1569,86 @@ export async function sendMonthlyReportEmail(opts: {
     html,
   });
 }
+
+export async function sendPayoutConfirmationEmail(opts: {
+  to: string;
+  firstName: string;
+  amount: number;
+  netAmount: number;
+  fees: number;
+  method: string;
+  reference: string;
+  paidAt: Date;
+}) {
+  const html = layout(`
+    <h2 style="margin:0 0 6px;font-size:22px;font-weight:800;color:#0f1729;">💸 Votre virement a été effectué</h2>
+    <p style="margin:0 0 20px;font-size:15px;color:#5b6577;">Bonjour ${opts.firstName}, votre commission a été versée avec succès.</p>
+
+    <div style="background:linear-gradient(135deg,#059669,#0d9488);border-radius:16px;padding:24px;text-align:center;margin-bottom:20px;">
+      <p style="margin:0;font-size:12px;font-weight:700;color:#a7f3d0;text-transform:uppercase;letter-spacing:1px;">Montant reçu</p>
+      <p style="margin:8px 0 0;font-size:36px;font-weight:900;color:#fff;">${fcfaFmt(opts.netAmount)}</p>
+      ${opts.fees > 0 ? `<p style="margin:6px 0 0;font-size:12px;color:#a7f3d0;">Brut : ${fcfaFmt(opts.amount)} · Frais : ${fcfaFmt(opts.fees)}</p>` : ""}
+    </div>
+
+    <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+      <tr>
+        <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;">
+          <span style="font-size:12px;color:#5b6577;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Méthode</span>
+        </td>
+        <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;text-align:right;font-size:14px;color:#0f1729;font-weight:600;">${opts.method}</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;">
+          <span style="font-size:12px;color:#5b6577;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Référence</span>
+        </td>
+        <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;text-align:right;font-size:13px;font-family:monospace;color:#0f1729;">${opts.reference}</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 0;">
+          <span style="font-size:12px;color:#5b6577;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Date</span>
+        </td>
+        <td style="padding:10px 0;text-align:right;font-size:14px;color:#0f1729;font-weight:600;">${opts.paidAt.toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}</td>
+      </tr>
+    </table>
+
+    <p style="margin:0 0 16px;font-size:14px;color:#5b6577;">
+      Consultez votre espace pour télécharger votre reçu de paiement.
+    </p>
+    ${btn("Voir mon reçu →", `${SITE}/espace/paiements`)}
+  `);
+
+  return sendEmail({
+    to: opts.to,
+    subject: `💸 Virement reçu — ${fcfaFmt(opts.netAmount)} · IBIG PARTNERS`,
+    html,
+  });
+}
+
+export async function sendPayoutThresholdEmail(opts: {
+  to: string;
+  firstName: string;
+  amount: number;
+  threshold: number;
+}) {
+  const html = layout(`
+    <h2 style="margin:0 0 6px;font-size:22px;font-weight:800;color:#0f1729;">🎉 Vous pouvez demander un retrait !</h2>
+    <p style="margin:0 0 20px;font-size:15px;color:#5b6577;">Bonjour ${opts.firstName}, vos commissions validées ont dépassé votre seuil de paiement.</p>
+
+    <div style="background:linear-gradient(135deg,#0b5fff,#7c3aed);border-radius:16px;padding:24px;text-align:center;margin-bottom:20px;">
+      <p style="margin:0;font-size:12px;font-weight:700;color:#bfdbfe;text-transform:uppercase;letter-spacing:1px;">Disponible pour retrait</p>
+      <p style="margin:8px 0 0;font-size:36px;font-weight:900;color:#fff;">${fcfaFmt(opts.amount)}</p>
+      <p style="margin:6px 0 0;font-size:12px;color:#bfdbfe;">Seuil configuré : ${fcfaFmt(opts.threshold)}</p>
+    </div>
+
+    <p style="margin:0 0 16px;font-size:14px;color:#5b6577;">
+      Connectez-vous à votre espace et cliquez sur <strong>"Demander mon retrait"</strong> pour lancer le virement.
+    </p>
+    ${btn("Demander mon retrait →", `${SITE}/espace/paiements`)}
+  `);
+
+  return sendEmail({
+    to: opts.to,
+    subject: `🎉 Retrait disponible — ${fcfaFmt(opts.amount)} · IBIG PARTNERS`,
+    html,
+  });
+}

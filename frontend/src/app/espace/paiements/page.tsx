@@ -57,10 +57,18 @@ export default async function PaiementsPage() {
 
   return (
     <div className="space-y-5 pb-10">
-      <PageHeader
-        title="Mes Paiements"
-        subtitle="Retrait self-service disponible après validation KYC — virement sous 48h"
-      />
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <PageHeader
+          title="Mes Paiements"
+          subtitle="Retrait self-service disponible après validation KYC — virement sous 48h"
+        />
+        <Link
+          href="/espace/paiements/releve"
+          className="shrink-0 inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-100 transition-colors"
+        >
+          📄 Relevé mensuel
+        </Link>
+      </div>
 
       {/* ── Alerte KYC ── */}
       {!isVerified && (

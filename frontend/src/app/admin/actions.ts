@@ -18,6 +18,7 @@ import {
   sendOnboardingJ0Email,
   sendStatusUpEmail,
   sendNewProductEmail,
+  sendPayoutThresholdEmail,
 } from "@/lib/email";
 import { logAction } from "@/lib/audit";
 
@@ -226,10 +227,32 @@ export async function addPaidMonth(formData: FormData) {
 }
 
 // --- Commissions ---
+async function checkAndNotifyThreshold(userId: string) {
+  const [user, agg] = await Promise.all([
+    prisma.user.findUnique({ where: { id: userId }, select: { email: true, firstName: true, minPayout: true } }),
+    prisma.commission.aggregate({ where: { userId, status: "VALIDATED", payoutId: null }, _sum: { amount: true } }),
+  ]);
+  if (!user) return;
+  const total = agg._sum.amount ?? 0;
+  const threshold = user.minPayout ?? 5000;
+  if (total >= threshold) {
+    const alreadyNotified = await prisma.notification.findFirst({
+      where: { userId, title: { contains: "Retrait disponible" }, createdAt: { gte: new Date(Date.now() - 7 * 24 * 3600 * 1000) } },
+    });
+    if (!alreadyNotified) {
+      await prisma.notification.create({
+        data: { userId, title: "💸 Retrait disponible !", body: `Vous avez ${total.toLocaleString("fr-FR")} FCFA disponibles. Demandez votre retrait depuis votre espace.`, url: "/espace/paiements" },
+      });
+      after(() => sendPayoutThresholdEmail({ to: user.email, firstName: user.firstName, amount: total, threshold }));
+    }
+  }
+}
+
 export async function validateCommission(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("id"));
-  await prisma.commission.update({ where: { id }, data: { status: "VALIDATED" } });
+  const commission = await prisma.commission.update({ where: { id }, data: { status: "VALIDATED" } });
+  after(() => checkAndNotifyThreshold(commission.userId));
   revalidatePath("/admin/commissions");
 }
 
@@ -259,6 +282,7 @@ export async function validateAllPending(formData: FormData) {
       const to = user.email, firstName = user.firstName;
       const totalAmount = agg._sum.amount ?? 0, count = agg._count._all;
       after(() => sendCommissionsValidatedEmail({ to, firstName, totalAmount, count }));
+      after(() => checkAndNotifyThreshold(uid));
     }
   }
 
