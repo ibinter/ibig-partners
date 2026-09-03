@@ -1489,3 +1489,83 @@ export async function sendNewProductEmail(opts: {
     html,
   });
 }
+
+// ─── E-mail : Rapport mensuel affilié ─────────────────────────────────────
+
+export async function sendMonthlyReportEmail(opts: {
+  to: string;
+  firstName: string;
+  month: string;
+  commissionsTotal: number;
+  salesCount: number;
+  salesCountPrev: number;
+  rank: number;
+  totalPartners: number;
+  topProduct: string | null;
+  pendingPayout: number;
+}): Promise<EmailResult> {
+  const trend = opts.salesCount >= opts.salesCountPrev
+    ? `+${opts.salesCount - opts.salesCountPrev} vs mois précédent`
+    : `${opts.salesCount - opts.salesCountPrev} vs mois précédent`;
+  const html = layout(`
+    <h2 style="margin:0 0 6px;font-size:22px;color:#0f1729;">
+      📊 Votre bilan de ${opts.month}, ${opts.firstName}
+    </h2>
+    <p style="margin:0 0 24px;color:#5b6577;font-size:14px;">
+      Voici votre récapitulatif mensuel IBIG PARTNERS.
+    </p>
+
+    <!-- KPIs -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+      <tr>
+        <td style="width:50%;padding:0 6px 12px 0;">
+          <div style="background:#f0f9ff;border-radius:12px;padding:16px 18px;">
+            <p style="margin:0;font-size:11px;font-weight:700;color:#0284c7;text-transform:uppercase;letter-spacing:1px;">Commissions du mois</p>
+            <p style="margin:4px 0 0;font-size:22px;font-weight:800;color:#0f1729;">${fcfaFmt(opts.commissionsTotal)}</p>
+          </div>
+        </td>
+        <td style="width:50%;padding:0 0 12px 6px;">
+          <div style="background:#f0fdf4;border-radius:12px;padding:16px 18px;">
+            <p style="margin:0;font-size:11px;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:1px;">Ventes confirmées</p>
+            <p style="margin:4px 0 0;font-size:22px;font-weight:800;color:#0f1729;">${opts.salesCount}</p>
+            <p style="margin:2px 0 0;font-size:11px;color:#16a34a;">${trend}</p>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:0 6px 0 0;">
+          <div style="background:#faf5ff;border-radius:12px;padding:16px 18px;">
+            <p style="margin:0;font-size:11px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;">Rang dans le réseau</p>
+            <p style="margin:4px 0 0;font-size:22px;font-weight:800;color:#0f1729;">#${opts.rank}</p>
+            <p style="margin:2px 0 0;font-size:11px;color:#7c3aed;">sur ${opts.totalPartners} partenaires</p>
+          </div>
+        </td>
+        <td style="padding:0 0 0 6px;">
+          <div style="background:#fff7ed;border-radius:12px;padding:16px 18px;">
+            <p style="margin:0;font-size:11px;font-weight:700;color:#ea580c;text-transform:uppercase;letter-spacing:1px;">En attente de paiement</p>
+            <p style="margin:4px 0 0;font-size:22px;font-weight:800;color:#0f1729;">${fcfaFmt(opts.pendingPayout)}</p>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    ${opts.topProduct ? `
+    <div style="background:#f8fafc;border-radius:12px;padding:14px 18px;margin-bottom:20px;">
+      <p style="margin:0;font-size:13px;color:#5b6577;">
+        🏆 <strong>Meilleur produit :</strong> ${opts.topProduct}
+      </p>
+    </div>
+    ` : ""}
+
+    <p style="margin:0 0 8px;font-size:14px;color:#0f1729;">
+      Consultez votre espace partenaire pour voir le détail de vos ventes et demander un retrait.
+    </p>
+    ${btn("Voir mon espace →", `${SITE}/espace`)}
+  `);
+
+  return sendEmail({
+    to: opts.to,
+    subject: `📊 Bilan ${opts.month} — IBIG PARTNERS`,
+    html,
+  });
+}

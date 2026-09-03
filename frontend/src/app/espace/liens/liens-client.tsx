@@ -151,6 +151,13 @@ export default function LiensClient({ cards, branches }: Props) {
                       <span className="text-xs font-semibold text-emerald-600">{card.sales} vente{card.sales !== 1 ? "s" : ""}</span>
                     </div>
                   )}
+                  {card.clicks > 0 && (
+                    <div className="flex items-center gap-1 rounded-xl bg-violet-50 border border-violet-100 px-2.5 py-1">
+                      <span className="text-[10px] font-bold text-violet-600 tabular-nums">
+                        {((card.sales / card.clicks) * 100).toFixed(1)} %
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 

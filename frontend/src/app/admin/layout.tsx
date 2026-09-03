@@ -19,6 +19,7 @@ const NAV: NavItem[] = [
   { href: "/admin/tickets",       label: "Tickets Support",    icon: "🎫", group: "Communication" },
   { href: "/admin/communication",    label: "Communication",       icon: "📣", group: "Communication" },
   { href: "/admin/email-sequences", label: "Séquences email",     icon: "🔁", group: "Communication" },
+  { href: "/admin/analytics",     label: "Analytics",           icon: "📈", group: "Administration" },
   { href: "/admin/audit",         label: "Journal d'audit",    icon: "🔍", group: "Administration" },
   { href: "/admin/nettoyage",     label: "Nettoyage données",  icon: "🧹", group: "Administration" },
   { href: "/admin/parametres",    label: "Paramètres",         icon: "⚙️", group: "Administration" },
