@@ -627,7 +627,7 @@ export default async function HomePage() {
           <div className="mt-12 grid gap-5 lg:grid-cols-2">
             {[
               {
-                icon: "coins",
+                icon: "coins" as IconName,
                 tag: "Vente directe",
                 title: "Le spécialiste des abonnements annuels",
                 lines: [
@@ -639,7 +639,7 @@ export default async function HomePage() {
                 grad: "from-emerald-500 to-teal-600",
               },
               {
-                icon: "network",
+                icon: "network" as IconName,
                 tag: "Revenu passif",
                 title: "Le bâtisseur de réseau",
                 lines: [
@@ -651,7 +651,7 @@ export default async function HomePage() {
                 grad: "from-brand-600 to-indigo-700",
               },
               {
-                icon: "home",
+                icon: "home" as IconName,
                 tag: "Forte valeur",
                 title: "L'expert immobilier IBIG IMMO TRUST",
                 lines: [
@@ -663,7 +663,7 @@ export default async function HomePage() {
                 grad: "from-violet-600 to-purple-700",
               },
               {
-                icon: "layers",
+                icon: "layers" as IconName,
                 tag: "Diversifié",
                 title: "Le combo malin",
                 lines: [
