@@ -204,17 +204,46 @@ export default async function BienvenuePage() {
           <li className="flex gap-2"><span>→</span><span>Partagez d'abord dans vos groupes WhatsApp — c'est le canal le plus rapide pour les premières ventes.</span></li>
           <li className="flex gap-2"><span>→</span><span>Recrutez au moins un filleul dans votre premier mois — les commissions N1 démultiplient vos revenus passifs.</span></li>
           <li className="flex gap-2"><span>→</span><span>Utilisez le Coach IA pour préparer vos arguments de vente et vos scripts de recrutement.</span></li>
+          <li className="flex gap-2"><span>→</span><span>Ajoutez vos prospects dans le CRM et suivez-les dans le pipeline Kanban — ne laissez aucun lead sans suivi.</span></li>
         </ul>
         <div className="flex gap-2 flex-wrap">
           <Link href="/espace/coach" className="rounded-xl bg-amber-500 px-4 py-2 text-xs font-bold text-white hover:bg-amber-600 transition shadow-sm">
             Coach IA ✨
           </Link>
-          <Link href="/espace/kit" className="rounded-xl border border-amber-300 bg-white px-4 py-2 text-xs font-bold text-amber-700 hover:border-amber-400 transition shadow-sm">
-            Kit Marketing 🎨
+          <Link href="/espace/prospects" className="rounded-xl border border-amber-300 bg-white px-4 py-2 text-xs font-bold text-amber-700 hover:border-amber-400 transition shadow-sm">
+            CRM Prospects 📇
+          </Link>
+          <Link href="/espace/challenges" className="rounded-xl border border-amber-300 bg-white px-4 py-2 text-xs font-bold text-amber-700 hover:border-amber-400 transition shadow-sm">
+            Challenges 🔥
           </Link>
           <Link href="/espace/simulateur" className="rounded-xl border border-amber-300 bg-white px-4 py-2 text-xs font-bold text-amber-700 hover:border-amber-400 transition shadow-sm">
             Simulateur 🧮
           </Link>
+        </div>
+      </div>
+
+      {/* Nouvelles fonctionnalités */}
+      <div className="rounded-2xl border border-blue-100 bg-blue-50/40 p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="rounded-full bg-blue-600 px-3 py-1 text-[10px] font-bold text-white uppercase tracking-wide">Nouveautés</span>
+          <h3 className="text-sm font-bold text-blue-900">Ce que la plateforme fait pour vous</h3>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <div className="rounded-xl bg-white border border-blue-100 p-4">
+            <p className="text-lg mb-1">📊</p>
+            <p className="text-xs font-bold text-slate-800 mb-1">Relevé mensuel</p>
+            <p className="text-[11px] text-slate-500 leading-relaxed">Téléchargez votre récapitulatif mensuel depuis <Link href="/espace/paiements" className="text-blue-600 hover:underline">Mes Paiements</Link>. Alerte automatique quand vous atteignez votre seuil de retrait.</p>
+          </div>
+          <div className="rounded-xl bg-white border border-blue-100 p-4">
+            <p className="text-lg mb-1">🔥</p>
+            <p className="text-xs font-bold text-slate-800 mb-1">Challenges & Promotion</p>
+            <p className="text-[11px] text-slate-500 leading-relaxed">4 challenges mensuels adaptatifs à votre statut. Votre statut monte <strong>automatiquement</strong> dès que vous remplissez les critères — sans demande manuelle.</p>
+          </div>
+          <div className="rounded-xl bg-white border border-blue-100 p-4">
+            <p className="text-lg mb-1">🗂️</p>
+            <p className="text-xs font-bold text-slate-800 mb-1">CRM Pipeline Kanban</p>
+            <p className="text-[11px] text-slate-500 leading-relaxed">Suivez chaque prospect de Contacté à Converti en vue Kanban. Historique des échanges (appels, emails, réunions), relances intelligentes et export CSV.</p>
+          </div>
         </div>
       </div>
     </div>

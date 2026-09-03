@@ -75,13 +75,14 @@ const MISSION: { icon: IconName; title: string; desc: string }[] = [
 ];
 
 const PARTNER_MODULES: { icon: IconName; title: string; desc: string }[] = [
-  { icon: "chart",   title: "Dashboard",      desc: "CA généré, commissions en attente et versées, progression de statut en temps réel." },
-  { icon: "puzzle",  title: "Mes Produits",   desc: "Sélectionnez librement les branches et produits que vous souhaitez promouvoir." },
-  { icon: "link",    title: "Mes Liens",      desc: "Liens d'affiliation uniques, code promo personnel, QR code téléchargeable." },
-  { icon: "network", title: "Mon Réseau",     desc: "Visualisez vos filleuls Niveau 1/2/3 et la performance de chacun." },
-  { icon: "coins",   title: "Mes Commissions",desc: "Historique complet, statut par paiement, export PDF et Excel." },
-  { icon: "graduation", title: "Académie IBIG", desc: "Vidéos, guides, assistant intelligent et formations pour monter en compétence." },
-  { icon: "target",  title: "Mes Prospects",  desc: "Suivi de vos leads : contacté, démo faite, converti ou perdu. Import en masse." },
+  { icon: "chart",      title: "Dashboard",          desc: "CA généré, commissions en attente et versées, progression de statut et analytics en temps réel." },
+  { icon: "puzzle",     title: "Mes Produits",        desc: "Sélectionnez librement les branches et produits à promouvoir — 14 logiciels, formations, services." },
+  { icon: "link",       title: "Mes Liens",           desc: "Liens d'affiliation uniques, code promo personnel, QR code téléchargeable." },
+  { icon: "network",    title: "Mon Réseau",          desc: "Visualisez vos filleuls Niveau 1/2/3 et la performance de chacun en temps réel." },
+  { icon: "coins",      title: "Mes Commissions",     desc: "Historique complet, relevé mensuel téléchargeable, alerte de seuil de paiement, export PDF." },
+  { icon: "target",     title: "CRM Prospects",       desc: "Pipeline Kanban (Contacté → Intéressé → Devis → Converti), historique des échanges, relances intelligentes, export CSV." },
+  { icon: "sparkles",   title: "Challenges & Statut", desc: "Challenges mensuels adaptatifs, promotion de statut automatique (Starter → Elite) dès les critères atteints." },
+  { icon: "graduation", title: "Académie IBIG",       desc: "Vidéos, guides, assistant Coach IA et formations pour développer vos compétences commerciales." },
 ];
 
 const TRUST: { icon: IconName; text: string }[] = [

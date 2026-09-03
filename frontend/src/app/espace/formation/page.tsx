@@ -201,6 +201,18 @@ const FAQ_ITEMS = [
     q: "Peut-on cumuler plusieurs produits pour un même client ?",
     a: "Oui ! Si un client clique votre lien et achète Scolaby ET une formation dans les 90 jours, vous touchez une commission sur les deux achats. Activez tous vos produits pour maximiser cette fenêtre.",
   },
+  {
+    q: "Comment fonctionne la promotion de statut automatique ?",
+    a: "Votre statut est réévalué après chaque vente confirmée. Dès que vous atteignez les critères (ventes, filleuls directs, équipe active), vous êtes promu instantanément et une notification vous le confirme — aucune démarche manuelle n'est nécessaire.",
+  },
+  {
+    q: "À quoi servent les Challenges mensuels ?",
+    a: "Les Challenges sont 4 objectifs mensuels adaptés à votre statut (ventes, recrutement, commissions, progression de statut). Ils sont informatifs et vous aident à garder le cap. Votre statut évolue automatiquement sur les critères globaux, pas seulement les challenges mensuels.",
+  },
+  {
+    q: "Comment fonctionne le CRM de suivi des prospects ?",
+    a: "Dans 'Mes Prospects', vous gérez un pipeline Kanban : Contacté → Intéressé → Devis → Converti. Pour chaque prospect, vous pouvez enregistrer l'historique de vos échanges (appels, emails, réunions), programmer des rappels et exporter votre liste en CSV. Des relances automatiques vous alertent si un prospect n'a pas été contacté depuis un certain nombre de jours selon son stade.",
+  },
 ];
 
 const STATUS_ORDER = ["STARTER", "SILVER", "GOLD", "MASTER", "ELITE"];
