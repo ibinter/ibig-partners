@@ -229,7 +229,7 @@ export default function GuidePage() {
       py = body("Notre mission : offrir à chaque partenaire les outils, la formation et les commissions attractives pour bâtir un revenu durable et construire son propre réseau.",py);
       py += 5;
 
-      py = subTitle("Les 9 Branches du Groupe IBIG SARL",py);
+      py = subTitle("Les 11 Branches du Groupe IBIG SARL",py);
 
       const branches = [
         ["IBIG SOFT","14 logiciels/ERP SaaS (Scolaby, Fleet 360, GESCOMXEL, Zelivry, Lokativo, StockFlow, CONSTRUIRO, SANTAREX, AGRIFRIK, GESTMONEY, ANOUANZÊ, FactPro, SECRETIS, DocPro) — ibigsoft.com","Commission : 20% N1 - 10% N2 - 5% N3 (dégressive sur 4 mois)"],
@@ -239,8 +239,10 @@ export default function GuidePage() {
         ["IBIG DIGITAL","Création digitale : site vitrine, e-commerce, refonte web, identité visuelle, community management, production photo/vidéo, campagnes (Meta/Google/TikTok Ads), email marketing, SEO, formation réseaux sociaux — intermark-business.com/digital","Commission : 10% N1 - 5% N2 - 2% N3"],
         ["IBIG DIGITAL KITS","Transformation numérique : intégration ERP (SAP/SAGE/Odoo/IBIG), développement web sur mesure, application mobile iOS & Android, chatbot IA, GED, kit marketing digital, formation ERP, cybersécurité & audit SI — kits.intermark-business.com","Commission : 10% N1 - 5% N2 - 2% N3"],
         ["IBIG CONSEIL+","Structuration, comptabilité, juridique, conseil stratégique, création d'entreprise — intermark-business.com/conseil","Commission : 10% N1 - 5% N2 - 2% N3 sur la mission"],
+        ["IBIG FINANCEMENT","Crédit PME, assurances (auto, santé, vie, RC pro, transport), épargne retraite, leasing, financement agricole, gestion de patrimoine — 20 offres","Commission : 5% N1 - 2,5% N2 - 1% N3"],
+        ["IBIG EMPLOI & TALENTS","Recrutement CDI/CDD, placement cadres, audit RH, coaching dirigeants, outplacement, externalisation RH, GPEC, marque employeur — 20 offres","Commission : 10% N1 - 5% N2 - 2% N3"],
         ["IBIG PARTNERS","Programme d'affiliation multi-niveaux, représentation commerciale, B2B — ibigpartners.com","Commission : Variable selon branche & niveau"],
-        ["IBIG MULTISERVICES","Événementiel, déménagement, maintenance, accueil VIP, logistique, BTP, tourisme — intermark-business.com/multiservices","Commission : 10% N1 - 5% N2 - 2% N3"],
+        ["IBIG MULTISERVICES","Événementiel, déménagement, maintenance, accueil VIP, logistique, gardiennage, transport VIP et 55 services — intermark-business.com/multiservices","Commission : 10% N1 - 5% N2 - 2% N3"],
       ];
 
       branches.forEach(([name,desc,comm]) => {
@@ -438,6 +440,8 @@ export default function GuidePage() {
           ["IBIG DIGITAL","10%","5%","2%"],
           ["IBIG DIGITAL KITS","10%","5%","2%"],
           ["IBIG CONSEIL+","10%","5%","2%"],
+          ["IBIG FINANCEMENT","5%","2,5%","1%"],
+          ["IBIG EMPLOI & TALENTS","10%","5%","2%"],
           ["IBIG MULTISERVICES","10%","5%","2%"],
         ],
         headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 8.5 },
@@ -679,19 +683,27 @@ export default function GuidePage() {
       // @ts-ignore
       py = (doc as any).lastAutoTable.finalY + 4;
 
-      // ── IBIG MULTISERVICES ──
-      py = subTitle("IBIG MULTISERVICES — N1=10% · N2=5% · N3=2%",py);
+      // ── IBIG FINANCEMENT ──
+      if (py > 240) { newPage(); header(8,14); footer(); py = 22; }
+      py = subTitle("IBIG FINANCEMENT — N1=5% · N2=2,5% · N3=1%",py);
       // @ts-ignore
       autoTable(doc,{
         startY: py,
         head: [["Service","Tarif indicatif","N1"]],
         body: [
-          ["Événementiel Professionnel","300 000 - 5 000 000 FCFA","10%"],
-          ["Déménagement & Stockage","100 000 - 1 000 000 FCFA","10%"],
-          ["Maintenance & Réparation","25 000 - 500 000 FCFA","10%"],
-          ["Logistique Last-Mile","15 000 - 300 000 FCFA/mission","10%"],
-          ["Tourisme d'Affaires","Sur devis","10%"],
-          ["Transport VIP","50 000 - 300 000 FCFA/jour","10%"],
+          ["Microcrédit PME (500 000 à 5 000 000 FCFA)","Sur devis","5%"],
+          ["Crédit de Trésorerie & Fonds de Roulement PME","Sur devis","5%"],
+          ["Financement Équipement / Leasing","Sur devis","5%"],
+          ["Financement Immobilier (Crédit hypothécaire)","Sur devis","5%"],
+          ["Financement Agricole & Rural","Sur devis","5%"],
+          ["Assurance Santé Collective","Dès 50 000 FCFA/mois","5%"],
+          ["Assurance Vie & Prévoyance","Dès 25 000 FCFA/mois","5%"],
+          ["Assurance Entreprise Multirisques","Dès 300 000 FCFA/an","5%"],
+          ["Assurance Auto Flotte Professionnelle","Dès 150 000 FCFA/an/véhicule","5%"],
+          ["Assurance RC Professionnelle & Décennale","Sur devis","5%"],
+          ["Plan d'Épargne Retraite Individuel","Dès 25 000 FCFA/mois","5%"],
+          ["Aide à la Levée de Fonds","Dès 400 000 FCFA","5%"],
+          ["Conseil en Investissement & Gestion de Patrimoine","Sur devis","5%"],
         ],
         headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
         bodyStyles: { fontSize: 7.5,textColor: DARK },
@@ -702,7 +714,69 @@ export default function GuidePage() {
       });
       // @ts-ignore
       py = (doc as any).lastAutoTable.finalY + 4;
-      py = infoBox("Catalogue complet : 9 branches · 14 logiciels SaaS · 10 formations certifiantes · 5 services immobiliers · 5 catégories commerce · 10 services digitaux · 8 solutions numériques · 6 missions conseil · 6 services polyvalents = 330+ produits et formules disponibles à promouvoir.",py,[235,255,245]);
+
+      // ── IBIG EMPLOI & TALENTS ──
+      if (py > 240) { newPage(); header(8,14); footer(); py = 22; }
+      py = subTitle("IBIG EMPLOI & TALENTS — N1=10% · N2=5% · N3=2%",py);
+      // @ts-ignore
+      autoTable(doc,{
+        startY: py,
+        head: [["Service","Tarif indicatif","N1"]],
+        body: [
+          ["Mission de Recrutement CDI","Dès 300 000 FCFA","10%"],
+          ["Mission de Recrutement CDD / Intérim","Dès 150 000 FCFA","10%"],
+          ["Placement de Profils Qualifiés / Cadres","Dès 200 000 FCFA","10%"],
+          ["Externalisation RH Complète","Dès 200 000 FCFA/mois","10%"],
+          ["Gestion du Personnel Externalisée","Dès 100 000 FCFA/mois","10%"],
+          ["Portage Salarial","Sur devis","10%"],
+          ["Audit RH & Diagnostic Organisationnel","Dès 200 000 FCFA","10%"],
+          ["Executive Coaching & Coaching de Dirigeants","Dès 150 000 FCFA/mois","10%"],
+          ["Assessment Center & Recrutement par Simulation","Dès 250 000 FCFA","10%"],
+          ["Outplacement & Accompagnement au Départ","Dès 300 000 FCFA","10%"],
+          ["GPEC & Gestion Prévisionnelle des Compétences","Dès 350 000 FCFA","10%"],
+          ["Tests de Compétences & Évaluation","Dès 80 000 FCFA","10%"],
+          ["Marque Employeur & Communication RH","Dès 200 000 FCFA","10%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
+        bodyStyles: { fontSize: 7.5,textColor: DARK },
+        alternateRowStyles: { fillColor: LIGHT },
+        margin: { left: 14,right: 14 },
+        styles: { cellPadding: 2 },
+        columnStyles: { 2: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold",halign: "center" } },
+      });
+      // @ts-ignore
+      py = (doc as any).lastAutoTable.finalY + 4;
+
+      // ── IBIG MULTISERVICES ──
+      if (py > 240) { newPage(); header(8,14); footer(); py = 22; }
+      py = subTitle("IBIG MULTISERVICES — N1=10% · N2=5% · N3=2% (55 services)",py);
+      // @ts-ignore
+      autoTable(doc,{
+        startY: py,
+        head: [["Service","Tarif indicatif","N1"]],
+        body: [
+          ["Organisation Événementielle Corporate","Dès 300 000 FCFA","10%"],
+          ["Organisation Événement Privé (Mariage, Gala)","Dès 150 000 FCFA","10%"],
+          ["Déménagement Particuliers & Entreprises","Dès 80 000 FCFA","10%"],
+          ["Nettoyage & Entretien de Locaux","Dès 40 000 FCFA/mois","10%"],
+          ["Gardiennage & Sécurité","Dès 80 000 FCFA/mois","10%"],
+          ["Accueil VIP & Conciergerie d'Entreprise","Dès 75 000 FCFA","10%"],
+          ["Maintenance & Dépannage d'Urgence","Dès 25 000 FCFA","10%"],
+          ["Chauffeur Privé & Transport VIP","Dès 30 000 FCFA/jour","10%"],
+          ["Location Véhicules / Matériel Événementiel","Sur devis","10%"],
+          ["Travaux de Rénovation & Construction","Sur devis","10%"],
+          ["Et 45+ autres services (pressing, soins, livraison, secrétariat...)","Variable","10%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
+        bodyStyles: { fontSize: 7.5,textColor: DARK },
+        alternateRowStyles: { fillColor: LIGHT },
+        margin: { left: 14,right: 14 },
+        styles: { cellPadding: 2 },
+        columnStyles: { 2: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold",halign: "center" } },
+      });
+      // @ts-ignore
+      py = (doc as any).lastAutoTable.finalY + 4;
+      py = infoBox("Catalogue complet : 11 branches · 14 logiciels SaaS · 10 formations certifiantes · 5 services immobiliers · 5 catégories commerce · 10 services digitaux · 8 solutions numériques · 6 missions conseil · 20 offres financement & assurances · 20 offres emploi & RH · 55 multiservices = 330+ produits et formules disponibles à promouvoir.",py,[235,255,245]);
 
       // ═══════════════════════════════════════════════════════════
       // PAGE 9 — KYC ET LIENS
@@ -1125,7 +1199,7 @@ export default function GuidePage() {
   }
 
   const chapters = [
-    { num: "01", title: "Présentation & Branches",       desc: "9 branches, vision, mission, engagement IBIG SARL",       icon: "🌍" },
+    { num: "01", title: "Présentation & Branches",       desc: "11 branches, vision, mission, engagement IBIG SARL",       icon: "🌍" },
     { num: "02", title: "Inscription & Types de comptes", desc: "Particulier, entreprise, ONG — processus étape par étape", icon: "✍️" },
     { num: "03", title: "Tableau de bord",                desc: "Vue d'ensemble, KPIs temps réel, alertes, navigation",     icon: "📊" },
     { num: "04", title: "Commissions N1/N2/N3",           desc: "Taux par branche, statuts, bonus, dégressivité SOFT",      icon: "💰" },
