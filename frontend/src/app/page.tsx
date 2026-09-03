@@ -140,22 +140,31 @@ export default async function HomePage() {
 
       {/* ═══════════ HERO — défilement pleine section ═══════════ */}
       <HeroSlider slides={CATALOG_HERO_SLIDES}>
-        {/* CTAs et réassurance : injectés dans chaque slide via children */}
-        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
+        {/* CTAs */}
+        <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center sm:gap-5">
           <Link
             href="/rejoindre"
-            className="rounded-xl bg-white px-6 py-3.5 text-center font-bold text-brand-700 shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-50 hover:shadow-xl sm:px-7"
+            className="inline-flex items-center gap-2 rounded-2xl bg-white px-8 py-4 text-center text-base font-extrabold text-brand-700 shadow-xl shadow-black/20 transition-all duration-200 hover:-translate-y-1 hover:bg-orange-50 hover:shadow-2xl sm:px-10"
+            style={{ fontFamily: "var(--font-poppins,sans-serif)" }}
           >
+            <svg className="h-4 w-4 text-orange-500" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M10 2a8 8 0 100 16A8 8 0 0010 2zm1 11H9v-2h2v2zm0-4H9V7h2v2z"/>
+            </svg>
             Devenir Partenaire — c&apos;est gratuit
           </Link>
           <a
             href="#simulateur"
-            className="rounded-xl border-2 border-white/30 px-6 py-3.5 text-center font-semibold text-white transition-all duration-200 hover:bg-white/10 sm:px-7"
+            className="inline-flex items-center gap-2 rounded-2xl border-2 border-white/40 bg-white/10 px-8 py-4 text-center text-base font-bold text-white backdrop-blur-sm transition-all duration-200 hover:-translate-y-1 hover:bg-white/20 sm:px-10"
           >
+            <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd"/>
+            </svg>
             Simuler mes gains
           </a>
         </div>
-        <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-white/70">
+
+        {/* Réassurance */}
+        <ul className="mt-4 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-white/65">
           {["Gratuit", "Inscription en 2 min", "Sans carte bancaire", "Sans engagement"].map((t) => (
             <li key={t} className="flex items-center gap-1.5">
               <svg className="h-3.5 w-3.5 shrink-0 text-orange-400" viewBox="0 0 16 16" fill="currentColor">
@@ -165,17 +174,19 @@ export default async function HomePage() {
             </li>
           ))}
         </ul>
-        {/* Stats bar en bas de chaque slide */}
-        <div className="mt-8 grid grid-cols-2 gap-4 border-t border-white/10 pt-6 sm:flex sm:flex-wrap sm:gap-8">
+
+        {/* Stats bar */}
+        <div className="mx-auto mt-10 flex flex-wrap justify-center gap-8 border-t border-white/10 pt-8 sm:gap-14">
           {[
-            { val: String(branches.length || 9), label: "Branches du groupe" },
+            { val: String(branches.length || 11), label: "Branches du groupe" },
             { val: "3",   label: "Niveaux de commission" },
             { val: "50%", label: "Commission max N1" },
             { val: "7j",  label: "Délai de paiement" },
           ].map(({ val, label }) => (
-            <div key={label} className="flex flex-col">
-              <span className="text-3xl font-extrabold tabular-nums text-amber-300 sm:text-4xl">{val}</span>
-              <span className="mt-1 text-sm text-white/60">{label}</span>
+            <div key={label} className="flex flex-col items-center gap-1">
+              <span className="text-4xl font-extrabold tabular-nums text-amber-300 sm:text-5xl"
+                style={{ fontFamily: "var(--font-poppins,sans-serif)" }}>{val}</span>
+              <span className="text-xs font-medium uppercase tracking-widest text-white/50">{label}</span>
             </div>
           ))}
         </div>
