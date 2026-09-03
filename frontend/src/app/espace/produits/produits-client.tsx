@@ -12,25 +12,35 @@ function CourseDetailPanel({ product }: { product: Product }) {
   const r5 = (x: number) => Math.round(x / 5000) * 5000;
   const ref = product.price;
   const pres = r5(ref * 16000 / 11250);
-  const rate = product.rate; // décimal ex: 0.10
+  const rate = product.rate;
 
+  // Chaque modalité définit : min/max de participants valides, et si N est libre (elearning)
   const modalities = [
-    { icon: "🖥️", label: "E-learning",         prixLigne: r5(ref * 0.50), prixPres: null },
-    { icon: "👤", label: "Individuel",          prixLigne: ref,            prixPres: pres },
-    { icon: "👥", label: "Groupe 3–5 pers",    prixLigne: r5(ref * 0.70), prixPres: r5(pres * 0.70) },
-    { icon: "👥", label: "Groupe 6–10 pers",   prixLigne: r5(ref * 0.55), prixPres: r5(pres * 0.55) },
-    { icon: "🏢", label: "Groupe 10+ pers",    prixLigne: r5(ref * 0.45), prixPres: r5(pres * 0.45) },
+    { key: "elearning",  icon: "🖥️", label: "E-learning",       minP: 1,  maxP: Infinity, prixLigne: r5(ref * 0.50), prixPres: null,              freeN: true  },
+    { key: "indiv",      icon: "👤", label: "Individuel",        minP: 1,  maxP: 1,        prixLigne: ref,            prixPres: pres,               freeN: false },
+    { key: "grp3",       icon: "👥", label: "Groupe 3–5 pers",  minP: 3,  maxP: 5,        prixLigne: r5(ref * 0.70), prixPres: r5(pres * 0.70),    freeN: false },
+    { key: "grp6",       icon: "👥", label: "Groupe 6–10 pers", minP: 6,  maxP: 10,       prixLigne: r5(ref * 0.55), prixPres: r5(pres * 0.55),    freeN: false },
+    { key: "grp10",      icon: "🏢", label: "Groupe 10+ pers",  minP: 11, maxP: Infinity, prixLigne: r5(ref * 0.45), prixPres: r5(pres * 0.45),    freeN: false },
   ];
 
+  // Modalité active selon N (la première dont la plage couvre N, hors e-learning qui est toujours dispo)
+  const activeGroup = modalities.find(m => m.key !== "elearning" && participants >= m.minP && participants <= m.maxP)
+    ?? modalities[1]; // fallback individuel
+
   const fmt = (n: number) => new Intl.NumberFormat("fr-FR").format(n) + " FCFA";
-  const comm = (prix: number) => Math.round(prix * rate * participants);
+
+  // Commission simulée : pour e-learning N libre, pour les autres N × prix/pers
+  const commLigne = (m: typeof modalities[0]) => Math.round(m.prixLigne * rate * (m.freeN ? participants : (m.key === "indiv" ? 1 : participants)));
+  const commPres  = (m: typeof modalities[0]) => m.prixPres ? Math.round(m.prixPres * rate * (m.freeN ? participants : (m.key === "indiv" ? 1 : participants))) : null;
+
+  const isActive = (m: typeof modalities[0]) => m.key === "elearning" || m.key === activeGroup.key;
 
   return (
     <div className="border-t border-slate-100 bg-slate-50/80 px-4 py-4 space-y-4">
       {/* Simulateur */}
       <div className="rounded-2xl bg-emerald-50 border border-emerald-100 px-4 py-3">
         <p className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-600 mb-2">🧮 Simulateur de commission</p>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
           <div className="flex items-center gap-2">
             <label className="text-xs font-bold text-slate-600">Participants :</label>
             <div className="flex items-center gap-1">
@@ -41,16 +51,27 @@ function CourseDetailPanel({ product }: { product: Product }) {
                 className="w-6 h-6 rounded-full bg-emerald-500 text-white font-bold text-sm flex items-center justify-center hover:bg-emerald-600 transition">+</button>
             </div>
           </div>
-          <div className="flex-1 text-right">
-            <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-wide">Commission totale estimée</p>
-            <p className="text-lg font-extrabold text-emerald-700">
-              {fmt(comm(ref))} <span className="text-[10px] font-semibold text-emerald-500">(individuel en ligne)</span>
-            </p>
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-wide">Formule applicable</p>
+            <p className="text-sm font-extrabold text-emerald-800">{activeGroup.icon} {activeGroup.label}</p>
+          </div>
+          <div className="text-right shrink-0">
+            <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-wide">Commission estimée</p>
+            <p className="text-base font-extrabold text-emerald-700">{fmt(commLigne(activeGroup))}</p>
+            {activeGroup.prixPres && (
+              <p className="text-[10px] text-emerald-500">présentiel : {fmt(commPres(activeGroup)!)}</p>
+            )}
           </div>
         </div>
+        {/* Hint selon la plage */}
+        {participants === 2 && (
+          <p className="mt-2 text-[10px] text-amber-600 font-semibold bg-amber-50 rounded-lg px-2 py-1">
+            ⚠️ Pas de formule groupe pour 2 pers. — tarif individuel ×2 séances appliqué.
+          </p>
+        )}
       </div>
 
-      {/* Tableau tarifs + commissions */}
+      {/* Tableau complet — lignes grisées si non applicable */}
       <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
         <table className="w-full text-xs">
           <thead>
@@ -58,30 +79,52 @@ function CourseDetailPanel({ product }: { product: Product }) {
               <th className="px-3 py-2 font-extrabold text-slate-500 uppercase tracking-wide">Modalité</th>
               <th className="px-3 py-2 font-extrabold text-slate-500 uppercase tracking-wide text-right">💻 En ligne</th>
               <th className="px-3 py-2 font-extrabold text-slate-500 uppercase tracking-wide text-right">🏛️ Présentiel</th>
-              <th className="px-3 py-2 font-extrabold text-emerald-600 uppercase tracking-wide text-right">Commission ×{participants}</th>
+              <th className="px-3 py-2 font-extrabold text-emerald-600 uppercase tracking-wide text-right">Commission</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50">
-            {modalities.map(m => (
-              <tr key={m.label} className="hover:bg-slate-50 transition">
-                <td className="px-3 py-2 text-slate-700 font-medium">{m.icon} {m.label}</td>
-                <td className="px-3 py-2 text-right font-bold text-slate-800">{fmt(m.prixLigne)}</td>
-                <td className="px-3 py-2 text-right font-bold text-slate-800">{m.prixPres ? fmt(m.prixPres) : "—"}</td>
-                <td className="px-3 py-2 text-right">
-                  <span className="font-extrabold text-emerald-700">{fmt(comm(m.prixLigne))}</span>
-                  {m.prixPres && <span className="text-emerald-400 font-semibold"> / {fmt(comm(m.prixPres))}</span>}
-                </td>
-              </tr>
-            ))}
-            <tr className="bg-slate-50">
-              <td className="px-3 py-2 text-slate-600 font-medium">🌍 Intra / International</td>
+            {modalities.map(m => {
+              const active = isActive(m);
+              const cl = commLigne(m);
+              const cp = commPres(m);
+              return (
+                <tr key={m.key} className={`transition ${active ? "bg-emerald-50/60" : "opacity-40"}`}>
+                  <td className={`px-3 py-2 font-medium ${active ? "text-slate-800 font-bold" : "text-slate-400"}`}>
+                    {m.icon} {m.label}
+                    {active && m.key !== "elearning" && (
+                      <span className="ml-1.5 text-[9px] bg-emerald-200 text-emerald-800 font-extrabold rounded-full px-1.5 py-0.5">✓ applicable</span>
+                    )}
+                  </td>
+                  <td className="px-3 py-2 text-right font-bold text-slate-700">{fmt(m.prixLigne)}</td>
+                  <td className="px-3 py-2 text-right font-bold text-slate-700">{m.prixPres ? fmt(m.prixPres) : "—"}</td>
+                  <td className="px-3 py-2 text-right">
+                    {active ? (
+                      <>
+                        <span className="font-extrabold text-emerald-700">{fmt(cl)}</span>
+                        {cp && <span className="text-emerald-400 font-semibold"> / {fmt(cp)}</span>}
+                        {m.freeN && participants > 1 && (
+                          <span className="text-[9px] text-emerald-500 block">×{participants} abonnés</span>
+                        )}
+                        {!m.freeN && m.key !== "indiv" && (
+                          <span className="text-[9px] text-emerald-500 block">×{participants} pers.</span>
+                        )}
+                      </>
+                    ) : (
+                      <span className="text-slate-300 font-semibold">{fmt(cl)}</span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+            <tr className="bg-slate-50 opacity-50">
+              <td className="px-3 py-2 text-slate-500 font-medium">🌍 Intra / International</td>
               <td className="px-3 py-2 text-right text-slate-400 italic" colSpan={2}>Sur devis</td>
-              <td className="px-3 py-2 text-right text-slate-400 italic font-semibold">Sur devis</td>
+              <td className="px-3 py-2 text-right text-slate-400 italic">Sur devis</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <p className="text-[10px] text-slate-400 italic">* Commissions estimées basées sur {Math.round(rate * 100)}% du prix HT. Les montants exacts dépendent de la vente réalisée.</p>
+      <p className="text-[10px] text-slate-400 italic">* Commissions estimées à {Math.round(rate * 100)}% du prix HT selon la formule applicable au nombre de participants.</p>
     </div>
   );
 }
