@@ -30,7 +30,7 @@ export async function GET(req: Request) {
   // Rang basé sur ventes confirmées du mois
   const salesAllMonth = await prisma.sale.groupBy({
     by: ["sellerId"],
-    where: { status: "CONFIRMED", confirmedAt: { gte: monthStart, lt: monthEnd } },
+    where: { status: "CONFIRMED", createdAt: { gte: monthStart, lt: monthEnd } },
     _count: { id: true },
     orderBy: { _count: { id: "desc" } },
   });
@@ -43,10 +43,10 @@ export async function GET(req: Request) {
   for (const partner of partners) {
     const [salesMonth, salesPrev, commissions, pendingPayout, topProductRaw] = await Promise.all([
       prisma.sale.count({
-        where: { sellerId: partner.id, status: "CONFIRMED", confirmedAt: { gte: monthStart, lt: monthEnd } },
+        where: { sellerId: partner.id, status: "CONFIRMED", createdAt: { gte: monthStart, lt: monthEnd } },
       }),
       prisma.sale.count({
-        where: { sellerId: partner.id, status: "CONFIRMED", confirmedAt: { gte: prevStart, lt: monthStart } },
+        where: { sellerId: partner.id, status: "CONFIRMED", createdAt: { gte: prevStart, lt: monthStart } },
       }),
       prisma.commission.aggregate({
         where: { userId: partner.id, status: { in: ["VALIDATED", "PENDING"] }, createdAt: { gte: monthStart, lt: monthEnd } },
@@ -58,7 +58,7 @@ export async function GET(req: Request) {
       }),
       prisma.sale.groupBy({
         by: ["productId"],
-        where: { sellerId: partner.id, status: "CONFIRMED", confirmedAt: { gte: monthStart, lt: monthEnd } },
+        where: { sellerId: partner.id, status: "CONFIRMED", createdAt: { gte: monthStart, lt: monthEnd } },
         _count: { id: true },
         orderBy: { _count: { id: "desc" } },
         take: 1,
