@@ -6,7 +6,7 @@ import { FaqAccordion } from "@/components/faq-accordion";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { HeroSlider, CATALOG_HERO_SLIDES } from "@/components/hero-slider";
 import { Icon, type IconName } from "@/components/icons";
-import { HeroDashboard, NetworkTree, GrowthBars } from "@/components/illustrations";
+import { NetworkTree, GrowthBars } from "@/components/illustrations";
 import { fcfa } from "@/lib/format";
 import { STATUS_DETAILS } from "@/lib/constants";
 import { LiveCalculator } from "@/components/live-calculator";
@@ -138,69 +138,48 @@ export default async function HomePage() {
       />
       <SiteHeader />
 
-      {/* ═══════════ HERO ═══════════ */}
-      <section className="gradient-hero relative overflow-hidden text-white">
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="animate-float absolute -right-32 -top-32 h-96 w-96 rounded-full bg-white/5" />
-          <div className="animate-float absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-white/5" style={{ animationDelay: "1s" }} />
-          <div className="animate-float absolute right-1/4 top-1/2 h-48 w-48 rounded-full bg-brand-500/20" style={{ animationDelay: "2s" }} />
-          {/* trame légère */}
-          <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+      {/* ═══════════ HERO — défilement pleine section ═══════════ */}
+      <HeroSlider slides={CATALOG_HERO_SLIDES}>
+        {/* CTAs et réassurance : injectés dans chaque slide via children */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
+          <Link
+            href="/rejoindre"
+            className="rounded-xl bg-white px-6 py-3.5 text-center font-bold text-brand-700 shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-50 hover:shadow-xl sm:px-7"
+          >
+            Devenir Partenaire — c&apos;est gratuit
+          </Link>
+          <a
+            href="#simulateur"
+            className="rounded-xl border-2 border-white/30 px-6 py-3.5 text-center font-semibold text-white transition-all duration-200 hover:bg-white/10 sm:px-7"
+          >
+            Simuler mes gains
+          </a>
         </div>
-
-        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:py-20 lg:py-24">
-          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
-            {/* Colonne texte */}
-            <div>
-              <HeroSlider slides={CATALOG_HERO_SLIDES} />
-
-              <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
-                <Link
-                  href="/rejoindre"
-                  className="rounded-xl bg-white px-6 py-3.5 text-center font-bold text-brand-700 shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-50 hover:shadow-xl sm:px-7"
-                >
-                  Devenir Partenaire — c&apos;est gratuit
-                </Link>
-                <a
-                  href="#simulateur"
-                  className="rounded-xl border-2 border-white/30 px-6 py-3.5 text-center font-semibold text-white transition-all duration-200 hover:bg-white/10 sm:px-7"
-                >
-                  Simuler mes gains
-                </a>
-              </div>
-
-              {/* Réassurance au point de décision — réduit la friction juste sous le CTA */}
-              <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-brand-100">
-                {["Gratuit", "Inscription en 2 min", "Sans carte bancaire", "Sans engagement"].map((t) => (
-                  <li key={t} className="flex items-center gap-1.5">
-                    <Icon name="check" className="h-3.5 w-3.5 shrink-0 text-gold-400" />
-                    {t}
-                  </li>
-                ))}
-              </ul>
+        <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-white/70">
+          {["Gratuit", "Inscription en 2 min", "Sans carte bancaire", "Sans engagement"].map((t) => (
+            <li key={t} className="flex items-center gap-1.5">
+              <svg className="h-3.5 w-3.5 shrink-0 text-orange-400" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.5 12.5 2 8l1.4-1.4 3.1 3.1 6.1-6.1L14 5z"/>
+              </svg>
+              {t}
+            </li>
+          ))}
+        </ul>
+        {/* Stats bar en bas de chaque slide */}
+        <div className="mt-8 grid grid-cols-2 gap-4 border-t border-white/10 pt-6 sm:flex sm:flex-wrap sm:gap-8">
+          {[
+            { val: String(branches.length || 9), label: "Branches du groupe" },
+            { val: "3",   label: "Niveaux de commission" },
+            { val: "50%", label: "Commission max N1" },
+            { val: "7j",  label: "Délai de paiement" },
+          ].map(({ val, label }) => (
+            <div key={label} className="flex flex-col">
+              <span className="text-3xl font-extrabold tabular-nums text-amber-300 sm:text-4xl">{val}</span>
+              <span className="mt-1 text-sm text-white/60">{label}</span>
             </div>
-
-            {/* Colonne illustration */}
-            <div className="hidden lg:block">
-              <HeroDashboard className="animate-float w-full" />
-            </div>
-          </div>
-
-          <div className="mt-12 grid grid-cols-2 gap-6 border-t border-white/10 pt-8 sm:flex sm:flex-wrap sm:gap-10 lg:mt-14">
-            {[
-              { val: branches.length || "9", label: "Branches du groupe" },
-              { val: "3",   label: "Niveaux de commission" },
-              { val: "50%", label: "Commission max N1" },
-              { val: "7j",  label: "Délai de paiement" },
-            ].map(({ val, label }) => (
-              <div key={label} className="flex flex-col">
-                <span className="text-numeral text-3xl text-gold-400 sm:text-4xl">{val}</span>
-                <span className="mt-1 text-sm text-brand-200">{label}</span>
-              </div>
-            ))}
-          </div>
+          ))}
         </div>
-      </section>
+      </HeroSlider>
 
       {/* ═══════════ TRUST BAR ═══════════ */}
       <section className="border-b border-slate-100 bg-white py-5">
