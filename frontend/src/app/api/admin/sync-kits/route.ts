@@ -125,11 +125,39 @@ const KITS: KitSeed[] = [
   // ── IBIG MULTISERVICES ───────────────────────────────────────────────
   {
     branchSlug: "ibig-multiservices", title: "Argumentaire Organisation Événementielle", type: "ARGUMENT",
-    content: "Mariage, séminaire d'entreprise, anniversaire : IBIG MULTISERVICES organise l'événement de A à Z (lieu, traiteur, décoration, logistique) pour que votre contact n'ait plus qu'à profiter du jour J.",
+    content: "Mariage, séminaire d'entreprise, anniversaire : IBIG MULTISERVICES organise l'événement de A à Z (lieu, traiteur, décoration, logistique) pour que votre contact n'ait plus qu'à profiter du jour J. 55 services disponibles.",
   },
   {
-    branchSlug: "ibig-multiservices", title: "Argumentaire Placement de Personnel", type: "ARGUMENT",
-    content: "Une entreprise qui cherche du personnel qualifié ou des ouvriers de chantier fiables ? IBIG MULTISERVICES présélectionne et place des candidats vérifiés, du personnel domestique aux cadres qualifiés.",
+    branchSlug: "ibig-multiservices", title: "Argumentaire Déménagement & Maintenance", type: "ARGUMENT",
+    content: "Votre contact déménage ou a besoin d'entretien ? IBIG MULTISERVICES couvre le déménagement (emballage, transport, stockage), la maintenance (plomberie, électricité, climatisation) et le nettoyage de locaux. Devis rapide, intervention sous 48h.",
+  },
+
+  // ── IBIG FINANCEMENT ─────────────────────────────────────────────────
+  {
+    branchSlug: "ibig-financement", title: "Argumentaire Crédit PME", type: "ARGUMENT",
+    content: "Votre contact a besoin de financement pour son entreprise ? IBIG FINANCEMENT facilite l'accès au crédit PME (fonds de roulement, équipement, leasing), avec accompagnement du dossier de A à Z. Commission N1 = 5% du montant du dossier.",
+  },
+  {
+    branchSlug: "ibig-financement", title: "Argumentaire Assurance Entreprise", type: "ARGUMENT",
+    content: "Toute entreprise a besoin d'être couverte. IBIG FINANCEMENT propose des assurances multirisques, RC professionnelle, flotte auto et assurance santé collective pour les équipes. Des offres adaptées à toutes les tailles de PME, dès 25 000 FCFA/mois.",
+  },
+  {
+    branchSlug: "ibig-financement", title: "Argumentaire Épargne & Patrimoine", type: "ARGUMENT",
+    content: "Aidez votre entourage à préparer l'avenir : IBIG FINANCEMENT propose des plans d'épargne retraite individuels et du conseil en gestion de patrimoine. Des solutions sécurisées et accessibles, dès 25 000 FCFA/mois.",
+  },
+
+  // ── IBIG EMPLOI & TALENTS ────────────────────────────────────────────
+  {
+    branchSlug: "ibig-emploi-talents", title: "Argumentaire Recrutement CDI/CDD", type: "ARGUMENT",
+    content: "Votre contact dirige une entreprise et cherche du personnel fiable ? IBIG EMPLOI & TALENTS prend en charge tout le recrutement : sourcing, tests, entretiens, sélection. CDI dès 300 000 FCFA, CDD/intérim dès 150 000 FCFA. Votre commission N1 = 10%.",
+  },
+  {
+    branchSlug: "ibig-emploi-talents", title: "Argumentaire Externalisation RH", type: "ARGUMENT",
+    content: "Les PME n'ont pas toujours les moyens d'avoir un DRH en interne. IBIG EMPLOI & TALENTS propose l'externalisation complète de la fonction RH : paie, contrats, recrutements, discipline. Dès 100 000 FCFA/mois, sans engagement long terme.",
+  },
+  {
+    branchSlug: "ibig-emploi-talents", title: "Argumentaire Coaching Dirigeants", type: "ARGUMENT",
+    content: "Un dirigeant qui stagne dans ses pratiques managériales freine toute son organisation. IBIG EMPLOI & TALENTS propose un coaching exécutif personnalisé, mensuel, pour les dirigeants et managers qui veulent passer à un niveau supérieur. Dès 150 000 FCFA/mois.",
   },
 ];
 
@@ -169,6 +197,6 @@ export async function POST() {
     ok: true,
     created,
     skipped,
-    message: `${created} ressource(s) de kit marketing synchronisée(s) sur les 9 branches.${skipped.length ? ` Branches introuvables : ${skipped.join(", ")}.` : ""}`,
+    message: `${created} ressource(s) de kit marketing synchronisée(s) sur les 11 branches.${skipped.length ? ` Branches introuvables : ${skipped.join(", ")}.` : ""}`,
   });
 }
