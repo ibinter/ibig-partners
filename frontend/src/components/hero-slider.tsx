@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 export interface HeroSlide {
   eyebrow: string;
@@ -117,122 +117,181 @@ export const CATALOG_HERO_SLIDES: HeroSlide[] = [
   },
 ];
 
-const ACCENT_COLORS: Record<string, string> = {
-  orange: "from-orange-400 to-amber-300",
-  blue:   "from-blue-300 to-cyan-200",
-  amber:  "from-amber-400 to-yellow-300",
-  violet: "from-violet-400 to-purple-300",
-  indigo: "from-indigo-400 to-blue-300",
-  teal:   "from-teal-400 to-cyan-300",
-  emerald:"from-emerald-400 to-green-300",
-  rose:   "from-rose-400 to-pink-300",
-  yellow: "from-yellow-400 to-amber-300",
-  slate:  "from-slate-300 to-slate-200",
+const ACCENT_GRAD: Record<string, string> = {
+  orange:  "from-orange-400 to-amber-300",
+  blue:    "from-blue-300 to-cyan-200",
+  amber:   "from-amber-400 to-yellow-300",
+  violet:  "from-violet-400 to-purple-300",
+  indigo:  "from-indigo-400 to-blue-300",
+  teal:    "from-teal-400 to-cyan-300",
+  emerald: "from-emerald-400 to-green-300",
+  rose:    "from-rose-400 to-pink-300",
+  yellow:  "from-yellow-400 to-amber-300",
+  slate:   "from-slate-300 to-slate-200",
 };
 
-const STAT_COLORS: Record<string, string> = {
-  orange: "bg-orange-500/20 text-orange-300 ring-orange-400/30",
-  blue:   "bg-blue-500/20 text-blue-200 ring-blue-400/30",
-  amber:  "bg-amber-500/20 text-amber-300 ring-amber-400/30",
-  violet: "bg-violet-500/20 text-violet-300 ring-violet-400/30",
-  indigo: "bg-indigo-500/20 text-indigo-300 ring-indigo-400/30",
-  teal:   "bg-teal-500/20 text-teal-300 ring-teal-400/30",
-  emerald:"bg-emerald-500/20 text-emerald-300 ring-emerald-400/30",
-  rose:   "bg-rose-500/20 text-rose-300 ring-rose-400/30",
-  yellow: "bg-yellow-500/20 text-yellow-300 ring-yellow-400/30",
-  slate:  "bg-slate-500/20 text-slate-300 ring-slate-400/30",
+const ACCENT_STAT: Record<string, string> = {
+  orange:  "bg-orange-500/20 text-orange-300 ring-orange-400/30",
+  blue:    "bg-blue-500/20 text-blue-200 ring-blue-400/30",
+  amber:   "bg-amber-500/20 text-amber-300 ring-amber-400/30",
+  violet:  "bg-violet-500/20 text-violet-300 ring-violet-400/30",
+  indigo:  "bg-indigo-500/20 text-indigo-300 ring-indigo-400/30",
+  teal:    "bg-teal-500/20 text-teal-300 ring-teal-400/30",
+  emerald: "bg-emerald-500/20 text-emerald-300 ring-emerald-400/30",
+  rose:    "bg-rose-500/20 text-rose-300 ring-rose-400/30",
+  yellow:  "bg-yellow-500/20 text-yellow-300 ring-yellow-400/30",
+  slate:   "bg-slate-500/20 text-slate-300 ring-slate-400/30",
 };
 
 export function HeroSlider({ slides = CATALOG_HERO_SLIDES }: { slides?: HeroSlide[] }) {
-  const [index, setIndex] = useState(0);
-  const [animating, setAnimating] = useState(false);
   const count = slides.length;
+  const [current, setCurrent] = useState(0);
+  const [next, setNext]       = useState<number | null>(null);
+  const [dir, setDir]         = useState<1 | -1>(1); // 1 = gauche→droite, -1 = droite→gauche
+  const [phase, setPhase]     = useState<"idle" | "enter" | "done">("idle");
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const go = useCallback((i: number) => {
-    if (animating) return;
-    setAnimating(true);
+  const go = useCallback((to: number, direction: 1 | -1 = 1) => {
+    if (phase !== "idle") return;
+    setDir(direction);
+    setNext(to);
+    setPhase("enter");
+
     setTimeout(() => {
-      setIndex(((i % count) + count) % count);
-      setAnimating(false);
-    }, 300);
-  }, [count, animating]);
+      setCurrent(to);
+      setNext(null);
+      setPhase("done");
+      setTimeout(() => setPhase("idle"), 50);
+    }, 480);
+  }, [phase]);
 
-  useEffect(() => {
-    if (count <= 1) return;
-    const t = setInterval(() => {
-      setAnimating(true);
+  const advance = useCallback(() => {
+    setCurrent((c) => {
+      const to = (c + 1) % count;
+      setDir(1);
+      setNext(to);
+      setPhase("enter");
       setTimeout(() => {
-        setIndex((i) => (i + 1) % count);
-        setAnimating(false);
-      }, 300);
-    }, 6000);
-    return () => clearInterval(t);
+        setCurrent(to);
+        setNext(null);
+        setPhase("done");
+        setTimeout(() => setPhase("idle"), 50);
+      }, 480);
+      return c;
+    });
   }, [count]);
 
-  const s = slides[index];
-  const accent = s.accent ?? "orange";
-  const gradClass = ACCENT_COLORS[accent] ?? ACCENT_COLORS.orange;
-  const statClass = STAT_COLORS[accent] ?? STAT_COLORS.orange;
+  useEffect(() => {
+    timerRef.current = setInterval(advance, 6000);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [advance]);
 
-  return (
-    <div className="w-full">
-      {/* Slide content */}
-      <div
-        className="transition-all duration-300 ease-in-out"
-        style={{ opacity: animating ? 0 : 1, transform: animating ? "translateY(8px)" : "translateY(0)" }}
-      >
-        <div className="flex flex-wrap items-center gap-3 mb-6">
+  const handleGo = (to: number) => {
+    if (to === current || phase !== "idle") return;
+    if (timerRef.current) clearInterval(timerRef.current);
+    go(to, to > current ? 1 : -1);
+    timerRef.current = setInterval(advance, 6000);
+  };
+
+  const s  = slides[current];
+  const sn = next !== null ? slides[next] : null;
+  const accent = s.accent ?? "orange";
+  const accentN = sn?.accent ?? "orange";
+
+  // Translate values pendant l'animation
+  const currentX = phase === "enter" ? `${dir * -100}%` : "0%";
+  const nextX    = phase === "enter" ? "0%" : `${dir * 100}%`;
+
+  function SlideContent({ slide, accent: a }: { slide: HeroSlide; accent: string }) {
+    const grad = ACCENT_GRAD[a] ?? ACCENT_GRAD.orange;
+    const stat = ACCENT_STAT[a] ?? ACCENT_STAT.orange;
+    return (
+      <div className="w-full">
+        <div className="flex flex-wrap items-center gap-3 mb-5">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-brand-100 backdrop-blur-sm">
             <span className="h-1.5 w-1.5 rounded-full bg-orange-400 animate-pulse" />
-            {s.eyebrow}
+            {slide.eyebrow}
           </span>
-          {s.tag && (
+          {slide.tag && (
             <span className="rounded-full bg-orange-500 px-3 py-1 text-xs font-bold text-white shadow-lg shadow-orange-500/30">
-              {s.tag}
+              {slide.tag}
             </span>
           )}
         </div>
 
         <h1 className="text-hero max-w-3xl text-white leading-tight">
-          {s.titleLead}{" "}
-          <span className={`bg-gradient-to-r ${gradClass} bg-clip-text text-transparent`}>
-            {s.titleHighlight}
+          {slide.titleLead}{" "}
+          <span className={`bg-gradient-to-r ${grad} bg-clip-text text-transparent`}>
+            {slide.titleHighlight}
           </span>
-          {s.titleTail ? ` ${s.titleTail}` : ""}
+          {slide.titleTail ? ` ${slide.titleTail}` : ""}
         </h1>
 
         <p className="mt-5 max-w-2xl text-lg leading-relaxed text-brand-100">
-          {s.desc}
+          {slide.desc}
         </p>
 
-        {s.stat && (
-          <div className={`mt-6 inline-flex items-center gap-3 rounded-2xl px-5 py-3 ring-1 backdrop-blur-sm ${statClass}`}>
-            <span className="text-2xl font-extrabold">{s.stat}</span>
-            <span className="text-sm font-medium opacity-80">{s.statLabel}</span>
+        {slide.stat && (
+          <div className={`mt-6 inline-flex items-center gap-3 rounded-2xl px-5 py-3 ring-1 backdrop-blur-sm ${stat}`}>
+            <span className="text-2xl font-extrabold">{slide.stat}</span>
+            <span className="text-sm font-medium opacity-80">{slide.statLabel}</span>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full">
+      {/* Zone de défilement */}
+      <div className="relative overflow-hidden" style={{ minHeight: "260px" }}>
+
+        {/* Slide actuel */}
+        <div
+          className="w-full transition-transform"
+          style={{
+            transitionDuration: "480ms",
+            transitionTimingFunction: "cubic-bezier(0.4,0,0.2,1)",
+            transform: `translateX(${currentX})`,
+          }}
+        >
+          <SlideContent slide={s} accent={accent} />
+        </div>
+
+        {/* Slide suivant (arrive depuis la droite ou gauche) */}
+        {sn && (
+          <div
+            className="absolute inset-0 w-full transition-transform"
+            style={{
+              transitionDuration: "480ms",
+              transitionTimingFunction: "cubic-bezier(0.4,0,0.2,1)",
+              transform: `translateX(${nextX})`,
+              willChange: "transform",
+            }}
+          >
+            <SlideContent slide={sn} accent={accentN} />
           </div>
         )}
       </div>
 
       {/* Navigation */}
       <div className="mt-8 flex items-center gap-3">
-        {/* Prev */}
         <button
-          onClick={() => go((index - 1 + count) % count)}
+          onClick={() => handleGo((current - 1 + count) % count)}
           className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition-all text-sm"
           aria-label="Précédent"
         >
           ‹
         </button>
 
-        {/* Dots */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 flex-wrap">
           {slides.map((_, i) => (
             <button
               key={i}
-              onClick={() => go(i)}
+              onClick={() => handleGo(i)}
               aria-label={`Slide ${i + 1}`}
               className={`rounded-full transition-all duration-300 ${
-                i === index
+                i === current
                   ? "w-7 h-2 bg-orange-400"
                   : "w-2 h-2 bg-white/25 hover:bg-white/50"
               }`}
@@ -240,18 +299,16 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES }: { slides?: HeroSlid
           ))}
         </div>
 
-        {/* Next */}
         <button
-          onClick={() => go((index + 1) % count)}
+          onClick={() => handleGo((current + 1) % count)}
           className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition-all text-sm"
           aria-label="Suivant"
         >
           ›
         </button>
 
-        {/* Counter */}
         <span className="ml-2 text-xs font-semibold text-white/40 tabular-nums">
-          {String(index + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
+          {String(current + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
         </span>
       </div>
     </div>

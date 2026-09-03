@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { FaqAccordion } from "@/components/faq-accordion";
 import { ScrollReveal } from "@/components/scroll-reveal";
-import { HeroSlider, type HeroSlide } from "@/components/hero-slider";
+import { HeroSlider, CATALOG_HERO_SLIDES } from "@/components/hero-slider";
 import { Icon, type IconName } from "@/components/icons";
 import { HeroDashboard, NetworkTree, GrowthBars } from "@/components/illustrations";
 import { fcfa } from "@/lib/format";
@@ -23,26 +23,6 @@ import { CommissionDetails } from "@/components/commission-details";
 import { BranchEcosystem } from "@/components/branch-ecosystem";
 export const dynamic = "force-dynamic";
 
-const HERO_SLIDES: HeroSlide[] = [
-  {
-    eyebrow: "IBIG SARL — Intermark Business International Group",
-    titleLead: "Une seule plateforme,",
-    titleHighlight: "tout l'écosystème IBIG",
-    desc: "IBIG PARTNERS réunit l'ensemble des produits et services du groupe IBIG SARL dans un programme d'affiliation unique : 14 logiciels métiers, 800+ formations certifiantes, financement & assurances, emploi & RH, immobilier et 55 services. Un compte, des centaines d'opportunités, des revenus à la clé.",
-  },
-  {
-    eyebrow: "Notre mission en Afrique",
-    titleLead: "Créons ensemble la",
-    titleHighlight: "richesse en Afrique",
-    desc: "Nous démocratisons l'accès au revenu : chacun, où qu'il soit sur le continent ou dans la diaspora, peut devenir acteur de l'économie numérique africaine et en vivre.",
-  },
-  {
-    eyebrow: "Un revenu qui dure",
-    titleLead: "Bâtissez une équipe,",
-    titleHighlight: "des revenus sur 3 niveaux",
-    desc: "Vendez, parrainez, accompagnez. Vous gagnez sur vos ventes directes et sur celles de votre réseau, jusqu'au 3ème niveau — un revenu qui grandit avec votre communauté.",
-  },
-];
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL && process.env.NEXT_PUBLIC_SITE_URL.startsWith("https://")
@@ -172,7 +152,7 @@ export default async function HomePage() {
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
             {/* Colonne texte */}
             <div>
-              <HeroSlider slides={HERO_SLIDES} />
+              <HeroSlider slides={CATALOG_HERO_SLIDES} />
 
               <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
                 <Link
