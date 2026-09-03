@@ -8,11 +8,22 @@ type Lang = "fr" | "en";
 export function Logo({ light = false, lang = "fr" }: { light?: boolean; lang?: Lang }) {
   return (
     <Link href={lang === "en" ? "/en" : "/"} className="group flex shrink-0 items-center gap-2.5 transition-transform hover:scale-[1.02]">
-      <span className="relative inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl shadow-md shadow-brand-700/30 ring-1 ring-white/10">
-        <Image src="/icon.svg" alt="IBIG PARTNERS" width={40} height={40} priority />
+      <span className="relative inline-flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl shadow-lg shadow-[#041B4D]/40 ring-2 ring-[#FF6A00]/30">
+        <Image src="/icon.svg" alt="IBIG PARTNERS" width={48} height={48} priority />
       </span>
-      <span className={`whitespace-nowrap font-extrabold tracking-tight leading-none ${light ? "text-white" : "text-ink"}`}>
-        IBIG <span className={light ? "text-gold-400" : "text-brand-600"}>PARTNERS</span>
+      <span className="flex flex-col leading-none">
+        <span
+          className={`font-extrabold tracking-tight text-[17px] ${light ? "text-white" : "text-[#041B4D]"}`}
+          style={{ fontFamily: "var(--font-poppins, 'Poppins', sans-serif)" }}
+        >
+          IBIG <span style={{ color: "#FF6A00" }}>PARTNERS</span>
+        </span>
+        <span
+          className={`text-[9px] font-semibold tracking-[0.18em] uppercase ${light ? "text-white/60" : "text-[#041B4D]/50"}`}
+          style={{ fontFamily: "var(--font-poppins, 'Poppins', sans-serif)" }}
+        >
+          ENSEMBLE, PLUS DE POSSIBILITÉS
+        </span>
       </span>
     </Link>
   );
@@ -22,7 +33,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
   return (
     <a
       href={href}
-      className="relative rounded-lg px-3 py-2 text-slate-600 hover:text-brand-700 transition-colors after:absolute after:bottom-1 after:left-1/2 after:h-0.5 after:w-0 after:-translate-x-1/2 after:rounded-full after:bg-brand-500 after:transition-all hover:after:w-4"
+      className="ibig-nav-link relative rounded-lg px-3 py-2 text-slate-600 transition-colors after:absolute after:bottom-1 after:left-1/2 after:h-0.5 after:w-0 after:-translate-x-1/2 after:rounded-full after:bg-[#FF6A00] after:transition-all hover:text-[#FF6A00] hover:after:w-4"
     >
       {children}
     </a>
@@ -50,12 +61,12 @@ function MarqueeBanner({ lang = "fr" }: { lang?: Lang }) {
   // Deux copies identiques pour une boucle continue sans coupure.
   const sequence = [...MARQUEE_ITEMS[lang], ...MARQUEE_ITEMS[lang]];
   return (
-    <div className="relative z-40 flex items-stretch bg-gradient-to-r from-brand-800 via-brand-700 to-brand-600 text-white">
+    <div className="relative z-40 flex items-stretch text-white" style={{ background: "#041B4D" }}>
       <div className="marquee-mask flex-1 overflow-hidden py-2">
         <div className="marquee-track">
           {sequence.map((item, i) => (
             <span key={i} className="mx-6 inline-flex items-center gap-3 text-xs font-medium tracking-wide text-brand-50">
-              <span className="text-gold-400">◆</span>
+              <span style={{ color: "#FF6A00" }}>◆</span>
               {item}
             </span>
           ))}
@@ -114,13 +125,15 @@ export function SiteHeader({ lang = "fr" }: { lang?: Lang }) {
           <LangSwitcher />
           <Link
             href="/connexion"
-            className="hidden rounded-lg px-3.5 py-2 text-sm font-semibold text-brand-700 hover:bg-brand-50 transition-colors sm:inline-flex"
+            className="hidden rounded-lg px-3.5 py-2 text-sm font-semibold transition-colors sm:inline-flex hover:bg-[#041B4D]/5"
+            style={{ color: "#041B4D" }}
           >
             {t.signIn}
           </Link>
           <Link
             href={t.joinHref}
-            className="group relative hidden sm:inline-flex items-center gap-1.5 overflow-hidden rounded-xl bg-gradient-to-r from-brand-600 via-brand-600 to-brand-700 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-brand-600/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-600/40"
+            className="group relative hidden sm:inline-flex items-center gap-1.5 overflow-hidden rounded-xl px-4 py-2 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
+            style={{ background: "linear-gradient(135deg, #FF6A00 0%, #e55d00 100%)", boxShadow: "0 4px 14px rgba(255,106,0,0.35)" }}
           >
             <span className="relative z-10">{t.join}</span>
             <span className="relative z-10 transition-transform group-hover:translate-x-0.5">→</span>
