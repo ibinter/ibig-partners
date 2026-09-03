@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   title: "IBIG PARTNERS — Programme d'Affiliation Panafricain",
   description:
     "Programme d'affiliation panafricain : un seul compte pour accéder à 14 logiciels et ERP SaaS, formations, immobilier et services des 11 branches IBIG SARL.",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "IBIG PARTNERS — Programme d'Affiliation Panafricain",
     description:
@@ -30,12 +33,21 @@ export const metadata: Metadata = {
     siteName: "IBIG PARTNERS",
     locale: "fr_FR",
     type: "website",
+    images: [
+      {
+        url: "/icon-512.png",
+        width: 512,
+        height: 512,
+        alt: "IBIG PARTNERS — Programme d'Affiliation Panafricain",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "IBIG PARTNERS — Programme d'Affiliation Panafricain",
     description:
       "Un seul compte pour promouvoir 14 logiciels et ERP SaaS, formations, immobilier et services des 11 branches d'IBIG SARL.",
+    images: ["/icon-512.png"],
   },
   manifest: "/manifest.webmanifest",
   appleWebApp: {
@@ -71,6 +83,52 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": `${SITE_URL}/#organization`,
+                  name: "IBIG PARTNERS",
+                  legalName: "IBIG SARL — Intermark Business International Group",
+                  url: SITE_URL,
+                  logo: {
+                    "@type": "ImageObject",
+                    url: `${SITE_URL}/icon-512.png`,
+                    width: 512,
+                    height: 512,
+                  },
+                  description:
+                    "Programme d'affiliation panafricain : un seul compte pour accéder à 14 logiciels ERP SaaS, formations certifiantes, immobilier et services des 11 branches IBIG SARL.",
+                  areaServed: ["CI", "SN", "CM", "BJ", "TG", "BF", "GN", "ML", "MR", "NE", "CD"],
+                  sameAs: [
+                    "https://www.facebook.com/ibigpartners",
+                    "https://www.linkedin.com/company/ibig-sarl",
+                  ],
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": `${SITE_URL}/#website`,
+                  url: SITE_URL,
+                  name: "IBIG PARTNERS",
+                  publisher: { "@id": `${SITE_URL}/#organization` },
+                  inLanguage: ["fr", "en"],
+                  potentialAction: {
+                    "@type": "SearchAction",
+                    target: {
+                      "@type": "EntryPoint",
+                      urlTemplate: `${SITE_URL}/offres?q={search_term_string}`,
+                    },
+                    "query-input": "required name=search_term_string",
+                  },
+                },
+              ],
+            }),
+          }}
+        />
         {children}
         <TawkVisibility />
         <PWARegister />
