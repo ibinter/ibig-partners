@@ -178,7 +178,7 @@ export default async function HomePage() {
         {/* Stats bar */}
         <div className="mx-auto mt-6 grid grid-cols-2 gap-4 border-t border-white/10 pt-6 sm:mt-8 sm:flex sm:flex-wrap sm:justify-center sm:gap-10 sm:pt-8">
           {[
-            { val: String(branches.length || 10), label: "Branches du groupe" },
+            { val: "10", label: "Branches du groupe" },
             { val: "3",   label: "Niveaux de commission" },
             { val: "50%", label: "Commission max N1" },
             { val: "7j",  label: "Délai de paiement" },

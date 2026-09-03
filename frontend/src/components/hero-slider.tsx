@@ -475,7 +475,7 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
     return (
       <div
         key={role}
-        className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden px-4 pt-10 pb-6 sm:px-8 sm:pt-20 sm:pb-10 lg:pt-24 lg:pb-12 text-center"
+        className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden px-4 pt-6 pb-4 sm:px-8 sm:pt-16 sm:pb-8 lg:pt-20 lg:pb-10 text-center"
         style={{ background: slide.bg ?? "linear-gradient(135deg,#041B4D 0%,#0b3a8a 100%)", ...s }}
       >
         {/* Illustration de fond */}
@@ -540,7 +540,7 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
   return (
     <div className="relative w-full flex flex-col">
       {/* ── Slides (hauteur fixe) ── */}
-      <div className="relative overflow-hidden" style={{ minHeight: "clamp(520px,88vh,700px)" }}>
+      <div className="relative overflow-hidden" style={{ minHeight: "clamp(640px,94vh,820px)" }}>
         {renderSlide(cur, "current")}
         {next !== null && renderSlide(next, "entering")}
       </div>
