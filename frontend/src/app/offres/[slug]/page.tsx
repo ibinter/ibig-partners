@@ -254,16 +254,10 @@ export default async function OffrePage({
           <div className="flex flex-col sm:flex-row items-start sm:items-stretch gap-4">
             {/* Card prix */}
             <div className="rounded-2xl bg-white/15 border border-white/25 backdrop-blur-sm px-6 py-5 min-w-[180px]">
-              <p className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-white/50 mb-1">
-                {isCourse && product.price > 0 ? "À partir de" : "Prix de référence"}
-              </p>
-              <p className="text-4xl font-extrabold text-white leading-none">
-                {isCourse && product.price > 0
-                  ? `${(Math.round(product.price * 0.5 / 5000) * 5000).toLocaleString("fr-FR")} FCFA`
-                  : priceDisplay}
-              </p>
+              <p className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-white/50 mb-1">Prix de référence</p>
+              <p className="text-4xl font-extrabold text-white leading-none">{priceDisplay}</p>
               {isService && <p className="text-xs text-white/55 mt-2 font-medium">Devis gratuit · Sous 24h</p>}
-              {isCourse && <p className="text-xs text-white/55 mt-2 font-medium">E-learning · Certificat · Replay inclus</p>}
+              {isCourse && <p className="text-xs text-white/55 mt-2 font-medium">Voir tableau des tarifs ci-dessous</p>}
             </div>
 
             {/* CTAs */}
@@ -370,16 +364,6 @@ export default async function OffrePage({
                   <span className="text-xl">💰</span>
                   <h2 className="text-sm font-extrabold text-slate-800">Tarifs & Modalités</h2>
                 </div>
-                {/* Badge À partir de */}
-                <div className="px-6 pt-5 pb-2 flex items-center gap-3">
-                  <div className="inline-flex items-baseline gap-1.5 rounded-2xl px-5 py-3 border-2" style={{ background: theme.light, borderColor: theme.accent }}>
-                    <span className="text-xs font-extrabold uppercase tracking-widest" style={{ color: theme.accent }}>À partir de</span>
-                    <span className="text-3xl font-extrabold text-slate-900">
-                      {(Math.round(product.price * 0.5 / 5000) * 5000).toLocaleString("fr-FR")} FCFA
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-500">Tarif e-learning — à votre rythme</p>
-                </div>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
@@ -462,16 +446,10 @@ export default async function OffrePage({
               {/* Card CTA sidebar */}
               <div className="rounded-3xl overflow-hidden shadow-xl border border-slate-100 bg-white">
                 <div className={`bg-gradient-to-br ${theme.gradient} px-5 py-6 text-white text-center`}>
-                  <p className="text-[10px] font-extrabold uppercase tracking-widest text-white/60 mb-1">
-                    {isCourse && product.price > 0 ? "À partir de" : "Prix de référence"}
-                  </p>
-                  <p className="text-4xl font-extrabold">
-                    {isCourse && product.price > 0
-                      ? `${(Math.round(product.price * 0.5 / 5000) * 5000).toLocaleString("fr-FR")} FCFA`
-                      : priceDisplay}
-                  </p>
+                  <p className="text-[10px] font-extrabold uppercase tracking-widest text-white/60 mb-1">Prix de référence</p>
+                  <p className="text-4xl font-extrabold">{priceDisplay}</p>
                   {isService && <p className="text-xs text-white/60 mt-1">Devis gratuit · Sous 24h</p>}
-                  {isCourse && <p className="text-xs text-white/60 mt-1">E-learning · Devis sur demande</p>}
+                  {isCourse && <p className="text-xs text-white/60 mt-1">Voir tableau des tarifs</p>}
                 </div>
                 <div className="p-5 space-y-3">
                   <a
