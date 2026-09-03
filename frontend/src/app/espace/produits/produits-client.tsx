@@ -276,7 +276,7 @@ export default function ProduitsClient({ branches, totalProducts, totalActive, m
       results.sort((a, b) => (b.recommended ? 1 : 0) - (a.recommended ? 1 : 0));
     }
     return results;
-  }, [allProducts, selectedBranch, filter, search, marketSectors]);
+  }, [allProducts, selectedBranch, selectedCategory, filter, search, marketSectors]);
 
   const totalCommissionPotential = filtered.filter(p => p.affiliateUrl).reduce((s, p) => s + (p.price > 0 ? Math.round(p.price * p.rate / 100) : 0), 0);
 
