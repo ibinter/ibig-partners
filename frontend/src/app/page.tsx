@@ -27,7 +27,7 @@ const HERO_SLIDES: HeroSlide[] = [
     eyebrow: "IBIG SARL — Intermark Business International Group",
     titleLead: "Une seule plateforme,",
     titleHighlight: "tout l'écosystème IBIG",
-    desc: "IBIG PARTNERS réunit l'ensemble des produits et services du groupe IBIG SARL dans un programme d'affiliation unique : 14 logiciels métiers, formations, immobilier et services. Un compte, des dizaines d'opportunités, des revenus à la clé.",
+    desc: "IBIG PARTNERS réunit l'ensemble des produits et services du groupe IBIG SARL dans un programme d'affiliation unique : 14 logiciels métiers, 800+ formations certifiantes, financement & assurances, emploi & RH, immobilier et 55 services. Un compte, des centaines d'opportunités, des revenus à la clé.",
   },
   {
     eyebrow: "Notre mission en Afrique",
@@ -69,7 +69,7 @@ const POSITIONING: { icon: IconName; title: string; desc: string }[] = [
 
 const MISSION: { icon: IconName; title: string; desc: string }[] = [
   { icon: "globe",     title: "Démocratiser le revenu",   desc: "Offrir à chaque Africain, urbain ou rural, salarié ou indépendant, une source de revenu accessible sans capital de départ." },
-  { icon: "store",     title: "Valoriser le local",       desc: "Promouvoir des solutions conçues en Afrique pour l'Afrique : 14 logiciels métiers couvrant plus de 17 secteurs (scolaire, BTP, santé, agriculture, Mobile Money, commerce, immobilier, ONG…), des formations et des services adaptés à nos réalités." },
+  { icon: "store",     title: "Valoriser le local",       desc: "Promouvoir des solutions conçues en Afrique pour l'Afrique : 14 logiciels SaaS couvrant 17+ secteurs, 800+ formations certifiantes, des services de financement, d'emploi et 55 multiservices — le tout adapté à nos réalités économiques." },
   { icon: "users",     title: "Créer des entrepreneurs",  desc: "Transformer chaque partenaire en chef d'entreprise de son réseau, avec les outils et la formation pour réussir." },
   { icon: "handshake", title: "Inclure la diaspora",      desc: "Connecter la diaspora aux opportunités du continent et permettre à chacun d'investir son énergie dans l'économie africaine." },
 ];
@@ -137,7 +137,7 @@ export default async function HomePage() {
     "@type": "Organization",
     name: "IBIG PARTNERS",
     description:
-      "Programme d'affiliation panafricain du Groupe IBIG SARL : accès à 14 logiciels et ERP SaaS, formations, immobilier et services, avec commissions sur 3 niveaux.",
+      "Programme d'affiliation panafricain du Groupe IBIG SARL : accès à 14 logiciels et ERP SaaS, formations certifiantes, financement & assurances, emploi & RH, immobilier et multiservices, avec commissions sur 3 niveaux.",
     url: SITE_URL,
     logo: `${SITE_URL}/icon-512.png`,
     parentOrganization: {

@@ -98,7 +98,7 @@ export default function GuideAffilie() {
       doc.text(t("Programme d'Affiliation Multi-Niveaux Toutes les cles pour réussir"),W / 2,154,{ align: "center"});
       doc.text(t("INTERMARK BUSINESS INTERNATIONAL GROUP SARL"),W / 2,162,{ align: "center"});
       doc.setTextColor(...GOLD); doc.setFontSize(8);
-      doc.text(t("Version 1.0 Juin 2026"),W / 2,174,{ align: "center"});
+      doc.text(t("Version 2.0 Septembre 2026"),W / 2,174,{ align: "center"});
       doc.setFontSize(7.5); doc.setTextColor(130,155,200);
       doc.text(t("ibigpartners.com ibigpartners.com contact@ibigpartners.com +225 07 78 88 25 92"),W / 2,H - 14,{ align: "center"});
 
@@ -157,17 +157,19 @@ export default function GuideAffilie() {
       y = infoBox(t("EXEMPLE CONCRET : Si vous vendez Scolaby a partir de 10 000 FCFA/mois, vous gagnez 2 000 FCFA (20%). Votre filleul vend aussi Scolaby : vous gagnez automatiquement 1 000 FCFA supplémentaires (10% N2) sans rien faire de plus."),y,[240,253,244]);
       y += 3;
 
-      y = sub(t("Les 9 Branches du Groupe IBIG SARL"),y);
+      y = sub(t("Les 11 Branches du Groupe IBIG SARL"),y);
       const branches = [
         [t("IBIG SOFT"),t("14 logiciels/ERP SaaS : Scolaby, Fleet 360, GESCOMXEL, Zelivry, Lokativo, StockFlow, CONSTRUIRO, SANTAREX, AGRIFRIK, GESTMONEY, ANOUANZÊ, FactPro, SECRETIS, DocPro — ibigsoft.com"),t("20%/10%/5%")],
-        [t("IBIG EDUFORM"),t("Formations certifiantes : comptabilité, RH, QHSE, Sage, SAP, IA... — ibig-eduform.com"),t("10%/5%/2%")],
+        [t("IBIG EDUFORM"),t("800+ formations certifiantes : Comptabilité & Finance, Management, QHSE, RH, Sage, SAP, IA, Achats, Logistique, Marketing, Droit... — ibig-eduform.com"),t("10%/5%/2%")],
         [t("IBIG IMMO TRUST"),t("Immobilier sécurisé, BTP, gestion locative, transactions, diaspora — ibigimmotrust.com"),t("5%/2,5%/1%")],
         [t("IBIG MARKET"),t("Vente physique et e-commerce : IT, mobilier, fournitures, livraison — ibig-market.com"),t("8%/4%/2%")],
         [t("IBIG DIGITAL"),t("Création digitale, communication visuelle, site vitrine, identité visuelle, community management — intermark-business.com/digital"),t("10%/5%/2%")],
         [t("IBIG DIGITAL KITS"),t("Transformation numérique : ERP, app mobile, IA, chatbots, kits prêts à l'emploi — kits.intermark-business.com"),t("10%/5%/2%")],
         [t("IBIG CONSEIL+"),t("Structuration, comptabilité, juridique, conseil stratégique, création d'entreprise — intermark-business.com/conseil"),t("10%/5%/2%")],
-        [t("IBIG PARTNERS"),t("Programme d'affiliation multi-niveaux, représentation commerciale, B2B — ibigpartners.com"),t("Variable")],
-        [t("IBIG MULTISERVICES"),t("Événementiel, déménagement, maintenance, accueil VIP, logistique, BTP, tourisme — intermark-business.com/multiservices"),t("10%/5%/2%")],
+        [t("IBIG FINANCEMENT"),t("Crédit PME, assurances (auto, santé, vie, RC pro, transport), épargne retraite, leasing, financement agricole, gestion de patrimoine — 20 offres"),t("5%/2,5%/1%")],
+        [t("IBIG EMPLOI & TALENTS"),t("Recrutement CDI/CDD, placement cadres, audit RH, coaching dirigeants, outplacement, externalisation RH, GPEC, marque employeur — 20 offres"),t("10%/5%/2%")],
+        [t("IBIG PARTNERS"),t("Programme d'affiliation multi-niveaux, représentation commerciale, packs affiliés, formations vente, challenges & récompenses — ibigpartners.com"),t("Variable")],
+        [t("IBIG MULTISERVICES"),t("55 services : événementiel, déménagement, nettoyage, gardiennage, accueil VIP, conciergerie, car wash, logistique, santé à domicile, BTP, tourisme — intermark-business.com/multiservices"),t("10%/5%/2%")],
       ];
       branches.forEach(([name,desc,comm]) => {
         y = checkPage(y,3);
@@ -295,6 +297,8 @@ export default function GuideAffilie() {
           [t("IBIG DIGITAL"),"10%","5%","2%"],
           [t("IBIG DIGITAL KITS"),"10%","5%","2%"],
           [t("IBIG CONSEIL+"),"10%","5%","2%"],
+          [t("IBIG FINANCEMENT"),"5%","2,5%","1%"],
+          [t("IBIG EMPLOI & TALENTS"),"10%","5%","2%"],
           [t("IBIG MULTISERVICES"),"10%","5%","2%"],
         ],
         headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 9 },
@@ -558,12 +562,57 @@ export default function GuideAffilie() {
           ],
         },
         {
-          branch: t("IBIG MULTISERVICES - Commissions : N1=10%, N2=5%, N3=2% — intermark-business.com/multiservices"),
+          branch: t("IBIG FINANCEMENT - Commissions : N1=5%, N2=2,5%, N3=1%"),
           items: [
-            t("Organisation Événementielle (conférences, séminaires, mariages)"),
-            t("Déménagement & Transport"),
-            t("Maintenance & Dépannage (plomberie, électricité, climatisation)"),
-            t("Accueil VIP & Conciergerie"),
+            t("Crédit de Trésorerie & Fonds de Roulement PME - Sur devis | N1=5% du montant du dossier"),
+            t("Microcrédit PME (500 000 a 5 000 000 FCFA) - Sur devis | N1=5%"),
+            t("Financement Immobilier (crédit hypothécaire) - Sur devis | N1=5%"),
+            t("Financement Équipement / Leasing - Sur devis | N1=5%"),
+            t("Financement Agricole & Rural - Sur devis | N1=5%"),
+            t("Assurance Santé Collective - 50 000 FCFA/mois | N1=2 500, N2=1 250, N3=500 FCFA/mois"),
+            t("Assurance Vie & Prévoyance - 25 000 FCFA/mois | N1=1 250, N2=625, N3=250 FCFA/mois"),
+            t("Assurance Entreprise Multirisques - 300 000 FCFA/an | N1=15 000, N2=7 500, N3=3 000 FCFA/an"),
+            t("Assurance Auto Flotte Professionnelle - 150 000 FCFA/an par véhicule | N1=7 500 FCFA/an"),
+            t("Assurance RC Professionnelle & Décennale - Sur devis | N1=5%"),
+            t("Épargne Retraite Individuelle - 25 000 FCFA/mois | N1=1 250 FCFA/mois"),
+            t("Aide à la Levée de Fonds - 400 000 FCFA | N1=20 000, N2=10 000, N3=4 000 FCFA"),
+            t("Conseil en Investissement & Gestion de Patrimoine - Sur devis | N1=5%"),
+          ],
+        },
+        {
+          branch: t("IBIG EMPLOI & TALENTS - Commissions : N1=10%, N2=5%, N3=2%"),
+          items: [
+            t("Mission de Recrutement CDI - 300 000 FCFA | N1=30 000, N2=15 000, N3=6 000 FCFA"),
+            t("Mission de Recrutement CDD / Intérim - 150 000 FCFA | N1=15 000, N2=7 500, N3=3 000 FCFA"),
+            t("Placement de Profils Qualifiés / Cadres - 200 000 FCFA | N1=20 000, N2=10 000, N3=4 000 FCFA"),
+            t("Externalisation RH Complète - 200 000 FCFA/mois | N1=20 000, N2=10 000, N3=4 000 FCFA/mois"),
+            t("Gestion du Personnel Externalisée - 100 000 FCFA/mois | N1=10 000 FCFA/mois"),
+            t("Portage Salarial - Sur devis | N1=10%"),
+            t("Audit RH & Diagnostic Organisationnel - 200 000 FCFA | N1=20 000, N2=10 000, N3=4 000 FCFA"),
+            t("Executive Coaching & Coaching de Dirigeants - 150 000 FCFA/mois | N1=15 000 FCFA/mois"),
+            t("Assessment Center & Recrutement par Simulation - 250 000 FCFA | N1=25 000 FCFA"),
+            t("Outplacement & Accompagnement au Départ - 300 000 FCFA | N1=30 000 FCFA"),
+            t("Formation Management & Leadership Intra-Entreprise - 300 000 FCFA | N1=30 000 FCFA"),
+            t("GPEC & Gestion Prévisionnelle des Compétences - 350 000 FCFA | N1=35 000 FCFA"),
+            t("Tests de Compétences & Évaluation - 80 000 FCFA | N1=8 000, N2=4 000, N3=1 600 FCFA"),
+          ],
+        },
+        {
+          branch: t("IBIG MULTISERVICES - Commissions : N1=10%, N2=5%, N3=2% — 55 services disponibles"),
+          items: [
+            t("Organisation Événementielle Corporate - 300 000 FCFA+ | N1=30 000+ FCFA"),
+            t("Organisation Événement Privé (Mariage, Gala) - 150 000 FCFA+ | N1=15 000+ FCFA"),
+            t("Déménagement Particuliers - 80 000 FCFA+ | N1=8 000+ FCFA"),
+            t("Déménagement & Transfert de Bureaux - 200 000 FCFA+ | N1=20 000+ FCFA"),
+            t("Nettoyage & Entretien de Locaux - 40 000 FCFA/mois | N1=4 000 FCFA/mois"),
+            t("Gardiennage & Sécurité - 80 000 FCFA/mois | N1=8 000 FCFA/mois"),
+            t("Accueil VIP & Conciergerie d'Entreprise - 75 000 FCFA+ | N1=7 500+ FCFA"),
+            t("Maintenance & Dépannage d'Urgence - 25 000 FCFA+ | N1=2 500+ FCFA"),
+            t("Chauffeur Privé & Transport VIP - 30 000 FCFA/jour | N1=3 000 FCFA/jour"),
+            t("Location Véhicules / Groupes Électrogènes / Matériel Événementiel - Sur devis | N1=10%"),
+            t("Placement Personnel Domestique / Ouvriers / Employés Qualifiés - 25 000 a 100 000 FCFA | N1=10%"),
+            t("Travaux de Rénovation & Construction - Sur devis | N1=10%"),
+            t("Et 40+ autres services (pressing, soins infirmiers, car wash, livraison médicaments, secrétariat externalisé...)"),
           ],
         },
       ];
