@@ -35,96 +35,137 @@ function CourseDetailPanel({ product }: { product: Product }) {
 
   const isActive = (m: typeof modalities[0]) => m.key === "elearning" || m.key === activeGroup.key;
 
+  const activeCommLigne = commLigne(activeGroup);
+  const activeCommPres  = commPres(activeGroup);
+
   return (
-    <div className="border-t border-slate-100 bg-slate-50/80 px-4 py-4 space-y-4">
-      {/* Simulateur */}
-      <div className="rounded-2xl bg-emerald-50 border border-emerald-100 px-4 py-3">
-        <p className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-600 mb-2">🧮 Simulateur de commission</p>
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-2">
-            <label className="text-xs font-bold text-slate-600">Participants :</label>
-            <div className="flex items-center gap-1">
-              <button onClick={() => setParticipants(p => Math.max(1, p - 1))}
-                className="w-6 h-6 rounded-full bg-white border border-slate-200 text-slate-600 font-bold text-sm flex items-center justify-center hover:bg-slate-100 transition">−</button>
-              <span className="w-8 text-center text-sm font-extrabold text-slate-800">{participants}</span>
-              <button onClick={() => setParticipants(p => p + 1)}
-                className="w-6 h-6 rounded-full bg-emerald-500 text-white font-bold text-sm flex items-center justify-center hover:bg-emerald-600 transition">+</button>
+    <div className="border-t-2 border-emerald-100 bg-gradient-to-b from-emerald-50/60 to-white px-4 pt-4 pb-5 space-y-4">
+
+      {/* ── Simulateur ── */}
+      <div className="rounded-2xl bg-white border border-emerald-200 shadow-sm overflow-hidden">
+        {/* Header simulateur */}
+        <div className="bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-2.5 flex items-center gap-2">
+          <span className="text-base">🧮</span>
+          <p className="text-[11px] font-extrabold uppercase tracking-widest text-white">Simulateur de commission</p>
+        </div>
+
+        <div className="px-4 py-3 space-y-3">
+          {/* Contrôle participants */}
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-bold text-slate-500 shrink-0">Participants :</span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setParticipants(p => Math.max(1, p - 1))}
+                className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-base flex items-center justify-center transition"
+              >−</button>
+              <span className="w-10 text-center text-lg font-extrabold text-slate-900 tabular-nums">{participants}</span>
+              <button
+                onClick={() => setParticipants(p => p + 1)}
+                className="w-7 h-7 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-base flex items-center justify-center transition"
+              >+</button>
+            </div>
+            {/* Badge formule active */}
+            <span className="ml-auto shrink-0 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-2.5 py-1 border border-emerald-200">
+              {activeGroup.icon} {activeGroup.label}
+            </span>
+          </div>
+
+          {participants === 2 && (
+            <p className="text-[10px] text-amber-700 font-semibold bg-amber-50 border border-amber-200 rounded-xl px-3 py-1.5">
+              ⚠️ Pas de formule groupe pour 2 pers. — 2 séances individuelles appliquées.
+            </p>
+          )}
+
+          {/* Résultat commission */}
+          <div className="grid grid-cols-2 gap-2">
+            <div className="rounded-xl bg-emerald-50 border border-emerald-100 px-3 py-2.5 text-center">
+              <p className="text-[9px] font-extrabold uppercase tracking-widest text-emerald-500 mb-0.5">💻 En ligne</p>
+              <p className="text-base font-extrabold text-emerald-700 tabular-nums">{fmt(activeCommLigne)}</p>
+              {!activeGroup.freeN && activeGroup.key !== "indiv" && (
+                <p className="text-[9px] text-emerald-400 font-semibold">{fmt(Math.round(activeGroup.prixLigne * rate))}/pers. ×{participants}</p>
+              )}
+            </div>
+            <div className={`rounded-xl border px-3 py-2.5 text-center ${activeCommPres ? "bg-teal-50 border-teal-100" : "bg-slate-50 border-slate-100 opacity-50"}`}>
+              <p className="text-[9px] font-extrabold uppercase tracking-widest text-teal-500 mb-0.5">🏛️ Présentiel</p>
+              {activeCommPres ? (
+                <>
+                  <p className="text-base font-extrabold text-teal-700 tabular-nums">{fmt(activeCommPres)}</p>
+                  {!activeGroup.freeN && activeGroup.key !== "indiv" && (
+                    <p className="text-[9px] text-teal-400 font-semibold">{fmt(Math.round((activeGroup.prixPres ?? 0) * rate))}/pers. ×{participants}</p>
+                  )}
+                </>
+              ) : (
+                <p className="text-sm font-bold text-slate-400">—</p>
+              )}
             </div>
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-wide">Formule applicable</p>
-            <p className="text-sm font-extrabold text-emerald-800">{activeGroup.icon} {activeGroup.label}</p>
-          </div>
-          <div className="text-right shrink-0">
-            <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-wide">Commission estimée</p>
-            <p className="text-base font-extrabold text-emerald-700">{fmt(commLigne(activeGroup))}</p>
-            {activeGroup.prixPres && (
-              <p className="text-[10px] text-emerald-500">présentiel : {fmt(commPres(activeGroup)!)}</p>
-            )}
-          </div>
         </div>
-        {/* Hint selon la plage */}
-        {participants === 2 && (
-          <p className="mt-2 text-[10px] text-amber-600 font-semibold bg-amber-50 rounded-lg px-2 py-1">
-            ⚠️ Pas de formule groupe pour 2 pers. — tarif individuel ×2 séances appliqué.
-          </p>
-        )}
       </div>
 
-      {/* Tableau complet — lignes grisées si non applicable */}
-      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
-        <table className="w-full text-xs">
-          <thead>
-            <tr className="bg-slate-100 text-left">
-              <th className="px-3 py-2 font-extrabold text-slate-500 uppercase tracking-wide">Modalité</th>
-              <th className="px-3 py-2 font-extrabold text-slate-500 uppercase tracking-wide text-right">💻 En ligne</th>
-              <th className="px-3 py-2 font-extrabold text-slate-500 uppercase tracking-wide text-right">🏛️ Présentiel</th>
-              <th className="px-3 py-2 font-extrabold text-emerald-600 uppercase tracking-wide text-right">Commission</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-50">
-            {modalities.map(m => {
-              const active = isActive(m);
-              const cl = commLigne(m);
-              const cp = commPres(m);
-              return (
-                <tr key={m.key} className={`transition ${active ? "bg-emerald-50/60" : "opacity-40"}`}>
-                  <td className={`px-3 py-2 font-medium ${active ? "text-slate-800 font-bold" : "text-slate-400"}`}>
-                    {m.icon} {m.label}
-                    {active && m.key !== "elearning" && (
-                      <span className="ml-1.5 text-[9px] bg-emerald-200 text-emerald-800 font-extrabold rounded-full px-1.5 py-0.5">✓ applicable</span>
-                    )}
-                  </td>
-                  <td className="px-3 py-2 text-right font-bold text-slate-700">{fmt(m.prixLigne)}</td>
-                  <td className="px-3 py-2 text-right font-bold text-slate-700">{m.prixPres ? fmt(m.prixPres) : "—"}</td>
-                  <td className="px-3 py-2 text-right">
-                    {active ? (
-                      <>
-                        <span className="font-extrabold text-emerald-700">{fmt(cl)}</span>
-                        {cp && <span className="text-emerald-400 font-semibold"> / {fmt(cp)}</span>}
-                        {m.freeN && participants > 1 && (
-                          <span className="text-[9px] text-emerald-500 block">×{participants} abonnés</span>
+      {/* ── Tableau complet ── */}
+      <div>
+        <p className="text-[9px] font-extrabold uppercase tracking-widest text-slate-400 mb-1.5 px-0.5">Toutes les formules</p>
+        <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+          <table className="w-full text-[11px]">
+            <thead>
+              <tr className="bg-slate-50 border-b border-slate-100">
+                <th className="px-3 py-2 text-left font-extrabold text-slate-400 uppercase tracking-wide text-[9px]">Formule</th>
+                <th className="px-3 py-2 text-right font-extrabold text-slate-400 uppercase tracking-wide text-[9px]">💻 En ligne</th>
+                <th className="px-3 py-2 text-right font-extrabold text-slate-400 uppercase tracking-wide text-[9px]">🏛️ Présentiel</th>
+                <th className="px-3 py-2 text-right font-extrabold text-emerald-500 uppercase tracking-wide text-[9px]">Ma commission</th>
+              </tr>
+            </thead>
+            <tbody>
+              {modalities.map((m, i) => {
+                const active = isActive(m);
+                const cl = commLigne(m);
+                const cp = commPres(m);
+                return (
+                  <tr
+                    key={m.key}
+                    className={`border-b border-slate-50 last:border-0 transition-colors ${
+                      active
+                        ? m.key === activeGroup.key
+                          ? "bg-emerald-50"
+                          : "bg-white"
+                        : "bg-white opacity-35"
+                    }`}
+                  >
+                    <td className="px-3 py-2.5">
+                      <div className="flex items-center gap-1.5">
+                        <span>{m.icon}</span>
+                        <span className={`font-semibold ${active ? "text-slate-700" : "text-slate-400"}`}>{m.label}</span>
+                        {m.key === activeGroup.key && (
+                          <span className="rounded-full bg-emerald-500 text-white text-[8px] font-extrabold px-1.5 py-0.5 leading-none">✓</span>
                         )}
-                        {!m.freeN && m.key !== "indiv" && (
-                          <span className="text-[9px] text-emerald-500 block">×{participants} pers.</span>
-                        )}
-                      </>
-                    ) : (
-                      <span className="text-slate-300 font-semibold">{fmt(cl)}</span>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-            <tr className="bg-slate-50 opacity-50">
-              <td className="px-3 py-2 text-slate-500 font-medium">🌍 Intra / International</td>
-              <td className="px-3 py-2 text-right text-slate-400 italic" colSpan={2}>Sur devis</td>
-              <td className="px-3 py-2 text-right text-slate-400 italic">Sur devis</td>
-            </tr>
-          </tbody>
-        </table>
+                      </div>
+                    </td>
+                    <td className="px-3 py-2.5 text-right font-semibold text-slate-600 tabular-nums">{fmt(m.prixLigne)}</td>
+                    <td className="px-3 py-2.5 text-right font-semibold text-slate-600 tabular-nums">{m.prixPres ? fmt(m.prixPres) : <span className="text-slate-300">—</span>}</td>
+                    <td className="px-3 py-2.5 text-right tabular-nums">
+                      {active ? (
+                        <div>
+                          <span className="font-extrabold text-emerald-600">{fmt(cl)}</span>
+                          {cp && <span className="text-teal-400 font-semibold"> / {fmt(cp)}</span>}
+                        </div>
+                      ) : (
+                        <span className="text-slate-200 font-semibold">{fmt(cl)}</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+              <tr className="bg-slate-50/80 opacity-50">
+                <td className="px-3 py-2 text-slate-400 font-medium">🌍 Intra / International</td>
+                <td className="px-3 py-2 text-right text-slate-300 italic" colSpan={2}>Sur devis</td>
+                <td className="px-3 py-2 text-right text-slate-300 italic">Sur devis</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <p className="text-[10px] text-slate-400 italic">* Commissions estimées à {Math.round(rate * 100)}% du prix HT selon la formule applicable au nombre de participants.</p>
+
+      <p className="text-[9px] text-slate-300 text-center">Commission {Math.round(rate * 100)}% du prix HT · Formule sélectionnée selon le nombre de participants</p>
     </div>
   );
 }
