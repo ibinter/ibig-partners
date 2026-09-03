@@ -254,10 +254,16 @@ export default async function OffrePage({
           <div className="flex flex-col sm:flex-row items-start sm:items-stretch gap-4">
             {/* Card prix */}
             <div className="rounded-2xl bg-white/15 border border-white/25 backdrop-blur-sm px-6 py-5 min-w-[180px]">
-              <p className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-white/50 mb-1">Prix de référence</p>
-              <p className="text-4xl font-extrabold text-white leading-none">{priceDisplay}</p>
+              <p className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-white/50 mb-1">
+                {isCourse && product.price > 0 ? "À partir de" : "Prix de référence"}
+              </p>
+              <p className="text-4xl font-extrabold text-white leading-none">
+                {isCourse && product.price > 0
+                  ? `${(Math.round(product.price * 0.5 / 5000) * 5000).toLocaleString("fr-FR")} FCFA`
+                  : priceDisplay}
+              </p>
               {isService && <p className="text-xs text-white/55 mt-2 font-medium">Devis gratuit · Sous 24h</p>}
-              {isCourse && <p className="text-xs text-white/55 mt-2 font-medium">Certificat inclus · Replay inclus</p>}
+              {isCourse && <p className="text-xs text-white/55 mt-2 font-medium">E-learning · Certificat · Replay inclus</p>}
             </div>
 
             {/* CTAs */}
@@ -357,49 +363,46 @@ export default async function OffrePage({
               </div>
             )}
 
-            {/* Tableau des tarifs formations */}
-            {isCourse && (
+            {/* Tarifs formations — À partir de */}
+            {isCourse && product.price > 0 && (
               <div className="rounded-3xl bg-white shadow-sm border border-slate-100 overflow-hidden">
                 <div className="px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
                   <span className="text-xl">💰</span>
                   <h2 className="text-sm font-extrabold text-slate-800">Tarifs & Modalités</h2>
                 </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr style={{ background: theme.light }}>
-                        <th className="text-left px-6 py-3 text-xs font-extrabold uppercase tracking-wide text-slate-500">Modalité</th>
-                        <th className="text-right px-4 py-3 text-xs font-extrabold uppercase tracking-wide text-slate-500">💻 En ligne</th>
-                        <th className="text-right px-6 py-3 text-xs font-extrabold uppercase tracking-wide text-slate-500">🏛️ Présentiel</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-50">
-                      {(() => {
-                        const r5 = (x: number) => Math.round(x / 5000) * 5000;
-                        const pres = r5(product.price * 16000 / 11250);
-                        const fmt = (n: number) => n.toLocaleString("fr-FR") + " FCFA";
-                        return [
-                          { icon: "🖥️", label: "E-learning (à votre rythme)", ligne: fmt(r5(product.price * 0.50)), presentiel: "—", highlight: false },
-                          { icon: "👤", label: "Individuel (en direct)", ligne: fmt(product.price), presentiel: fmt(pres), highlight: true },
-                          { icon: "👥", label: "Groupe 3–5 pers / pers", ligne: fmt(r5(product.price * 0.70)), presentiel: fmt(r5(pres * 0.70)), highlight: false },
-                          { icon: "👥", label: "Groupe 6–10 pers / pers", ligne: fmt(r5(product.price * 0.55)), presentiel: fmt(r5(pres * 0.55)), highlight: false },
-                          { icon: "🏢", label: "Groupe 10+ pers / pers", ligne: fmt(r5(product.price * 0.45)), presentiel: fmt(r5(pres * 0.45)), highlight: false },
-                        ];
-                      })().map((row) => (
-                        <tr key={row.label} className={`hover:bg-slate-50/80 transition ${row.highlight ? "font-semibold" : ""}`} style={row.highlight ? { background: theme.light } : {}}>
-                          <td className="px-6 py-3.5 text-slate-700"><span className="mr-2">{row.icon}</span>{row.label}</td>
-                          <td className="px-4 py-3.5 text-right font-bold text-slate-900">{row.ligne}</td>
-                          <td className="px-6 py-3.5 text-right font-bold text-slate-900">{row.presentiel}</td>
-                        </tr>
-                      ))}
-                      <tr className="border-t-2 border-slate-100" style={{ background: theme.light }}>
-                        <td className="px-6 py-3 text-slate-700 font-medium"><span className="mr-2">🌍</span>Intra-entreprise / International</td>
-                        <td className="px-4 py-3 text-right text-slate-500 italic font-medium" colSpan={2}>Sur devis</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <div className="px-6 py-6 space-y-5">
+                  {/* Prix d'entrée */}
+                  <div className="flex items-center gap-5">
+                    <div className="rounded-2xl px-6 py-4 text-center" style={{ background: theme.light }}>
+                      <p className="text-[10px] font-extrabold uppercase tracking-widest mb-1" style={{ color: theme.accent }}>À partir de</p>
+                      <p className="text-3xl font-extrabold text-slate-900">
+                        {(Math.round(product.price * 0.5 / 5000) * 5000).toLocaleString("fr-FR")}
+                      </p>
+                      <p className="text-xs font-bold text-slate-500 mt-0.5">FCFA</p>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-bold text-slate-800 mb-1">E-learning — à votre rythme</p>
+                      <p className="text-xs text-slate-500 leading-relaxed">Accès en ligne, supports inclus, progressez à votre propre rythme.</p>
+                    </div>
+                  </div>
+                  {/* Modalités disponibles */}
+                  <div className="grid sm:grid-cols-3 gap-3">
+                    {[
+                      { icon: "🖥️", label: "E-learning", desc: "En ligne, à votre rythme" },
+                      { icon: "👤", label: "Individuel", desc: "En direct avec formateur" },
+                      { icon: "👥", label: "Groupe / Intra", desc: "Pour équipes & entreprises" },
+                    ].map(m => (
+                      <div key={m.label} className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3 text-center">
+                        <span className="text-2xl block mb-1">{m.icon}</span>
+                        <p className="text-xs font-extrabold text-slate-700">{m.label}</p>
+                        <p className="text-[10px] text-slate-400 mt-0.5">{m.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-xs text-slate-400 italic">
+                    💬 Contactez-nous pour un devis personnalisé selon votre profil, le nombre de participants et la modalité choisie.
+                  </p>
                 </div>
-                <p className="px-6 py-3 text-[11px] text-slate-400 italic border-t border-slate-50">* Tarifs indicatifs. Contactez-nous pour un devis personnalisé.</p>
               </div>
             )}
 
@@ -446,9 +449,16 @@ export default async function OffrePage({
               {/* Card CTA sidebar */}
               <div className="rounded-3xl overflow-hidden shadow-xl border border-slate-100 bg-white">
                 <div className={`bg-gradient-to-br ${theme.gradient} px-5 py-6 text-white text-center`}>
-                  <p className="text-[10px] font-extrabold uppercase tracking-widest text-white/60 mb-1">Prix de référence</p>
-                  <p className="text-4xl font-extrabold">{priceDisplay}</p>
+                  <p className="text-[10px] font-extrabold uppercase tracking-widest text-white/60 mb-1">
+                    {isCourse && product.price > 0 ? "À partir de" : "Prix de référence"}
+                  </p>
+                  <p className="text-4xl font-extrabold">
+                    {isCourse && product.price > 0
+                      ? `${(Math.round(product.price * 0.5 / 5000) * 5000).toLocaleString("fr-FR")} FCFA`
+                      : priceDisplay}
+                  </p>
                   {isService && <p className="text-xs text-white/60 mt-1">Devis gratuit · Sous 24h</p>}
+                  {isCourse && <p className="text-xs text-white/60 mt-1">E-learning · Devis sur demande</p>}
                 </div>
                 <div className="p-5 space-y-3">
                   <a
