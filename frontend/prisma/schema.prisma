@@ -575,6 +575,19 @@ model MissionApplication {
   @@unique([missionId, userId])
 }
 
+// ─── Séquences email marketing automatiques ─────────────────────────────────
+model EmailSequenceLog {
+  id         String   @id @default(cuid())
+  userId     String
+  sequence   String   // ONBOARDING | ACTIVATION | REENGAGE | STATUS_UP
+  step       String   // J0 | J1 | J3 | J7 | J14 | J21 | J30 | J45 | J60 | IMMEDIATE
+  sentAt     DateTime @default(now())
+  emailId    String?  // id Resend pour tracking
+
+  @@unique([userId, sequence, step])
+  @@index([userId])
+}
+
 // ─── Taux de commission par produit (grille détaillée) ─────────────────────
 model ProductCommissionRate {
   id          String  @id @default(cuid())

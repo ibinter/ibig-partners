@@ -15,6 +15,8 @@ import {
   sendNewSaleEmail,
   sendOpportunityMessageEmail,
   sendOpportunityStatusEmail,
+  sendOnboardingJ0Email,
+  sendStatusUpEmail,
 } from "@/lib/email";
 import { logAction } from "@/lib/audit";
 
@@ -27,7 +29,16 @@ export async function approvePartner(formData: FormData) {
     data: { approved: true, active: true },
   });
   if (partner.sponsorId) await recomputeStatus(partner.sponsorId);
-  after(() => sendAccountApprovedEmail({ to: partner.email, firstName: partner.firstName, code: partner.code }));
+  after(async () => {
+    // Email J0 enrichi : bienvenue + lien guide PDF (remplace l'ancien email simple)
+    await sendOnboardingJ0Email({ to: partner.email, firstName: partner.firstName, code: partner.code });
+    // Marquer J0 comme envoyé pour que le cron ne l'envoie pas en double
+    await prisma.emailSequenceLog.upsert({
+      where: { userId_sequence_step: { userId: partner.id, sequence: "ONBOARDING", step: "J0" } },
+      update: { sentAt: new Date() },
+      create: { userId: partner.id, sequence: "ONBOARDING", step: "J0" },
+    });
+  });
   void logAction({ userId: admin.id, action: "APPROVE_PARTNER", target: id, detail: partner.email });
   revalidatePath("/admin/partenaires");
 }

@@ -3,6 +3,7 @@ import { computeCommissions } from "./commissions";
 import { STATUS_RULES, STATUSES, STATUS_LABELS, STATUS_BONUS } from "./constants";
 import { getNetwork, activeTeamCount, directReferralsCount } from "./metrics";
 import { checkAndAwardBadges } from "@/lib/badges";
+import { sendStatusUpEmail } from "@/lib/email";
 import type { PricingType } from "./constants";
 
 /** Remonte la chaine de parrainage : [vendeur, parrain, grand-parrain]. */
@@ -158,6 +159,22 @@ export async function recomputeStatus(userId: string): Promise<string> {
         },
       })
       .catch(() => {});
+    // Email de félicitations montée de statut
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { email: true, firstName: true },
+    });
+    if (user?.email) {
+      const totalEarned = await prisma.commission
+        .aggregate({ where: { userId, status: { in: ["VALIDATED", "PAID"] } }, _sum: { amount: true } })
+        .then(r => r._sum.amount ?? 0);
+      sendStatusUpEmail({
+        to: user.email,
+        firstName: user.firstName,
+        newStatus: status,
+        commissionsAmount: totalEarned,
+      }).catch(() => {});
+    }
   } else if (status === "STARTER") {
     // Coup de pouce vers Silver (condition = ventes uniquement, donc message fiable).
     const remaining = STATUS_RULES.SILVER.sales - salesCount;
