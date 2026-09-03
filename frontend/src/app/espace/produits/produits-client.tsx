@@ -5,6 +5,87 @@ import { toggleProduct } from "../actions";
 import CopyButton from "../liens/copy-button";
 import Link from "next/link";
 
+// ── Simulateur commission formation ──────────────────────────────────────────
+function CourseDetailPanel({ product }: { product: Product }) {
+  const [participants, setParticipants] = useState(1);
+
+  const r5 = (x: number) => Math.round(x / 5000) * 5000;
+  const ref = product.price;
+  const pres = r5(ref * 16000 / 11250);
+  const rate = product.rate; // décimal ex: 0.10
+
+  const modalities = [
+    { icon: "🖥️", label: "E-learning",         prixLigne: r5(ref * 0.50), prixPres: null },
+    { icon: "👤", label: "Individuel",          prixLigne: ref,            prixPres: pres },
+    { icon: "👥", label: "Groupe 3–5 pers",    prixLigne: r5(ref * 0.70), prixPres: r5(pres * 0.70) },
+    { icon: "👥", label: "Groupe 6–10 pers",   prixLigne: r5(ref * 0.55), prixPres: r5(pres * 0.55) },
+    { icon: "🏢", label: "Groupe 10+ pers",    prixLigne: r5(ref * 0.45), prixPres: r5(pres * 0.45) },
+  ];
+
+  const fmt = (n: number) => new Intl.NumberFormat("fr-FR").format(n) + " FCFA";
+  const comm = (prix: number) => Math.round(prix * rate * participants);
+
+  return (
+    <div className="border-t border-slate-100 bg-slate-50/80 px-4 py-4 space-y-4">
+      {/* Simulateur */}
+      <div className="rounded-2xl bg-emerald-50 border border-emerald-100 px-4 py-3">
+        <p className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-600 mb-2">🧮 Simulateur de commission</p>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <label className="text-xs font-bold text-slate-600">Participants :</label>
+            <div className="flex items-center gap-1">
+              <button onClick={() => setParticipants(p => Math.max(1, p - 1))}
+                className="w-6 h-6 rounded-full bg-white border border-slate-200 text-slate-600 font-bold text-sm flex items-center justify-center hover:bg-slate-100 transition">−</button>
+              <span className="w-8 text-center text-sm font-extrabold text-slate-800">{participants}</span>
+              <button onClick={() => setParticipants(p => p + 1)}
+                className="w-6 h-6 rounded-full bg-emerald-500 text-white font-bold text-sm flex items-center justify-center hover:bg-emerald-600 transition">+</button>
+            </div>
+          </div>
+          <div className="flex-1 text-right">
+            <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-wide">Commission totale estimée</p>
+            <p className="text-lg font-extrabold text-emerald-700">
+              {fmt(comm(ref))} <span className="text-[10px] font-semibold text-emerald-500">(individuel en ligne)</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Tableau tarifs + commissions */}
+      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="bg-slate-100 text-left">
+              <th className="px-3 py-2 font-extrabold text-slate-500 uppercase tracking-wide">Modalité</th>
+              <th className="px-3 py-2 font-extrabold text-slate-500 uppercase tracking-wide text-right">💻 En ligne</th>
+              <th className="px-3 py-2 font-extrabold text-slate-500 uppercase tracking-wide text-right">🏛️ Présentiel</th>
+              <th className="px-3 py-2 font-extrabold text-emerald-600 uppercase tracking-wide text-right">Commission ×{participants}</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-50">
+            {modalities.map(m => (
+              <tr key={m.label} className="hover:bg-slate-50 transition">
+                <td className="px-3 py-2 text-slate-700 font-medium">{m.icon} {m.label}</td>
+                <td className="px-3 py-2 text-right font-bold text-slate-800">{fmt(m.prixLigne)}</td>
+                <td className="px-3 py-2 text-right font-bold text-slate-800">{m.prixPres ? fmt(m.prixPres) : "—"}</td>
+                <td className="px-3 py-2 text-right">
+                  <span className="font-extrabold text-emerald-700">{fmt(comm(m.prixLigne))}</span>
+                  {m.prixPres && <span className="text-emerald-400 font-semibold"> / {fmt(comm(m.prixPres))}</span>}
+                </td>
+              </tr>
+            ))}
+            <tr className="bg-slate-50">
+              <td className="px-3 py-2 text-slate-600 font-medium">🌍 Intra / International</td>
+              <td className="px-3 py-2 text-right text-slate-400 italic" colSpan={2}>Sur devis</td>
+              <td className="px-3 py-2 text-right text-slate-400 italic font-semibold">Sur devis</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p className="text-[10px] text-slate-400 italic">* Commissions estimées basées sur {Math.round(rate * 100)}% du prix HT. Les montants exacts dépendent de la vente réalisée.</p>
+    </div>
+  );
+}
+
 interface Product {
   id: string;
   name: string;
@@ -115,6 +196,8 @@ function ProductCard({
   affiliateCode?: string;
 }) {
   const active = product.affiliateUrl !== null;
+  const isCourse = product.pricingType === "COURSE";
+  const [showDetail, setShowDetail] = useState(false);
   const destination = product.siteUrl
     ? product.siteUrl.startsWith("http") ? product.siteUrl : `https://${product.siteUrl}`
     : null;
@@ -203,7 +286,16 @@ function ProductCard({
           >
             📄 Présenter
           </Link>
-          {destination && (
+          {isCourse && (
+            <button
+              type="button"
+              onClick={() => setShowDetail(v => !v)}
+              className={`flex items-center gap-1 text-xs font-bold transition rounded-lg px-2.5 py-1.5 ${showDetail ? "bg-emerald-100 text-emerald-700" : "bg-emerald-50 text-emerald-600 hover:bg-emerald-100"}`}
+            >
+              🧮 {showDetail ? "Masquer" : "Tarifs & commissions"}
+            </button>
+          )}
+          {destination && !isCourse && (
             <a
               href={destination}
               target="_blank"
@@ -229,6 +321,7 @@ function ProductCard({
           </form>
         </div>
       </div>
+      {isCourse && showDetail && <CourseDetailPanel product={product} />}
     </div>
   );
 }
