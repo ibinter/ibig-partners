@@ -62,6 +62,11 @@ export default async function ProduitsPage() {
           user.status,
         );
         const estimatedCommission = product.price > 0 ? Math.round(product.price * rate) : 0;
+        const isCourse = product.pricingType === "COURSE";
+        // Pour les formations : commission min (e-learning 50%) et max (individuel 100%)
+        const commissionMin = isCourse && product.price > 0
+          ? Math.round(Math.round(product.price * 0.5 / 5000) * 5000 * rate)
+          : null;
         const affiliateUrl = affiliateLink
           ? `${baseUrl}/aff/${user.code}?p=${product.slug}`
           : null;
@@ -74,8 +79,11 @@ export default async function ProduitsPage() {
           price: product.price,
           pricingType: product.pricingType,
           rate,
-          commissionDisplay:
-            pct(rate) + (estimatedCommission > 0 ? ` · ${fcfa(estimatedCommission)}` : ""),
+          commissionDisplay: isCourse && commissionMin && estimatedCommission > 0
+            ? `${pct(rate)} · ${fcfa(commissionMin)} → ${fcfa(estimatedCommission)}`
+            : pct(rate) + (estimatedCommission > 0 ? ` · ${fcfa(estimatedCommission)}` : ""),
+          commissionMin,
+          commissionMax: estimatedCommission,
           priceDisplay:
             product.price > 0
               ? fcfa(product.price) +

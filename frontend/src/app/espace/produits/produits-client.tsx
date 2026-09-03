@@ -15,6 +15,8 @@ interface Product {
   pricingType: string;
   rate: number;
   commissionDisplay: string;
+  commissionMin?: number | null;
+  commissionMax?: number | null;
   priceDisplay: string;
   affiliateUrl: string | null;
   category?: string | null;
@@ -164,7 +166,18 @@ function ProductCard({
           </div>
           <div className="rounded-xl bg-emerald-50 px-3 py-2">
             <p className="text-[10px] font-bold uppercase tracking-wide text-emerald-500">Commission N1</p>
-            <p className="text-sm font-bold text-emerald-700 truncate">{product.commissionDisplay}</p>
+            {product.commissionMin && product.commissionMax && product.commissionMin !== product.commissionMax ? (
+              <div>
+                <p className="text-[11px] font-extrabold text-emerald-700 leading-tight">
+                  {product.rate}% · {new Intl.NumberFormat("fr-FR").format(product.commissionMin)} FCFA
+                </p>
+                <p className="text-[9px] text-emerald-500 font-bold">
+                  jusqu&apos;à {new Intl.NumberFormat("fr-FR").format(product.commissionMax)} FCFA
+                </p>
+              </div>
+            ) : (
+              <p className="text-sm font-bold text-emerald-700 truncate">{product.commissionDisplay}</p>
+            )}
           </div>
         </div>
 
