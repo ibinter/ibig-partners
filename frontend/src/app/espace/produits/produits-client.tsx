@@ -169,7 +169,7 @@ function ProductCard({
             {product.pricingType === "COURSE" && product.commissionMin && product.commissionMax ? (
               <div>
                 <p className="text-[11px] font-extrabold text-emerald-700 leading-tight">
-                  {product.rate}% / participant
+                  {Math.round(product.rate * 100)}% / participant
                 </p>
                 <p className="text-[9px] text-emerald-600 font-bold">
                   {new Intl.NumberFormat("fr-FR").format(product.commissionMin)}–{new Intl.NumberFormat("fr-FR").format(product.commissionMax)} FCFA/pers.
