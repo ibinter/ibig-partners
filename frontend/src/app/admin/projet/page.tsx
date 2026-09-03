@@ -250,7 +250,7 @@ export default function ProjetPage() {
       y += 3;
       y = body(t("Le programme permet à toute personne physique ou morale de devenir Partenaire Affilié et de percevoir des commissions sur les ventes de produits et services IBIG qu'elle génère directement (N1) ou via son réseau de filleuls (N2, N3). Aucun investissement initial n'est requis pour rejoindre le programme."),y);
       y += 3;
-      y = body(t("Chiffres clés : 9 branches d'activité, 330+ produits au catalogue (dont 14 logiciels/ERP IBIG SOFT), commissions jusqu'à 20% N1, système 3 niveaux de profondeur, statuts évolutifs de STARTER à ELITE, paiements via Orange Money, Wave, MTN MoMo et virement bancaire."),y);
+      y = body(t("Chiffres clés : 11 branches d'activité, 330+ produits au catalogue (dont 14 logiciels/ERP IBIG SOFT), commissions jusqu'à 20% N1, système 3 niveaux de profondeur, statuts évolutifs de STARTER à ELITE, paiements via Orange Money, Wave, MTN MoMo et virement bancaire."),y);
       y += 3;
       y = body(t("Objectif 2026 : 500 partenaires actifs, 50M FCFA de commissions versées, couverture Afrique de l'Ouest."),y);
       y += 5;
@@ -280,7 +280,7 @@ export default function ProjetPage() {
       y = subTitle(t("Proposition de valeur unique"),y);
       y = bullet(t("Zéro investissement requis : inscription 100% gratuite, aucun stock à acheter"),y);
       y = bullet(t("Commissions sur 3 niveaux de profondeur (N1, N2, N3)"),y);
-      y = bullet(t("9 branches d'activité : logiciels, formation, immobilier, commerce, digital, conseil, affiliation, multiservices"),y);
+      y = bullet(t("11 branches d'activité : logiciels, formation, immobilier, commerce, digital, kits numériques, conseil, financement & assurances, emploi & RH, affiliation, multiservices"),y);
       y = bullet(t("Revenus récurrents sur abonnements logiciels mensuels"),y);
       y = bullet(t("Académie IBIG intégrée + Coach IA 24h/24 pour maximiser les performances"),y);
       y = bullet(t("4 méthodes de paiement : Orange Money, Wave, MTN MoMo, virement bancaire"),y);
@@ -353,7 +353,7 @@ export default function ProjetPage() {
       header(pageNum,TOTAL_PAGES);
       footer();
       y = 22;
-      y = sectionTitle(t("Les 9 Branches du Groupe IBIG"),y);
+      y = sectionTitle(t("Les 11 Branches du Groupe IBIG"),y);
 
       // --- IBIG SOFT ---
       y = subTitle(t("IBIG SOFT - Logiciels SaaS de Gestion"),y);
@@ -786,19 +786,91 @@ export default function ProjetPage() {
       });
       y = (doc as any).lastAutoTable.finalY + 5;
 
+      // ── IBIG FINANCEMENT ──
+      y = checkPage(y,60);
+      y = subTitle(t("IBIG FINANCEMENT — Crédit, Assurances & Gestion de Patrimoine"),y);
+      y = body(t("Accès au financement structuré et aux produits d'assurance pour particuliers et PME en Afrique de l'Ouest. 20 offres couvrant le crédit, les assurances vie/santé/auto, l'épargne retraite et la gestion de patrimoine."),y);
+      y += 2;
+      autoTable(doc,{
+        startY: y,
+        head: [[t("Service"),t("Tarif indicatif"),t("Comm. N1")]],
+        body: [
+          [t("Microcrédit PME (500 000 à 5 000 000 FCFA)"),"Sur devis","5%"],
+          [t("Crédit de Trésorerie & Fonds de Roulement PME"),"Sur devis","5%"],
+          [t("Financement Équipement / Leasing"),"Sur devis","5%"],
+          [t("Financement Immobilier (Crédit hypothécaire)"),"Sur devis","5%"],
+          [t("Financement Agricole & Rural"),"Sur devis","5%"],
+          [t("Assurance Santé Collective"),"Dès 50 000 FCFA/mois","5%"],
+          [t("Assurance Vie & Prévoyance"),"Dès 25 000 FCFA/mois","5%"],
+          [t("Assurance Entreprise Multirisques"),"Dès 300 000 FCFA/an","5%"],
+          [t("Assurance Auto Flotte Professionnelle"),"Dès 150 000 FCFA/an/véhicule","5%"],
+          [t("Assurance RC Professionnelle & Décennale"),"Sur devis","5%"],
+          [t("Plan d'Épargne Retraite Individuel"),"Dès 25 000 FCFA/mois","5%"],
+          [t("Aide à la Levée de Fonds"),"Dès 400 000 FCFA","5%"],
+          [t("Conseil en Investissement & Gestion de Patrimoine"),"Sur devis","5%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
+        bodyStyles: { fontSize: 7.5,textColor: DARK },
+        alternateRowStyles: { fillColor: [248,250,252] },
+        margin: { left: 14,right: 14 },
+        theme: "grid",
+        columnStyles: { 2: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold" } },
+      });
+      y = (doc as any).lastAutoTable.finalY + 3;
+      y = body(t("Commissions : N1=5%, N2=2,5%, N3=1%"),y);
+      y += 4;
+
+      // ── IBIG EMPLOI & TALENTS ──
+      y = checkPage(y,60);
+      y = subTitle(t("IBIG EMPLOI & TALENTS — Recrutement, RH & Développement"),y);
+      y = body(t("Solutions RH complètes pour entreprises : recrutement CDI/CDD, placement de cadres, externalisation RH, coaching, audit organisationnel, GPEC et outplacement. 20 offres disponibles."),y);
+      y += 2;
+      autoTable(doc,{
+        startY: y,
+        head: [[t("Service"),t("Tarif indicatif"),t("Comm. N1")]],
+        body: [
+          [t("Mission de Recrutement CDI"),"Dès 300 000 FCFA","10%"],
+          [t("Mission de Recrutement CDD / Intérim"),"Dès 150 000 FCFA","10%"],
+          [t("Placement de Profils Qualifiés / Cadres"),"Dès 200 000 FCFA","10%"],
+          [t("Externalisation RH Complète"),"Dès 200 000 FCFA/mois","10%"],
+          [t("Gestion du Personnel Externalisée"),"Dès 100 000 FCFA/mois","10%"],
+          [t("Portage Salarial"),"Sur devis","10%"],
+          [t("Audit RH & Diagnostic Organisationnel"),"Dès 200 000 FCFA","10%"],
+          [t("Executive Coaching & Coaching de Dirigeants"),"Dès 150 000 FCFA/mois","10%"],
+          [t("Assessment Center & Recrutement par Simulation"),"Dès 250 000 FCFA","10%"],
+          [t("Outplacement & Accompagnement au Départ"),"Dès 300 000 FCFA","10%"],
+          [t("GPEC & Gestion Prévisionnelle des Compétences"),"Dès 350 000 FCFA","10%"],
+          [t("Tests de Compétences & Évaluation"),"Dès 80 000 FCFA","10%"],
+          [t("Marque Employeur & Communication RH"),"Dès 200 000 FCFA","10%"],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
+        bodyStyles: { fontSize: 7.5,textColor: DARK },
+        alternateRowStyles: { fillColor: [248,250,252] },
+        margin: { left: 14,right: 14 },
+        theme: "grid",
+        columnStyles: { 2: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold" } },
+      });
+      y = (doc as any).lastAutoTable.finalY + 3;
+      y = body(t("Commissions : N1=10%, N2=5%, N3=2%"),y);
+      y += 4;
+
       // ── IBIG MULTISERVICES ──
       y = checkPage(y,55);
-      y = subTitle(t("IBIG MULTISERVICES — Services Polyvalents B2B et B2C"),y);
+      y = subTitle(t("IBIG MULTISERVICES — 55 Services Polyvalents B2B et B2C"),y);
       autoTable(doc,{
         startY: y,
         head: [[t("Service"),t("Description"),t("Tarif indicatif"),t("Comm. N1")]],
         body: [
-          [t("Événementiel Professionnel"),t("Séminaires, conférences, galas, team building"),"300 000 - 5 000 000","10%"],
-          [t("Déménagement & Stockage"),t("Transport national, emballage, garde-meubles"),"100 000 - 1 000 000","10%"],
-          [t("Maintenance & Réparation"),t("Électricité, plomberie, climatisation, IT"),"25 000 - 500 000","10%"],
-          [t("Logistique Last-Mile"),t("Livraison express, coursiers, transport B2B"),"15 000 - 300 000/mission","10%"],
-          [t("Tourisme d'Affaires"),t("Visa, hôtel, billets, circuits, transferts aéroport"),"Sur devis","10%"],
-          [t("Transport VIP"),t("Chauffeurs privés, véhicules premium, longue durée"),"50 000 - 300 000/jour","10%"],
+          [t("Événementiel Corporate"),t("Séminaires, conférences, galas, team building"),"300 000 - 5 000 000","10%"],
+          [t("Événement Privé (Mariage, Gala)"),t("Organisation clé en main, décoration, traiteur"),"150 000 - 3 000 000","10%"],
+          [t("Déménagement & Stockage"),t("Transport national, emballage, garde-meubles"),"80 000 - 1 000 000","10%"],
+          [t("Nettoyage & Entretien de Locaux"),t("Entreprises, résidences, post-travaux"),"40 000 - 500 000/mois","10%"],
+          [t("Gardiennage & Sécurité"),t("Agents de sécurité, rondes, surveillance"),"80 000 - 300 000/mois","10%"],
+          [t("Accueil VIP & Conciergerie"),t("Protocole, hôtesses, assistance VIP"),"75 000 - 500 000","10%"],
+          [t("Maintenance & Dépannage"),t("Électricité, plomberie, climatisation, IT"),"25 000 - 500 000","10%"],
+          [t("Transport VIP & Chauffeur Privé"),t("Véhicules premium, longue durée, aéroport"),"30 000 - 300 000/jour","10%"],
+          [t("Travaux de Rénovation & Construction"),t("Peinture, carrelage, menuiserie, gros œuvre"),"Sur devis","10%"],
+          [t("Et 45+ autres services"),t("Pressing, soins infirmiers, livraison médicaments, secrétariat..."),"Variable","10%"],
         ],
         headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
         bodyStyles: { fontSize: 7.5,textColor: DARK },
@@ -808,7 +880,7 @@ export default function ProjetPage() {
         columnStyles: { 3: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold" } },
       });
       y = (doc as any).lastAutoTable.finalY + 5;
-      y = infoBox(t("Chiffres clés du catalogue : 9 branches · 14 logiciels SaaS · 10 formations certifiantes · 5 services immobiliers · 5 catégories commerce · 10 services digitaux · 8 solutions numériques · 6 missions conseil · 6 services polyvalents. Total : 330+ produits et formules disponibles."),y,[235,255,245]);
+      y = infoBox(t("Chiffres clés du catalogue : 11 branches · 14 logiciels SaaS · 10 formations certifiantes · 5 services immobiliers · 5 catégories commerce · 10 services digitaux · 8 solutions numériques · 6 missions conseil · 20 offres financement & assurances · 20 offres emploi & RH · 55 multiservices. Total : 330+ produits et formules disponibles."),y,[235,255,245]);
 
       // ═══════════════════════════════════════════════════════════
       // PAGE 10-11 — SYSTEME DE COMMISSIONS DETAILLE
@@ -840,6 +912,8 @@ export default function ProjetPage() {
           [t("IBIG DIGITAL"),t("Site vitrine"),"400 000","10%","5%","2%","40 000","20 000","8 000"],
           [t("IBIG DIGITAL KITS"),t("Intégration ERP"),"2 000 000","10%","5%","2%","200 000","100 000","40 000"],
           [t("IBIG CONSEIL+"),t("Mission audit"),"1 500 000","10%","5%","2%","150 000","75 000","30 000"],
+          [t("IBIG FINANCEMENT"),t("Assurance entreprise"),"300 000","5%","2,5%","1%","15 000","7 500","3 000"],
+          [t("IBIG EMPLOI & TALENTS"),t("Recrutement CDI"),"300 000","10%","5%","2%","30 000","15 000","6 000"],
           [t("IBIG MULTISERVICES"),t("Événementiel Pro"),"1 000 000","10%","5%","2%","100 000","50 000","20 000"],
         ],
         headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7 },
@@ -1235,7 +1309,7 @@ export default function ProjetPage() {
  startY: y,
  head: [[t("Avantage"), t("Description"), t("Impact")]],
  body: [
- [t("Modèle intégré"), t("9 branches couvrant besoins essentiels PME/particuliers"), t("Ventes croisees,client captif")],
+ [t("Modèle intégré"), t("11 branches couvrant besoins essentiels PME/particuliers"), t("Ventes croisees,client captif")],
  [t("Commissions attractives"), t("Jusqu'a 20% N1, système 3 niveaux"), t("ROI partenaire exceptionnel")],
  [t("Plateforme technologique"), t("Dashboard temps réel, tracking automatique"), t("Transparence et confiance")],
  [t("Formation intégrée"), t("Académie + Coach IA 24/7"), t("Autonomie et performance partenaires")],
@@ -1270,7 +1344,7 @@ export default function ProjetPage() {
  [t("Commissions récurrentes"), t("Oui (SaaS)"), t("Rarement"),"Non", t("Non (fixe)")],
  [t("Risque financier"),"Nul", t("Moyen à élevé"), t("Faible"),"Nul"],
  [t("Plafond de revenus"), t("Illimite"), t("Illimite"), t("Limite"), t("Plafonné")],
- [t("Produits reels"),"Oui (9 branches)", t("Parfois douteux"),"Oui", t("Selon employeur")],
+ [t("Produits reels"),"Oui (11 branches)", t("Parfois douteux"),"Oui", t("Selon employeur")],
  [t("Formation Intégrée"), t("Oui (Academie IBIG)"), t("Rarement"),"Non", t("Variable")],
  [t("Support dedie"),"Oui", t("Variable"),"Non","RH"],
  ],
@@ -1416,7 +1490,7 @@ export default function ProjetPage() {
  },
  {
  q: t("Est-il possible de cumulér les commissions de plusieurs branches ?"),
- r: t("Absolument. Un partenaire peut promouvoir simultanément les 9 branches et cumuler des commissions sur toutes. Un client peut acheter un logiciel IBIG SOFT, s'inscrire en formation EDUFORM et commander du matériel IBIG MARKET — le partenaire perçoit une commission sur chacune de ces transactions."),
+ r: t("Absolument. Un partenaire peut promouvoir simultanément les 11 branches et cumuler des commissions sur toutes. Un client peut acheter un logiciel IBIG SOFT, s'inscrire en formation EDUFORM, souscrire une assurance FINANCEMENT et commander du matériel IBIG MARKET — le partenaire perçoit une commission sur chacune de ces transactions."),
  },
  {
  q: t("Comment rejoindre IBIG PARTNERS en tant qu'entreprise ?"),
