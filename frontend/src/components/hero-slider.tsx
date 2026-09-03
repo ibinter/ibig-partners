@@ -475,7 +475,7 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
     return (
       <div
         key={role}
-        className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden px-4 pb-20 pt-12 sm:px-8 sm:py-20 sm:pb-24 lg:py-24 lg:pb-28 text-center"
+        className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden px-4 pt-10 pb-6 sm:px-8 sm:pt-20 sm:pb-10 lg:pt-24 lg:pb-12 text-center"
         style={{ background: slide.bg ?? "linear-gradient(135deg,#041B4D 0%,#0b3a8a 100%)", ...s }}
       >
         {/* Illustration de fond */}
@@ -538,73 +538,57 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
   };
 
   return (
-    <div className="relative w-full overflow-hidden" style={{ minHeight: "clamp(560px,90vh,720px)" }}>
-      {renderSlide(cur, "current")}
-      {next !== null && renderSlide(next, "entering")}
+    <div className="relative w-full flex flex-col">
+      {/* ── Slides (hauteur fixe) ── */}
+      <div className="relative overflow-hidden" style={{ minHeight: "clamp(520px,88vh,700px)" }}>
+        {renderSlide(cur, "current")}
+        {next !== null && renderSlide(next, "entering")}
+      </div>
 
-      {/* ── Navigation ── */}
-      <div className="absolute bottom-5 left-1/2 z-30 -translate-x-1/2">
-
-        {/* Mobile : flèches + compteur + barre de progression */}
+      {/* ── Navigation — SOUS les slides, dans le flux, fond du slide courant ── */}
+      <div
+        className="flex items-center justify-center py-4 sm:py-5"
+        style={{ background: slides[cur]?.bg ?? "linear-gradient(135deg,#041B4D 0%,#0b3a8a 100%)" }}
+      >
+        {/* Mobile */}
         <div className="flex sm:hidden items-center gap-3">
           <button
             onClick={() => handleNav((cur - 1 + count) % count)}
             className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white text-lg backdrop-blur-sm active:scale-90"
             aria-label="Précédent"
           >‹</button>
-
-          {/* Barre de progression mobile */}
           <div className="flex items-center gap-1.5">
             {slides.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => handleNav(i)}
-                aria-label={`Slide ${i + 1}`}
-                className={`rounded-full transition-all duration-300 ${
-                  i === cur ? "w-5 h-1.5 bg-orange-400" : "w-1.5 h-1.5 bg-white/25"
-                }`}
+              <button key={i} onClick={() => handleNav(i)} aria-label={`Slide ${i + 1}`}
+                className={`rounded-full transition-all duration-300 ${i === cur ? "w-5 h-1.5 bg-orange-400" : "w-1.5 h-1.5 bg-white/30"}`}
               />
             ))}
           </div>
-
           <button
             onClick={() => handleNav((cur + 1) % count)}
             className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white text-lg backdrop-blur-sm active:scale-90"
             aria-label="Suivant"
           >›</button>
-
-          <span className="text-xs font-semibold tabular-nums text-white/40">
-            {cur + 1}/{count}
-          </span>
+          <span className="text-xs font-semibold tabular-nums text-white/50">{cur + 1}/{count}</span>
         </div>
 
-        {/* Desktop : dots complets */}
+        {/* Desktop */}
         <div className="hidden sm:flex items-center gap-2.5">
           <button
             onClick={() => handleNav((cur - 1 + count) % count)}
             className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white text-xl backdrop-blur-sm transition-all hover:bg-white/30 hover:scale-110 active:scale-95"
             aria-label="Précédent"
           >‹</button>
-
           {slides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => handleNav(i)}
-              aria-label={`Slide ${i + 1}`}
-              className={`rounded-full transition-all duration-300 ${
-                i === cur
-                  ? "w-8 h-2.5 bg-orange-400 shadow-lg shadow-orange-500/50"
-                  : "w-2 h-2 bg-white/20 hover:bg-white/50 hover:scale-125"
-              }`}
+            <button key={i} onClick={() => handleNav(i)} aria-label={`Slide ${i + 1}`}
+              className={`rounded-full transition-all duration-300 ${i === cur ? "w-8 h-2.5 bg-orange-400 shadow-lg shadow-orange-500/50" : "w-2 h-2 bg-white/20 hover:bg-white/50 hover:scale-125"}`}
             />
           ))}
-
           <button
             onClick={() => handleNav((cur + 1) % count)}
             className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white text-xl backdrop-blur-sm transition-all hover:bg-white/30 hover:scale-110 active:scale-95"
             aria-label="Suivant"
           >›</button>
-
           <span className="ml-1 text-xs font-semibold tabular-nums text-white/35">
             {String(cur + 1).padStart(2, "0")}&thinsp;/&thinsp;{String(count).padStart(2, "0")}
           </span>

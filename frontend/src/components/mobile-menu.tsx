@@ -35,28 +35,28 @@ export function MobileMenu({ lang = "fr" }: { lang?: Lang }) {
     <>
       <button
         onClick={() => setOpen(!open)}
-        className="flex flex-col items-center justify-center gap-1.5 p-2 md:hidden"
+        className="flex h-10 w-10 flex-col items-center justify-center gap-[5px] rounded-xl border border-slate-200 bg-white p-2 shadow-sm lg:hidden"
         aria-label={open ? t.close : t.open}
       >
         <span
-          className={`block h-0.5 w-5 rounded-full bg-slate-700 transition-all duration-200 ${
-            open ? "translate-y-2 rotate-45" : ""
+          className={`block h-[2px] w-6 rounded-full bg-[#041B4D] transition-all duration-200 ${
+            open ? "translate-y-[7px] rotate-45" : ""
           }`}
         />
         <span
-          className={`block h-0.5 w-5 rounded-full bg-slate-700 transition-all duration-200 ${
+          className={`block h-[2px] w-6 rounded-full bg-[#041B4D] transition-all duration-200 ${
             open ? "opacity-0 scale-x-0" : ""
           }`}
         />
         <span
-          className={`block h-0.5 w-5 rounded-full bg-slate-700 transition-all duration-200 ${
-            open ? "-translate-y-2 -rotate-45" : ""
+          className={`block h-[2px] w-6 rounded-full bg-[#041B4D] transition-all duration-200 ${
+            open ? "-translate-y-[7px] -rotate-45" : ""
           }`}
         />
       </button>
 
       {open && (
-        <div className="absolute left-0 right-0 top-full z-50 border-b border-slate-200 bg-white shadow-xl md:hidden">
+        <div className="absolute left-0 right-0 top-full z-50 border-b border-slate-200 bg-white shadow-xl lg:hidden">
           <nav className="flex flex-col gap-1 p-4">
             {nav.map((item) => (
               <a
