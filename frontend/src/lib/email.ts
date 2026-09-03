@@ -1426,3 +1426,66 @@ export async function sendOpportunityStatusEmail(opts: {
     html,
   });
 }
+
+// ─── E-mail : Nouveau produit / nouvelle branche disponible ──────────────
+
+export async function sendNewProductEmail(opts: {
+  to: string;
+  firstName: string;
+  type: "product" | "branch";
+  name: string;
+  branchName: string;
+  description?: string;
+  commissionRate?: number;
+  productsUrl: string;
+}): Promise<EmailResult> {
+  const isBranch = opts.type === "branch";
+  const html = layout(`
+    <h2 style="margin:0 0 8px;font-size:22px;color:#0f1729;">
+      ${isBranch ? "🆕 Nouvelle branche IBIG disponible !" : "🛍️ Nouveau produit à proposer !"}
+    </h2>
+    <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
+      Bonne nouvelle ${opts.firstName} — ${isBranch
+        ? `la branche <strong>${opts.name}</strong> vient d'être ajoutée au catalogue IBIG PARTNERS.`
+        : `<strong>${opts.name}</strong> est maintenant disponible dans la branche <strong>${opts.branchName}</strong>.`
+      } Vous pouvez dès maintenant le promouvoir et générer des commissions.
+    </p>
+
+    <div style="background:#f0f4ff;border-radius:10px;padding:20px 24px;margin-bottom:24px;">
+      <p style="margin:0 0 4px;font-size:13px;color:#5b6577;text-transform:uppercase;letter-spacing:0.5px;">
+        ${isBranch ? "Nouvelle branche" : "Nouveau produit"}
+      </p>
+      <p style="margin:0 0 6px;font-size:22px;font-weight:800;color:#0b5fff;">${opts.name}</p>
+      ${opts.description ? `<p style="margin:0 0 8px;font-size:14px;color:#374151;">${opts.description}</p>` : ""}
+      ${opts.commissionRate ? `
+      <div style="display:inline-block;background:#0b5fff;color:#fff;border-radius:8px;padding:4px 12px;font-size:13px;font-weight:700;">
+        Commission : ${opts.commissionRate}%
+      </div>` : ""}
+    </div>
+
+    <div style="background:#f0fdf4;border-radius:10px;padding:16px 20px;margin-bottom:24px;border:1px solid #bbf7d0;">
+      <p style="margin:0 0 6px;font-size:13px;font-weight:700;color:#166534;">💡 Comment en profiter :</p>
+      <p style="margin:0;font-size:14px;color:#166534;line-height:1.8;">
+        1. Consultez la fiche produit dans votre espace affilié<br/>
+        2. Copiez votre lien d'affiliation unique<br/>
+        3. Partagez-le à vos prospects via WhatsApp, email, réseaux sociaux
+      </p>
+    </div>
+
+    ${btn("Voir le catalogue →", opts.productsUrl)}
+
+    <hr style="margin:28px 0;border:none;border-top:1px solid #e2e8f0;" />
+    <p style="margin:0;font-size:13px;color:#94a3b8;">
+      Questions ? WhatsApp :
+      <a href="https://wa.me/2250778882592" style="color:#0b5fff;font-weight:600;">+225 07 78 88 25 92</a>
+    </p>
+  `);
+
+  return sendEmail({
+    to: opts.to,
+    subject: isBranch
+      ? `🆕 Nouvelle branche IBIG : ${opts.name} — nouvelle opportunité de commissions`
+      : `🛍️ Nouveau produit disponible : ${opts.name} (${opts.branchName})`,
+    html,
+  });
+}

@@ -17,6 +17,7 @@ import {
   sendOpportunityStatusEmail,
   sendOnboardingJ0Email,
   sendStatusUpEmail,
+  sendNewProductEmail,
 } from "@/lib/email";
 import { logAction } from "@/lib/audit";
 
@@ -361,9 +362,37 @@ export async function createBranch(formData: FormData) {
   const order = Number(formData.get("order") || 0);
   if (!name) return;
   const slug = toSlug(name);
-  await prisma.branch.create({ data: { name, slug, tagline, description, offerType, commissionModel, order } });
+  const branch = await prisma.branch.create({ data: { name, slug, tagline, description, offerType, commissionModel, order } });
   revalidatePath("/admin/branches");
   revalidatePath("/");
+
+  // Notifier tous les affiliés actifs approuvés
+  after(async () => {
+    const partners = await prisma.user.findMany({
+      where: { role: "PARTNER", approved: true, active: true },
+      select: { id: true, email: true, firstName: true },
+    });
+    await prisma.notification.createMany({
+      data: partners.map(p => ({
+        userId: p.id,
+        title: `🆕 Nouvelle branche : ${name}`,
+        body: `La branche "${name}" vient d'être ajoutée au catalogue. Découvrez-la et commencez à la promouvoir !`,
+        url: "/espace/produits",
+      })),
+    });
+    const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ibigpartners.com";
+    for (const p of partners) {
+      await sendNewProductEmail({
+        to: p.email,
+        firstName: p.firstName,
+        type: "branch",
+        name,
+        branchName: name,
+        description: description || undefined,
+        productsUrl: `${SITE}/espace/produits`,
+      }).catch(() => {});
+    }
+  });
 }
 
 export async function updateBranch(formData: FormData) {
@@ -420,6 +449,36 @@ export async function createProduct(formData: FormData) {
   revalidatePath("/admin/branches");
   revalidatePath("/espace/produits");
   revalidatePath("/");
+
+  after(async () => {
+    const branch = await prisma.branch.findUnique({ where: { id: branchId }, select: { name: true } });
+    const branchName = branch?.name ?? "IBIG";
+    const partners = await prisma.user.findMany({
+      where: { role: "PARTNER", approved: true, active: true },
+      select: { id: true, email: true, firstName: true },
+    });
+    await prisma.notification.createMany({
+      data: partners.map(p => ({
+        userId: p.id,
+        title: `🛍️ Nouveau produit : ${name}`,
+        body: `Le produit "${name}" (${branchName}) vient d'être ajouté au catalogue. Partagez votre lien affilié !`,
+        url: "/espace/produits",
+      })),
+    });
+    const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ibigpartners.com";
+    for (const p of partners) {
+      await sendNewProductEmail({
+        to: p.email,
+        firstName: p.firstName,
+        type: "product",
+        name,
+        branchName,
+        description: description || undefined,
+        commissionRate: rate,
+        productsUrl: `${SITE}/espace/produits`,
+      }).catch(() => {});
+    }
+  });
 }
 
 export async function updateProduct(formData: FormData) {
@@ -432,12 +491,28 @@ export async function updateProduct(formData: FormData) {
   const rate = Number(formData.get("rate") || 8);
   const siteUrl = normalizeSiteUrl(formData.get("siteUrl"));
   if (!name || !id) return;
-  await prisma.product.update({
+  const updated = await prisma.product.update({
     where: { id },
     data: { name, description: description || null, price, pricingType, rate, siteUrl },
+    include: { branch: { select: { name: true } } },
   });
   revalidatePath("/admin/branches");
   revalidatePath("/espace/produits");
+
+  after(async () => {
+    const partners = await prisma.user.findMany({
+      where: { role: "PARTNER", approved: true, active: true },
+      select: { id: true },
+    });
+    await prisma.notification.createMany({
+      data: partners.map(p => ({
+        userId: p.id,
+        title: `📝 Produit mis à jour : ${name}`,
+        body: `Les informations du produit "${name}" (${updated.branch.name}) ont été mises à jour. Consultez le catalogue pour les nouveaux détails.`,
+        url: "/espace/produits",
+      })),
+    });
+  });
 }
 
 export async function deleteProduct(formData: FormData) {
