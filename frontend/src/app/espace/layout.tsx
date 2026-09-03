@@ -28,6 +28,7 @@ export default async function EspaceLayout({
     { href: "/espace/analytics",    label: "Analytics",       icon: "📈",  group: "Vue d'ensemble" },
     { href: "/espace/classement",   label: "Classement",      icon: "🏆",  group: "Vue d'ensemble" },
     { href: "/espace/objectifs",    label: "Mes Objectifs",   icon: "🎯",  group: "Vue d'ensemble" },
+    { href: "/espace/challenges",   label: "Challenges",      icon: "🔥",  group: "Vue d'ensemble" },
     { href: "/espace/simulateur",   label: "Simulateur gains",icon: "🧮",  group: "Vue d'ensemble" },
     { href: "/espace/bienvenue",    label: "Guide démarrage", icon: "🚀",  group: "Vue d'ensemble" },
     { href: "/espace/produits",     label: "Mes Produits",    icon: "🧩",  group: "Mon activité" },

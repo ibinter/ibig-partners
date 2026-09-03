@@ -21,6 +21,7 @@ import {
   sendPayoutThresholdEmail,
 } from "@/lib/email";
 import { logAction } from "@/lib/audit";
+import { checkAndPromoteStatusAfter } from "@/lib/status";
 
 // --- Partenaires ---
 export async function approvePartner(formData: FormData) {
@@ -159,6 +160,7 @@ export async function createSale(formData: FormData) {
   });
   await generateCommissionsForSale(sale.id);
   await recomputeStatus(sellerId);
+  checkAndPromoteStatusAfter(sellerId);
   revalidatePath("/admin/ventes");
   revalidatePath("/admin/commissions");
 }
@@ -176,6 +178,7 @@ export async function confirmSale(formData: FormData) {
   });
   await generateCommissionsForSale(sale.id);
   await recomputeStatus(sale.sellerId);
+  checkAndPromoteStatusAfter(sale.sellerId);
 
   // Notifier l'affilié que sa vente déclarée a été validée (cloche + e-mail).
   await prisma.notification.create({
