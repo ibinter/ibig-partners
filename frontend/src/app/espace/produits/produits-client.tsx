@@ -166,13 +166,16 @@ function ProductCard({
           </div>
           <div className="rounded-xl bg-emerald-50 px-3 py-2">
             <p className="text-[10px] font-bold uppercase tracking-wide text-emerald-500">Commission N1</p>
-            {product.commissionMin && product.commissionMax && product.commissionMin !== product.commissionMax ? (
+            {product.pricingType === "COURSE" && product.commissionMin && product.commissionMax ? (
               <div>
                 <p className="text-[11px] font-extrabold text-emerald-700 leading-tight">
-                  {product.rate}% · {new Intl.NumberFormat("fr-FR").format(product.commissionMin)} FCFA
+                  {product.rate}% / participant
                 </p>
-                <p className="text-[9px] text-emerald-500 font-bold">
-                  jusqu&apos;à {new Intl.NumberFormat("fr-FR").format(product.commissionMax)} FCFA
+                <p className="text-[9px] text-emerald-600 font-bold">
+                  {new Intl.NumberFormat("fr-FR").format(product.commissionMin)}–{new Intl.NumberFormat("fr-FR").format(product.commissionMax)} FCFA/pers.
+                </p>
+                <p className="text-[9px] text-emerald-500 font-semibold mt-0.5">
+                  ✦ ×N participants = N× de gains
                 </p>
               </div>
             ) : (
