@@ -132,6 +132,25 @@ export async function deleteProspect(formData: FormData) {
   revalidatePath("/espace/prospects");
 }
 
+export async function addProspectNote(formData: FormData) {
+  const user = await requireUser();
+  const prospectId = String(formData.get("prospectId") || "");
+  const content = String(formData.get("content") || "").trim();
+  const type = String(formData.get("type") || "NOTE");
+  if (!content || !prospectId) return;
+  const prospect = await prisma.prospect.findUnique({ where: { id: prospectId } });
+  if (!prospect || prospect.userId !== user.id) return;
+  await (prisma as any).prospectNote.create({
+    data: { prospectId, content, type, id: crypto.randomUUID() },
+  });
+  await prisma.prospect.update({
+    where: { id: prospectId },
+    data: { lastContactedAt: new Date() },
+  });
+  revalidatePath(`/espace/prospects/${prospectId}`);
+  revalidatePath("/espace/prospects");
+}
+
 export async function submitOpportunity(formData: FormData) {
   const user = await requireUser();
   const title = String(formData.get("title") || "").trim();

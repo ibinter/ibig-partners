@@ -5,7 +5,8 @@ import { Badge, Button, Field, PageHeader, statusTone } from "@/components/ui";
 import { PROSPECT_STATUS_LABELS } from "@/lib/constants";
 import { addProspect } from "../actions";
 import { ProspectImport } from "./ProspectImport";
-import ProspectsTable from "./prospects-client";
+import ViewToggle from "./view-toggle";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -25,23 +26,23 @@ export default async function ProspectsPage() {
   ]);
   const productMap = new Map(products.map((p) => [p.id, p.name]));
 
-  const total     = prospects.length;
-  const contacted = prospects.filter((p) => p.status === "CONTACTED").length;
-  const demo      = prospects.filter((p) => p.status === "DEMO").length;
-  const converted = prospects.filter((p) => p.status === "CONVERTED").length;
-  const lost      = prospects.filter((p) => p.status === "LOST").length;
+  const total      = prospects.length;
+  const contacted  = prospects.filter((p) => p.status === "CONTACTED").length;
+  const interested = prospects.filter((p) => p.status === "INTERESTED" || p.status === "DEMO").length;
+  const quote      = prospects.filter((p) => p.status === "QUOTE").length;
+  const converted  = prospects.filter((p) => p.status === "CONVERTED").length;
+  const lost       = prospects.filter((p) => p.status === "LOST").length;
 
   const convRate = total > 0 ? Math.round((converted / total) * 100) : 0;
 
-  /* Funnel pourcentages relatifs au total */
   const funnelSteps = [
-    { label: "Contactés",   count: contacted, color: "bg-amber-400",   pct: total > 0 ? Math.round((contacted / total) * 100) : 0 },
-    { label: "En démo",     count: demo,       color: "bg-blue-500",    pct: total > 0 ? Math.round((demo / total) * 100) : 0 },
-    { label: "Convertis",   count: converted,  color: "bg-emerald-500", pct: total > 0 ? Math.round((converted / total) * 100) : 0 },
-    { label: "Perdus",      count: lost,       color: "bg-red-400",     pct: total > 0 ? Math.round((lost / total) * 100) : 0 },
+    { label: "Contactés",  count: contacted,  color: "bg-amber-400",   pct: total > 0 ? Math.round((contacted / total) * 100) : 0 },
+    { label: "Intéressés", count: interested, color: "bg-blue-500",    pct: total > 0 ? Math.round((interested / total) * 100) : 0 },
+    { label: "Devis",      count: quote,      color: "bg-violet-500",  pct: total > 0 ? Math.round((quote / total) * 100) : 0 },
+    { label: "Convertis",  count: converted,  color: "bg-emerald-500", pct: total > 0 ? Math.round((converted / total) * 100) : 0 },
+    { label: "Perdus",     count: lost,       color: "bg-red-400",     pct: total > 0 ? Math.round((lost / total) * 100) : 0 },
   ];
 
-  /* Sérialisation pour le composant client */
   const now = Date.now();
   const rows = prospects.map((p) => ({
     id: p.id,
@@ -54,16 +55,25 @@ export default async function ProspectsPage() {
     productName: p.productId ? (productMap.get(p.productId) ?? null) : null,
     date: formatDate(p.createdAt),
     daysSince: Math.floor((now - new Date(p.createdAt).getTime()) / (1000 * 60 * 60 * 24)),
+    priority: p.priority,
   }));
 
   return (
     <div className="space-y-5">
-      <PageHeader
-        title="Mes Prospects"
-        subtitle="Pipeline de vente : suivez chaque lead de la prise de contact à la conversion."
-      />
+      <div className="flex items-start justify-between flex-wrap gap-3">
+        <PageHeader
+          title="Mes Prospects"
+          subtitle="Pipeline de vente : suivez chaque lead de la prise de contact à la conversion."
+        />
+        <a
+          href="/api/prospects/export"
+          className="shrink-0 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors flex items-center gap-1.5"
+        >
+          ⬇ Exporter CSV
+        </a>
+      </div>
 
-      {/* ── 4 KPIs gradient ── */}
+      {/* ── KPIs ── */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-2xl bg-gradient-to-br from-slate-700 to-slate-800 p-4 text-white shadow-sm">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-300">Total prospects</p>
@@ -75,10 +85,10 @@ export default async function ProspectsPage() {
           <p className="mt-1 text-2xl font-extrabold">{contacted}</p>
           <p className="mt-0.5 text-xs text-amber-100">en cours de suivi</p>
         </div>
-        <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 p-4 text-white shadow-sm">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-blue-200">En démo</p>
-          <p className="mt-1 text-2xl font-extrabold">{demo}</p>
-          <p className="mt-0.5 text-xs text-blue-200">présentation en cours</p>
+        <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-violet-600 p-4 text-white shadow-sm">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-blue-200">Intéressés + Devis</p>
+          <p className="mt-1 text-2xl font-extrabold">{interested + quote}</p>
+          <p className="mt-0.5 text-xs text-blue-200">{interested} intéressés · {quote} devis</p>
         </div>
         <div className="rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 p-4 text-white shadow-sm">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-emerald-200">Convertis</p>
@@ -87,7 +97,7 @@ export default async function ProspectsPage() {
         </div>
       </div>
 
-      {/* ── Funnel visuel ── */}
+      {/* ── Funnel ── */}
       {total > 0 && (
         <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
           <h3 className="font-semibold text-slate-800 text-sm mb-4">Funnel de conversion</h3>
@@ -115,7 +125,6 @@ export default async function ProspectsPage() {
 
       {/* ── Import + Formulaire ── */}
       <div className="grid gap-4 lg:grid-cols-2">
-        {/* Formulaire ajout */}
         <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
           <div className="mb-4">
             <h3 className="font-semibold text-slate-800 text-sm">➕ Ajouter un prospect</h3>
@@ -162,7 +171,6 @@ export default async function ProspectsPage() {
           </form>
         </div>
 
-        {/* Import CSV */}
         <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-5 flex flex-col">
           <div className="mb-3">
             <h3 className="font-semibold text-slate-800 text-sm">📥 Import en masse</h3>
@@ -172,8 +180,8 @@ export default async function ProspectsPage() {
         </div>
       </div>
 
-      {/* ── Table filtrée (client) ── */}
-      <ProspectsTable rows={rows} />
+      {/* ── Vue Kanban / Liste ── */}
+      <ViewToggle rows={rows} />
     </div>
   );
 }

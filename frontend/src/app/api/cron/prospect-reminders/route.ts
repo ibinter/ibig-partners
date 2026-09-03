@@ -5,12 +5,21 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
 
-/**
- * Cron de rappels prospects IBIG PARTNERS.
- * Déclenché quotidiennement à 7h UTC (avant le cron email-sequences).
- * Envoie une notification in-app + crée une alerte pour chaque prospect dont
- * la date de relance (reminderAt) est passée et le statut n'est pas terminal.
- */
+// Délai sans contact (en jours) avant relance automatique par statut
+const STALE_DAYS: Record<string, number> = {
+  CONTACTED:  3,
+  INTERESTED: 5,
+  DEMO:       5,
+  QUOTE:      7,
+};
+
+const STAGE_MESSAGE: Record<string, string> = {
+  CONTACTED:  "n'a pas encore répondu — relancez-le pour avancer.",
+  INTERESTED: "est intéressé mais attend un suivi — ne le laissez pas refroidir !",
+  DEMO:       "a eu une démo mais attend votre relance.",
+  QUOTE:      "a reçu un devis — c'est le moment de conclure !",
+};
+
 export async function GET(req: Request) {
   const hdrs = await headers();
   const secret = hdrs.get("authorization")?.replace("Bearer ", "") ?? hdrs.get("x-cron-secret");
@@ -20,7 +29,7 @@ export async function GET(req: Request) {
 
   const now = new Date();
 
-  // Prospects dont la relance est due, statut actif, et dont l'affilié est actif
+  // 1. Relances manuelles (reminderAt passé)
   const dueProspects = await prisma.prospect.findMany({
     where: {
       reminderAt: { lte: now },
@@ -28,52 +37,87 @@ export async function GET(req: Request) {
       user: { approved: true, active: true },
     },
     include: {
-      user: { select: { id: true, email: true, firstName: true } },
+      user: { select: { id: true, firstName: true } },
     },
   });
 
-  if (dueProspects.length === 0) {
-    return NextResponse.json({ sent: 0 });
+  // 2. Relances intelligentes par stade (pas de contact depuis X jours)
+  const staleAlerts: typeof dueProspects = [];
+  for (const [status, days] of Object.entries(STALE_DAYS)) {
+    const cutoff = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
+    const stale = await prisma.prospect.findMany({
+      where: {
+        status,
+        reminderAt: null, // pas déjà prévu en relance manuelle
+        lastContactedAt: { lte: cutoff },
+        user: { approved: true, active: true },
+      },
+      include: {
+        user: { select: { id: true, firstName: true } },
+      },
+    });
+    staleAlerts.push(...stale);
   }
 
-  // Grouper par userId pour une seule notification récapitulative
-  const byUser = new Map<string, typeof dueProspects>();
+  // Grouper manuels par userId
+  const byUser = new Map<string, { manual: typeof dueProspects; stale: typeof dueProspects }>();
+
   for (const p of dueProspects) {
-    const list = byUser.get(p.userId) ?? [];
-    list.push(p);
-    byUser.set(p.userId, list);
+    const entry = byUser.get(p.userId) ?? { manual: [], stale: [] };
+    entry.manual.push(p);
+    byUser.set(p.userId, entry);
+  }
+  for (const p of staleAlerts) {
+    const entry = byUser.get(p.userId) ?? { manual: [], stale: [] };
+    if (!entry.manual.find((m) => m.id === p.id)) {
+      entry.stale.push(p);
+    }
+    byUser.set(p.userId, entry);
   }
 
   let notifCount = 0;
 
-  for (const [userId, prospects] of byUser.entries()) {
-    const user = prospects[0].user;
-    const count = prospects.length;
-    const names = prospects
-      .slice(0, 3)
-      .map((p) => p.name)
-      .join(", ");
-    const suffix = count > 3 ? ` +${count - 3} autre${count - 3 > 1 ? "s" : ""}` : "";
+  for (const [userId, { manual, stale }] of byUser.entries()) {
+    // Notification pour les relances manuelles
+    if (manual.length > 0) {
+      const count = manual.length;
+      const names = manual.slice(0, 3).map((p) => p.name).join(", ");
+      const suffix = count > 3 ? ` +${count - 3} autre${count - 3 > 1 ? "s" : ""}` : "";
+      await prisma.notification.create({
+        data: {
+          userId,
+          title: `⏰ ${count} prospect${count > 1 ? "s" : ""} à relancer`,
+          body: `Aujourd'hui : ${names}${suffix}. Relancez-les pour ne pas perdre vos opportunités !`,
+          url: "/espace/prospects",
+        },
+      });
+      await prisma.prospect.updateMany({
+        where: { id: { in: manual.map((p) => p.id) } },
+        data: { reminderAt: null },
+      });
+      notifCount++;
+    }
 
-    await prisma.notification.create({
-      data: {
-        userId,
-        title: `⏰ ${count} prospect${count > 1 ? "s" : ""} à relancer`,
-        body: `Aujourd'hui : ${names}${suffix}. Relancez-les pour ne pas perdre vos opportunités !`,
-        url: "/espace/prospects",
-      },
-    });
-
-    // Réinitialiser reminderAt à null pour éviter la re-notification demain
-    // (l'affilié devra manuellement fixer une nouvelle relance s'il le souhaite)
-    await prisma.prospect.updateMany({
-      where: { id: { in: prospects.map((p) => p.id) } },
-      data: { reminderAt: null },
-    });
-
-    notifCount++;
-    console.log(`[prospect-reminders] ${user.firstName} → ${count} rappel(s)`);
+    // Notifications intelligentes par prospect stale
+    for (const p of stale.slice(0, 3)) {
+      const msg = STAGE_MESSAGE[p.status] ?? "mérite un suivi.";
+      await prisma.notification.create({
+        data: {
+          userId,
+          title: `💡 ${p.name} attend votre relance`,
+          body: `${p.name} ${msg}`,
+          url: `/espace/prospects/${p.id}`,
+        },
+      });
+      // Éviter re-notification le lendemain : on met lastContactedAt à maintenant
+      // L'affilié verra la notif et devra aller sur la fiche pour vraiment relancer
+      notifCount++;
+    }
   }
 
-  return NextResponse.json({ sent: notifCount, prospects: dueProspects.length });
+  return NextResponse.json({
+    sent: notifCount,
+    manual: dueProspects.length,
+    stale: staleAlerts.length,
+  });
 }

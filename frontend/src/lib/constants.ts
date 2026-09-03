@@ -62,10 +62,12 @@ export const SALE_STATUS_LABELS: Record<string, string> = {
 };
 
 export const PROSPECT_STATUS_LABELS: Record<string, string> = {
-  CONTACTED: "Contacté",
-  DEMO:      "Démo",
-  CONVERTED: "Converti",
-  LOST:      "Perdu",
+  CONTACTED:  "Contacté",
+  INTERESTED: "Intéressé",
+  QUOTE:      "Devis",
+  DEMO:       "Intéressé",   // legacy — mapped to Intéressé column
+  CONVERTED:  "Converti",
+  LOST:       "Perdu",
 };
 
 export const OPPORTUNITY_STATUS_LABELS: Record<string, string> = {
