@@ -242,30 +242,32 @@ function ProductCard({
         </div>
 
         {/* Prix + Commission */}
-        <div className="grid grid-cols-2 gap-2 mt-auto">
-          <div className="rounded-xl bg-slate-50 px-3 py-2">
-            <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Prix</p>
-            <p className="text-sm font-bold text-slate-700 truncate">{product.priceDisplay}</p>
+        {isCourse ? (
+          /* Formation : affichage simplifié — le détail est dans le panel */
+          <div className="flex items-center gap-2 mt-auto rounded-xl bg-emerald-50 border border-emerald-100 px-3 py-2.5">
+            <span className="text-emerald-600 text-base">💰</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-[10px] font-bold uppercase tracking-wide text-emerald-500">Commission N1</p>
+              <p className="text-sm font-extrabold text-emerald-700">
+                {Math.round(product.rate * 100)}% par participant · par formule
+              </p>
+            </div>
+            <p className="text-[10px] font-semibold text-emerald-400 text-right shrink-0">
+              Voir détail →
+            </p>
           </div>
-          <div className="rounded-xl bg-emerald-50 px-3 py-2">
-            <p className="text-[10px] font-bold uppercase tracking-wide text-emerald-500">Commission N1</p>
-            {product.pricingType === "COURSE" && product.commissionMin && product.commissionMax ? (
-              <div>
-                <p className="text-[11px] font-extrabold text-emerald-700 leading-tight">
-                  {Math.round(product.rate * 100)}% / participant
-                </p>
-                <p className="text-[9px] text-emerald-600 font-bold">
-                  {new Intl.NumberFormat("fr-FR").format(product.commissionMin)}–{new Intl.NumberFormat("fr-FR").format(product.commissionMax)} FCFA/pers.
-                </p>
-                <p className="text-[9px] text-emerald-500 font-semibold mt-0.5">
-                  ✦ ×N participants = N× de gains
-                </p>
-              </div>
-            ) : (
+        ) : (
+          <div className="grid grid-cols-2 gap-2 mt-auto">
+            <div className="rounded-xl bg-slate-50 px-3 py-2">
+              <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Prix</p>
+              <p className="text-sm font-bold text-slate-700 truncate">{product.priceDisplay}</p>
+            </div>
+            <div className="rounded-xl bg-emerald-50 px-3 py-2">
+              <p className="text-[10px] font-bold uppercase tracking-wide text-emerald-500">Commission N1</p>
               <p className="text-sm font-bold text-emerald-700 truncate">{product.commissionDisplay}</p>
-            )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Lien affilié si actif */}
         {active && product.affiliateUrl && (
