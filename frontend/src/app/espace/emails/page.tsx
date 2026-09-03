@@ -1,4 +1,4 @@
-import { requirePartner } from "@/lib/auth";
+import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/format";
 import { Card, PageHeader } from "@/components/ui";
@@ -35,7 +35,7 @@ const ONBOARDING_STEPS = ["J0","J1","J3","J7"];
 const ACTIVATION_STEPS = ["J14","J21"];
 
 export default async function EmailsPage() {
-  const user = await requirePartner();
+  const user = await requireUser();
 
   const logs = await prisma.emailSequenceLog.findMany({
     where: { userId: user.id },
