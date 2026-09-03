@@ -8,6 +8,77 @@ import { formatDate } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
+type VerifReq = Awaited<ReturnType<typeof import("@/lib/prisma").prisma.verificationRequest.findUnique>>;
+
+function computeKycScore(req: NonNullable<VerifReq>) {
+  const items: { label: string; pts: number; earned: boolean }[] = [];
+  const add = (label: string, pts: number, earned: boolean) => items.push({ label, pts, earned });
+
+  if (req.type === "INDIVIDUAL") {
+    add("Nom état civil", 8, !!req.fullName);
+    add("Type + N° pièce ID", 10, !!(req.idType && req.idNumber));
+    add("Pièce ID recto", 15, !!req.idDocUrl);
+    add("Pièce ID verso", 7, !!req.idDocBack);
+    add("WhatsApp", 10, !!req.whatsapp);
+    add("Contact 1 (nom + tél)", 5, !!(req.contact1Name && req.contact1Phone));
+    add("Contact 2 (nom + tél)", 5, !!(req.contact2Name && req.contact2Phone));
+    add("CV / Parcours", 10, !!req.cvText || !!req.cvFileUrl);
+    add("Profession", 5, !!req.profession);
+    add("Pays + ville", 5, !!(req.country && req.city));
+    add("Coordonnées de paiement", 20, !!req.payoutMethod);
+  } else {
+    add("Nom entreprise", 10, !!(req.companyName));
+    add("RCCM", 15, !!req.rccm);
+    add("NIF", 10, !!req.nif);
+    add("Représentant légal", 5, !!req.legalRep);
+    add("Email entreprise", 5, !!req.companyEmail);
+    add("WhatsApp entreprise", 5, !!req.companyWhatsapp);
+    add("Pays + ville siège", 10, !!(req.companyCountry && req.companyCity));
+    add("Adresse siège", 5, !!req.companyAddress);
+    add("Coordonnées de paiement", 20, !!req.payoutMethod);
+    add("Docs justificatifs", 15, !!(req.idDocUrl));
+  }
+
+  const total = items.reduce((s, i) => s + i.pts, 0);
+  const earned = items.reduce((s, i) => s + (i.earned ? i.pts : 0), 0);
+  const score = Math.round((earned / total) * 100);
+  return { score, items };
+}
+
+function KycScoreGauge({ req }: { req: NonNullable<VerifReq> }) {
+  const { score, items } = computeKycScore(req);
+  const color = score >= 80 ? "emerald" : score >= 50 ? "amber" : "rose";
+  const colorMap = {
+    emerald: { bar: "bg-emerald-500", text: "text-emerald-700", bg: "bg-emerald-50 border-emerald-100" },
+    amber:   { bar: "bg-amber-400",   text: "text-amber-700",   bg: "bg-amber-50 border-amber-100" },
+    rose:    { bar: "bg-rose-500",     text: "text-rose-700",     bg: "bg-rose-50 border-rose-100" },
+  };
+  const c = colorMap[color];
+  return (
+    <div className={`rounded-2xl border p-5 ${c.bg}`}>
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Score de confiance KYC</p>
+          <p className={`text-3xl font-extrabold ${c.text} mt-0.5`}>{score} <span className="text-lg font-semibold">/ 100</span></p>
+        </div>
+        <span className="text-4xl">{score >= 80 ? "🟢" : score >= 50 ? "🟡" : "🔴"}</span>
+      </div>
+      <div className="h-3 w-full rounded-full bg-white/60 border border-white mb-4">
+        <div className={`h-full rounded-full ${c.bar} transition-all`} style={{ width: `${score}%` }} />
+      </div>
+      <div className="grid grid-cols-2 gap-1">
+        {items.map((item) => (
+          <div key={item.label} className="flex items-center gap-1.5 text-[11px]">
+            <span>{item.earned ? "✅" : "⬜"}</span>
+            <span className={item.earned ? "text-slate-700" : "text-slate-400"}>{item.label}</span>
+            <span className="ml-auto font-mono text-slate-400">{item.pts}pts</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Row({ label, value }: { label: string; value?: string | null }) {
   if (!value) return null;
   return (
@@ -174,6 +245,9 @@ export default async function VerificationDetailPage({
         title={`Dossier KYC — ${u.firstName} ${u.lastName}`}
         subtitle={`${u.code} · Soumis le ${formatDate(req.submittedAt)}`}
       />
+
+      {/* Score de confiance KYC */}
+      <KycScoreGauge req={req} />
 
       {/* Statut + actions */}
       <Card className="p-5">

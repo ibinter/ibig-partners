@@ -60,3 +60,32 @@ self.addEventListener("fetch", (e) => {
       )
   );
 });
+
+// ── Push notifications ──────────────────────────────────────────────────────
+self.addEventListener("push", (e) => {
+  if (!e.data) return;
+  let data = {};
+  try { data = e.data.json(); } catch { data = { title: "IBIG PARTNERS", body: e.data.text() }; }
+  const { title = "IBIG PARTNERS", body = "Vous avez une notification.", url = "/espace" } = data;
+  e.waitUntil(
+    self.registration.showNotification(title, {
+      body,
+      icon: "/icon-192.png",
+      badge: "/icon-192.png",
+      data: { url },
+      vibrate: [200, 100, 200],
+    })
+  );
+});
+
+self.addEventListener("notificationclick", (e) => {
+  e.notification.close();
+  const url = e.notification.data?.url ?? "/espace";
+  e.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
+      const existing = list.find((c) => c.url.includes(self.location.origin));
+      if (existing) return existing.focus();
+      return clients.openWindow(url);
+    })
+  );
+});

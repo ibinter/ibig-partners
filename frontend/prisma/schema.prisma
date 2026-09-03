@@ -67,6 +67,7 @@ model User {
   ticketMessages   TicketMessage[]    @relation("TicketAuthor")
   auditLogs        AuditLog[]
   otpCode          OtpCode?
+  pushSubscriptions PushSubscription[]
   verification     VerificationRequest?
   trainingProgress TrainingProgress[]
   chatParticipations ChatParticipant[]
@@ -602,4 +603,17 @@ model ProductCommissionRate {
   description String? // ex: "Mois 1, Niveau 1"
 
   @@unique([productId, level, monthIndex])
+}
+
+// ─── Push notifications Web Push (PWA) ────────────────────────────────────
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }
