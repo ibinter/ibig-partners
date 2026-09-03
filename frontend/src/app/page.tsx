@@ -230,7 +230,7 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════ MISSION / AFRIQUE ═══════════ */}
-      <section id="mission" className="relative overflow-hidden bg-white py-24">
+      <section id="mission" className="relative overflow-hidden bg-white py-14 sm:py-20 lg:py-24">
         <div className="mx-auto max-w-6xl px-4">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <ScrollReveal animation="slide-left">
@@ -277,7 +277,7 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════ POURQUOI ═══════════ */}
-      <section className="bg-slate-50 py-24">
+      <section className="bg-slate-50 py-14 sm:py-20 lg:py-24">
         <div className="mx-auto max-w-6xl px-4">
           <ScrollReveal animation="fade-up">
             <div className="text-center">
@@ -309,7 +309,7 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════ BRANCHES ═══════════ */}
-      <section id="branches" className="bg-white py-24">
+      <section id="branches" className="bg-white py-14 sm:py-20 lg:py-24">
         <div className="mx-auto max-w-6xl px-4">
           <ScrollReveal animation="fade-up">
             <div className="text-center">
@@ -385,7 +385,7 @@ export default async function HomePage() {
       <CommissionDetails />
 
       {/* ═══════════ COMMISSIONS ═══════════ */}
-      <section id="commissions" className="bg-slate-50 py-24">
+      <section id="commissions" className="bg-slate-50 py-14 sm:py-20 lg:py-24">
         <div className="mx-auto max-w-6xl px-4">
           <ScrollReveal animation="fade-up">
             <div className="text-center">
@@ -414,6 +414,7 @@ export default async function HomePage() {
                   <h3 className="font-bold">Abonnements mensuels (IBIG SOFT)</h3>
                   <p className="mt-0.5 text-xs text-brand-100">Dégressif sur 4 mois — exemple sur {fcfa(10000)}/mois</p>
                 </div>
+                <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-muted">
                     <tr>
@@ -445,6 +446,7 @@ export default async function HomePage() {
                     </tr>
                   </tbody>
                 </table>
+                </div>
               </div>
             </ScrollReveal>
 
@@ -478,7 +480,7 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════ SIMULATEUR ═══════════ */}
-      <section className="gradient-simulateur py-24 text-white">
+      <section className="gradient-simulateur py-14 sm:py-20 lg:py-24 text-white">
         <div className="mx-auto max-w-6xl px-4">
           <ScrollReveal animation="fade-up">
             <div className="text-center">
@@ -577,7 +579,7 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════ OBJECTIF 500 000 FCFA ═══════════ */}
-      <section id="objectif-500k" className="bg-white py-24">
+      <section id="objectif-500k" className="bg-white py-14 sm:py-20 lg:py-24">
         <div className="mx-auto max-w-6xl px-4">
           <ScrollReveal animation="fade-up">
             <div className="text-center">
@@ -705,7 +707,7 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════ STATUTS ═══════════ */}
-      <section id="statuts" className="bg-slate-50 py-24">
+      <section id="statuts" className="bg-slate-50 py-14 sm:py-20 lg:py-24">
         <div className="mx-auto max-w-6xl px-4">
           <ScrollReveal animation="fade-up">
             <div className="text-center">
@@ -836,7 +838,7 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════ FAQ ═══════════ */}
-      <section id="faq" className="bg-white py-24">
+      <section id="faq" className="bg-white py-14 sm:py-20 lg:py-24">
         <div className="mx-auto max-w-3xl px-4">
           <ScrollReveal animation="fade-up">
             <div className="text-center">
@@ -857,7 +859,7 @@ export default async function HomePage() {
       <Testimonials />
 
       {/* ═══════════ CTA FINAL ═══════════ */}
-      <section className="bg-slate-50 py-24">
+      <section className="bg-slate-50 py-14 sm:py-20 lg:py-24">
         <div className="mx-auto max-w-4xl px-4 text-center">
           <ScrollReveal animation="fade-up">
             <h2 className="text-3xl font-extrabold text-ink sm:text-5xl">

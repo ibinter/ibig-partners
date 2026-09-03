@@ -125,14 +125,14 @@ export function SiteHeader({ lang = "fr" }: { lang?: Lang }) {
           <LangSwitcher />
           <Link
             href="/connexion"
-            className="hidden rounded-lg px-3.5 py-2 text-sm font-semibold transition-colors sm:inline-flex hover:bg-[#041B4D]/5"
+            className="hidden rounded-lg px-3.5 py-2 text-sm font-semibold transition-colors lg:inline-flex hover:bg-[#041B4D]/5"
             style={{ color: "#041B4D" }}
           >
             {t.signIn}
           </Link>
           <Link
             href={t.joinHref}
-            className="group relative hidden sm:inline-flex items-center gap-1.5 overflow-hidden rounded-xl px-4 py-2 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
+            className="group relative hidden lg:inline-flex items-center gap-1.5 overflow-hidden rounded-xl px-4 py-2 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
             style={{ background: "linear-gradient(135deg, #FF6A00 0%, #e55d00 100%)", boxShadow: "0 4px 14px rgba(255,106,0,0.35)" }}
           >
             <span className="relative z-10">{t.join}</span>
