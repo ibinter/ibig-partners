@@ -316,15 +316,18 @@ model OpportunityMessage {
 }
 
 model Prospect {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  name      String
-  contact   String?
-  productId String?
-  status    String   @default("CONTACTED") // CONTACTED | DEMO | CONVERTED | LOST
-  note      String?
-  createdAt DateTime @default(now())
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id])
+  name              String
+  contact           String?
+  productId         String?
+  status            String    @default("CONTACTED") // CONTACTED | DEMO | CONVERTED | LOST
+  note              String?
+  priority          String    @default("NORMAL") // LOW | NORMAL | HIGH
+  reminderAt        DateTime?
+  lastContactedAt   DateTime?
+  createdAt         DateTime  @default(now())
 }
 
 model MarketingKit {

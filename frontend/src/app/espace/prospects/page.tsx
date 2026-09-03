@@ -136,6 +136,28 @@ export default async function ProspectsPage() {
               </select>
             </Field>
             <Field label="Note (observations)" name="note" placeholder="Contexte, timing, intérêt…" />
+            <Field label="Priorité" name="priority">
+              <select
+                name="priority"
+                className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              >
+                <option value="NORMAL">🟡 Normale</option>
+                <option value="HIGH">🔴 Haute</option>
+                <option value="LOW">🔵 Basse</option>
+              </select>
+            </Field>
+            <Field label="Me rappeler dans" name="reminderDays">
+              <select
+                name="reminderDays"
+                className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              >
+                <option value="0">— Pas de rappel</option>
+                <option value="1">1 jour</option>
+                <option value="3">3 jours</option>
+                <option value="7">7 jours</option>
+                <option value="14">14 jours</option>
+              </select>
+            </Field>
             <Button type="submit" className="w-full">Ajouter le prospect</Button>
           </form>
         </div>

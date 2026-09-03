@@ -43,7 +43,18 @@ export default async function DashboardPage({
   const sixMonthsAgo = new Date();
   sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
-  const [recentCommissions, chartSales, chartComms] = await Promise.all([
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+  const monthStart = new Date();
+  monthStart.setDate(1);
+  monthStart.setHours(0, 0, 0, 0);
+
+  const STATUS_MONTHLY_TARGET: Record<string, number> = {
+    STARTER: 3, SILVER: 5, GOLD: 8, MASTER: 12, ELITE: 20,
+  };
+  const monthlyTarget = STATUS_MONTHLY_TARGET[user.status] ?? 3;
+
+  const [recentCommissions, chartSales, chartComms, salesToday, salesThisMonth, myRank, prospectsUrgent] = await Promise.all([
     prisma.commission.findMany({
       where: { userId: user.id },
       orderBy: { createdAt: "desc" },
@@ -57,6 +68,26 @@ export default async function DashboardPage({
     prisma.commission.findMany({
       where: { userId: user.id, createdAt: { gte: sixMonthsAgo } },
       select: { createdAt: true, amount: true, status: true },
+    }),
+    prisma.sale.count({ where: { sellerId: user.id, status: "CONFIRMED", createdAt: { gte: todayStart } } }),
+    prisma.sale.count({ where: { sellerId: user.id, status: "CONFIRMED", createdAt: { gte: monthStart } } }),
+    // Rang : nombre de partenaires avec plus de ventes confirmées que moi
+    prisma.sale.groupBy({
+      by: ["sellerId"],
+      where: { status: "CONFIRMED" },
+      _count: { id: true },
+    }).then((rows) => {
+      const myCount = summary.confirmedSales;
+      const rank = rows.filter((r) => r._count.id > myCount).length + 1;
+      const total = rows.length || 1;
+      return { rank, total };
+    }),
+    // Prospects urgents : relance due aujourd'hui ou en retard
+    prisma.prospect.findMany({
+      where: { userId: user.id, reminderAt: { lte: new Date() }, status: { notIn: ["CONVERTED", "LOST"] } },
+      orderBy: { reminderAt: "asc" },
+      take: 5,
+      select: { id: true, name: true, contact: true, reminderAt: true, status: true },
     }),
   ]);
 
@@ -196,6 +227,92 @@ export default async function DashboardPage({
           <p className="mt-0.5 text-xs text-slate-400">N1 : {counts[0]} · N2 : {counts[1]} · N3 : {counts[2]}</p>
         </div>
       </div>
+
+      {/* ── Temps réel : ventes du jour + objectif mois + rang ── */}
+      <div className="grid gap-3 sm:grid-cols-3">
+        {/* Ventes aujourd'hui */}
+        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm flex items-center gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-rose-50 text-2xl">🔥</div>
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Aujourd'hui</p>
+            <p className="text-2xl font-extrabold text-slate-900">{salesToday}</p>
+            <p className="text-xs text-slate-400">vente{salesToday !== 1 ? "s" : ""} confirmée{salesToday !== 1 ? "s" : ""}</p>
+          </div>
+        </div>
+
+        {/* Objectif du mois */}
+        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <span className="text-xl">🎯</span>
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Objectif du mois</p>
+            </div>
+            <span className="text-xs font-bold text-slate-600">{salesThisMonth}/{monthlyTarget}</span>
+          </div>
+          <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
+            <div
+              className={`h-2.5 rounded-full transition-all ${salesThisMonth >= monthlyTarget ? "bg-emerald-500" : "bg-blue-500"}`}
+              style={{ width: `${Math.min(100, Math.round((salesThisMonth / monthlyTarget) * 100))}%` }}
+            />
+          </div>
+          <p className="mt-1.5 text-xs text-slate-400">
+            {salesThisMonth >= monthlyTarget
+              ? "✅ Objectif atteint — dépassez-le !"
+              : `${monthlyTarget - salesThisMonth} vente${monthlyTarget - salesThisMonth > 1 ? "s" : ""} pour atteindre l'objectif`}
+          </p>
+        </div>
+
+        {/* Rang dans le réseau */}
+        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm flex items-center gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-2xl">
+            {myRank.rank === 1 ? "🏆" : myRank.rank <= 3 ? "🥈" : "📊"}
+          </div>
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Mon rang</p>
+            <p className="text-2xl font-extrabold text-slate-900">#{myRank.rank}</p>
+            <p className="text-xs text-slate-400">sur {myRank.total} actifs</p>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Prospects urgents (rappels dus) ── */}
+      {prospectsUrgent.length > 0 && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">⏰</span>
+              <h2 className="text-sm font-semibold text-amber-900">
+                {prospectsUrgent.length} prospect{prospectsUrgent.length > 1 ? "s" : ""} à relancer maintenant
+              </h2>
+            </div>
+            <Link href="/espace/prospects" className="text-xs font-semibold text-amber-700 hover:underline">
+              Voir tous →
+            </Link>
+          </div>
+          <div className="space-y-2">
+            {prospectsUrgent.map((p) => (
+              <Link
+                key={p.id}
+                href="/espace/prospects"
+                className="flex items-center justify-between rounded-xl bg-white border border-amber-100 px-3 py-2 hover:bg-amber-100/50 transition"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-base">👤</span>
+                  <div>
+                    <p className="text-sm font-semibold text-slate-800">{p.name}</p>
+                    {p.contact && <p className="text-xs text-slate-500">{p.contact}</p>}
+                  </div>
+                </div>
+                <span className="text-xs font-semibold text-rose-600">
+                  {p.reminderAt && new Date(p.reminderAt) < new Date(todayStart)
+                    ? `En retard de ${Math.floor((Date.now() - new Date(p.reminderAt).getTime()) / 86400000)}j`
+                    : "Aujourd'hui"}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ── Progression statut + Réseau ── */}
       <div className="grid gap-4 lg:grid-cols-3">

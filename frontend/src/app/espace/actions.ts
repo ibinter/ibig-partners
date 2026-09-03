@@ -33,6 +33,10 @@ export async function addProspect(formData: FormData) {
   const user = await requireUser();
   const name = String(formData.get("name") || "").trim();
   if (!name) return;
+  const reminderDays = Number(formData.get("reminderDays") || 0);
+  const reminderAt = reminderDays > 0
+    ? new Date(Date.now() + reminderDays * 24 * 60 * 60 * 1000)
+    : null;
   await prisma.prospect.create({
     data: {
       userId: user.id,
@@ -40,7 +44,26 @@ export async function addProspect(formData: FormData) {
       contact: String(formData.get("contact") || "").trim() || null,
       productId: String(formData.get("productId") || "") || null,
       note: String(formData.get("note") || "").trim() || null,
+      priority: String(formData.get("priority") || "NORMAL"),
       status: "CONTACTED",
+      reminderAt,
+      lastContactedAt: new Date(),
+    },
+  });
+  revalidatePath("/espace/prospects");
+}
+
+export async function setProspectReminder(formData: FormData) {
+  const user = await requireUser();
+  const id = String(formData.get("id") || "");
+  const days = Number(formData.get("days") || 3);
+  const prospect = await prisma.prospect.findUnique({ where: { id } });
+  if (!prospect || prospect.userId !== user.id) return;
+  await prisma.prospect.update({
+    where: { id },
+    data: {
+      reminderAt: new Date(Date.now() + days * 24 * 60 * 60 * 1000),
+      lastContactedAt: new Date(),
     },
   });
   revalidatePath("/espace/prospects");
