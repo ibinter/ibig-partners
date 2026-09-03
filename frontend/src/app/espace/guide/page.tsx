@@ -241,7 +241,7 @@ export default function GuideAffilie() {
         [t("Commissions"),t("Detail N1/N2/N3 : montant, statut (En attente / Validee / Payee). Toutes vos commissions sont calculees automatiquement a chaque vente confirmée."),t("Conseil : vérifiez vos commissions N2 pour voir la performance de vos filleuls.")],
         [t("Paiements"),t("Historique des virements reçus avec références et montants. Permet de reconcilier vos paiements et de contacter le support en cas d'ecart."),t("Conseil : seuil minimum 5 000 FCFA pour déclencher un paiement.")],
         [t("Mon Réseau"),t("Arbre de parrainage sur 3 niveaux avec performances de vos filleuls. Identifiez vos meilleurs filleuls et ceux qui ont besoin d'accompagnement."),t("Conseil : contactez vos filleuls inactifs pour les remotivér.")],
-        [t("Prospects"),t("Gestion de vos contacts : Contacte - Demo - Converti - Perdu. Suivez chaque prospect de la première prise de contact jusqu'a la vente."),t("Conseil : visez 10 nouveaux prospects par semaine.")],
+        [t("Prospects (CRM)"),t("Pipeline Kanban 4 colonnes : Contacte - Intéresse - Devis - Converti. Vue kanban et vue tableau, historique des échanges (appels, emails, reunions, notes), relances automatiques intelligentes, export CSV."),t("Conseil : visez 10 nouveaux prospects par semaine et utilisez la vue Kanban pour ne rien oublier.")],
         [t("Badges"),t("Vos badges gagnes et objectifs en cours. Les badges debloquent des formations avancees et améliorent votre classement."),t("Conseil : l'objectif 'Première vente'est prioritaire.")],
         [t("Académie"),t("Modules de formation, videos, PDFs, quiz et ressources marketing. Completez un module par semaine pour progresser rapidement."),t("Conseil : commencez par le module 'Argumentaire Scolaby'.")],
         [t("Coach IA"),t("Assistant intelligent disponible 24h/24 pour toutes vos questions sur les produits, commissions, techniques de vente et gestion du réseau."),t("Conseil : préparez vos rendez-vous clients avec le Coach IA.")],
@@ -766,9 +766,9 @@ export default function GuideAffilie() {
           t("Astuce : faites imprimer 50 cartes de visite avec votre QR code Scolaby pour vos contacts en écoles.")
         ],
         [
-          t("Gestionnaire de prospects (CRM)"),
-          t("Comment utiliser : Ajoutez chaque contact intèresse dans la section Prospects. Faites evoluer le statut : Contacte - Demo programmee - Demo réalisée - Converti - Perdu. Ajoutez des notes a chaque prospect."),
-          t("Astuce : relancez les prospects 'Demo réalisée'a J+3 systematiquement.")
+          t("CRM Kanban (Gestionnaire de prospects)"),
+          t("Comment utiliser : Ajoutez chaque contact intéresse dans la section Prospects. Passez en vue Kanban pour visualiser votre pipeline en 4 colonnes : Contacte - Interesse - Devis - Converti. Cliquez sur un prospect pour voir son historique complet (appels, emails, reunions, notes). Exportez votre liste en CSV pour vos rapports. Des relances automatiques vous alertent si un prospect stagne."),
+          t("Astuce : cliquez sur la fiche prospect pour ajouter une note apres chaque echange — cela declenche le calcul de la prochaine relance automatiquement.")
         ],
         [
           t("Simulateur de revenus"),
@@ -1079,6 +1079,9 @@ export default function GuideAffilie() {
         [t("Comment signaler un problème ?"),t("Via l'onglet Support de votre espace, ou a support@ibigpartners.com.")],
         [t("Les abonnements genèrent-ils des commissions chaque mois ?"),t("Oui, sur 4 mois avec un taux dégressif (100%, 75%, 50%, 25%).")],
         [t("Puis-je vendre plusieurs branches en même temps ?"),t("Oui, vous pouvez activér des liens pour toutes les branches simultanement.")],
+        [t("Comment fonctionne la promotion automatique de statut ?"),t("Votre statut (STARTER, SILVER, GOLD, MASTER, ELITE) est réévalué automatiquement chaque nuit. Des que vous atteignez les critères (ventes, filleuls, equipe active), vous passez au statut supérieur sans aucune demande manuelle.")],
+        [t("C'est quoi les Challenges et comment en profiter ?"),t("4 challenges mensuels sont disponibles dans votre espace (section Challenges). Chaque challenge est adapte a votre statut actuel : ventes, recrutements, formations. Completez-les pour gagner des badges et des points de classement supplementaires.")],
+        [t("Comment telecharger mon relevé mensuel de commissions ?"),t("Dans la section Paiements de votre espace, cliquez sur 'Telecharger le releve' pour obtenir un PDF de vos commissions du mois. Vous recevez aussi une alerte automatique quand votre solde atteint votre seuil de retrait.")],
       ];
       faq.forEach(([q,a]) => {
         y = checkPage(y,16);
@@ -1113,7 +1116,7 @@ export default function GuideAffilie() {
           <p className="text-xs font-bold tracking-widest text-blue-300 uppercase mb-2">IBIG SARL — Programme Officiel</p>
           <h1 className="text-3xl font-extrabold text-white">IBIG PARTNERS</h1>
           <p className="text-yellow-400 font-bold text-lg mt-1">Guide du Partenaire Affilié</p>
-          <p className="text-blue-200 text-sm mt-3">Version 1.0 — Juin 2026 — 17 pages — Format A4</p>
+          <p className="text-blue-200 text-sm mt-3">Version 2.0 — Septembre 2026 — 17 pages — Format A4</p>
         </div>
         <div className="bg-white px-8 py-6 space-y-5">
           <p className="text-slate-600 text-sm leading-relaxed">
@@ -1126,6 +1129,7 @@ export default function GuideAffilie() {
               "Stratégies réseau","Tous les produits IBIG",
               "KYC & paiements","Outils professionnels",
               "Académie & Coach IA","Badges & classement",
+              "CRM Kanban pipeline","Challenges & Promotion auto",
             ].map(i => <div key={i}>{i}</div>)}
           </div>
           <button

@@ -346,7 +346,7 @@ export default function GuidePage() {
         ["Retrait self-service","Demandez votre retrait directement depuis votre espace, a tout moment, sans passer par le support. Disponible apres validation KYC. Virement sous 48h."],
         ["Kit Marketing","Argumentaires personnalises avec votre nom et code, visuels prets a partager, scripts WhatsApp, videos de presentation par branche."],
         ["Mon Réseau","Visualisation de votre arbre de parrainage sur 3 niveaux avec les performances de chaque filleul."],
-        ["Prospects","Gestion de vos prospects : ajout, suivi du statut (Contacté, Démo, Converti, Perdu)."],
+        ["Prospects (CRM Kanban)","Pipeline Kanban 4 colonnes (Contacté, Intéressé, Devis, Converti). Fiche prospect avec historique échanges (appels, emails, réunions, notes), relances automatiques intelligentes, export CSV."],
         ["Badges","Collection de vos badges gagnés : 1ère vente, 10 ventes, statut Gold, équipe de 10..."],
         ["Académie","Modules de formation IBIG : articles, vidéos, quiz et assistant IA pour progresser."],
         ["Coach IA","Assistant intelligent formé sur les produits IBIG pour répondre à toutes vos questions."],
@@ -950,7 +950,7 @@ export default function GuidePage() {
         body: [
           ["Vue arbre","Visualisation hiérarchique de votre réseau jusqu'à 3 niveaux"],
           ["Performances filleuls","CA généré, nombre de ventes et statut de chaque filleul"],
-          ["Prospects","Suivi de vos contacts potentiels : Contacté -> Démo -> Converti"],
+          ["Prospects (CRM Kanban)","Pipeline Kanban : Contacté -> Intéressé -> Devis -> Converti, historique échanges, relances auto, export CSV"],
           ["Opportunités","Gestion des opportunités commerciales importantes avec valeur estimée"],
           ["Classement","Votre position parmi les meilleurs partenaires du mois"],
         ],
@@ -1024,6 +1024,8 @@ export default function GuidePage() {
           ["Branches & Produits","Création/modification des branches et produits du catalogue"],
           ["Académie IBIG","Gestion des modules de formation, contenus, badges"],
           ["Opportunités","Suivi des grandes opportunités commerciales du réseau"],
+          ["Challenges","Création et gestion des challenges mensuels par statut partenaire"],
+          ["Email Sequences","Séquences d'emails automatiques (bienvenue, relances, seuil atteint)"],
           ["Communication","Messagerie, annonces globales, tickets support"],
           ["Journal d'audit","Traçabilité de toutes les actions administratives"],
           ["Paramètres","Configuration globale : seuils, délais, coordonnées IBIG"],
@@ -1117,6 +1119,9 @@ export default function GuidePage() {
         ["Combien de filleuls puis-je recruter ?","Illimité. Vous pouvez recruter autant de partenaires que vous le souhaitez sur vos 3 niveaux."],
         ["Que se passe-t-il si je ne valide pas mon KYC ?","Vos commissions sont calculées et conservées mais non versées. Elles seront débloquées dès la validation de votre KYC."],
         ["Comment signaler un problème technique ?","Utilisez la section « Support » dans votre espace (tickets), envoyez un email à support@ibigpartners.com ou contactez-nous sur WhatsApp."],
+        ["Comment fonctionne la promotion automatique de statut ?","Le statut (STARTER, SILVER, GOLD, MASTER, ELITE) est réévalué automatiquement chaque nuit par un cron job. Dès que les critères (ventes, filleuls directs, équipe active) sont atteints, le partenaire est promu sans intervention manuelle ni demande de sa part."],
+        ["Comment utiliser le CRM Kanban Prospects ?","Dans Prospects, passez en vue Kanban pour voir 4 colonnes : Contacté, Intéressé, Devis, Converti. Cliquez sur → pour faire avancer un prospect, sur la fiche pour accéder à l'historique complet (appels, emails, réunions, notes). Exportez la liste via le bouton CSV."],
+        ["Comment télécharger le relevé mensuel de commissions ?","Dans la section Paiements de votre espace, cliquez sur 'Télécharger le relevé'. Vous recevez aussi une alerte automatique quand votre solde franchit votre seuil de retrait."],
       ];
       faq.forEach(([q,a]) => {
         if (py > 255) { newPage(); header(13,14); footer(); py = 22; }
@@ -1207,12 +1212,12 @@ export default function GuidePage() {
     { num: "06", title: "KYC & Activation paiements",     desc: "Vérification identité, étapes, délais, méthodes",          icon: "🔐" },
     { num: "07", title: "Liens & QR codes",               desc: "Génération, cookie 90j, partage WhatsApp/réseaux",         icon: "🔗" },
     { num: "07b", title: "Kit Marketing",                  desc: "Argumentaires personnalisés, visuels, scripts WhatsApp, vidéos par branche", icon: "🎨" },
-    { num: "08", title: "Ventes, commissions & retrait",  desc: "Cycle vente, statuts, retrait self-service sans support, virements", icon: "💳" },
-    { num: "09", title: "Réseau & parrainage",            desc: "Arbre 3 niveaux, prospects, opportunités, classement",     icon: "🌐" },
+    { num: "08", title: "Ventes, commissions & retrait",  desc: "Cycle vente, statuts, retrait self-service, relevé mensuel PDF, alerte seuil", icon: "💳" },
+    { num: "09", title: "Réseau & parrainage",            desc: "Arbre 3 niveaux, CRM Kanban prospects, relances auto, export CSV, classement", icon: "🌐" },
     { num: "10", title: "Académie IBIG",                  desc: "Articles, vidéos, audios, images, quiz, Coach IA 24/7",    icon: "🎓" },
-    { num: "11", title: "Espace SUPERADMIN",              desc: "Gestion partenaires, KYC, ventes, paiements, audit",       icon: "⚙️" },
-    { num: "12", title: "Badges & récompenses",           desc: "Jalons, badges automatiques, gamification du programme",   icon: "🏅" },
-    { num: "13", title: "FAQ & contacts",                 desc: "Questions fréquentes, canaux support, équipe IBIG",        icon: "🏆" },
+    { num: "11", title: "Espace SUPERADMIN",              desc: "Gestion partenaires, KYC, ventes, paiements, challenges, email séquences, audit", icon: "⚙️" },
+    { num: "12", title: "Badges & récompenses",           desc: "Jalons, badges automatiques, promotion de statut automatique, challenges mensuels", icon: "🏅" },
+    { num: "13", title: "FAQ & contacts",                 desc: "Questions fréquentes (CRM, challenges, promotion auto, relevé), canaux support", icon: "🏆" },
   ];
 
   return (
