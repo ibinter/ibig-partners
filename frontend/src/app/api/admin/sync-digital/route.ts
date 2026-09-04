@@ -1,6 +1,7 @@
 ﻿import { NextResponse } from "next/server";
 import { isSyncAuthorized } from "@/lib/sync-auth";
 import { syncBranchWithFeed } from "@/lib/catalog-feed";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -537,6 +538,13 @@ export async function POST() {
     if (!(await isSyncAuthorized())) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
+
+    // Enregistre l'URL du flux ibig-digital.com en DB (priorité sur le fallback codé en dur)
+    await prisma.setting.upsert({
+      where: { key: "catalog_feed_ibig-digital" },
+      update: { value: `${BASE}/api/catalogue` },
+      create: { key: "catalog_feed_ibig-digital", value: `${BASE}/api/catalogue` },
+    });
 
     const result = await syncBranchWithFeed("ibig-digital", "IBIG DIGITAL", DIGITAL_PRODUCTS, { notify: true });
     if (!result.ok) {
