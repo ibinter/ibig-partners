@@ -475,7 +475,7 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
     return (
       <div
         key={role}
-        className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden px-4 pt-6 pb-4 sm:px-8 sm:pt-16 sm:pb-8 lg:pt-20 lg:pb-10 text-center"
+        className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden px-4 py-6 sm:px-8 sm:py-10 lg:py-14 text-center"
         style={{ background: slide.bg ?? "linear-gradient(135deg,#041B4D 0%,#0b3a8a 100%)", ...s }}
       >
         {/* Illustration de fond */}
@@ -531,7 +531,7 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
             </div>
           )}
 
-          {children && <div className="mt-6 sm:mt-9">{children}</div>}
+          {/* children rendered outside — see below */}
         </div>
       </div>
     );
@@ -540,10 +540,20 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
   return (
     <div className="relative w-full flex flex-col">
       {/* ── Slides (hauteur fixe) ── */}
-      <div className="relative overflow-hidden" style={{ minHeight: "clamp(640px,94vh,820px)" }}>
+      <div className="relative overflow-hidden" style={{ minHeight: "clamp(380px,60vh,540px)" }}>
         {renderSlide(cur, "current")}
         {next !== null && renderSlide(next, "entering")}
       </div>
+
+      {/* ── Children (CTAs + stats) — SOUS les slides, jamais coupés ── */}
+      {children && (
+        <div
+          className="px-4 pb-6 pt-4 text-center sm:px-8 sm:pb-8 sm:pt-6"
+          style={{ background: slides[cur]?.bg ?? "linear-gradient(135deg,#041B4D 0%,#0b3a8a 100%)" }}
+        >
+          {children}
+        </div>
+      )}
 
       {/* ── Navigation — SOUS les slides, dans le flux, fond du slide courant ── */}
       <div
