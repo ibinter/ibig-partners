@@ -27,9 +27,19 @@ const SITE_URL =
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "IBIG PARTNERS — Programme d'Affiliation Panafricain",
+  title: {
+    default: "IBIG PARTNERS — Programme d'Affiliation Panafricain | Gagnez des commissions en Afrique",
+    template: "%s | IBIG PARTNERS",
+  },
   description:
-    "Programme d'affiliation panafricain : un seul compte pour accéder à 14 logiciels et ERP SaaS, formations, immobilier et services des 11 branches IBIG SARL.",
+    "Rejoignez IBIG PARTNERS, le programme d'affiliation panafricain n°1 : commissions sur 14 logiciels SaaS, formations certifiantes, immobilier et 11 branches IBIG SARL. Inscription gratuite, paiement Mobile Money.",
+  keywords: [
+    "affiliation Afrique", "programme d'affiliation Côte d'Ivoire", "gagner de l'argent en ligne Afrique",
+    "commission marketing Abidjan", "IBIG PARTNERS", "IBIG SARL", "réseau MLM légal Afrique",
+    "affiliation logiciel SaaS Afrique", "partenaire commercial Côte d'Ivoire",
+    "revenus passifs Afrique", "affiliation formations certifiantes", "Mobile Money commission",
+    "programme partenaire panafricain", "affiliation multi-niveaux Afrique",
+  ],
   alternates: {
     canonical: "/",
   },

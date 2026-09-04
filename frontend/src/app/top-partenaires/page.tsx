@@ -10,8 +10,20 @@ export const dynamic = "force-dynamic";
 const MIN_PARTNERS_FOR_LEADERBOARD = 10;
 
 export const metadata = {
-  title: "Top Partenaires IBIG · Classement public",
-  description: "Découvrez les meilleurs partenaires IBIG PARTNERS du mois — gains réels, transparence totale. Rejoignez le classement.",
+  title: "Top Partenaires IBIG — Classement Public des Meilleurs Affiliés",
+  description:
+    "Classement public des meilleurs partenaires IBIG PARTNERS : commissions réelles versées, ventes générées, transparence totale. Rejoignez le réseau et grimpez dans le classement.",
+  keywords: [
+    "top partenaires IBIG", "classement affiliés Afrique", "meilleurs partenaires IBIG SARL",
+    "hall of fame affiliation Côte d'Ivoire", "commissions partenaires IBIG PARTNERS",
+    "parrain du mois IBIG", "palmares affiliation panafricain",
+  ],
+  alternates: { canonical: "/top-partenaires" },
+  openGraph: {
+    title: "Top Partenaires IBIG — Classement Public des Meilleurs Affiliés",
+    description: "Voyez les commissions réelles gagnées par les meilleurs partenaires IBIG PARTNERS. Transparent, vérifiable, motivant.",
+    url: "/top-partenaires",
+  },
 };
 
 /**

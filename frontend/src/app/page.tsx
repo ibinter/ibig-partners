@@ -32,6 +32,14 @@ const SITE_URL =
 
 // hreflang : signale la version anglaise /en aux moteurs de recherche.
 export const metadata: Metadata = {
+  title: "IBIG PARTNERS — Programme d'Affiliation Panafricain | Gagnez des commissions en Afrique",
+  description:
+    "Rejoignez IBIG PARTNERS et gagnez des commissions en promouvant 14 logiciels SaaS, formations certifiantes, immobilier et services IBIG SARL. Inscription gratuite — paiement via Mobile Money, banque ou virement international.",
+  keywords: [
+    "programme affiliation Afrique", "gagner argent en ligne Côte d'Ivoire", "IBIG PARTNERS inscription",
+    "commission Mobile Money Abidjan", "affiliation SaaS Afrique", "réseau partenaires IBIG SARL",
+    "revenus passifs Afrique", "marketing de réseau légal Côte d'Ivoire",
+  ],
   alternates: {
     canonical: `${SITE_URL}/`,
     languages: {
@@ -39,6 +47,12 @@ export const metadata: Metadata = {
       en: `${SITE_URL}/en`,
       "x-default": `${SITE_URL}/`,
     },
+  },
+  openGraph: {
+    title: "IBIG PARTNERS — Gagnez des commissions en promouvant les services IBIG SARL",
+    description: "Programme d'affiliation panafricain : inscription gratuite, commissions transparentes sur 14 logiciels, formations et services. Paiement Mobile Money sous 7 jours.",
+    url: `${SITE_URL}/`,
+    images: [{ url: `${SITE_URL}/og-home.png`, width: 1200, height: 630, alt: "IBIG PARTNERS — Programme d'affiliation panafricain" }],
   },
 };
 
@@ -102,6 +116,19 @@ function SectionEyebrow({ children, className = "" }: { children: React.ReactNod
   );
 }
 
+const FAQ_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    { "@type": "Question", name: "C'est vraiment gratuit ?", acceptedAnswer: { "@type": "Answer", text: "Oui, l'inscription est 100% gratuite et sans engagement. Vous ne payez absolument rien pour devenir partenaire IBIG." } },
+    { "@type": "Question", name: "Comment je suis payé ?", acceptedAnswer: { "@type": "Answer", text: "Via Orange Money, Wave, MTN Money ou virement bancaire selon votre préférence. Les commissions sont versées chaque semaine." } },
+    { "@type": "Question", name: "Quel délai pour recevoir mes commissions ?", acceptedAnswer: { "@type": "Answer", text: "Vos commissions sont validées sous 7 jours ouvrables. Le versement est effectué chaque semaine pour l'ensemble des commissions validées." } },
+    { "@type": "Question", name: "Qui peut devenir partenaire ?", acceptedAnswer: { "@type": "Answer", text: "IBIG PARTNERS est un programme panafricain et international. Toute personne majeure peut rejoindre le réseau, en Côte d'Ivoire, ailleurs en Afrique, ou depuis la diaspora partout dans le monde." } },
+    { "@type": "Question", name: "Est-ce un système pyramidal ou un Ponzi ?", acceptedAnswer: { "@type": "Answer", text: "Non. IBIG PARTNERS est un programme d'affiliation légitime : vous êtes payé uniquement sur des ventes réelles de produits existants (logiciels, formations, services). L'inscription est gratuite et aucun revenu ne vient du recrutement seul." } },
+    { "@type": "Question", name: "Y a-t-il un minimum de ventes requis ?", acceptedAnswer: { "@type": "Answer", text: "Aucun minimum. Chaque vente génère des commissions immédiatement. Vous gardez l'accès à la plateforme sans aucune obligation." } },
+  ],
+};
+
 export default async function HomePage() {
   // Rendu résilient : si la base est indisponible, la page de vente reste en
   // ligne en mode dégradé (repli vide) plutôt que de renvoyer une erreur 500.
@@ -139,6 +166,10 @@ export default async function HomePage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSON_LD) }}
       />
       <SiteHeader />
 

@@ -1,7 +1,24 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 import { STATUS_LABELS, STATUS_COLORS } from "@/lib/constants";
+
+export const metadata: Metadata = {
+  title: "Nos Partenaires — Réseau d'Affiliation IBIG PARTNERS",
+  description:
+    "Découvrez les partenaires actifs du réseau IBIG PARTNERS en Côte d'Ivoire et en Afrique. Un réseau en pleine croissance de professionnels qui gagnent des commissions sur 11 branches IBIG SARL.",
+  keywords: [
+    "partenaires IBIG PARTNERS", "réseau affiliation Côte d'Ivoire", "partenaires commerciaux IBIG SARL",
+    "liste partenaires affiliation Afrique", "réseau distributeurs IBIG",
+  ],
+  alternates: { canonical: "/partenaires" },
+  openGraph: {
+    title: "Nos Partenaires — Réseau IBIG PARTNERS",
+    description: "Rejoignez un réseau actif de partenaires qui génèrent des commissions en promouvant les services IBIG SARL en Afrique.",
+    url: "/partenaires",
+  },
+};
 
 export const dynamic = "force-dynamic";
 

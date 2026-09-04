@@ -1,8 +1,25 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { Logo } from "@/components/site-chrome";
 import { registerAction } from "../auth-actions";
+
+export const metadata: Metadata = {
+  title: "Rejoindre IBIG PARTNERS — Inscription Gratuite",
+  description:
+    "Créez votre compte partenaire IBIG gratuitement en 2 minutes. Accédez immédiatement à votre espace, vos liens d'affiliation et votre kit marketing. Commissions versées via Mobile Money.",
+  keywords: [
+    "rejoindre IBIG PARTNERS", "inscription affiliation gratuite Afrique", "créer compte partenaire IBIG",
+    "affiliation Côte d'Ivoire gratuit", "devenir partenaire IBIG SARL", "inscription programme affiliation Abidjan",
+  ],
+  alternates: { canonical: "/rejoindre" },
+  openGraph: {
+    title: "Rejoindre IBIG PARTNERS — Inscription Gratuite en 2 minutes",
+    description: "Devenez partenaire IBIG SARL gratuitement et commencez à générer des commissions dès aujourd'hui sur 14 logiciels, formations et services.",
+    url: "/rejoindre",
+  },
+};
 import RegisterForm from "./register-form";
 
 export default async function RejoindrePage({
