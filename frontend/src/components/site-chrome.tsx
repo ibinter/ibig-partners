@@ -19,7 +19,7 @@ export function Logo({ light = false, lang = "fr" }: { light?: boolean; lang?: L
           IBIG <span style={{ color: "#FF6A00" }}>PARTNERS</span>
         </span>
         <span
-          className={`text-[9px] font-semibold tracking-[0.18em] uppercase ${light ? "text-white/60" : "text-[#041B4D]/50"}`}
+          className={`hidden sm:block text-[9px] font-semibold tracking-[0.18em] uppercase ${light ? "text-white/60" : "text-[#041B4D]/50"}`}
           style={{ fontFamily: "var(--font-poppins, 'Poppins', sans-serif)" }}
         >
           ENSEMBLE, PLUS DE POSSIBILITÉS

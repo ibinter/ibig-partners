@@ -32,7 +32,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), "Inter", system-ui, sans-serif;
-  overflow-x: hidden;
+  overflow-x: clip;
   font-size: 15px;
   line-height: 1.65;
   letter-spacing: -0.011em;
@@ -48,7 +48,7 @@ html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%; /* évite le gonflement auto des polices sur iOS */
   text-size-adjust: 100%;
-  overflow-x: hidden; /* bloque le scroll horizontal global */
+  overflow-x: clip; /* bloque le scroll horizontal sans casser les position:fixed */
 }
 
 /* Les ancres (#branches, #software, #faq…) ne sont plus masquées par le header
