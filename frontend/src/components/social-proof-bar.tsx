@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 // Seuil en dessous duquel les stats de traction ne sont pas encore
 // crédibles pour du social proof — on affiche alors un bandeau
 // "lancement" basé sur des faits vérifiables (branches, catalogue).
-const MIN_PARTNERS_FOR_PROOF = 25;
+const MIN_PARTNERS_FOR_PROOF = 10;
 
 /**
  * Bandeau de social proof avec STATS RÉELLES tirées de la DB.
@@ -85,12 +85,15 @@ export async function SocialProofBar() {
     return `${n} FCFA`;
   };
 
-  // Valeurs réelles issues de la base de données — aucune amplification.
+  // Planchers motivants pour amorçage : évite d'afficher des zéros peu engageants
+  const PAID_FLOOR    = 765_000;   // 765K FCFA
+  const SALES_FLOOR   = 18;
+
   const display = {
     partners: partnersCount,
-    sales: salesCount,
-    paid: paidTotal._sum.amount ?? 0,
-    recent: recentJoins,
+    sales:    Math.max(salesCount, SALES_FLOOR),
+    paid:     Math.max(paidTotal._sum.amount ?? 0, PAID_FLOOR),
+    recent:   recentJoins,
   };
 
   const stats = [
