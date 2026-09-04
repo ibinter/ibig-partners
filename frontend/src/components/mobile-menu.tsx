@@ -107,8 +107,8 @@ export function MobileMenu({ lang = "fr" }: { lang?: Lang }) {
     <>
       <button
         onClick={() => setOpen(true)}
-        style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 5, width: 40, height: 40, borderRadius: 12, border: "1px solid #e2e8f0", background: "#ffffff", boxShadow: "0 1px 3px rgba(0,0,0,0.08)", cursor: "pointer", padding: 8 }}
-        className="lg:hidden"
+        style={{ flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 5, width: 40, height: 40, borderRadius: 12, border: "1px solid #e2e8f0", background: "#ffffff", boxShadow: "0 1px 3px rgba(0,0,0,0.08)", cursor: "pointer", padding: 8 }}
+        className="flex lg:hidden"
         aria-label={t.open}
       >
         <span style={{ display: "block", height: 2, width: 24, borderRadius: 9999, background: "#041B4D" }} />

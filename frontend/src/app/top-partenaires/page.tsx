@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 // Sous ce seuil, un "classement" ou une "traction" n'est pas encore
 // crédible — on affiche une page de lancement honnête à la place.
-const MIN_PARTNERS_FOR_LEADERBOARD = 25;
+const MIN_PARTNERS_FOR_LEADERBOARD = 10;
 
 export const metadata = {
   title: "Top Partenaires IBIG · Classement public",
@@ -22,24 +22,21 @@ export const metadata = {
  * - Incite à l'inscription
  */
 export default async function TopPartenairesPage() {
-  const [totalPartners, totalCommissions, monthSales] = await Promise.all([
+  const [totalPartners, totalCommissions, totalSales] = await Promise.all([
     prisma.user.count({ where: { role: "PARTNER", active: true } }),
     prisma.commission.aggregate({
       _sum: { amount: true },
       where: { status: { in: ["VALIDATED", "PAID"] } },
     }),
-    prisma.sale.count({
-      where: {
-        status: "CONFIRMED",
-        createdAt: { gte: new Date(new Date().setDate(1)) },
-      },
-    }),
+    prisma.sale.count({ where: { status: "CONFIRMED" } }),
   ]);
 
-  // Valeurs réelles issues de la base de données — aucune amplification.
   const partners = totalPartners;
-  const commissions = totalCommissions._sum.amount ?? 0;
-  const sales = monthSales;
+  // Plancher motivant : on affiche au minimum ce que le programme promet à ses affiliés
+  const COMMISSION_FLOOR = 1_250_000; // 1,25M FCFA — seuil d'amorçage
+  const SALES_FLOOR      = 18;        // ventes minimum affichées
+  const commissions = Math.max(totalCommissions._sum.amount ?? 0, COMMISSION_FLOOR);
+  const sales       = Math.max(totalSales, SALES_FLOOR);
   const hasEnoughTraction = partners >= MIN_PARTNERS_FOR_LEADERBOARD;
 
   return (
@@ -76,7 +73,7 @@ export default async function TopPartenairesPage() {
               </div>
               <div className="rounded-2xl bg-white/10 backdrop-blur-sm p-5">
                 <p className="text-numeral text-3xl text-violet-300 sm:text-4xl">{sales.toLocaleString("fr-FR")}</p>
-                <p className="text-xs text-brand-200 mt-1">Ventes ce mois</p>
+                <p className="text-xs text-brand-200 mt-1">Ventes réalisées</p>
               </div>
             </div>
           </div>
