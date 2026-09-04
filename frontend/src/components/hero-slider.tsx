@@ -396,45 +396,53 @@ interface Props {
 }
 
 export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
-  const count  = slides.length;
-  const [cur,  setCur]  = useState(0);   // slide visible
-  const [next, setNext] = useState<number | null>(null); // slide entrante
-  const [dir,  setDir]  = useState<1 | -1>(1); // 1 = gauche→droite, -1 = droite→gauche
+  const count   = slides.length;
+  const [cur,   setCur]  = useState(0);
+  const [next,  setNext] = useState<number | null>(null);
+  const [dir,   setDir]  = useState<1 | -1>(1);
   const [phase, setPhase] = useState<"idle" | "run">("idle");
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const animRef  = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Refs stables — ne déclenchent pas de nettoyage useEffect
+  const phaseRef  = useRef<"idle" | "run">("idle");
+  const curRef    = useRef(0);
+  const timerRef  = useRef<ReturnType<typeof setInterval> | null>(null);
+  const animRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const goto = useCallback((to: number, direction: 1 | -1 = 1) => {
-    if (phase !== "idle" || to === cur) return;
+    if (phaseRef.current !== "idle" || to === curRef.current) return;
+    phaseRef.current = "run";
     setNext(to);
     setDir(direction);
     setPhase("run");
     animRef.current = setTimeout(() => {
+      curRef.current = to;
+      phaseRef.current = "idle";
       setCur(to);
       setNext(null);
       setPhase("idle");
     }, DUR);
-  }, [phase, cur]);
+  }, []); // dépendances stables — goto ne change jamais
 
-  const startTimer = useCallback(() => {
+  const resetTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
-      goto((cur + 1) % count, 1);
+      goto((curRef.current + 1) % count, 1);
     }, 6500);
-  }, [cur, count, goto]);
+  }, [count, goto]);
 
+  // Un seul useEffect stable — ne se relance pas à chaque slide
   useEffect(() => {
-    startTimer();
+    resetTimer();
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
       if (animRef.current)  clearTimeout(animRef.current);
     };
-  }, [startTimer]);
+  }, [resetTimer]);
 
   const handleNav = (to: number) => {
     const d: 1 | -1 = to > cur ? 1 : -1;
     goto(to, d);
-    startTimer();
+    resetTimer();
   };
 
   // Styles d'animation par rôle + phase
