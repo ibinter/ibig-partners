@@ -11,6 +11,7 @@ import { fcfa } from "@/lib/format";
 import { STATUS_DETAILS } from "@/lib/constants";
 import { LiveCalculator } from "@/components/live-calculator";
 import { SocialProofBar } from "@/components/social-proof-bar";
+import { PartnersTicker } from "@/components/partners-ticker";
 import { StickyMobileCta } from "@/components/sticky-mobile-cta";
 import { Testimonials } from "@/components/testimonials";
 import { HallOfFame } from "@/components/hall-of-fame";
@@ -105,13 +106,16 @@ export default async function HomePage() {
   // Rendu résilient : si la base est indisponible, la page de vente reste en
   // ligne en mode dégradé (repli vide) plutôt que de renvoyer une erreur 500.
   let branches: Awaited<ReturnType<typeof prisma.branch.findMany>> = [];
+  let tickerPartners: { id: string; firstName: string; lastName: string; city: string | null; status: string }[] = [];
   try {
-    branches = await prisma.branch.findMany({
-      where: { active: true },
-      orderBy: { order: "asc" },
+    branches = await prisma.branch.findMany({ where: { active: true }, orderBy: { order: "asc" } });
+    tickerPartners = await prisma.user.findMany({
+      where: { role: "PARTNER", active: true, status: { in: ["SILVER", "GOLD", "MASTER", "ELITE"] } },
+      select: { id: true, firstName: true, lastName: true, city: true, status: true },
+      orderBy: { createdAt: "asc" },
     });
   } catch (err) {
-    console.error("HomePage: chargement des branches impossible, rendu dégradé", err);
+    console.error("HomePage: chargement impossible, rendu dégradé", err);
   }
 
   const orgJsonLd = {
@@ -206,6 +210,9 @@ export default async function HomePage() {
 
       {/* ═══════════ SOCIAL PROOF (NEW) ═══════════ */}
       <SocialProofBar />
+
+      {/* ═══════════ PARTENAIRES DÉFILANTS ═══════════ */}
+      {tickerPartners.length > 0 && <PartnersTicker partners={tickerPartners} />}
 
       {/* ═══════════ CALCULATEUR LIVE (NEW) ═══════════ */}
       <section id="simulateur" className="scroll-mt-20 bg-slate-50 py-20">

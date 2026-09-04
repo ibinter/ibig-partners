@@ -33,7 +33,7 @@ export default async function TopPartenairesPage() {
 
   const partners = totalPartners;
   // Plancher motivant : on affiche au minimum ce que le programme promet à ses affiliés
-  const COMMISSION_FLOOR = 1_250_000; // 1,25M FCFA — seuil d'amorçage
+  const COMMISSION_FLOOR = 765_000;   // 765K FCFA — seuil d'amorçage
   const SALES_FLOOR      = 18;        // ventes minimum affichées
   const commissions = Math.max(totalCommissions._sum.amount ?? 0, COMMISSION_FLOOR);
   const sales       = Math.max(totalSales, SALES_FLOOR);
