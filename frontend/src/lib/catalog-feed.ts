@@ -32,6 +32,7 @@ const TRUSTED_HOST_SUFFIXES = [
   "ibig-eduform.com",
   "ibigimmotrust.com",
   "ibig-market.com",
+  "ibig-digital.com",
 ];
 
 const MAX_PRODUCTS = 5000;

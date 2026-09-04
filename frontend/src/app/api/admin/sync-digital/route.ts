@@ -5,7 +5,7 @@ import { syncBranchWithFeed } from "@/lib/catalog-feed";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-const BASE = "https://intermark-business.com/digital";
+const BASE = "https://ibig-digital.com";
 
 const DIGITAL_PRODUCTS = [
   // ── Sites Web ─────────────────────────────────────────────────────────

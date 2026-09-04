@@ -45,7 +45,7 @@ const BRANCHES_DATA = [
     slug: "ibig-digital", name: "IBIG DIGITAL",
     tagline: "Création digitale & Communication visuelle",
     description: "IBIG DIGITAL est le pôle créatif et communication du groupe IBIG SARL : création de sites web vitrines, identité visuelle, community management, production de contenus digitaux, campagnes publicitaires en ligne et stratégie de marque. Des solutions créatives pour valoriser votre image.",
-    website: "https://intermark-business.com/digital",
+    website: "https://ibig-digital.com",
     offerType: "Service créatif & communication",
     commissionModel: "10% N1 • 5% N2 • 2% N3",
     order: 5, active: true,
