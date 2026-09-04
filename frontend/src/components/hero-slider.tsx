@@ -388,7 +388,7 @@ const ILLUSTRATIONS: Record<number, React.ReactNode> = {
 };
 
 /* ── Durée de la transition ── */
-const DUR = 800; // ms
+const DUR = 600; // ms
 
 interface Props {
   slides?: HeroSlide[];
@@ -409,7 +409,12 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
   const animRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const goto = useCallback((to: number, direction: 1 | -1 = 1) => {
-    if (phaseRef.current !== "idle" || to === curRef.current) return;
+    // Garde-fou : si l'animation est coincée depuis trop longtemps, on force le reset
+    if (phaseRef.current !== "idle") {
+      phaseRef.current = "idle";
+      if (animRef.current) { clearTimeout(animRef.current); animRef.current = null; }
+    }
+    if (to === curRef.current) return;
     phaseRef.current = "run";
     setNext(to);
     setDir(direction);
@@ -417,6 +422,7 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
     animRef.current = setTimeout(() => {
       curRef.current = to;
       phaseRef.current = "idle";
+      animRef.current = null;
       setCur(to);
       setNext(null);
       setPhase("idle");
@@ -427,7 +433,7 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
       goto((curRef.current + 1) % count, 1);
-    }, 6500);
+    }, 5000);
   }, [count, goto]);
 
   // Un seul useEffect stable — ne se relance pas à chaque slide
@@ -454,7 +460,7 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
         ? `translateX(${dir * -8}%) scale(0.97)`
         : "translateX(0%) scale(1)",
       transition: active
-        ? `opacity ${DUR}ms cubic-bezier(0.4,0,0.2,1), transform ${DUR}ms cubic-bezier(0.4,0,0.2,1)`
+        ? `opacity ${DUR}ms ease, transform ${DUR}ms ease`
         : "none",
       zIndex: 1,
     }),
@@ -465,7 +471,7 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
         ? "translateX(0%) scale(1)"
         : `translateX(${dir * 6}%) scale(1.02)`,
       transition: active
-        ? `opacity ${DUR}ms cubic-bezier(0.22,1,0.36,1), transform ${DUR}ms cubic-bezier(0.22,1,0.36,1)`
+        ? `opacity ${DUR}ms ease, transform ${DUR}ms ease`
         : "none",
       zIndex: 2,
     }),
