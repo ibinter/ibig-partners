@@ -7,13 +7,13 @@ type Lang = "fr" | "en";
 
 export function Logo({ light = false, lang = "fr" }: { light?: boolean; lang?: Lang }) {
   return (
-    <Link href={lang === "en" ? "/en" : "/"} className="group flex shrink-0 items-center gap-2.5 transition-transform hover:scale-[1.02]">
-      <span className="relative inline-flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl">
+    <Link href={lang === "en" ? "/en" : "/"} className="group flex min-w-0 items-center gap-2 transition-transform hover:scale-[1.02]">
+      <span className="relative inline-flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl sm:h-12 sm:w-12 sm:rounded-2xl">
         <Image src="/logo.png" alt="IBIG PARTNERS" width={48} height={48} priority className="object-contain" />
       </span>
-      <span className="flex flex-col leading-none">
+      <span className="flex min-w-0 flex-col leading-none">
         <span
-          className={`font-extrabold tracking-tight text-[17px] ${light ? "text-white" : "text-[#041B4D]"}`}
+          className={`font-extrabold tracking-tight text-[13px] sm:text-[17px] ${light ? "text-white" : "text-[#041B4D]"}`}
           style={{ fontFamily: "var(--font-poppins, 'Poppins', sans-serif)" }}
         >
           IBIG <span style={{ color: "#FF6A00" }}>PARTNERS</span>
