@@ -12,14 +12,12 @@ const NAV = {
     { href: "/#commissions", icon: "💰", label: "Commissions" },
     { href: "/#statuts", icon: "⭐", label: "Statuts" },
     { href: "/#espace", icon: "🖥️", label: "Espace partenaire" },
-    { href: "/formations", icon: "🎓", label: "Formations EDUFORM" },
   ],
   en: [
     { href: "/en#software", icon: "🖥️", label: "Software" },
     { href: "/en#commissions", icon: "💰", label: "Commissions" },
     { href: "/en#faq", icon: "❓", label: "FAQ" },
     { href: "/en/partenaires", icon: "🏢", label: "Our partners" },
-    { href: "/formations", icon: "🎓", label: "Training courses" },
   ],
 } as const;
 
