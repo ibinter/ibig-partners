@@ -82,11 +82,13 @@ const HEADER_NAV: Record<Lang, { href: string; label: string }[]> = {
     { href: "/#commissions", label: "Commissions" },
     { href: "/#statuts", label: "Statuts" },
     { href: "/#espace", label: "Espace partenaire" },
+    { href: "/formations", label: "🎓 Formations" },
     { href: "/#faq", label: "FAQ" },
   ],
   en: [
     { href: "/en#software", label: "Software" },
     { href: "/en#commissions", label: "Commissions" },
+    { href: "/formations", label: "🎓 Formations" },
     { href: "/en#faq", label: "FAQ" },
   ],
 };
