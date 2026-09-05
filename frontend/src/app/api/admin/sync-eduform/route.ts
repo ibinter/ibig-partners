@@ -1,6 +1,7 @@
 ﻿import { NextResponse } from "next/server";
 import { isSyncAuthorized } from "@/lib/sync-auth";
 import { syncBranchWithFeed } from "@/lib/catalog-feed";
+import { syncBranchCatalog } from "@/lib/catalog-sync";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -3193,10 +3194,12 @@ export async function POST() {
     }
 
     // Synchroniser chaque branche-catégorie séquentiellement (évite le timeout Vercel)
+    // On utilise syncBranchCatalog (pas syncBranchWithFeed) pour que les siteUrl
+    // venant de l'API live ne soient PAS écrasés par un flux externe en DB.
     const results = [];
     for (const [catKey, products] of Object.entries(grouped)) {
       const branch = CATEGORY_BRANCHES[catKey] ?? { slug: `eduform-${catKey}`, label: `EDUFORM — ${catKey}` };
-      const result = await syncBranchWithFeed(branch.slug, branch.label, products, { notify: false });
+      const result = await syncBranchCatalog(branch.slug, branch.label, products, { notify: false });
       results.push(result);
     }
 
