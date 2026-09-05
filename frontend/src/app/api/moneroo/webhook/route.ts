@@ -139,9 +139,9 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  // E-mails (après la réponse, pour ne pas retarder l'accusé au processeur) :
-  //  - reçu au CLIENT (s'il a fourni un e-mail)
-  //  - alerte "nouvelle vente" à l'AFFILIÉ
+  // Tâches asynchrones après la réponse :
+  //  - reçu au CLIENT, alerte AFFILIÉ
+  //  - inscription EDUFORM si produit EDUFORM
   after(async () => {
     if (customerEmail) {
       await sendPaymentReceiptEmail({
@@ -161,6 +161,42 @@ export async function POST(req: NextRequest) {
         customerName,
         reference: sale.reference,
       });
+    }
+
+    // Inscription automatique EDUFORM pour les formations de cette branche
+    if (product.slug.startsWith("eduform-")) {
+      const eduformUrl = process.env.EDUFORM_REGISTER_URL;
+      const eduformSecret = process.env.EDUFORM_REGISTER_SECRET;
+      if (eduformUrl && eduformSecret) {
+        try {
+          const resp = await fetch(eduformUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-partners-api-key": eduformSecret,
+            },
+            body: JSON.stringify({
+              formation_slug: product.slug,
+              customer_name: customerName,
+              customer_email: customerEmail ?? "",
+              customer_phone: customerPhone ?? "",
+              amount: saleAmount,
+              reference: sale.reference,
+              partner_code: seller.code,
+            }),
+          });
+          const json = await resp.json().catch(() => ({}));
+          if (resp.ok) {
+            console.log(`[EDUFORM] Inscription OK — ref ${json.reference ?? "?"} formation "${json.formation ?? product.slug}"`);
+          } else {
+            console.error(`[EDUFORM] Inscription échouée (${resp.status}) :`, JSON.stringify(json));
+          }
+        } catch (err) {
+          console.error("[EDUFORM] Erreur réseau lors de l'inscription :", err);
+        }
+      } else {
+        console.warn("[EDUFORM] EDUFORM_REGISTER_URL ou EDUFORM_REGISTER_SECRET non configurés — inscription ignorée");
+      }
     }
   });
 
