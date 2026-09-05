@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
+import { FormationCards } from "@/components/formation-cards";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 900; // 15 min
@@ -137,95 +139,15 @@ export default async function FormationsPage() {
         {/* Catalogue */}
         <section className="py-12 px-4 bg-slate-50">
           <div className="mx-auto max-w-7xl">
-            {formations.length === 0 ? (
-              <div className="text-center py-20 text-muted">
-                <p className="text-4xl mb-4">📚</p>
-                <p className="font-semibold">Catalogue temporairement indisponible</p>
-                <p className="text-sm mt-2">Réessayez dans quelques instants ou visitez{" "}
-                  <a href="https://ibig-eduform.com" target="_blank" rel="noopener noreferrer" className="text-brand-600 underline">ibig-eduform.com</a>
-                </p>
+            <Suspense fallback={
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="card-premium h-64 animate-pulse bg-slate-100 rounded-2xl" />
+                ))}
               </div>
-            ) : (
-              <>
-                {/* Filtre domaines */}
-                <div className="flex flex-wrap gap-2 mb-8">
-                  {domains.map((d) => (
-                    <span key={d} className="inline-flex items-center gap-1 rounded-full bg-white border border-slate-200 px-3 py-1 text-xs font-medium text-ink shadow-sm">
-                      {DOMAIN_EMOJIS[d] ?? "📚"} {d}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {formations.map((f) => (
-                    <a
-                      key={f.id}
-                      href={f.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="card-premium group flex flex-col overflow-hidden transition-all hover:-translate-y-1 hover:shadow-xl"
-                    >
-                      {f.image && (
-                        <div className="aspect-video overflow-hidden bg-slate-100">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={f.image}
-                            alt={f.titre}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            loading="lazy"
-                          />
-                        </div>
-                      )}
-                      <div className="flex flex-col flex-1 p-5">
-                        <div className="flex flex-wrap gap-2 mb-3">
-                          <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 text-brand-700 px-2.5 py-0.5 text-xs font-semibold">
-                            {DOMAIN_EMOJIS[f.domaine] ?? "📚"} {f.domaine}
-                          </span>
-                          {f.type === "Samedi Pro" && (
-                            <span className="inline-flex rounded-full bg-amber-50 text-amber-700 px-2.5 py-0.5 text-xs font-semibold">
-                              📅 Samedi Pro
-                            </span>
-                          )}
-                          {f.duree && (
-                            <span className="inline-flex rounded-full bg-slate-100 text-slate-600 px-2.5 py-0.5 text-xs font-medium">
-                              ⏱ {f.duree}
-                            </span>
-                          )}
-                        </div>
-
-                        <h2 className="font-extrabold text-ink text-base leading-snug mb-2 group-hover:text-brand-600 transition-colors">
-                          {f.titre}
-                        </h2>
-
-                        {f.pitch && (
-                          <p className="text-xs text-muted leading-relaxed mb-3 line-clamp-2">{f.pitch}</p>
-                        )}
-
-                        <div className="mt-auto space-y-1.5">
-                          {fmtDate(f.date_debut) && (
-                            <div className="text-xs text-muted flex items-center gap-1">
-                              <span>📅</span> Début : <span className="font-medium text-ink">{fmtDate(f.date_debut)}</span>
-                            </div>
-                          )}
-                          {f.tarif_en_ligne && (
-                            <div className="flex items-center justify-between">
-                              <span className="text-xs text-muted">Tarif individuel</span>
-                              <span className="font-extrabold text-brand-700 text-numeral">{fmtFcfa(f.tarif_en_ligne)}</span>
-                            </div>
-                          )}
-                          <div className="flex items-center justify-between pt-1 border-t border-slate-100">
-                            <span className="text-xs text-emerald-600 font-semibold">
-                              ✅ Commission : {f.tarif_en_ligne ? fmtFcfa(Math.round(f.tarif_en_ligne * 0.1)) : "10%"}
-                            </span>
-                            <span className="text-xs font-bold text-brand-600 group-hover:underline">Voir →</span>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  ))}
-                </div>
-              </>
-            )}
+            }>
+              <FormationCards formations={formations} />
+            </Suspense>
           </div>
         </section>
 
