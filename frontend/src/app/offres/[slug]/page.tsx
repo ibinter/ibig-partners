@@ -138,27 +138,21 @@ export default async function OffrePage({
     : product.siteUrl ?? `${baseUrl}/rejoindre`;
 
   // Pour "Voir l'offre complète" → redirige vers le site produit avec le ref affilié
-  function resolveEduformUrl(rawUrl: string | null | undefined, slug: string): string | null {
+  // On n'affiche le bouton que si l'URL est une vraie page spécifique (pas juste la homepage)
+  function buildTrackedSiteUrl(rawUrl: string | null | undefined): string | null {
     if (!rawUrl) return null;
     const full = rawUrl.startsWith("http") ? rawUrl : `https://${rawUrl}`;
-    // Si siteUrl est juste la homepage EDUFORM, construire l'URL de la page formation
-    if (full === "https://ibig-eduform.com" || full === "https://ibig-eduform.com/") {
-      const eduSlug = slug.startsWith("eduform-") ? slug.slice("eduform-".length) : slug;
-      return `https://ibig-eduform.com/formation-detail.php?slug=${eduSlug}`;
-    }
-    return full;
-  }
-  function buildTrackedSiteUrl(rawUrl: string | null | undefined): string | null {
-    const resolved = resolveEduformUrl(rawUrl, product.slug);
-    if (!resolved) return null;
-    if (!affCode) return resolved;
+    // Ignorer les URLs qui pointent uniquement vers la homepage d'un site partenaire
+    const homepages = ["https://ibig-eduform.com", "https://ibig-eduform.com/", "https://ibigpartners.com", "https://ibigpartners.com/"];
+    if (homepages.includes(full)) return null;
+    if (!affCode) return full;
     try {
-      const u = new URL(resolved);
+      const u = new URL(full);
       u.searchParams.set("ibig_ref", affCode);
       return u.toString();
     } catch {
-      const sep = resolved.includes("?") ? "&" : "?";
-      return `${resolved}${sep}ibig_ref=${encodeURIComponent(affCode)}`;
+      const sep = full.includes("?") ? "&" : "?";
+      return `${full}${sep}ibig_ref=${encodeURIComponent(affCode)}`;
     }
   }
   const trackedSiteUrl = buildTrackedSiteUrl(product.siteUrl);
