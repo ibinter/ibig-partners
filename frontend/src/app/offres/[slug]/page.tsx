@@ -141,11 +141,16 @@ export default async function OffrePage({
   function buildTrackedSiteUrl(rawUrl: string | null | undefined): string | null {
     if (!rawUrl) return null;
     const full = rawUrl.startsWith("http") ? rawUrl : `https://${rawUrl}`;
-    // Si siteUrl est juste la homepage EDUFORM, construire l'URL avec le slug du produit
-    // Les pages EDUFORM utilisent le même slug que Partners (avec préfixe eduform-)
+    // Toujours utiliser l'URL correcte basée sur le slug Partners (préfixe eduform-)
+    // Couvre : homepage seule, URL avec mauvais slug (sans préfixe), ou URL déjà correcte
     let resolved = full;
-    if (full === "https://ibig-eduform.com" || full === "https://ibig-eduform.com/") {
-      resolved = `https://ibig-eduform.com/formation-detail.php?slug=${product.slug}`;
+    if (product.slug.startsWith("eduform-")) {
+      const correctUrl = `https://ibig-eduform.com/formation-detail.php?slug=${product.slug}`;
+      // Remplacer si homepage ou si l'URL pointe vers formation-detail avec un slug incorrect
+      if (full === "https://ibig-eduform.com" || full === "https://ibig-eduform.com/" ||
+          (full.includes("formation-detail.php") && !full.includes(`slug=${product.slug}`))) {
+        resolved = correctUrl;
+      }
     }
     if (!affCode) return resolved;
     try {

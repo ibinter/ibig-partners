@@ -100,10 +100,14 @@ export default async function PaiementPage({
             {(product as { siteUrl?: string | null }).siteUrl && (() => {
               const raw = (product as { siteUrl: string }).siteUrl;
               const full = raw.startsWith("http") ? raw : `https://${raw}`;
-              // Si siteUrl est juste la homepage EDUFORM, construire l'URL avec le slug du produit
+              // Toujours reconstruire l'URL correcte pour les formations EDUFORM
               let resolved = full;
-              if (full === "https://ibig-eduform.com" || full === "https://ibig-eduform.com/") {
-                resolved = `https://ibig-eduform.com/formation-detail.php?slug=${product.slug}`;
+              if (product.slug.startsWith("eduform-")) {
+                const correctUrl = `https://ibig-eduform.com/formation-detail.php?slug=${product.slug}`;
+                if (full === "https://ibig-eduform.com" || full === "https://ibig-eduform.com/" ||
+                    (full.includes("formation-detail.php") && !full.includes(`slug=${product.slug}`))) {
+                  resolved = correctUrl;
+                }
               }
               let trackedUrl = resolved;
               try {
