@@ -53,6 +53,17 @@ export async function POST(req: NextRequest) {
   const metadata = (data.metadata ?? body.metadata ?? {}) as {
     product_slug?: string;
     partner_code?: string;
+    mode_formation?: string;
+    statut_professionnel?: string;
+    objectif?: string;
+    disponibilite?: string;
+    ville?: string;
+    pays?: string;
+    domaine_activite?: string;
+    niveau_etude?: string;
+    fonction?: string;
+    annees_experience?: string;
+    message?: string;
   };
 
   console.log("[Moneroo Webhook] status =", status, "| amount =", amount, "| metadata =", JSON.stringify(metadata));
@@ -176,13 +187,24 @@ export async function POST(req: NextRequest) {
               "x-partners-api-key": eduformSecret,
             },
             body: JSON.stringify({
-              formation_slug: product.slug,
-              customer_name: customerName,
-              customer_email: customerEmail ?? "",
-              customer_phone: customerPhone ?? "",
-              amount: saleAmount,
-              reference: sale.reference,
-              partner_code: seller.code,
+              formation_slug:       product.slug,
+              customer_name:        customerName,
+              customer_email:       customerEmail ?? "",
+              customer_phone:       customerPhone ?? "",
+              amount:               saleAmount,
+              reference:            sale.reference,
+              partner_code:         seller.code,
+              mode_formation:       metadata.mode_formation       ?? "",
+              statut_professionnel: metadata.statut_professionnel ?? "",
+              objectif:             metadata.objectif             ?? "",
+              disponibilite:        metadata.disponibilite        ?? "",
+              ville:                metadata.ville                ?? "",
+              pays:                 metadata.pays                 ?? "",
+              domaine_activite:     metadata.domaine_activite     ?? "",
+              niveau_etude:         metadata.niveau_etude         ?? "",
+              fonction:             metadata.fonction             ?? "",
+              annees_experience:    metadata.annees_experience    ?? "",
+              message:              metadata.message              ?? "",
             }),
           });
           const json = await resp.json().catch(() => ({}));

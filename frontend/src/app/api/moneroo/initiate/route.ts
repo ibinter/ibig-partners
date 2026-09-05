@@ -10,8 +10,12 @@ import { NextRequest, NextResponse } from "next/server";
 const MONEROO_API = "https://api.moneroo.io/v1/payments/initialize";
 
 export async function POST(req: NextRequest) {
-  const { productSlug, partnerCode, amount, customerFirstName, customerLastName, customerEmail, customerPhone } =
-    await req.json();
+  const {
+    productSlug, partnerCode, amount,
+    customerFirstName, customerLastName, customerEmail, customerPhone,
+    modeFormation, statutProfessionnel, objectif,
+    disponibilite, ville, pays, domaineActivite, niveauEtude, fonction, anneesExperience, message,
+  } = await req.json();
 
   const secretKey = process.env.MONEROO_SECRET_KEY;
   // Dériver l'URL de base depuis la requête elle-même — toujours correct en prod
@@ -45,8 +49,19 @@ export async function POST(req: NextRequest) {
       return_url: `${siteUrl}/paiement/merci?slug=${encodeURIComponent(productSlug)}&ref=${encodeURIComponent(partnerCode)}`,
       notify_url: `${siteUrl}/api/moneroo/webhook`,
       metadata: {
-        product_slug: productSlug,
-        partner_code: partnerCode,
+        product_slug:         productSlug,
+        partner_code:         partnerCode,
+        mode_formation:       modeFormation       ?? "",
+        statut_professionnel: statutProfessionnel ?? "",
+        objectif:             objectif            ?? "",
+        disponibilite:        disponibilite       ?? "",
+        ville:                ville               ?? "",
+        pays:                 pays                ?? "",
+        domaine_activite:     domaineActivite     ?? "",
+        niveau_etude:         niveauEtude         ?? "",
+        fonction:             fonction            ?? "",
+        annees_experience:    anneesExperience    ?? "",
+        message:              message             ?? "",
       },
     }),
   });
