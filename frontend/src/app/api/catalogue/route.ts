@@ -35,18 +35,23 @@ function detectCategory(name: string): string {
   return "Autres";
 }
 
-/* ─── Grille tarifaire ──────────────────────────────── */
+/* ─── Grille tarifaire (arrondi au 5 000 F CFA) ────── */
+const r5 = (v: number) => Math.round(v / 5000) * 5000;
 function grille(price: number) {
-  const pres = Math.round(price * 1.20);
+  const ind_pres  = r5(price * 10 / 7);
+  const g35_pres  = r5(ind_pres * 0.70);
+  const g610_pres = r5(ind_pres * 0.55);
+  const g10p_pres = r5(ind_pres * 0.45);
   return {
+    elearning_online:   r5(price * 0.5),
     individuel_online:  price,
-    individuel_pres:    pres,
-    groupe_3_5_online:  Math.round(price * 0.87),
-    groupe_3_5_pres:    Math.round(pres  * 0.87),
-    groupe_6_10_online: Math.round(price * 0.80),
-    groupe_6_10_pres:   Math.round(pres  * 0.80),
-    groupe_10p_online:  Math.round(price * 0.75),
-    groupe_10p_pres:    Math.round(pres  * 0.75),
+    individuel_pres:    ind_pres,
+    groupe_3_5_online:  r5(g35_pres  * 0.70),
+    groupe_3_5_pres:    g35_pres,
+    groupe_6_10_online: r5(g610_pres * 0.70),
+    groupe_6_10_pres:   g610_pres,
+    groupe_10p_online:  r5(g10p_pres * 0.70),
+    groupe_10p_pres:    g10p_pres,
   };
 }
 
