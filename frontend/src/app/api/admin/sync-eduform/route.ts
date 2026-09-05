@@ -3154,36 +3154,39 @@ export async function POST() {
       console.warn("sync-eduform: API live indisponible, utilisation de la liste statique", e);
     }
 
-    // ── 2. Si l'API a répondu, construire les produits depuis elle (siteUrl = f.url réel) ──
-    // Sinon, fallback sur la liste statique EDUFORM_PRODUCTS avec matching URL.
+    // ── 2. Construire la liste finale : API live + fallback statique pour les slugs absents ──
     type SyncProduct = { slug: string; name: string; pricingType: string; price: number; rate: number; siteUrl: string; description?: string };
 
-    let productsToSync: SyncProduct[];
-
-    if (apiFormations.length > 0) {
-      productsToSync = apiFormations.map(f => {
-        const price = f.tarif_en_ligne ?? f.tarif_presentiel ?? f.frais_inscription ?? 0;
-        // Slug ibig-partners : préfixe "eduform-" + slug API
-        const slug = `eduform-${f.slug}`;
-        return {
-          slug,
-          name: f.titre,
-          pricingType: "COURSE",
-          price,
-          rate: 10,
-          siteUrl: f.url,          // ← URL réelle de la page formation sur eduform
-          description: f.pitch || undefined,
-        };
-      });
-    } else {
-      // Fallback statique (si l'API est indisponible)
-      const seen = new Set<string>();
-      productsToSync = EDUFORM_PRODUCTS.filter(p => {
-        if (seen.has(p.slug)) return false;
-        seen.add(p.slug);
-        return true;
-      });
+    /** Génère l'URL de détail EDUFORM à partir d'un slug ibig-partners (ex: eduform-cyber → /formation-detail.php?slug=cyber) */
+    function eduformUrl(partnerSlug: string, existingSiteUrl: string): string {
+      if (existingSiteUrl && existingSiteUrl !== "https://ibig-eduform.com") return existingSiteUrl;
+      const eduSlug = partnerSlug.startsWith("eduform-") ? partnerSlug.slice("eduform-".length) : partnerSlug;
+      return `https://ibig-eduform.com/formation-detail.php?slug=${eduSlug}`;
     }
+
+    // Produits issus de l'API live
+    const apiSlugs = new Set<string>();
+    const fromApi: SyncProduct[] = apiFormations.map(f => {
+      const slug = `eduform-${f.slug}`;
+      apiSlugs.add(slug);
+      return {
+        slug,
+        name: f.titre,
+        pricingType: "COURSE",
+        price: f.tarif_en_ligne ?? f.tarif_presentiel ?? f.frais_inscription ?? 0,
+        rate: 10,
+        siteUrl: f.url,   // URL réelle retournée par l'API
+        description: f.pitch || undefined,
+      };
+    });
+
+    // Produits du catalogue statique non couverts par l'API (ou tout le catalogue si l'API est indisponible)
+    const seen = new Set<string>(apiSlugs);
+    const fromStatic: SyncProduct[] = EDUFORM_PRODUCTS
+      .filter(p => { if (seen.has(p.slug)) return false; seen.add(p.slug); return true; })
+      .map(p => ({ ...p, siteUrl: eduformUrl(p.slug, p.siteUrl) }));
+
+    const productsToSync: SyncProduct[] = [...fromApi, ...fromStatic];
 
     // ── 3. Grouper par catégorie (domaine) ────────────────────────────────────
     const grouped: Record<string, SyncProduct[]> = {};
