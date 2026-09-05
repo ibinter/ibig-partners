@@ -145,10 +145,10 @@ export default async function OffrePage({
     // Couvre : homepage seule, URL avec mauvais slug (sans préfixe), ou URL déjà correcte
     let resolved = full;
     if (product.slug.startsWith("eduform-")) {
-      const correctUrl = `https://ibig-eduform.com/formation-detail.php?slug=${product.slug}`;
-      // Remplacer si homepage ou si l'URL pointe vers formation-detail avec un slug incorrect
+      const slugSansPrefixe = product.slug.replace(/^eduform-/, "");
+      const correctUrl = `https://ibig-eduform.com/formation/${slugSansPrefixe}`;
       if (full === "https://ibig-eduform.com" || full === "https://ibig-eduform.com/" ||
-          (full.includes("formation-detail.php") && !full.includes(`slug=${product.slug}`))) {
+          full.includes("formation-detail.php")) {
         resolved = correctUrl;
       }
     }

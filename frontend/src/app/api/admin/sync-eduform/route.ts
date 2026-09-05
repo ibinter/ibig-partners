@@ -3158,10 +3158,11 @@ export async function POST() {
     // ── 2. Construire la liste finale : API live + fallback statique pour les slugs absents ──
     type SyncProduct = { slug: string; name: string; pricingType: string; price: number; rate: number; siteUrl: string; description?: string };
 
-    /** Génère l'URL de détail EDUFORM — les slugs EDUFORM ont le même préfixe eduform- que les slugs Partners */
+    /** Génère l'URL de détail EDUFORM au format /formation/{slug-sans-prefixe} (format retourné par l'API) */
     function eduformUrl(partnerSlug: string, existingSiteUrl: string): string {
       if (existingSiteUrl && existingSiteUrl !== "https://ibig-eduform.com" && existingSiteUrl !== "https://ibig-eduform.com/") return existingSiteUrl;
-      return `https://ibig-eduform.com/formation-detail.php?slug=${partnerSlug}`;
+      const slugSansPrefixe = partnerSlug.replace(/^eduform-/, "");
+      return `https://ibig-eduform.com/formation/${slugSansPrefixe}`;
     }
 
     // Produits issus de l'API live

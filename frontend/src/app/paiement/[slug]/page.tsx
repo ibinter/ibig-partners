@@ -76,9 +76,10 @@ export default async function PaiementPage({
     const full = raw.startsWith("http") ? raw : `https://${raw}`;
     let resolved = full;
     if (product.slug.startsWith("eduform-")) {
-      const correctUrl = `https://ibig-eduform.com/formation-detail.php?slug=${product.slug}`;
+      const slugSansPrefixe = product.slug.replace(/^eduform-/, "");
+      const correctUrl = `https://ibig-eduform.com/formation/${slugSansPrefixe}`;
       if (full === "https://ibig-eduform.com" || full === "https://ibig-eduform.com/" ||
-          (full.includes("formation-detail.php") && !full.includes(`slug=${product.slug}`))) {
+          (full.includes("formation-detail.php") && !full.includes(slugSansPrefixe))) {
         resolved = correctUrl;
       }
     }

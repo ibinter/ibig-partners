@@ -173,7 +173,7 @@ export default function CatalogClient({
                 <tr key={p.id} className={!p.active ? "opacity-50 bg-slate-50/60" : "hover:bg-slate-50/50 transition-colors"}>
                   <td className="px-4 py-3 max-w-[220px]">
                     <p className="font-semibold text-ink truncate">{p.name}</p>
-                    {p.siteUrl ? (
+                    {p.siteUrl && !["https://ibig-eduform.com","https://ibig-eduform.com/"].includes(p.siteUrl.trim()) ? (
                       <a href={normalizeUrl(p.siteUrl)} target="_blank" rel="noreferrer"
                         className="text-xs text-brand-600 hover:underline">
                         Site officiel ↗
