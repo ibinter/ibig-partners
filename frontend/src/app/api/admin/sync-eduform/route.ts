@@ -2,6 +2,7 @@
 import { isSyncAuthorized } from "@/lib/sync-auth";
 import { syncBranchWithFeed } from "@/lib/catalog-feed";
 import { syncBranchCatalog } from "@/lib/catalog-sync";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -3187,7 +3188,26 @@ export async function POST() {
 
     const productsToSync: SyncProduct[] = [...fromApi, ...fromStatic];
 
-    // ── 3. Grouper par catégorie (domaine) ────────────────────────────────────
+    // ── 3. Mise à jour directe des siteUrl pour tous les produits existants ──
+    // Cette étape est INDÉPENDANTE des branches : elle met à jour le siteUrl
+    // de chaque produit EDUFORM déjà en base, quel que soit son branche.
+    // C'est ce qui corrige les liens "Site officiel" dans l'admin.
+    let urlsFixed = 0;
+    const BATCH_URL = 10;
+    for (let i = 0; i < productsToSync.length; i += BATCH_URL) {
+      const batch = productsToSync.slice(i, i + BATCH_URL);
+      const updates = await Promise.all(
+        batch.map(p =>
+          prisma.product.updateMany({
+            where: { slug: p.slug },
+            data: { siteUrl: p.siteUrl, name: p.name, price: p.price },
+          })
+        )
+      );
+      urlsFixed += updates.reduce((s, r) => s + r.count, 0);
+    }
+
+    // ── 4. Sync par branche-catégorie (crée/retire les produits si la branche existe) ──
     const grouped: Record<string, SyncProduct[]> = {};
     for (const p of productsToSync) {
       const cat = SLUG_CATEGORY[p.slug] ?? "metiers";
@@ -3195,9 +3215,6 @@ export async function POST() {
       grouped[cat].push(p);
     }
 
-    // Synchroniser chaque branche-catégorie séquentiellement (évite le timeout Vercel)
-    // On utilise syncBranchCatalog (pas syncBranchWithFeed) pour que les siteUrl
-    // venant de l'API live ne soient PAS écrasés par un flux externe en DB.
     const results = [];
     for (const [catKey, products] of Object.entries(grouped)) {
       const branch = CATEGORY_BRANCHES[catKey] ?? { slug: `eduform-${catKey}`, label: `EDUFORM — ${catKey}` };
@@ -3205,26 +3222,24 @@ export async function POST() {
       results.push(result);
     }
 
-    const errors = results.filter(r => !r.ok);
-    if (errors.length > 0) {
-      const firstErr = errors[0] as { ok: false; error: string; status: number };
-      return NextResponse.json({ error: firstErr.error, partialErrors: errors.length }, { status: firstErr.status });
-    }
-
-    const totalAdded   = results.filter(r => r.ok).reduce((s, r) => s + (r as any).diff.added.length, 0);
-    const totalUpdated = results.filter(r => r.ok).reduce((s, r) => s + (r as any).diff.updated.length, 0);
-    const totalRemoved = results.filter(r => r.ok).reduce((s, r) => s + (r as any).diff.removed, 0);
-    const totalTotal   = results.filter(r => r.ok).reduce((s, r) => s + (r as any).diff.total, 0);
-    const branches     = Object.keys(grouped).length;
+    const okResults    = results.filter(r => r.ok);
+    const errorCount   = results.length - okResults.length;
+    const totalAdded   = okResults.reduce((s, r) => s + (r as any).diff.added.length, 0);
+    const totalUpdated = okResults.reduce((s, r) => s + (r as any).diff.updated.length, 0);
+    const totalRemoved = okResults.reduce((s, r) => s + (r as any).diff.removed, 0);
+    const totalTotal   = okResults.reduce((s, r) => s + (r as any).diff.total, 0);
+    const branches     = okResults.length;
 
     return NextResponse.json({
       ok: true,
+      urlsFixed,
       branches,
       upserted: totalTotal,
       added: totalAdded,
       updated: totalUpdated,
       deleted: totalRemoved,
-      message: `${totalTotal} formations EDUFORM synchronisées dans ${branches} branches-catégories (${totalAdded} ajoutée(s), ${totalUpdated} mise(s) à jour, ${totalRemoved} retirée(s)).`,
+      branchErrors: errorCount,
+      message: `${urlsFixed} siteUrl mis à jour directement. ${totalTotal} formations synchronisées dans ${branches} branches (${totalAdded} ajoutée(s), ${totalUpdated} mise(s) à jour, ${totalRemoved} retirée(s))${errorCount > 0 ? ` — ${errorCount} branche(s) introuvable(s) ignorée(s)` : ""}.`,
     });
   } catch (err: any) {
     console.error("sync-eduform error:", err);
