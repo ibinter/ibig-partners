@@ -3135,49 +3135,58 @@ export async function POST() {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
 
-    // ── Récupérer les URLs réelles depuis l'API live ibig-eduform.com ──────────
-    // L'API retourne { formations: [{ slug, url, titre, tarif_en_ligne, pitch, ... }] }
-    // On construit une map slug → url pour mettre à jour les siteUrl de la liste statique.
-    const liveUrlBySlug: Record<string, string> = {};
+    // ── 1. Récupérer le catalogue live depuis ibig-eduform.com/api/formations.php ──
+    type ApiFormation = {
+      id: number; titre: string; slug: string; url: string;
+      domaine: string; type: string; duree: string; pitch: string;
+      tarif_en_ligne: number | null; tarif_presentiel: number | null;
+      frais_inscription: number;
+    };
+    let apiFormations: ApiFormation[] = [];
     try {
-      const apiRes = await fetch("https://ibig-eduform.com/api/formations.php", { next: { revalidate: 0 } });
+      const apiRes = await fetch("https://ibig-eduform.com/api/formations.php", { cache: "no-store" });
       if (apiRes.ok) {
         const apiData = await apiRes.json();
-        const apiFormations: Array<{ slug?: string; url?: string; titre?: string }> =
-          Array.isArray(apiData?.formations) ? apiData.formations : [];
-        for (const f of apiFormations) {
-          if (f.slug && f.url) {
-            // Indexer par slug brut de l'API
-            liveUrlBySlug[f.slug] = f.url;
-            // Aussi par slug normalisé (sans accents, tirets) pour correspondre aux slugs ibig-partners
-            const normalized = f.slug.toLowerCase().replace(/[^a-z0-9-]/g, "-");
-            liveUrlBySlug[normalized] = f.url;
-          }
-        }
+        apiFormations = Array.isArray(apiData?.formations) ? apiData.formations : [];
       }
     } catch (e) {
-      console.warn("sync-eduform: impossible de récupérer les URLs live depuis l'API, utilisation des URLs statiques", e);
+      console.warn("sync-eduform: API live indisponible, utilisation de la liste statique", e);
     }
 
-    // Dédupliquer par slug (au cas où un slug apparaît deux fois dans l'array)
-    const seen = new Set<string>();
-    const unique = EDUFORM_PRODUCTS
-      .filter(p => {
+    // ── 2. Si l'API a répondu, construire les produits depuis elle (siteUrl = f.url réel) ──
+    // Sinon, fallback sur la liste statique EDUFORM_PRODUCTS avec matching URL.
+    type SyncProduct = { slug: string; name: string; pricingType: string; price: number; rate: number; siteUrl: string; description?: string };
+
+    let productsToSync: SyncProduct[];
+
+    if (apiFormations.length > 0) {
+      productsToSync = apiFormations.map(f => {
+        const price = f.tarif_en_ligne ?? f.tarif_presentiel ?? f.frais_inscription ?? 0;
+        // Slug ibig-partners : préfixe "eduform-" + slug API
+        const slug = `eduform-${f.slug}`;
+        return {
+          slug,
+          name: f.titre,
+          pricingType: "COURSE",
+          price,
+          rate: 10,
+          siteUrl: f.url,          // ← URL réelle de la page formation sur eduform
+          description: f.pitch || undefined,
+        };
+      });
+    } else {
+      // Fallback statique (si l'API est indisponible)
+      const seen = new Set<string>();
+      productsToSync = EDUFORM_PRODUCTS.filter(p => {
         if (seen.has(p.slug)) return false;
         seen.add(p.slug);
         return true;
-      })
-      .map(p => {
-        // Cherche une URL live : d'abord par slug exact, puis par correspondance partielle
-        const liveUrl =
-          liveUrlBySlug[p.slug] ??
-          Object.entries(liveUrlBySlug).find(([k]) => p.slug.includes(k) || k.includes(p.slug.replace(/^eduform-/, "")))?.[1];
-        return liveUrl ? { ...p, siteUrl: liveUrl } : p;
       });
+    }
 
-    // Grouper par catégorie
-    const grouped: Record<string, typeof EDUFORM_PRODUCTS> = {};
-    for (const p of unique) {
+    // ── 3. Grouper par catégorie (domaine) ────────────────────────────────────
+    const grouped: Record<string, SyncProduct[]> = {};
+    for (const p of productsToSync) {
       const cat = SLUG_CATEGORY[p.slug] ?? "metiers";
       if (!grouped[cat]) grouped[cat] = [];
       grouped[cat].push(p);
