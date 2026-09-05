@@ -10,6 +10,9 @@ interface CheckoutFormProps {
   priceLabel: string;
 }
 
+/** Arrondit au 100 FCFA le plus proche (ex: 113 333 → 113 300) */
+function round100(n: number) { return Math.round(n / 100) * 100; }
+
 const TRANCHES = [
   { key: "third",  label: "1/3 — Acompte",   ratio: 1 / 3 },
   { key: "two_thirds", label: "2/3 — Partiel", ratio: 2 / 3 },
@@ -34,7 +37,7 @@ export default function CheckoutForm({
   const [loading,   setLoading]   = useState(false);
   const [error,     setError]     = useState<string | null>(null);
 
-  const minAmount = Math.max(500, Math.round(price / 3));
+  const minAmount = Math.max(500, round100(price / 3));
 
   const amount = useMemo(() => {
     if (tranche === "custom") {
@@ -42,7 +45,7 @@ export default function CheckoutForm({
       return isNaN(v) ? 0 : v;
     }
     const t = TRANCHES.find((t) => t.key === tranche)!;
-    return Math.round(price * (t.ratio ?? 1));
+    return round100(price * (t.ratio ?? 1));
   }, [tranche, custom, price]);
 
   const amountValid = amount >= minAmount;
@@ -92,7 +95,7 @@ export default function CheckoutForm({
         </label>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {TRANCHES.map((t) => {
-            const display = t.ratio !== null ? fcfa(Math.round(price * t.ratio)) : "Libre";
+            const display = t.ratio !== null ? fcfa(round100(price * t.ratio)) : "Libre";
             const active  = tranche === t.key;
             return (
               <button
