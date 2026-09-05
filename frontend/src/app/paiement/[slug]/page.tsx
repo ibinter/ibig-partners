@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { fcfa } from "@/lib/format";
-import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 import CheckoutForm from "./CheckoutForm";
 import type { Metadata } from "next";
 
@@ -14,10 +13,10 @@ export async function generateMetadata({
   const product = await prisma.product
     .findUnique({ where: { slug }, include: { branch: true } })
     .catch(() => null);
-  if (!product) return { title: "Paiement — IBIG PARTNERS" };
+  if (!product) return { title: "Inscription — IBIG PARTNERS" };
   return {
-    title: `Payer — ${product.name} | IBIG PARTNERS`,
-    description: `Commandez ${product.name} via IBIG PARTNERS. Paiement sécurisé par Moneroo.`,
+    title: `S'inscrire — ${product.name} | IBIG PARTNERS`,
+    description: `Inscrivez-vous à ${product.name}. Paiement sécurisé, accès immédiat.`,
   };
 }
 
@@ -38,33 +37,26 @@ export default async function PaiementPage({
       return "DB_ERROR" as const;
     });
 
-  // Base indisponible : message clair au lieu d'une erreur 500.
   if (product === "DB_ERROR") {
     return (
-      <>
-        <SiteHeader />
-        <main className="flex min-h-[70vh] items-center justify-center bg-slate-50 px-4 py-16">
-          <div className="card-premium max-w-md p-8 text-center">
-            <h1 className="text-xl font-extrabold text-ink">Paiement momentanément indisponible</h1>
-            <p className="mt-3 text-sm text-muted">
-              Nous rencontrons un incident technique temporaire. Merci de réessayer dans quelques instants.
-            </p>
-            <a
-              href={`/paiement/${slug}${ref ? `?ref=${encodeURIComponent(ref)}` : ""}`}
-              className="mt-6 inline-block rounded-lg bg-brand-600 px-6 py-3 text-sm font-bold text-white hover:bg-brand-700"
-            >
-              Réessayer
-            </a>
-          </div>
-        </main>
-        <SiteFooter />
-      </>
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+        <div className="max-w-md rounded-2xl bg-white p-8 text-center shadow-lg">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-100 text-2xl">⚠️</div>
+          <h1 className="text-xl font-extrabold text-slate-900">Service momentanément indisponible</h1>
+          <p className="mt-2 text-sm text-slate-500">Veuillez réessayer dans quelques instants.</p>
+          <a
+            href={`/paiement/${slug}${ref ? `?ref=${encodeURIComponent(ref)}` : ""}`}
+            className="mt-6 inline-block rounded-xl bg-brand-600 px-6 py-3 text-sm font-bold text-white hover:bg-brand-700"
+          >
+            Réessayer
+          </a>
+        </div>
+      </div>
     );
   }
 
   if (!product) notFound();
 
-  // Charger le partenaire si ref fourni (optionnel : ne doit pas bloquer le paiement)
   const partner = ref
     ? await prisma.user
         .findFirst({
@@ -77,109 +69,177 @@ export default async function PaiementPage({
   const partnerCode = partner?.code ?? ref?.toUpperCase() ?? "DIRECT";
   const priceLabel = fcfa(product.price);
 
+  // URL page formation EDUFORM
+  let formationUrl: string | null = null;
+  if ((product as any).siteUrl) {
+    const raw = (product as any).siteUrl as string;
+    const full = raw.startsWith("http") ? raw : `https://${raw}`;
+    let resolved = full;
+    if (product.slug.startsWith("eduform-")) {
+      const correctUrl = `https://ibig-eduform.com/formation-detail.php?slug=${product.slug}`;
+      if (full === "https://ibig-eduform.com" || full === "https://ibig-eduform.com/" ||
+          (full.includes("formation-detail.php") && !full.includes(`slug=${product.slug}`))) {
+        resolved = correctUrl;
+      }
+    }
+    try {
+      const u = new URL(resolved);
+      if (ref) u.searchParams.set("ibig_ref", ref.toUpperCase());
+      formationUrl = u.toString();
+    } catch {
+      formationUrl = resolved;
+    }
+  }
+
+  // URL de retour (page offre ou accueil)
+  const backUrl = `/offres/${slug}${ref ? `?ref=${encodeURIComponent(ref)}` : ""}`;
+
   return (
-    <>
-      <SiteHeader />
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
 
-      <main className="min-h-[80vh] bg-slate-50 py-12">
-        <div className="mx-auto max-w-2xl px-4">
+      {/* Barre de navigation minimale */}
+      <nav className="flex items-center justify-between px-4 py-4 sm:px-8">
+        <a
+          href={backUrl}
+          className="flex items-center gap-2 rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-white/80 backdrop-blur-sm transition hover:bg-white/20 hover:text-white"
+        >
+          ← Retour
+        </a>
+        <a href="/" className="flex items-center gap-2">
+          <span className="text-sm font-extrabold text-white">IBIG PARTNERS</span>
+        </a>
+        {partner && (
+          <span className="hidden rounded-full bg-brand-500/20 px-3 py-1 text-xs font-semibold text-brand-300 sm:block">
+            via {partner.firstName} {partner.lastName}
+          </span>
+        )}
+      </nav>
 
-          {/* En-tête page */}
-          <div className="mb-8 text-center">
-            <span className="inline-block rounded-full bg-brand-100 px-4 py-1 text-xs font-semibold text-brand-700">
-              {product.branch.name}
-            </span>
-            <h1 className="mt-3 text-2xl font-extrabold text-ink sm:text-3xl">
-              {product.name}
-            </h1>
-            {product.description && (
-              <p className="mt-2 text-muted leading-relaxed">
-                {product.description}
-              </p>
-            )}
-            {(product as { siteUrl?: string | null }).siteUrl && (() => {
-              const raw = (product as { siteUrl: string }).siteUrl;
-              const full = raw.startsWith("http") ? raw : `https://${raw}`;
-              // Toujours reconstruire l'URL correcte pour les formations EDUFORM
-              let resolved = full;
-              if (product.slug.startsWith("eduform-")) {
-                const correctUrl = `https://ibig-eduform.com/formation-detail.php?slug=${product.slug}`;
-                if (full === "https://ibig-eduform.com" || full === "https://ibig-eduform.com/" ||
-                    (full.includes("formation-detail.php") && !full.includes(`slug=${product.slug}`))) {
-                  resolved = correctUrl;
-                }
-              }
-              let trackedUrl = resolved;
-              try {
-                const u = new URL(resolved);
-                if (ref) u.searchParams.set("ibig_ref", ref.toUpperCase());
-                trackedUrl = u.toString();
-              } catch { /* ignore */ }
-              return (
+      <main className="mx-auto max-w-5xl px-4 pb-16 pt-6 sm:px-8">
+        <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
+
+          {/* ── Colonne gauche : info formation ── */}
+          <div className="flex flex-col gap-6">
+
+            {/* Badge branche */}
+            <div>
+              <span className="inline-block rounded-full bg-brand-500/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-brand-300">
+                {product.branch.name}
+              </span>
+            </div>
+
+            {/* Titre + description */}
+            <div>
+              <h1 className="text-2xl font-extrabold leading-tight text-white sm:text-3xl lg:text-4xl">
+                {product.name}
+              </h1>
+              {product.description && (
+                <p className="mt-3 text-sm leading-relaxed text-slate-400 line-clamp-5">
+                  {product.description}
+                </p>
+              )}
+              {formationUrl && (
                 <a
-                  href={trackedUrl}
+                  href={formationUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700 hover:underline"
+                  className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand-400 hover:text-brand-300 hover:underline"
                 >
-                  Découvrir le produit ↗
+                  Voir le détail de la formation ↗
                 </a>
-              );
-            })()}
+              )}
+            </div>
+
+            {/* Tarif */}
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
+              <p className="text-xs font-semibold uppercase tracking-widest text-slate-400">Tarif de la formation</p>
+              <p className="mt-2 text-4xl font-extrabold text-white">{priceLabel}</p>
+              <p className="mt-1 text-xs text-slate-400">TTC · Paiement sécurisé via Moneroo</p>
+              <p className="mt-3 text-xs text-slate-400">
+                Vous pouvez payer en <span className="font-semibold text-white">1/3, 2/3 ou montant libre</span> (minimum 1/3).
+              </p>
+            </div>
+
+            {/* Ce que ça inclut */}
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
+              <p className="mb-3 text-xs font-bold uppercase tracking-widest text-slate-400">Ce que vous obtenez</p>
+              <ul className="space-y-2 text-sm text-slate-300">
+                {[
+                  "✅ Inscription confirmée par email immédiatement",
+                  "✅ Accès aux supports de cours",
+                  "✅ Certificat IBIG EDUFORM à l'issue",
+                  "✅ Replay des sessions inclus",
+                  "✅ Suivi et accompagnement post-formation",
+                  "✅ Paiement Mobile Money ou carte bancaire",
+                ].map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Modes de paiement */}
+            <div className="flex flex-wrap gap-2">
+              {[
+                { label: "Orange Money", color: "bg-orange-500/20 text-orange-300" },
+                { label: "Wave", color: "bg-blue-500/20 text-blue-300" },
+                { label: "MTN MoMo", color: "bg-yellow-500/20 text-yellow-300" },
+                { label: "Moov Money", color: "bg-sky-500/20 text-sky-300" },
+              ].map((m) => (
+                <span key={m.label} className={`rounded-full px-3 py-1 text-xs font-semibold ${m.color}`}>
+                  {m.label}
+                </span>
+              ))}
+            </div>
           </div>
 
-          {/* Carte principale */}
-          <div className="card-premium overflow-hidden">
-            {/* Résumé commande */}
-            <div className="border-b border-slate-100 bg-slate-50/60 px-6 py-4">
-              <p className="text-xs font-semibold uppercase tracking-widest text-muted">
-                Résumé de la commande
-              </p>
-              <div className="mt-3 flex items-center justify-between">
+          {/* ── Colonne droite : formulaire ── */}
+          <div>
+            <div className="rounded-2xl bg-white shadow-2xl">
+              {/* En-tête formulaire */}
+              <div className="border-b border-slate-100 px-6 py-5">
+                <h2 className="text-lg font-extrabold text-slate-900">Inscription & Paiement</h2>
+                <p className="mt-0.5 text-sm text-slate-500">
+                  Remplissez vos coordonnées. Vous serez inscrit(e) à la formation et redirigé(e) vers le paiement sécurisé.
+                </p>
+              </div>
+
+              {/* Récapitulatif commande compact */}
+              <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50 px-6 py-3">
                 <div>
-                  <p className="font-bold text-ink">{product.name}</p>
-                  <p className="text-xs text-muted">
-                    {product.branch.name}
-                    {partner && (
-                      <> · via <span className="font-medium text-brand-600">{partner.firstName} {partner.lastName}</span></>
-                    )}
-                  </p>
+                  <p className="text-sm font-bold text-slate-800">{product.name}</p>
+                  {partner && (
+                    <p className="text-xs text-slate-400">
+                      Partagé par <span className="font-medium text-brand-600">{partner.firstName} {partner.lastName}</span>
+                    </p>
+                  )}
                 </div>
-                <div className="text-right">
-                  <p className="text-2xl font-extrabold text-brand-600">
-                    {priceLabel}
-                  </p>
-                  <p className="text-xs text-muted">TTC</p>
-                </div>
+                <p className="text-lg font-extrabold text-brand-600">{priceLabel}</p>
+              </div>
+
+              {/* Form */}
+              <div className="px-6 py-6">
+                <CheckoutForm
+                  productSlug={product.slug}
+                  partnerCode={partnerCode}
+                  price={product.price}
+                  priceLabel={priceLabel}
+                />
+              </div>
+
+              {/* Footer sécurité */}
+              <div className="border-t border-slate-100 px-6 py-4 text-center">
+                <p className="text-xs text-slate-400">
+                  🔒 Paiement sécurisé via Moneroo · Vos données sont protégées
+                </p>
+                <p className="mt-1 text-xs text-slate-400">
+                  En vous inscrivant, vous recevrez une confirmation par email avec les détails de votre formation.
+                </p>
               </div>
             </div>
-
-            {/* Formulaire */}
-            <div className="p-6">
-              <h2 className="mb-5 font-semibold text-ink">
-                Vos coordonnées
-              </h2>
-              <CheckoutForm
-                productSlug={product.slug}
-                partnerCode={partnerCode}
-                price={product.price}
-                priceLabel={priceLabel}
-              />
-            </div>
-          </div>
-
-          {/* Logos modes de paiement */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-xs text-muted">
-            <span className="rounded-full bg-orange-100 px-3 py-1 font-semibold text-orange-700">Orange Money</span>
-            <span className="rounded-full bg-blue-100 px-3 py-1 font-semibold text-blue-700">Wave</span>
-            <span className="rounded-full bg-yellow-100 px-3 py-1 font-semibold text-yellow-800">MTN MoMo</span>
-            <span className="rounded-full bg-sky-100 px-3 py-1 font-semibold text-sky-700">Moov Money</span>
           </div>
 
         </div>
       </main>
-
-      <SiteFooter />
-    </>
+    </div>
   );
 }
