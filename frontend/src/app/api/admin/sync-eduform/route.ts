@@ -3135,13 +3135,45 @@ export async function POST() {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
 
+    // ── Récupérer les URLs réelles depuis l'API live ibig-eduform.com ──────────
+    // L'API retourne { formations: [{ slug, url, titre, tarif_en_ligne, pitch, ... }] }
+    // On construit une map slug → url pour mettre à jour les siteUrl de la liste statique.
+    const liveUrlBySlug: Record<string, string> = {};
+    try {
+      const apiRes = await fetch("https://ibig-eduform.com/api/formations.php", { next: { revalidate: 0 } });
+      if (apiRes.ok) {
+        const apiData = await apiRes.json();
+        const apiFormations: Array<{ slug?: string; url?: string; titre?: string }> =
+          Array.isArray(apiData?.formations) ? apiData.formations : [];
+        for (const f of apiFormations) {
+          if (f.slug && f.url) {
+            // Indexer par slug brut de l'API
+            liveUrlBySlug[f.slug] = f.url;
+            // Aussi par slug normalisé (sans accents, tirets) pour correspondre aux slugs ibig-partners
+            const normalized = f.slug.toLowerCase().replace(/[^a-z0-9-]/g, "-");
+            liveUrlBySlug[normalized] = f.url;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("sync-eduform: impossible de récupérer les URLs live depuis l'API, utilisation des URLs statiques", e);
+    }
+
     // Dédupliquer par slug (au cas où un slug apparaît deux fois dans l'array)
     const seen = new Set<string>();
-    const unique = EDUFORM_PRODUCTS.filter(p => {
-      if (seen.has(p.slug)) return false;
-      seen.add(p.slug);
-      return true;
-    });
+    const unique = EDUFORM_PRODUCTS
+      .filter(p => {
+        if (seen.has(p.slug)) return false;
+        seen.add(p.slug);
+        return true;
+      })
+      .map(p => {
+        // Cherche une URL live : d'abord par slug exact, puis par correspondance partielle
+        const liveUrl =
+          liveUrlBySlug[p.slug] ??
+          Object.entries(liveUrlBySlug).find(([k]) => p.slug.includes(k) || k.includes(p.slug.replace(/^eduform-/, "")))?.[1];
+        return liveUrl ? { ...p, siteUrl: liveUrl } : p;
+      });
 
     // Grouper par catégorie
     const grouped: Record<string, typeof EDUFORM_PRODUCTS> = {};
