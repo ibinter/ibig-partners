@@ -137,6 +137,22 @@ export default async function OffrePage({
     ? `${baseUrl}/aff/${affCode}?p=${product.slug}`
     : product.siteUrl ?? `${baseUrl}/rejoindre`;
 
+  // Pour "Voir l'offre complète" → redirige vers le site produit avec le ref affilié
+  function buildTrackedSiteUrl(rawUrl: string | null | undefined): string | null {
+    if (!rawUrl) return null;
+    const full = rawUrl.startsWith("http") ? rawUrl : `https://${rawUrl}`;
+    if (!affCode) return full;
+    try {
+      const u = new URL(full);
+      u.searchParams.set("ibig_ref", affCode);
+      return u.toString();
+    } catch {
+      const sep = full.includes("?") ? "&" : "?";
+      return `${full}${sep}ibig_ref=${encodeURIComponent(affCode)}`;
+    }
+  }
+  const trackedSiteUrl = buildTrackedSiteUrl(product.siteUrl);
+
   const suffix       = PRICING_SUFFIX[product.pricingType] ?? "";
   const priceDisplay = product.price > 0 ? `${fcfa(product.price)}${suffix}` : "Sur devis";
   const isService    = product.pricingType === "SERVICE" || product.price === 0;
@@ -281,9 +297,9 @@ export default async function OffrePage({
                 {ctaLabel}
                 <span className="ml-1">→</span>
               </a>
-              {product.siteUrl && (
+              {trackedSiteUrl && (
                 <a
-                  href={product.siteUrl.startsWith("http") ? product.siteUrl : `https://${product.siteUrl}`}
+                  href={trackedSiteUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white/15 border border-white/30 px-8 py-3.5 text-sm font-bold text-white hover:bg-white/25 transition backdrop-blur-sm"
@@ -478,9 +494,9 @@ export default async function OffrePage({
                   >
                     {ctaLabel} →
                   </a>
-                  {product.siteUrl && (
+                  {trackedSiteUrl && (
                     <a
-                      href={product.siteUrl.startsWith("http") ? product.siteUrl : `https://${product.siteUrl}`}
+                      href={trackedSiteUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block w-full rounded-2xl py-3 text-center text-sm font-bold text-slate-600 border border-slate-200 hover:bg-slate-50 transition"
@@ -567,9 +583,9 @@ export default async function OffrePage({
                 {ctaLabel}
                 <span>→</span>
               </a>
-              {product.siteUrl && (
+              {trackedSiteUrl && (
                 <a
-                  href={product.siteUrl.startsWith("http") ? product.siteUrl : `https://${product.siteUrl}`}
+                  href={trackedSiteUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white/15 border border-white/30 px-8 py-4 text-sm font-bold text-white hover:bg-white/25 transition"
