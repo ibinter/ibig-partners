@@ -97,16 +97,26 @@ export default async function PaiementPage({
                 {product.description}
               </p>
             )}
-            {(product as { siteUrl?: string | null }).siteUrl && (
-              <a
-                href={(product as { siteUrl: string }).siteUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700 hover:underline"
-              >
-                Découvrir le produit ↗
-              </a>
-            )}
+            {(product as { siteUrl?: string | null }).siteUrl && (() => {
+              const raw = (product as { siteUrl: string }).siteUrl;
+              const full = raw.startsWith("http") ? raw : `https://${raw}`;
+              let trackedUrl = full;
+              try {
+                const u = new URL(full);
+                if (ref) u.searchParams.set("ibig_ref", ref.toUpperCase());
+                trackedUrl = u.toString();
+              } catch { /* ignore */ }
+              return (
+                <a
+                  href={trackedUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700 hover:underline"
+                >
+                  Découvrir le produit ↗
+                </a>
+              );
+            })()}
           </div>
 
           {/* Carte principale */}
