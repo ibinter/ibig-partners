@@ -851,3 +851,57 @@ export async function updateNeedStatus(formData: FormData) {
   revalidatePath("/admin/besoins");
   revalidatePath("/espace/besoins");
 }
+
+// ─── COMMISSION PARTAGÉE ───────────────────────────────────────────────────────
+export async function addOpportunityShare(formData: FormData) {
+  await requireAdmin();
+  const opportunityId = String(formData.get("opportunityId"));
+  const partnerCode   = String(formData.get("partnerCode") || "").trim().toUpperCase();
+  const role          = String(formData.get("role") || "PARTENAIRE");
+  const shareAmount   = Number(formData.get("shareAmount") || 0);
+  const shareType     = String(formData.get("shareType") || "FIXED");
+  const note          = String(formData.get("note") || "").trim();
+
+  if (!partnerCode || !opportunityId) return;
+
+  const partner = await (prisma as any).user.findFirst({
+    where: { code: partnerCode },
+    select: { id: true },
+  });
+  if (!partner) return;
+
+  await (prisma as any).opportunityShare.upsert({
+    where: { opportunityId_userId: { opportunityId, userId: partner.id } },
+    create: { opportunityId, userId: partner.id, role, shareAmount, shareType, note: note || null, status: "PENDING" },
+    update: { role, shareAmount, shareType, note: note || null, updatedAt: new Date() },
+  });
+
+  revalidatePath("/admin/opportunites");
+}
+
+export async function removeOpportunityShare(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  await (prisma as any).opportunityShare.delete({ where: { id } });
+  revalidatePath("/admin/opportunites");
+}
+
+export async function confirmOpportunityShares(formData: FormData) {
+  await requireAdmin();
+  const opportunityId = String(formData.get("opportunityId"));
+  await (prisma as any).opportunityShare.updateMany({
+    where: { opportunityId, status: "PENDING" },
+    data: { status: "CONFIRMED", updatedAt: new Date() },
+  });
+  revalidatePath("/admin/opportunites");
+}
+
+export async function markSharePaid(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  await (prisma as any).opportunityShare.update({
+    where: { id },
+    data: { status: "PAID", updatedAt: new Date() },
+  });
+  revalidatePath("/admin/opportunites");
+}

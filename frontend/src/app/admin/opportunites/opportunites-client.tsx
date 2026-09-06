@@ -66,6 +66,12 @@ type Message = {
   createdAt: string;
 };
 
+type Share = {
+  id: string; userId: string; partnerName: string; partnerCode: string;
+  role: string; shareAmount: number; shareType: string; note: string;
+  status: string; createdAt: string;
+};
+
 type Row = {
   id: string;
   code: string;
@@ -85,6 +91,7 @@ type Row = {
   partnerCode: string;
   partnerPhone: string;
   messages: Message[];
+  shares: Share[];
 };
 
 function getMsgBodyType(body: string): "image" | "pdf" | "doc" | "sheet" | "ppt" | "zip" | "file" | "text" {
@@ -141,18 +148,44 @@ function fmtDate(iso: string) {
   return new Date(iso).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" });
 }
 
+const SHARE_ROLES = [
+  { value: "APPORTEUR_OPPORTUNITE", label: "Apporteur opportunité" },
+  { value: "APPORTEUR_CLIENT",      label: "Apporteur client" },
+  { value: "FACILITATEUR",          label: "Facilitateur / Clôture" },
+  { value: "COORDINATEUR_IBIG",     label: "Coordinateur IBIG" },
+  { value: "PARTENAIRE",            label: "Partenaire" },
+  { value: "AUTRE",                 label: "Autre" },
+];
+
+const SHARE_STATUS_STYLES: Record<string, string> = {
+  PENDING:   "bg-amber-100 text-amber-700",
+  CONFIRMED: "bg-blue-100 text-blue-700",
+  PAID:      "bg-emerald-100 text-emerald-700",
+};
+const SHARE_STATUS_LABELS: Record<string, string> = {
+  PENDING: "En attente", CONFIRMED: "Confirmé", PAID: "Payé",
+};
+
 export default function OpportunitesClient({
   rows,
   updateAction,
   messageAction,
   approveAction,
   rejectAction,
+  addShareAction,
+  removeShareAction,
+  confirmSharesAction,
+  markSharePaidAction,
 }: {
   rows: Row[];
   updateAction: (fd: FormData) => Promise<void>;
   messageAction: (fd: FormData) => Promise<void>;
   approveAction: (fd: FormData) => Promise<void>;
   rejectAction: (fd: FormData) => Promise<void>;
+  addShareAction: (fd: FormData) => Promise<void>;
+  removeShareAction: (fd: FormData) => Promise<void>;
+  confirmSharesAction: (fd: FormData) => Promise<void>;
+  markSharePaidAction: (fd: FormData) => Promise<void>;
 }) {
   const [filter, setFilter] = useState<string>("ALL");
   const [search, setSearch] = useState("");
@@ -533,6 +566,92 @@ export default function OpportunitesClient({
                           </button>
                         </form>
                       </div>
+                    </div>
+                  )}
+
+                  {/* Commission partagée */}
+                  {(o.status === "APPROVED" || o.status === "IN_PROGRESS" || o.status === "WON") && (
+                    <div className="pt-3 border-t border-slate-100 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">
+                          💰 Répartition commission ({o.shares.length} part{o.shares.length !== 1 ? "s" : ""})
+                        </p>
+                        {o.commission > 0 && (
+                          <span className="text-xs font-bold text-emerald-600">
+                            Pool : {fcfaFmt(o.commission)}
+                            {o.shares.length > 0 && ` — attribué : ${fcfaFmt(o.shares.reduce((s: number, sh: Share) => s + sh.shareAmount, 0))}`}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Parts existantes */}
+                      {o.shares.length > 0 && (
+                        <div className="space-y-2">
+                          {o.shares.map((sh: Share) => (
+                            <div key={sh.id} className="flex items-center gap-3 rounded-xl bg-slate-50 border border-slate-200 px-3 py-2 text-sm">
+                              <div className="flex-1 min-w-0">
+                                <p className="font-semibold text-slate-800 truncate">{sh.partnerName} <span className="text-slate-400 font-normal text-xs">({sh.partnerCode})</span></p>
+                                <p className="text-xs text-slate-500">{SHARE_ROLES.find(r => r.value === sh.role)?.label ?? sh.role} · {sh.shareType === "FIXED" ? fcfaFmt(sh.shareAmount) : `${sh.shareAmount}%`}</p>
+                              </div>
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${SHARE_STATUS_STYLES[sh.status] ?? "bg-slate-100 text-slate-500"}`}>
+                                {SHARE_STATUS_LABELS[sh.status] ?? sh.status}
+                              </span>
+                              {sh.status === "CONFIRMED" && (
+                                <form action={async (fd) => { await markSharePaidAction(fd); }}>
+                                  <input type="hidden" name="id" value={sh.id} />
+                                  <button type="submit" className="text-[10px] font-bold text-emerald-600 hover:underline">Marquer payé</button>
+                                </form>
+                              )}
+                              {sh.status === "PENDING" && (
+                                <form action={async (fd) => { await removeShareAction(fd); }}>
+                                  <input type="hidden" name="id" value={sh.id} />
+                                  <button type="submit" className="text-[10px] text-rose-500 hover:underline">✕</button>
+                                </form>
+                              )}
+                            </div>
+                          ))}
+                          {o.shares.some((sh: Share) => sh.status === "PENDING") && (
+                            <form action={async (fd) => { await confirmSharesAction(fd); }}>
+                              <input type="hidden" name="opportunityId" value={o.id} />
+                              <button type="submit" className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 transition">
+                                ✅ Confirmer toutes les parts en attente
+                              </button>
+                            </form>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Ajouter un partner */}
+                      <form action={async (fd) => { await addShareAction(fd); }}
+                        className="flex flex-wrap items-end gap-2 p-3 rounded-xl border border-dashed border-slate-300 bg-white">
+                        <input type="hidden" name="opportunityId" value={o.id} />
+                        <div className="flex flex-col gap-1">
+                          <label className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Code partner</label>
+                          <input name="partnerCode" placeholder="Ex : IBP-XXXX" required
+                            className="rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-sm w-32 outline-none focus:border-blue-400" />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <label className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Rôle</label>
+                          <select name="role" className="rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-sm outline-none focus:border-blue-400">
+                            {SHARE_ROLES.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
+                          </select>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <label className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Montant</label>
+                          <input name="shareAmount" type="number" min="0" placeholder="FCFA" required
+                            className="rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-sm w-28 outline-none focus:border-blue-400" />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <label className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Type</label>
+                          <select name="shareType" className="rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-sm outline-none focus:border-blue-400">
+                            <option value="FIXED">FCFA fixe</option>
+                            <option value="PERCENT">% valeur</option>
+                          </select>
+                        </div>
+                        <button type="submit" className="rounded-lg bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold px-3 py-2 transition">
+                          + Ajouter
+                        </button>
+                      </form>
                     </div>
                   )}
 

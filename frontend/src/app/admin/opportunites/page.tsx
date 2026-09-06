@@ -1,7 +1,12 @@
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/ui";
-import { updateOpportunity, sendOpportunityMessage, approveOpportunity, rejectOpportunity } from "../actions";
+import {
+  updateOpportunity, sendOpportunityMessage,
+  approveOpportunity, rejectOpportunity,
+  addOpportunityShare, removeOpportunityShare,
+  confirmOpportunityShares, markSharePaid,
+} from "../actions";
 import OpportunitesClient from "./opportunites-client";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +20,10 @@ export default async function OpportunitesPage() {
       user: { select: { firstName: true, lastName: true, code: true, phone: true } },
       messages: { orderBy: { createdAt: "asc" } },
       _count: { select: { leads: true } },
+      shares: {
+        include: { user: { select: { firstName: true, lastName: true, code: true } } },
+        orderBy: { createdAt: "asc" },
+      },
     },
   });
 
@@ -43,6 +52,18 @@ export default async function OpportunitesPage() {
       body: m.body,
       createdAt: m.createdAt instanceof Date ? m.createdAt.toISOString() : String(m.createdAt),
     })),
+    shares: (o.shares ?? []).map((s: any) => ({
+      id: s.id,
+      userId: s.userId,
+      partnerName: `${s.user.firstName} ${s.user.lastName}`,
+      partnerCode: s.user.code,
+      role: s.role,
+      shareAmount: s.shareAmount,
+      shareType: s.shareType,
+      note: s.note ?? "",
+      status: s.status,
+      createdAt: s.createdAt instanceof Date ? s.createdAt.toISOString() : String(s.createdAt),
+    })),
   }));
 
   return (
@@ -57,6 +78,10 @@ export default async function OpportunitesPage() {
         messageAction={sendOpportunityMessage}
         approveAction={approveOpportunity}
         rejectAction={rejectOpportunity}
+        addShareAction={addOpportunityShare}
+        removeShareAction={removeOpportunityShare}
+        confirmSharesAction={confirmOpportunityShares}
+        markSharePaidAction={markSharePaid}
       />
     </div>
   );
