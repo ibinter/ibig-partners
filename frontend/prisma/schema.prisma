@@ -51,6 +51,9 @@ model User {
   networkType        String? @default("MIXTE") // ENTREPRISES | PARTICULIERS | ONG | MIXTE
   networkDescription String? // description libre du réseau
 
+  // KYB — vérification entreprise
+  kybStatus          String  @default("NONE") // NONE | SUBMITTED | VERIFIED | REJECTED
+
   // Parrainage : structure du reseau multi-niveaux
   sponsorId String?
   sponsor   User?   @relation("Referral", fields: [sponsorId], references: [id])
