@@ -48,18 +48,20 @@ export async function POST(req: NextRequest) {
       },
       return_url: `${siteUrl}/paiement/merci?slug=${encodeURIComponent(productSlug)}&ref=${encodeURIComponent(partnerCode)}`,
       notify_url: `${siteUrl}/api/moneroo/webhook`,
-      metadata: {
-        product_slug:         productSlug,
-        partner_code:         partnerCode,
-        mode_formation:       modeFormation       ?? "",
-        statut_professionnel: statutProfessionnel ?? "",
-        objectif:             objectif            ?? "",
-        ville:                ville               ?? "",
-        pays:                 pays                ?? "",
-        niveau_etude:         niveauEtude         ?? "",
-        fonction:             fonction            ?? "",
-        message:              message             ?? "",
-      },
+      metadata: Object.fromEntries(
+        Object.entries({
+          product_slug:         productSlug,
+          partner_code:         partnerCode,
+          mode_formation:       modeFormation       ?? "",
+          statut_professionnel: statutProfessionnel ?? "",
+          objectif:             objectif            ?? "",
+          ville:                ville               ?? "",
+          pays:                 pays                ?? "",
+          niveau_etude:         niveauEtude         ?? "",
+          fonction:             fonction            ?? "",
+          message:              message             ?? "",
+        }).filter(([, v]) => v !== "")
+      ),
     }),
   });
 
