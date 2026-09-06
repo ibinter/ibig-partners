@@ -1,0 +1,17 @@
+{
+  "name": "IBIG PARTNERS",
+  "short_name": "IBIG",
+  "description": "Votre espace partenaire affilié IBIG",
+  "start_url": "/espace",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6366f1",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "screenshots": [
+    { "src": "/screenshot-mobile.png", "sizes": "390x844", "type": "image/png", "form_factor": "narrow" }
+  ]
+}

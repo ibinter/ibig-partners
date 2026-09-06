@@ -1027,3 +1027,51 @@ model PartnerVitrine {
   showContact Boolean  @default(true)
   updatedAt   DateTime @updatedAt
 }
+
+model PartnerContract {
+  id        String    @id @default(cuid())
+  userId    String    @unique
+  signedAt  DateTime?
+  ipAddress String?
+  version   String    @default("1.0")
+  createdAt DateTime  @default(now())
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  userId    String
+  content   String
+  rating    Int      @default(5)
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+}
+
+model AlertPreference {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  newNetworkSale Boolean  @default(true)
+  rankingChange  Boolean  @default(true)
+  newProspect    Boolean  @default(false)
+  commissionPaid Boolean  @default(true)
+  weeklyDigest   Boolean  @default(true)
+  updatedAt      DateTime @updatedAt
+}
+
+model OnboardingProgress {
+  id                    String    @id @default(cuid())
+  userId                String    @unique
+  profileCompleted      Boolean   @default(false)
+  firstProductActivated Boolean   @default(false)
+  firstLinkCopied       Boolean   @default(false)
+  firstProspectAdded    Boolean   @default(false)
+  firstShareDone        Boolean   @default(false)
+  completedAt           DateTime?
+  updatedAt             DateTime  @updatedAt
+}
+
+model LeaderboardOptIn {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  optedIn   Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+}
