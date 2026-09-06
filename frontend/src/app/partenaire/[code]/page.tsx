@@ -117,7 +117,7 @@ export default async function PartenairePublicPage({ params }: { params: Promise
             <h2 className="text-sm font-semibold text-slate-700 mb-3">Produits recommandés</h2>
             <div className="space-y-3">
               {links.map((l) => (
-                <a key={l.id} href={l.url} target="_blank" rel="noopener noreferrer"
+                <a key={l.id} href={`/rejoindre?ref=${l.code}&product=${l.productId}`} target="_blank" rel="noopener noreferrer"
                   className="flex items-center justify-between rounded-xl border border-slate-100 p-3 hover:bg-slate-50 transition-colors">
                   <div>
                     <p className="font-medium text-slate-800 text-sm">{l.product.name}</p>

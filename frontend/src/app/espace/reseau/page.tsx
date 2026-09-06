@@ -9,6 +9,7 @@ import { submitOpportunity } from "../actions";
 import CopyButton from "../liens/copy-button";
 import ReseauClient from "./reseau-client";
 import QrCodeClient from "./qr-code-client";
+import ReferralTree from "./referral-tree";
 
 export const dynamic = "force-dynamic";
 
@@ -98,6 +99,30 @@ export default async function ReseauPage() {
 
       {/* ── QR Code parrainage ── */}
       <QrCodeClient url={referralUrl} partnerName={user.code} />
+
+      {/* ── Arbre de parrainage SVG ── */}
+      <ReferralTree data={{
+        id: user.id,
+        name: `${(user as any).firstName ?? ""} ${(user as any).lastName ?? ""}`.trim() || user.code,
+        code: user.code,
+        status: user.status,
+        sales: 0,
+        children: byLevel(1).map((n1) => ({
+          id: n1.id,
+          name: `${n1.firstName} ${n1.lastName}`.trim() || n1.code,
+          code: n1.code,
+          status: n1.status,
+          sales: n1.salesCount,
+          children: byLevel(2).filter((n2) => (n2 as any).sponsorId === n1.id).map((n2) => ({
+            id: n2.id,
+            name: `${n2.firstName} ${n2.lastName}`.trim() || n2.code,
+            code: n2.code,
+            status: n2.status,
+            sales: n2.salesCount,
+            children: [],
+          })),
+        })),
+      }} />
 
       {/* ── 4 KPIs ── */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
