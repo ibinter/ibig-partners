@@ -24,13 +24,13 @@ const STATUS_INFO: Record<string, { label: string; color: string }> = {
 };
 
 type MyRow = {
-  id: string; title: string; category: string; description: string;
+  id: string; code: string; title: string; category: string; description: string;
   budget: number; location: string; status: string; visibility: string;
   adminNote: string; commission: number; commissionType: string;
   responseCount: number; createdAt: string;
 };
 type PublicRow = {
-  id: string; title: string; category: string; description: string;
+  id: string; code: string; title: string; category: string; description: string;
   budget: number; location: string; adminNote: string;
   commission: number; commissionType: string;
   responseCount: number; createdAt: string; hasResponded: boolean;
@@ -107,6 +107,7 @@ export default function BesoinsAffilieClient({
               <div key={row.id} className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm space-y-3">
                 <div className="flex items-start justify-between gap-3 flex-wrap">
                   <div>
+                    {row.code && <p className="text-[10px] font-mono font-bold text-blue-600 mb-0.5">{row.code}</p>}
                     <p className="font-bold text-slate-900 text-base">{row.title}</p>
                     <div className="flex items-center gap-2 mt-1 flex-wrap">
                       <span className="inline-block rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-500">
@@ -204,6 +205,7 @@ export default function BesoinsAffilieClient({
               <div key={row.id} className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
                 <div className="flex items-start justify-between gap-3 flex-wrap">
                   <div className="min-w-0 flex-1">
+                    {row.code && <p className="text-[10px] font-mono font-bold text-blue-600">{row.code}</p>}
                     <p className="font-semibold text-slate-900 truncate">{row.title}</p>
                     <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                       <span className="text-xs text-slate-400">{CATEGORY_LABELS[row.category] ?? row.category}</span>

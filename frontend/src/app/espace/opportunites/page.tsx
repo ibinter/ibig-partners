@@ -35,6 +35,7 @@ export default async function EspaceOpportunitesPage() {
 
   const myRows = myOpportunities.map((o: any) => ({
     id: o.id,
+    code: o.code ?? "",
     title: o.title,
     category: o.category ?? "AUTRE",
     description: o.description,
@@ -57,6 +58,7 @@ export default async function EspaceOpportunitesPage() {
 
   const publicRows = publicOpportunities.map((o: any) => ({
     id: o.id,
+    code: o.code ?? "",
     title: o.title,
     category: o.category ?? "AUTRE",
     description: o.description,

@@ -37,6 +37,7 @@ export default async function EspaceLayout({
     { href: "/espace/reseau",       label: "Mon Réseau",      icon: "🌳",  group: "Mon activité" },
     { href: "/espace/prospects",    label: "Mes Prospects",   icon: "📇",  group: "Mon activité" },
     { href: "/espace/ventes",       label: "Déclarer une vente", icon: "📝", group: "Mon activité" },
+    { href: "/espace/portefeuille",  label: "Mon Portefeuille",      icon: "📊",  group: "Mon activité" },
     { href: "/espace/opportunites", label: "Mes Opportunités B2B", icon: "💼", group: "Mon activité" },
     { href: "/espace/besoins",      label: "Mes Besoins",           icon: "🔍",  group: "Mon activité" },
     { href: "/espace/missions",     label: "Missions Partners",   icon: "🎯",  group: "Mon activité" },

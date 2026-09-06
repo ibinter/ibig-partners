@@ -30,6 +30,7 @@ export default async function EspaceBesoinsPage() {
 
   const myRows = myNeeds.map((n: any) => ({
     id: n.id,
+    code: n.code ?? "",
     title: n.title,
     category: n.category ?? "AUTRE",
     description: n.description,
@@ -46,6 +47,7 @@ export default async function EspaceBesoinsPage() {
 
   const publicRows = publicNeeds.map((n: any) => ({
     id: n.id,
+    code: n.code ?? "",
     title: n.title,
     category: n.category ?? "AUTRE",
     description: n.description,

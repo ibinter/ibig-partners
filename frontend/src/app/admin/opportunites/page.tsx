@@ -20,6 +20,7 @@ export default async function OpportunitesPage() {
 
   const rows = opportunities.map((o: any) => ({
     id: o.id,
+    code: o.code ?? "",
     title: o.title,
     category: o.category ?? "AUTRE",
     description: o.description,

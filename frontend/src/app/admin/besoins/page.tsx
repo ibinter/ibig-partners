@@ -19,6 +19,7 @@ export default async function AdminBesoinsPage() {
 
   const rows = needs.map((n: any) => ({
     id: n.id,
+    code: n.code ?? "",
     title: n.title,
     category: n.category ?? "AUTRE",
     description: n.description,

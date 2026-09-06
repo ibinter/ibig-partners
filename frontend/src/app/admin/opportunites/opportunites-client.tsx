@@ -68,6 +68,7 @@ type Message = {
 
 type Row = {
   id: string;
+  code: string;
   title: string;
   category: string;
   description: string;
@@ -323,6 +324,7 @@ export default function OpportunitesClient({
                 </span>
 
                 <div className="flex-1 min-w-0">
+                  {o.code && <p className="text-[10px] font-mono font-bold text-amber-600 mb-0.5">{o.code}</p>}
                   <p className="font-semibold text-slate-800 text-sm leading-snug">{o.title}</p>
                   <div className="flex items-center gap-2 mt-0.5">
                     {o.category && o.category !== "AUTRE" && (

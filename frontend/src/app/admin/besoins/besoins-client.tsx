@@ -25,7 +25,7 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 type Row = {
-  id: string; title: string; category: string; description: string;
+  id: string; code: string; title: string; category: string; description: string;
   budget: number; location: string; status: string; visibility: string;
   adminNote: string; commission: number; commissionType: string;
   responseCount: number; createdAt: string;
@@ -102,6 +102,7 @@ export default function BesoinsAdminClient({
                   {STATUS_LABELS[n.status]}
                 </span>
                 <div className="flex-1 min-w-0">
+                  {n.code && <p className="text-[10px] font-mono font-bold text-blue-600 mb-0.5">{n.code}</p>}
                   <p className="font-semibold text-slate-800 text-sm leading-snug">{n.title}</p>
                   <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                     <span className="text-[10px] text-blue-600 font-semibold">{CATEGORY_LABELS[n.category] ?? n.category}</span>

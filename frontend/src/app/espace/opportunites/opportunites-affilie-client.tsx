@@ -20,13 +20,13 @@ const CATEGORIES = ["FORMATION","DIGITAL","IMMOBILIER","PARTENARIAT","COMMERCIAL
 
 type Message = { id: string; fromAdmin: boolean; senderName: string; body: string; createdAt: string };
 type MyRow = {
-  id: string; title: string; category: string; description: string;
+  id: string; code: string; title: string; category: string; description: string;
   estimatedValue: number; status: string; handler: string; adminNote: string;
   commission: number; commissionType: string;
   createdAt: string; messages: Message[]; unreadCount: number;
 };
 type PublicRow = {
-  id: string; title: string; category: string; description: string;
+  id: string; code: string; title: string; category: string; description: string;
   estimatedValue: number; commission: number; commissionType: string;
   adminNote: string; deadline: string | null; leadCount: number;
   createdAt: string; myLead: { status: string; createdAt: string } | null;
@@ -112,6 +112,7 @@ export default function OpportunitesAffilieClient({
                 <div key={row.id} className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm space-y-3">
                   <div className="flex items-start justify-between gap-3 flex-wrap">
                     <div>
+                      {row.code && <p className="text-[10px] font-mono font-bold text-amber-600 mb-0.5">{row.code}</p>}
                       <p className="font-bold text-slate-900 text-base">{row.title}</p>
                       <span className="inline-block mt-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-500">
                         {CATEGORY_LABELS[row.category] ?? row.category}
@@ -180,6 +181,7 @@ export default function OpportunitesAffilieClient({
                 <div key={row.id} onClick={() => setSelected(row)}
                   className="cursor-pointer rounded-2xl border border-slate-100 bg-white p-4 hover:border-brand-200 hover:shadow-sm transition-all flex items-center justify-between gap-3">
                   <div className="min-w-0">
+                    {row.code && <p className="text-[10px] font-mono font-bold text-amber-600">{row.code}</p>}
                     <p className="font-semibold text-slate-900 truncate">{row.title}</p>
                     <p className="text-xs text-slate-400 mt-0.5">{CATEGORY_LABELS[row.category] ?? row.category} · {formatDate(row.createdAt)}</p>
                     {row.adminNote && <p className="text-xs text-brand-600 mt-1 truncate">💬 {row.adminNote}</p>}
