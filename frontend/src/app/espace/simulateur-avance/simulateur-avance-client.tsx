@@ -89,7 +89,7 @@ export default function SimulateurAvanceClient({
             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
             <XAxis dataKey="month" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-            <Tooltip formatter={(v: number) => `${v.toLocaleString()} FCFA`} />
+            <Tooltip formatter={(v) => `${Number(v ?? 0).toLocaleString()} FCFA`} />
             <Legend />
             <Area type="monotone" dataKey="direct" name="Commissions directes" stroke="#6366f1" fill="url(#gDirect)" strokeWidth={2} />
             <Area type="monotone" dataKey="reseau" name="Commissions réseau" stroke="#10b981" fill="url(#gReseau)" strokeWidth={2} />
