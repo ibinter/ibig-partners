@@ -48,8 +48,8 @@ export default function AnalyticsCharts({ data }: { data: MonthPoint[] }) {
             <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11, fill: "#94a3b8" }} tickLine={false} axisLine={false} width={60} tickFormatter={(v) => FCFA(v)} />
             <Tooltip
               contentStyle={{ borderRadius: 12, border: "1px solid #e2e8f0", fontSize: 12 }}
-              formatter={(value: number, name: string) =>
-                name === "Ventes" ? [value, "Ventes"] : [`${FCFA(value)} FCFA`, name]
+              formatter={(value, name) =>
+                name === "Ventes" ? [value, "Ventes"] : [`${FCFA(Number(value))} FCFA`, name]
               }
             />
             <Legend wrapperStyle={{ fontSize: 12 }} />
@@ -70,7 +70,7 @@ export default function AnalyticsCharts({ data }: { data: MonthPoint[] }) {
             <YAxis tick={{ fontSize: 11, fill: "#94a3b8" }} tickLine={false} axisLine={false} width={70} tickFormatter={(v) => FCFA(v)} />
             <Tooltip
               contentStyle={{ borderRadius: 12, border: "1px solid #e2e8f0", fontSize: 12 }}
-              formatter={(v: number) => [`${FCFA(v)} FCFA`, "Montant"]}
+              formatter={(v) => [`${FCFA(Number(v))} FCFA`, "Montant"]}
             />
             <Bar dataKey="montant" name="Montant" fill="#6366f1" radius={[4, 4, 0, 0]} />
           </BarChart>
