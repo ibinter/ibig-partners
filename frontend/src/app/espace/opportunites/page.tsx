@@ -71,12 +71,7 @@ export default async function EspaceOpportunitesPage() {
     leadCount: o._count?.leads ?? 0,
     partnerVerified: (o.user?.kybStatus ?? "NONE") === "VERIFIED",
     createdAt: o.createdAt instanceof Date ? o.createdAt.toISOString() : String(o.createdAt),
-    myLead: myLeadMap.get(o.id) ? {
-      status: myLeadMap.get(o.id).status,
-      createdAt: myLeadMap.get(o.id).createdAt instanceof Date
-        ? myLeadMap.get(o.id).createdAt.toISOString()
-        : String(myLeadMap.get(o.id).createdAt),
-    } : null,
+    myLead: (() => { const l = myLeadMap.get(o.id); if (!l) return null; return { status: l.status, createdAt: l.createdAt instanceof Date ? l.createdAt.toISOString() : String(l.createdAt) }; })(),
   }));
 
   return (
