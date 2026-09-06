@@ -15,7 +15,7 @@ export default async function AdminKybPage() {
   });
 
   // Ids des partenaires ayant au moins un doc
-  const userIds: string[] = [...new Set(allDocs.map((d: any) => d.userId as string))];
+  const userIds: string[] = Array.from(new Set<string>(allDocs.map((d: any) => String(d.userId))));
 
   // Infos partenaires
   const users = userIds.length > 0
