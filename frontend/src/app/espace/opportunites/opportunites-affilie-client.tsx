@@ -30,6 +30,7 @@ type PublicRow = {
   estimatedValue: number; commission: number; commissionType: string;
   adminNote: string; deadline: string | null; leadCount: number;
   partnerVerified: boolean;
+  isRecommended: boolean;
   createdAt: string; myLead: { status: string; createdAt: string } | null;
 };
 
@@ -115,6 +116,11 @@ export default function OpportunitesAffilieClient({
                     <div>
                       <div className="flex items-center gap-2 flex-wrap mb-0.5">
                         {row.code && <p className="text-[10px] font-mono font-bold text-amber-600">{row.code}</p>}
+                        {row.isRecommended && (
+                          <span className="text-[10px] font-bold bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full border border-violet-200">
+                            🎯 Pour vous
+                          </span>
+                        )}
                         {row.partnerVerified && (
                           <span className="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-200">
                             🏢 Entreprise vérifiée

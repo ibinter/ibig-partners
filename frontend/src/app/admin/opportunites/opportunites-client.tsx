@@ -72,6 +72,16 @@ type Share = {
   status: string; createdAt: string;
 };
 
+type MatchRow = {
+  id: string;
+  userId: string;
+  partnerName: string;
+  partnerCode: string;
+  partnerStatus: string;
+  score: number;
+  status: string; // SUGGESTED | INVITED | DECLINED
+};
+
 type Row = {
   id: string;
   code: string;
@@ -92,6 +102,7 @@ type Row = {
   partnerPhone: string;
   messages: Message[];
   shares: Share[];
+  matches: MatchRow[];
 };
 
 function getMsgBodyType(body: string): "image" | "pdf" | "doc" | "sheet" | "ppt" | "zip" | "file" | "text" {
@@ -166,6 +177,15 @@ const SHARE_STATUS_LABELS: Record<string, string> = {
   PENDING: "En attente", CONFIRMED: "Confirmé", PAID: "Payé",
 };
 
+const MATCH_STATUS_STYLES: Record<string, string> = {
+  SUGGESTED: "bg-slate-100 text-slate-600",
+  INVITED:   "bg-blue-100 text-blue-700",
+  DECLINED:  "bg-rose-100 text-rose-600",
+};
+const MATCH_STATUS_LABELS: Record<string, string> = {
+  SUGGESTED: "Suggéré", INVITED: "Invité ✉️", DECLINED: "Décliné",
+};
+
 export default function OpportunitesClient({
   rows,
   updateAction,
@@ -176,6 +196,9 @@ export default function OpportunitesClient({
   removeShareAction,
   confirmSharesAction,
   markSharePaidAction,
+  computeMatchesAction,
+  inviteMatchAction,
+  declineMatchAction,
 }: {
   rows: Row[];
   updateAction: (fd: FormData) => Promise<void>;
@@ -186,6 +209,9 @@ export default function OpportunitesClient({
   removeShareAction: (fd: FormData) => Promise<void>;
   confirmSharesAction: (fd: FormData) => Promise<void>;
   markSharePaidAction: (fd: FormData) => Promise<void>;
+  computeMatchesAction: (fd: FormData) => Promise<void>;
+  inviteMatchAction: (fd: FormData) => Promise<void>;
+  declineMatchAction: (fd: FormData) => Promise<void>;
 }) {
   const [filter, setFilter] = useState<string>("ALL");
   const [search, setSearch] = useState("");
@@ -652,6 +678,53 @@ export default function OpportunitesClient({
                           + Ajouter
                         </button>
                       </form>
+                    </div>
+                  )}
+
+                  {/* Panneau Matching IA */}
+                  {o.status === "APPROVED" && (
+                    <div className="pt-3 border-t border-slate-100">
+                      <div className="flex items-center justify-between mb-3">
+                        <p className="text-[10px] font-bold uppercase tracking-wide text-violet-600">🎯 Matching — Partenaires suggérés</p>
+                        <form action={async (fd) => { await computeMatchesAction(fd); }}>
+                          <input type="hidden" name="opportunityId" value={o.id} />
+                          <button type="submit" className="rounded-xl bg-violet-600 hover:bg-violet-700 text-white text-[10px] font-bold px-3 py-1.5 transition">
+                            ⟳ Calculer les matches
+                          </button>
+                        </form>
+                      </div>
+                      {o.matches.length === 0 ? (
+                        <p className="text-xs text-slate-400 italic">Aucun match calculé. Cliquez sur "Calculer les matches" pour trouver les partenaires les plus adaptés.</p>
+                      ) : (
+                        <div className="space-y-2">
+                          {o.matches.map((m: MatchRow) => (
+                            <div key={m.id} className="flex items-center gap-3 rounded-xl bg-slate-50 border border-slate-200 px-3 py-2 text-sm">
+                              <div className="flex-1 min-w-0">
+                                <p className="font-semibold text-slate-800 truncate">
+                                  {m.partnerName} <span className="text-slate-400 font-normal text-xs">({m.partnerCode})</span>
+                                </p>
+                                <p className="text-xs text-slate-500">Score : {m.score} · Niveau {m.partnerStatus}</p>
+                              </div>
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${MATCH_STATUS_STYLES[m.status] ?? "bg-slate-100 text-slate-500"}`}>
+                                {MATCH_STATUS_LABELS[m.status] ?? m.status}
+                              </span>
+                              {m.status === "SUGGESTED" && (
+                                <form action={async (fd) => { await inviteMatchAction(fd); }}>
+                                  <input type="hidden" name="matchId" value={m.id} />
+                                  <input type="hidden" name="opportunityId" value={o.id} />
+                                  <button type="submit" className="text-[10px] font-bold text-blue-600 hover:underline">Inviter ✉️</button>
+                                </form>
+                              )}
+                              {m.status !== "DECLINED" && (
+                                <form action={async (fd) => { await declineMatchAction(fd); }}>
+                                  <input type="hidden" name="matchId" value={m.id} />
+                                  <button type="submit" className="text-[10px] text-rose-400 hover:underline">✕</button>
+                                </form>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
 

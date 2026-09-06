@@ -8,24 +8,37 @@ import {
   confirmOpportunityShares, markSharePaid,
 } from "../actions";
 import OpportunitesClient from "./opportunites-client";
+import { computeOpportunityMatches, inviteMatchedPartner, declineMatch } from "./matching-actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function OpportunitesPage() {
   await requireAdmin();
 
-  const opportunities = await (prisma as any).opportunity.findMany({
-    orderBy: [{ createdAt: "desc" }],
-    include: {
-      user: { select: { firstName: true, lastName: true, code: true, phone: true } },
-      messages: { orderBy: { createdAt: "asc" } },
-      _count: { select: { leads: true } },
-      shares: {
-        include: { user: { select: { firstName: true, lastName: true, code: true } } },
-        orderBy: { createdAt: "asc" },
+  const [opportunities, allMatches] = await Promise.all([
+    (prisma as any).opportunity.findMany({
+      orderBy: [{ createdAt: "desc" }],
+      include: {
+        user: { select: { firstName: true, lastName: true, code: true, phone: true } },
+        messages: { orderBy: { createdAt: "asc" } },
+        _count: { select: { leads: true } },
+        shares: {
+          include: { user: { select: { firstName: true, lastName: true, code: true } } },
+          orderBy: { createdAt: "asc" },
+        },
       },
-    },
-  });
+    }),
+    (prisma as any).opportunityMatch.findMany({
+      orderBy: { score: "desc" },
+      include: { user: { select: { firstName: true, lastName: true, code: true, status: true } } },
+    }),
+  ]);
+
+  const matchesByOpp = new Map<string, any[]>();
+  for (const m of allMatches) {
+    if (!matchesByOpp.has(m.opportunityId)) matchesByOpp.set(m.opportunityId, []);
+    matchesByOpp.get(m.opportunityId)!.push(m);
+  }
 
   const rows = opportunities.map((o: any) => ({
     id: o.id,
@@ -64,6 +77,15 @@ export default async function OpportunitesPage() {
       status: s.status,
       createdAt: s.createdAt instanceof Date ? s.createdAt.toISOString() : String(s.createdAt),
     })),
+    matches: (matchesByOpp.get(o.id) ?? []).map((m: any) => ({
+      id: m.id,
+      userId: m.userId,
+      partnerName: `${m.user.firstName} ${m.user.lastName}`,
+      partnerCode: m.user.code,
+      partnerStatus: m.user.status,
+      score: m.score,
+      status: m.status,
+    })),
   }));
 
   return (
@@ -82,6 +104,9 @@ export default async function OpportunitesPage() {
         removeShareAction={removeOpportunityShare}
         confirmSharesAction={confirmOpportunityShares}
         markSharePaidAction={markSharePaid}
+        computeMatchesAction={computeOpportunityMatches}
+        inviteMatchAction={inviteMatchedPartner}
+        declineMatchAction={declineMatch}
       />
     </div>
   );

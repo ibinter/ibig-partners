@@ -57,6 +57,8 @@ export default async function EspaceOpportunitesPage() {
     unreadCount: o.messages.filter((m: any) => m.fromAdmin).length,
   }));
 
+  const userSectors = ((user as any).marketSectors ?? "").split(",").map((s: string) => s.trim().toUpperCase()).filter(Boolean);
+
   const publicRows = publicOpportunities.map((o: any) => ({
     id: o.id,
     code: o.code ?? "",
@@ -70,6 +72,7 @@ export default async function EspaceOpportunitesPage() {
     deadline: o.deadline ? (o.deadline instanceof Date ? o.deadline.toISOString() : String(o.deadline)) : null,
     leadCount: o._count?.leads ?? 0,
     partnerVerified: (o.user?.kybStatus ?? "NONE") === "VERIFIED",
+    isRecommended: userSectors.length > 0 && userSectors.includes((o.category ?? "AUTRE").toUpperCase()),
     createdAt: o.createdAt instanceof Date ? o.createdAt.toISOString() : String(o.createdAt),
     myLead: (() => { const l = myLeadMap.get(o.id) as any; if (!l) return null; return { status: l.status, createdAt: l.createdAt instanceof Date ? l.createdAt.toISOString() : String(l.createdAt) }; })(),
   }));
