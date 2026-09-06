@@ -58,6 +58,7 @@ export default async function EspaceLayout({
     { href: "/espace/kit",          label: "Kit Marketing",   icon: "🎨",  group: "Ressources" },
     { href: "/espace/guide",        label: "Guide Affilié (PDF)", icon: "📖", group: "Ressources" },
     { href: "/espace/emails",       label: "Mes emails reçus",    icon: "📬", group: "Ressources" },
+    { href: "/espace/documents",    label: "Mes Documents",       icon: "📂", group: "Ressources" },
     { href: "/espace/mobile",        label: "Vue Mobile",      icon: "📱",  group: "Compte" },
     { href: "/espace/notifications",label: "Notifications",   icon: "🔔",  group: "Compte", badge: unread },
     { href: "/espace/support",      label: "Support",         icon: "🎫",  group: "Compte" },

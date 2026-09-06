@@ -8,6 +8,7 @@ import { COMMISSION_STATUS_LABELS, STATUS_LABELS } from "@/lib/constants";
 import { OnboardingQuest } from "@/components/onboarding-quest";
 import { WeeklyChallenge } from "@/components/weekly-challenge";
 import DashboardCharts, { type SalePoint, type CommPoint } from "./dashboard-charts";
+import LiveKpisBar from "@/components/live-kpis-bar";
 
 export const dynamic = "force-dynamic";
 
@@ -144,6 +145,9 @@ export default async function DashboardPage({
           </span>
         </div>
       </div>
+
+      {/* ── KPIs live ── */}
+      <LiveKpisBar initial={{ salesToday, salesMonth: salesThisMonth, commPending: 0, prospectsUrgent: prospectsUrgent.length, unreadNotif: 0, updatedAt: new Date().toISOString() }} />
 
       {/* ── Alertes ── */}
       {bienvenue && (

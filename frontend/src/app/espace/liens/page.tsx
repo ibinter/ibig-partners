@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/ui";
 import { COOKIE_TRACKING_DAYS, type PricingType } from "@/lib/constants";
 import { effectiveRate } from "@/lib/commissions";
 import LiensClient from "./liens-client";
+import UtmGenerator from "./utm-generator";
 
 export const dynamic = "force-dynamic";
 
@@ -118,6 +119,11 @@ export default async function LiensPage() {
             </p>
           </div>
         </div>
+      )}
+
+      {/* ── Générateur UTM ── */}
+      {cards.length > 0 && (
+        <UtmGenerator links={cards.map((c) => ({ productName: c.productName, url: c.url }))} />
       )}
 
       {/* ── Grille filtrée (client) ── */}

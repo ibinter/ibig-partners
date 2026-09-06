@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { PushSubscribeButton } from "@/components/push-subscribe-button";
+import NotifLiveDropdown from "@/components/notif-live-dropdown";
 import { Logo } from "@/components/site-chrome";
 import { logoutAction } from "@/app/auth-actions";
 import { STATUS_LABELS } from "@/lib/constants";
@@ -435,6 +436,7 @@ export function DashboardShell({
 
           <div className="flex items-center gap-3">
             {/* Ctrl+K hint */}
+            {variant === "partner" && <NotifLiveDropdown initialCount={0} />}
             {variant === "partner" && <PushSubscribeButton />}
             {variant === "partner" && (
               <button
