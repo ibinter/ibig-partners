@@ -317,6 +317,7 @@ model Opportunity {
   leads          OpportunityLead[]
   shares         OpportunityShare[]
   matches        OpportunityMatch[]
+  activities     OpportunityActivity[]
 
   // Champs supplémentaires (ajoutés sans migration Prisma)
   adminNote      String?
@@ -762,6 +763,18 @@ model KybDocument {
   user       User @relation(fields: [userId], references: [id])
 
   @@index([userId])
+}
+
+model OpportunityActivity {
+  id            String   @id @default(cuid())
+  opportunityId String
+  leadId        String?
+  type          String   // STATUS_CHANGE | NOTE | MESSAGE | MATCH_INVITE
+  content       String
+  createdBy     String
+  createdAt     DateTime @default(now())
+  opportunity   Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  @@index([opportunityId])
 }
 
 model PartnerCall {

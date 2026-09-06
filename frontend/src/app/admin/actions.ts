@@ -905,3 +905,57 @@ export async function markSharePaid(formData: FormData) {
   });
   revalidatePath("/admin/opportunites");
 }
+
+// ─── CRM LEADS ───────────────────────────────────────────────────────────────
+export async function updateLeadStatus(formData: FormData) {
+  const admin = await requireAdmin();
+  const leadId        = String(formData.get("leadId"));
+  const opportunityId = String(formData.get("opportunityId"));
+  const status        = String(formData.get("status"));
+
+  const prev = await (prisma as any).opportunityLead.findUnique({
+    where: { id: leadId }, select: { status: true },
+  });
+
+  await (prisma as any).opportunityLead.update({
+    where: { id: leadId },
+    data: { status },
+  });
+
+  await (prisma as any).opportunityActivity.create({
+    data: {
+      opportunityId,
+      leadId,
+      type: "STATUS_CHANGE",
+      content: `Statut lead changé : ${prev?.status ?? "?"} → ${status}`,
+      createdBy: admin.id,
+    },
+  });
+
+  revalidatePath("/admin/opportunites");
+}
+
+export async function addLeadNote(formData: FormData) {
+  const admin = await requireAdmin();
+  const leadId        = String(formData.get("leadId"));
+  const opportunityId = String(formData.get("opportunityId"));
+  const note          = String(formData.get("note")).trim();
+  if (!note) return;
+
+  await (prisma as any).opportunityLead.update({
+    where: { id: leadId },
+    data: { note },
+  });
+
+  await (prisma as any).opportunityActivity.create({
+    data: {
+      opportunityId,
+      leadId,
+      type: "NOTE",
+      content: note,
+      createdBy: admin.id,
+    },
+  });
+
+  revalidatePath("/admin/opportunites");
+}

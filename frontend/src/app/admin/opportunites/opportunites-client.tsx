@@ -82,6 +82,27 @@ type MatchRow = {
   status: string; // SUGGESTED | INVITED | DECLINED
 };
 
+type LeadRow = {
+  id: string;
+  userId: string;
+  partnerName: string;
+  partnerCode: string;
+  partnerStatus: string;
+  partnerPhone: string;
+  status: string;
+  note: string;
+  result: string;
+  createdAt: string;
+};
+
+type ActivityRow = {
+  id: string;
+  leadId: string | null;
+  type: string;
+  content: string;
+  createdAt: string;
+};
+
 type Row = {
   id: string;
   code: string;
@@ -103,6 +124,8 @@ type Row = {
   messages: Message[];
   shares: Share[];
   matches: MatchRow[];
+  leads: LeadRow[];
+  activities: ActivityRow[];
 };
 
 function getMsgBodyType(body: string): "image" | "pdf" | "doc" | "sheet" | "ppt" | "zip" | "file" | "text" {
@@ -186,6 +209,21 @@ const MATCH_STATUS_LABELS: Record<string, string> = {
   SUGGESTED: "Suggéré", INVITED: "Invité ✉️", DECLINED: "Décliné",
 };
 
+const LEAD_STATUSES = ["INTERESTED","CONTACTED","MEETING","WON","LOST"];
+const LEAD_STATUS_LABELS: Record<string,string> = {
+  INTERESTED:"Intéressé", CONTACTED:"Contacté", MEETING:"RDV planifié", WON:"Gagné ✅", LOST:"Perdu ❌",
+};
+const LEAD_STATUS_STYLES: Record<string,string> = {
+  INTERESTED:"bg-amber-100 text-amber-700",
+  CONTACTED:"bg-blue-100 text-blue-700",
+  MEETING:"bg-violet-100 text-violet-700",
+  WON:"bg-emerald-100 text-emerald-700",
+  LOST:"bg-rose-100 text-rose-700",
+};
+const ACTIVITY_ICONS: Record<string,string> = {
+  STATUS_CHANGE:"🔄", NOTE:"📝", MESSAGE:"💬", MATCH_INVITE:"📩",
+};
+
 export default function OpportunitesClient({
   rows,
   updateAction,
@@ -199,6 +237,8 @@ export default function OpportunitesClient({
   computeMatchesAction,
   inviteMatchAction,
   declineMatchAction,
+  updateLeadStatusAction,
+  addLeadNoteAction,
 }: {
   rows: Row[];
   updateAction: (fd: FormData) => Promise<void>;
@@ -212,6 +252,8 @@ export default function OpportunitesClient({
   computeMatchesAction: (fd: FormData) => Promise<void>;
   inviteMatchAction: (fd: FormData) => Promise<void>;
   declineMatchAction: (fd: FormData) => Promise<void>;
+  updateLeadStatusAction: (fd: FormData) => Promise<void>;
+  addLeadNoteAction: (fd: FormData) => Promise<void>;
 }) {
   const [filter, setFilter] = useState<string>("ALL");
   const [search, setSearch] = useState("");
@@ -721,6 +763,58 @@ export default function OpportunitesClient({
                                   <button type="submit" className="text-[10px] text-rose-400 hover:underline">✕</button>
                                 </form>
                               )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* CRM — Candidatures / Leads */}
+                  {o.leads.length > 0 && (
+                    <div className="pt-3 border-t border-slate-100 space-y-3">
+                      <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wide">CRM · Candidatures ({o.leads.length})</h4>
+                      <div className="space-y-3">
+                        {o.leads.map((lead) => (
+                          <div key={lead.id} className="rounded-xl border bg-slate-50 p-3 space-y-2">
+                            <div className="flex items-center justify-between gap-2 flex-wrap">
+                              <div>
+                                <p className="text-sm font-semibold">{lead.partnerName} <span className="text-xs text-slate-400">#{lead.partnerCode}</span></p>
+                                <p className="text-xs text-slate-500">{lead.partnerPhone} · {fmtDate(lead.createdAt)}</p>
+                              </div>
+                              <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${LEAD_STATUS_STYLES[lead.status] ?? "bg-gray-100 text-gray-600"}`}>
+                                {LEAD_STATUS_LABELS[lead.status] ?? lead.status}
+                              </span>
+                            </div>
+                            {lead.note && <p className="text-xs text-slate-600 italic">📝 {lead.note}</p>}
+                            {/* Changer statut */}
+                            <form action={updateLeadStatusAction} className="flex items-center gap-2 flex-wrap">
+                              <input type="hidden" name="leadId" value={lead.id} />
+                              <input type="hidden" name="opportunityId" value={o.id} />
+                              <select name="status" defaultValue={lead.status} className="rounded-lg border px-2 py-1 text-xs">
+                                {LEAD_STATUSES.map(s => <option key={s} value={s}>{LEAD_STATUS_LABELS[s]}</option>)}
+                              </select>
+                              <button type="submit" className="rounded-lg bg-slate-700 text-white px-3 py-1 text-xs font-medium hover:bg-slate-800">Mettre à jour</button>
+                            </form>
+                            {/* Ajouter note */}
+                            <form action={addLeadNoteAction} className="flex items-center gap-2">
+                              <input type="hidden" name="leadId" value={lead.id} />
+                              <input type="hidden" name="opportunityId" value={o.id} />
+                              <input name="note" defaultValue={lead.note} placeholder="Note interne…" className="flex-1 rounded-lg border px-2 py-1 text-xs" />
+                              <button type="submit" className="rounded-lg bg-violet-600 text-white px-3 py-1 text-xs font-medium hover:bg-violet-700">Enregistrer</button>
+                            </form>
+                          </div>
+                        ))}
+                      </div>
+                      {/* Timeline activité */}
+                      {o.activities.length > 0 && (
+                        <div className="pt-2 space-y-1">
+                          <h5 className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Timeline</h5>
+                          {o.activities.map(a => (
+                            <div key={a.id} className="flex items-start gap-2 text-xs text-slate-600">
+                              <span className="shrink-0">{ACTIVITY_ICONS[a.type] ?? "•"}</span>
+                              <span className="text-slate-400 shrink-0">{fmtDate(a.createdAt)}</span>
+                              <span>{a.content}</span>
                             </div>
                           ))}
                         </div>

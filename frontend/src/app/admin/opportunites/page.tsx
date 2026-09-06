@@ -6,6 +6,7 @@ import {
   approveOpportunity, rejectOpportunity,
   addOpportunityShare, removeOpportunityShare,
   confirmOpportunityShares, markSharePaid,
+  updateLeadStatus, addLeadNote,
 } from "../actions";
 import OpportunitesClient from "./opportunites-client";
 import { computeOpportunityMatches, inviteMatchedPartner, declineMatch } from "./matching-actions";
@@ -15,7 +16,7 @@ export const dynamic = "force-dynamic";
 export default async function OpportunitesPage() {
   await requireAdmin();
 
-  const [opportunities, allMatches] = await Promise.all([
+  const [opportunities, allMatches, allLeads, allActivities] = await Promise.all([
     (prisma as any).opportunity.findMany({
       orderBy: [{ createdAt: "desc" }],
       include: {
@@ -32,12 +33,31 @@ export default async function OpportunitesPage() {
       orderBy: { score: "desc" },
       include: { user: { select: { firstName: true, lastName: true, code: true, status: true } } },
     }),
+    (prisma as any).opportunityLead.findMany({
+      orderBy: { createdAt: "desc" },
+      include: { user: { select: { firstName: true, lastName: true, code: true, status: true, phone: true } } },
+    }),
+    (prisma as any).opportunityActivity.findMany({
+      orderBy: { createdAt: "asc" },
+    }),
   ]);
 
   const matchesByOpp = new Map<string, any[]>();
   for (const m of allMatches) {
     if (!matchesByOpp.has(m.opportunityId)) matchesByOpp.set(m.opportunityId, []);
     matchesByOpp.get(m.opportunityId)!.push(m);
+  }
+
+  const leadsByOpp = new Map<string, any[]>();
+  for (const l of allLeads) {
+    if (!leadsByOpp.has(l.opportunityId)) leadsByOpp.set(l.opportunityId, []);
+    leadsByOpp.get(l.opportunityId)!.push(l);
+  }
+
+  const activitiesByOpp = new Map<string, any[]>();
+  for (const a of allActivities) {
+    if (!activitiesByOpp.has(a.opportunityId)) activitiesByOpp.set(a.opportunityId, []);
+    activitiesByOpp.get(a.opportunityId)!.push(a);
   }
 
   const rows = opportunities.map((o: any) => ({
@@ -86,6 +106,25 @@ export default async function OpportunitesPage() {
       score: m.score,
       status: m.status,
     })),
+    leads: (leadsByOpp.get(o.id) ?? []).map((l: any) => ({
+      id: l.id,
+      userId: l.userId,
+      partnerName: `${l.user.firstName} ${l.user.lastName}`,
+      partnerCode: l.user.code,
+      partnerStatus: l.user.status,
+      partnerPhone: l.user.phone ?? "",
+      status: l.status,
+      note: l.note ?? "",
+      result: l.result ?? "",
+      createdAt: l.createdAt instanceof Date ? l.createdAt.toISOString() : String(l.createdAt),
+    })),
+    activities: (activitiesByOpp.get(o.id) ?? []).map((a: any) => ({
+      id: a.id,
+      leadId: a.leadId ?? null,
+      type: a.type,
+      content: a.content,
+      createdAt: a.createdAt instanceof Date ? a.createdAt.toISOString() : String(a.createdAt),
+    })),
   }));
 
   return (
@@ -107,6 +146,8 @@ export default async function OpportunitesPage() {
         computeMatchesAction={computeOpportunityMatches}
         inviteMatchAction={inviteMatchedPartner}
         declineMatchAction={declineMatch}
+        updateLeadStatusAction={updateLeadStatus}
+        addLeadNoteAction={addLeadNote}
       />
     </div>
   );
