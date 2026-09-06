@@ -109,7 +109,8 @@ export async function sendVerificationReminderToAll() {
     const recipients = targets.filter((u) => u.email);
     after(async () => {
       for (const u of recipients) {
-        await sendVerificationReminderEmail({ to: u.email, firstName: u.firstName });
+        await sendVerificationReminderEmail({ to: u.email, firstName: u.firstName }).catch(() => {});
+        await new Promise((r) => setTimeout(r, 120));
       }
     });
   }
@@ -136,6 +137,7 @@ export async function bulkApproveAll() {
   after(async () => {
     for (const p of pending) {
       await sendOnboardingJ0Email({ to: p.email, firstName: p.firstName, code: p.code }).catch(() => {});
+      await new Promise((r) => setTimeout(r, 120));
       await prisma.emailSequenceLog.upsert({
         where: { userId_sequence_step: { userId: p.id, sequence: "ONBOARDING", step: "J0" } },
         update: { sentAt: new Date() },

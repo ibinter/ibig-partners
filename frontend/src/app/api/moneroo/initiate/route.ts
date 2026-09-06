@@ -50,17 +50,17 @@ export async function POST(req: NextRequest) {
       notify_url: `${siteUrl}/api/moneroo/webhook`,
       metadata: Object.fromEntries(
         Object.entries({
-          product_slug:         productSlug,
-          partner_code:         partnerCode,
-          mode_formation:       modeFormation       ?? "",
-          statut_professionnel: statutProfessionnel ?? "",
-          objectif:             objectif            ?? "",
-          ville:                ville               ?? "",
-          pays:                 pays                ?? "",
-          niveau_etude:         niveauEtude         ?? "",
-          fonction:             fonction            ?? "",
-          message:              message             ?? "",
-        }).filter(([, v]) => v !== "")
+          product_slug:         String(productSlug         ?? ""),
+          partner_code:         String(partnerCode         ?? ""),
+          mode_formation:       String(modeFormation       ?? ""),
+          statut_professionnel: String(statutProfessionnel ?? ""),
+          objectif:             String(objectif            ?? ""),
+          ville:                String(ville               ?? ""),
+          pays:                 String(pays                ?? ""),
+          niveau_etude:         String(niveauEtude         ?? ""),
+          fonction:             String(fonction            ?? ""),
+          message:              String(message             ?? ""),
+        }).filter(([, v]) => v !== "" && v !== "undefined" && v !== "null").slice(0, 10)
       ),
     }),
   });
