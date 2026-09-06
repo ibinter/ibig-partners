@@ -138,20 +138,12 @@ export default async function OffrePage({
     : product.siteUrl ?? `${baseUrl}/rejoindre`;
 
   // Pour "Voir l'offre complète" → redirige vers le site produit avec le ref affilié
+  // Utilise siteUrl de la DB directement — ne jamais générer d'URL dynamique
   function buildTrackedSiteUrl(rawUrl: string | null | undefined): string | null {
     if (!rawUrl) return null;
+    if (rawUrl === "https://ibig-eduform.com" || rawUrl === "https://ibig-eduform.com/") return null;
     const full = rawUrl.startsWith("http") ? rawUrl : `https://${rawUrl}`;
-    // Toujours utiliser l'URL correcte basée sur le slug Partners (préfixe eduform-)
-    // Couvre : homepage seule, URL avec mauvais slug (sans préfixe), ou URL déjà correcte
-    let resolved = full;
-    if (product.slug.startsWith("eduform-")) {
-      const slugSansPrefixe = product.slug.replace(/^eduform-/, "");
-      const correctUrl = `https://ibig-eduform.com/formation/${slugSansPrefixe}`;
-      if (full === "https://ibig-eduform.com" || full === "https://ibig-eduform.com/" ||
-          full.includes("formation-detail.php")) {
-        resolved = correctUrl;
-      }
-    }
+    const resolved = full;
     if (!affCode) return resolved;
     try {
       const u = new URL(resolved);

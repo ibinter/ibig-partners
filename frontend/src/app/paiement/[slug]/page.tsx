@@ -69,26 +69,18 @@ export default async function PaiementPage({
   const partnerCode = partner?.code ?? ref?.toUpperCase() ?? "DIRECT";
   const priceLabel = fcfa(product.price);
 
-  // URL page formation EDUFORM
+  // URL page formation — utilise siteUrl de la DB directement
+  // Ne jamais générer d'URL dynamique : si siteUrl = homepage, pas de lien
   let formationUrl: string | null = null;
-  if ((product as any).siteUrl) {
-    const raw = (product as any).siteUrl as string;
-    const full = raw.startsWith("http") ? raw : `https://${raw}`;
-    let resolved = full;
-    if (product.slug.startsWith("eduform-")) {
-      const slugSansPrefixe = product.slug.replace(/^eduform-/, "");
-      const correctUrl = `https://ibig-eduform.com/formation/${slugSansPrefixe}`;
-      if (full === "https://ibig-eduform.com" || full === "https://ibig-eduform.com/" ||
-          (full.includes("formation-detail.php") && !full.includes(slugSansPrefixe))) {
-        resolved = correctUrl;
-      }
-    }
+  const rawSiteUrl = (product as any).siteUrl as string | null;
+  if (rawSiteUrl && rawSiteUrl !== "https://ibig-eduform.com" && rawSiteUrl !== "https://ibig-eduform.com/") {
+    const full = rawSiteUrl.startsWith("http") ? rawSiteUrl : `https://${rawSiteUrl}`;
     try {
-      const u = new URL(resolved);
+      const u = new URL(full);
       if (ref) u.searchParams.set("ibig_ref", ref.toUpperCase());
       formationUrl = u.toString();
     } catch {
-      formationUrl = resolved;
+      formationUrl = full;
     }
   }
 
