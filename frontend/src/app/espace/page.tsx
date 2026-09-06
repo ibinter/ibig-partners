@@ -120,6 +120,46 @@ export default async function DashboardPage({
     where: { sellerId: user.id, status: "CONFIRMED", createdAt: { gte: weekStart } },
   });
 
+  // Phase 8 — CP balance + niveau partenaire
+  const cpData = await (async () => {
+    try {
+      const txs = await (prisma as any).pointTransaction.findMany({
+        where: { userId: user.id },
+        select: { points: true, type: true },
+      });
+      const earned = txs.filter((t: any) => ["CREDIT", "BONUS"].includes(t.type)).reduce((s: number, t: any) => s + t.points, 0);
+      const spent = txs.filter((t: any) => ["DEBIT", "CANCELLATION", "EXPIRATION"].includes(t.type)).reduce((s: number, t: any) => s + Math.abs(t.points), 0);
+      return { balance: earned - spent, earned, spent };
+    } catch { return { balance: 0, earned: 0, spent: 0 }; }
+  })();
+
+  const levelData = await (async () => {
+    try {
+      const levels = await (prisma as any).partnerLevel.findMany({
+        where: { active: true },
+        orderBy: { minCp: "asc" },
+      });
+      if (!levels.length) return null;
+      const cp = cpData.earned;
+      let currentLevel = levels[0];
+      let nextLevel = null;
+      for (let i = 0; i < levels.length; i++) {
+        if (cp >= levels[i].minCp) { currentLevel = levels[i]; nextLevel = levels[i + 1] ?? null; }
+      }
+      const pctToNext = nextLevel
+        ? Math.min(100, Math.round(((cp - currentLevel.minCp) / (nextLevel.minCp - currentLevel.minCp)) * 100))
+        : 100;
+      return { currentLevel, nextLevel, pctToNext, cpEarned: cp };
+    } catch { return null; }
+  })();
+
+  // Score de performance (0-100)
+  const perfScore = Math.min(100, Math.round(
+    (summary.confirmedSales * 5) +
+    (counts.reduce((a: number, b: number) => a + b, 0) * 2) +
+    (cpData.balance * 0.1)
+  ));
+
   const needsVerification = user.role === "PARTNER" && user.verificationStatus !== "VERIFIED";
   const verifRejected = user.verificationStatus === "REJECTED";
   const verifPending = user.verificationStatus === "SUBMITTED";
@@ -233,6 +273,78 @@ export default async function DashboardPage({
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-300">Mon réseau</p>
           <p className="mt-1 text-2xl font-extrabold">{counts.reduce((a, b) => a + b, 0)}</p>
           <p className="mt-0.5 text-xs text-slate-400">N1 : {counts[0]} · N2 : {counts[1]} · N3 : {counts[2]}</p>
+        </div>
+      </div>
+
+      {/* ── Phase 8 : CP Wallet + Niveau + Score ── */}
+      <div className="grid gap-3 sm:grid-cols-3">
+        {/* CP Balance */}
+        <div className="rounded-2xl bg-gradient-to-br from-violet-600 to-purple-700 p-4 text-white shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs font-semibold uppercase tracking-wide text-violet-200">Crédits PARTNERS</p>
+            <Link href="/espace/portefeuille" className="text-[10px] text-violet-200 hover:text-white underline">Détails →</Link>
+          </div>
+          <p className="text-3xl font-extrabold">{cpData.balance}</p>
+          <p className="text-xs text-violet-300 mt-0.5">CP disponibles</p>
+          <div className="mt-3 flex gap-3 text-[11px]">
+            <span className="text-violet-200">↑ {cpData.earned} gagnés</span>
+            <span className="text-violet-300">↓ {cpData.spent} dépensés</span>
+          </div>
+          <Link href="/espace/boutique" className="mt-3 inline-flex items-center gap-1 rounded-lg bg-white/15 hover:bg-white/25 px-3 py-1.5 text-xs font-semibold text-white transition">
+            🛍️ Boutique avantages
+          </Link>
+        </div>
+
+        {/* Niveau partenaire */}
+        {levelData ? (
+          <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">Mon niveau</p>
+            <div className="flex items-center gap-2 mb-3">
+              <div className="h-8 w-8 rounded-full shrink-0" style={{ backgroundColor: levelData.currentLevel.color }} />
+              <div>
+                <p className="font-bold text-slate-800 text-sm">{levelData.currentLevel.label}</p>
+                <p className="text-[10px] text-slate-400 font-mono">{levelData.currentLevel.name}</p>
+              </div>
+            </div>
+            {levelData.nextLevel ? (
+              <>
+                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100 mb-1">
+                  <div className="h-2 rounded-full transition-all" style={{ width: `${levelData.pctToNext}%`, backgroundColor: levelData.currentLevel.color }} />
+                </div>
+                <p className="text-[11px] text-slate-500">
+                  {levelData.nextLevel.minCp - levelData.cpEarned} CP pour atteindre <strong>{levelData.nextLevel.label}</strong>
+                </p>
+              </>
+            ) : (
+              <p className="text-xs text-emerald-600 font-semibold">👑 Niveau maximum atteint !</p>
+            )}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-slate-200 bg-white p-4 flex items-center justify-center">
+            <p className="text-xs text-slate-400 text-center">Niveaux non configurés</p>
+          </div>
+        )}
+
+        {/* Score de performance */}
+        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">Score de performance</p>
+          <div className="flex items-center gap-3">
+            <div className="relative h-16 w-16 shrink-0">
+              <svg viewBox="0 0 36 36" className="h-16 w-16 -rotate-90">
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#f1f5f9" strokeWidth="3" />
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke={perfScore >= 80 ? "#10b981" : perfScore >= 50 ? "#3b82f6" : "#f59e0b"} strokeWidth="3"
+                  strokeDasharray={`${perfScore} ${100 - perfScore}`} strokeLinecap="round" />
+              </svg>
+              <span className="absolute inset-0 flex items-center justify-center text-sm font-extrabold text-slate-800">{perfScore}</span>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-slate-800">
+                {perfScore >= 80 ? "Excellent" : perfScore >= 60 ? "Bon" : perfScore >= 40 ? "Correct" : "À améliorer"}
+              </p>
+              <p className="text-[11px] text-slate-500 mt-0.5">{summary.confirmedSales} vente{summary.confirmedSales !== 1 ? "s" : ""} · {counts.reduce((a, b) => a + b, 0)} filleuls · {cpData.balance} CP</p>
+              <Link href="/espace/analytics" className="mt-1.5 inline-block text-[10px] text-blue-600 hover:underline">Voir analytics →</Link>
+            </div>
+          </div>
         </div>
       </div>
 

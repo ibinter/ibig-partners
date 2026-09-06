@@ -36,6 +36,7 @@ const NAV: NavItem[] = [
   { href: "/admin/analytics",     label: "Analytics",           icon: "📈", group: "Administration" },
   { href: "/admin/reporting",     label: "Reporting avancé",    icon: "📊", group: "Administration" },
   { href: "/admin/audit",         label: "Journal d'audit",    icon: "🔍", group: "Administration" },
+  { href: "/admin/anti-abus",     label: "Anti-abus",          icon: "🛡️", group: "Administration" },
   { href: "/admin/nettoyage",     label: "Nettoyage données",  icon: "🧹", group: "Administration" },
   { href: "/admin/parametres",    label: "Paramètres",         icon: "⚙️", group: "Administration" },
   { href: "/admin/guide",         label: "Guide Admin (PDF)",   icon: "📘", group: "Documents" },
