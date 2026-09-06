@@ -92,6 +92,7 @@ model User {
   eventRegistrations     EventRegistration[]
   contract               Contract?
   notificationPreference NotificationPreference?
+  bonusTransactions      BonusTransaction[]
 
   preferredCurrency String @default("FCFA")
 
@@ -590,37 +591,67 @@ model ConnectRequest {
 
 // ─── Missions Partners ───────────────────────────────────────────────────────
 model Mission {
-  id               String   @id @default(cuid())
-  title            String
-  description      String
-  category         String   @default("AUTRE") // même 21 catégories que Opportunity
-  missionType      String   @default("LEAD")  // LEAD | VENTE | RECRUTEMENT | REPRESENTATION | PROSPECTION | AUTRE
-  compensationType String   @default("FIXED") // FIXED | PERCENT
-  compensationAmount Int    @default(0)       // FCFA si FIXED, % * 100 si PERCENT (ex: 1000 = 10%)
-  zone             String   @default("Côte d'Ivoire") // zone géographique cible
-  difficulty       String   @default("MEDIUM") // EASY | MEDIUM | HARD
-  slots            Int      @default(5)        // nombre max de partenaires sur cette mission
-  deadline         DateTime?
-  status           String   @default("OPEN")  // OPEN | CLOSED | COMPLETED
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id                 String    @id @default(cuid())
+  code               String?   // ex: EDU-001, DIG-042
+  title              String
+  description        String
+  category           String    @default("AUTRE")
+  missionType        String    @default("LEAD")       // LEAD | VENTE | RECRUTEMENT | REPRESENTATION | PROSPECTION | SOURCING | MISE_EN_RELATION | ETUDE | ANIMATION | PARTENARIAT | AUTRE
+  branch             String    @default("")           // EDUFORM | DIGITAL | SOFT | IMMOTRUST | CONSEIL | PARTNERS | MARKET | MULTISERVICES
+  // Récompense
+  rewardType         String    @default("CASH")       // CASH | CP | MIXED
+  compensationType   String    @default("FIXED")      // FIXED | PERCENT
+  compensationAmount Int       @default(0)            // FCFA si FIXED, % * 100 si PERCENT
+  cpAmount           Int       @default(0)            // CP attribués si CP ou MIXED
+  rewardTrigger      String    @default("VALIDATION") // VALIDATION | COMMERCIAL_RESULT | BOTH
+  // Ciblage
+  zone               String    @default("Côte d'Ivoire")
+  difficulty         String    @default("MEDIUM")     // EASY | MEDIUM | HARD
+  minLevel           String    @default("")           // vide = tous niveaux
+  slots              Int       @default(5)
+  deadline           DateTime?
+  // Preuves
+  proofInstructions  String    @default("")
+  // Gestion
+  status             String    @default("OPEN")       // OPEN | CLOSED | COMPLETED | ARCHIVED
+  active             Boolean   @default(true)
+  adminNote          String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
   applications MissionApplication[]
+  duplicates   MissionDuplicate[]
 }
 
 model MissionApplication {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   missionId String
-  mission   Mission  @relation(fields: [missionId], references: [id])
+  mission   Mission   @relation(fields: [missionId], references: [id])
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  status    String   @default("PENDING") // PENDING | ACCEPTED | REJECTED | COMPLETED
+  user      User      @relation(fields: [userId], references: [id])
+  // Statut étendu
+  status    String    @default("PENDING") // PENDING | ACCEPTED | REJECTED | SUBMITTED | VALIDATED | REJECTED_PROOF | COMPLETED
   note      String?
-  result    String?  // résultat / rapport de mission
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  result    String?
+  // Preuve soumise par le partenaire
+  proofUrl       String?
+  proofNote      String?
+  submittedAt    DateTime?
+  // Validation admin
+  validatedAt    DateTime?
+  validatedBy    String?
+  // Récompenses gagnées
+  cpEarned           Int @default(0)
+  commissionEarned   Int @default(0)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  pointTransactions PointTransaction[]
+  duplicates        MissionDuplicate[]
 
   @@unique([missionId, userId])
+  @@index([userId])
+  @@index([missionId])
 }
 
 // ─── Séquences email marketing automatiques ─────────────────────────────────
@@ -915,35 +946,50 @@ model EmailTemplate {
 }
 
 model PointTransaction {
-  id        String   @id @default(cuid())
-  userId    String
-  points    Int
-  reason    String   // SALE | REFERRAL | TRAINING | CHALLENGE | BONUS
-  ref       String?
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
+  id                   String    @id @default(cuid())
+  userId               String
+  points               Int
+  type                 String    @default("CREDIT")  // CREDIT | DEBIT | BONUS | ADJUSTMENT | CANCELLATION | EXPIRATION
+  reason               String    // SALE | REFERRAL | TRAINING | CHALLENGE | BONUS | MISSION | REWARD_CLAIM | ADMIN
+  ref                  String?
+  missionApplicationId String?
+  missionApplication   MissionApplication? @relation(fields: [missionApplicationId], references: [id])
+  adminId              String?
+  adminNote            String?
+  user                 User      @relation(fields: [userId], references: [id])
+  createdAt            DateTime  @default(now())
+
+  @@index([userId])
 }
 
 model Reward {
   id          String   @id @default(cuid())
   name        String
   description String?
-  points      Int
+  points      Int      // coût en CP (alias cpCost)
   stock       Int      @default(-1) // -1 = illimité
   active      Boolean  @default(true)
   imageUrl    String?
+  category    String   @default("AUTRE")     // FORMATION | LOGICIEL | AUDIT | MARKETING | MISSION | AUTRE
+  validityDays Int     @default(30)          // durée de validité en jours après activation
+  conditions  String?                        // conditions d'éligibilité (texte libre)
   createdAt   DateTime @default(now())
   claims      RewardClaim[]
 }
 
 model RewardClaim {
-  id        String   @id @default(cuid())
-  userId    String
-  rewardId  String
-  status    String   @default("PENDING") // PENDING | APPROVED | REJECTED
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
-  reward    Reward   @relation(fields: [rewardId], references: [id])
+  id          String    @id @default(cuid())
+  userId      String
+  rewardId    String
+  status      String    @default("PENDING") // PENDING | APPROVED | REJECTED
+  adminNote   String?
+  processedAt DateTime?
+  processedBy String?
+  createdAt   DateTime  @default(now())
+  user        User      @relation(fields: [userId], references: [id])
+  reward      Reward    @relation(fields: [rewardId], references: [id])
+
+  @@index([userId])
 }
 
 model NotificationPreference {
@@ -1074,4 +1120,75 @@ model LeaderboardOptIn {
   userId    String   @unique
   optedIn   Boolean  @default(false)
   updatedAt DateTime @updatedAt
+}
+
+// ─── Phase 1 Extension — Niveaux, Bonus, Doublons missions ──────────────────
+
+model PartnerLevel {
+  id        String   @id @default(cuid())
+  name      String   @unique // CONNECTEUR | PARTNER | BUSINESS_PARTNER | PREMIUM_PARTNER | ELITE_PARTNER
+  label     String            // label affiché (ex: "Business Partner")
+  minCp     Int      @default(0)
+  color     String   @default("#6366f1")
+  perks     String   @default("") // description des avantages séparés par | ou JSON
+  order     Int      @default(0)  // ordre d'affichage
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BonusRule {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  type        String    @default("MANUAL") // VOLUME | CAMPAIGN | PERFORMANCE | RECRUITMENT | CONVERSION | TERRITORIAL | EVENT | MANUAL
+  cpAmount    Int       @default(0)
+  cashAmount  Int       @default(0)
+  conditions  String?   // conditions libres en JSON ou texte
+  active      Boolean   @default(true)
+  startAt     DateTime?
+  endAt       DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  transactions BonusTransaction[]
+}
+
+model BonusTransaction {
+  id         String     @id @default(cuid())
+  userId     String
+  ruleId     String?
+  cpAmount   Int        @default(0)
+  cashAmount Int        @default(0)
+  reason     String
+  adminId    String?
+  adminNote  String?
+  createdAt  DateTime   @default(now())
+
+  user User       @relation(fields: [userId], references: [id])
+  rule BonusRule? @relation(fields: [ruleId], references: [id])
+
+  @@index([userId])
+  @@index([ruleId])
+}
+
+model MissionDuplicate {
+  id             String    @id @default(cuid())
+  missionId      String
+  applicationId  String    // candidature qui a déclenché la détection
+  conflictAppId  String?   // candidature en conflit
+  phone          String?
+  email          String?
+  company        String?
+  status         String    @default("PENDING") // PENDING | RESOLVED_FIRST | RESOLVED_SECOND | DISMISSED
+  adminNote      String?
+  resolvedAt     DateTime?
+  resolvedBy     String?
+  createdAt      DateTime  @default(now())
+
+  mission     Mission            @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  application MissionApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([missionId])
+  @@index([applicationId])
 }
