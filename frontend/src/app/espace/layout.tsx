@@ -41,6 +41,7 @@ export default async function EspaceLayout({
     { href: "/espace/opportunites", label: "Mes Opportunités B2B", icon: "💼", group: "Mon activité" },
     { href: "/espace/besoins",      label: "Mes Besoins",           icon: "🔍",  group: "Mon activité" },
     { href: "/espace/kyb",          label: "Vérification Entreprise", icon: "🏢", group: "Mon activité" },
+    { href: "/espace/appels",       label: "Appels à partenaires",    icon: "📣", group: "Mon activité" },
     { href: "/espace/missions",     label: "Missions Partners",   icon: "🎯",  group: "Mon activité" },
     { href: "/espace/connect",      label: "IBIG CONNECT",        icon: "🔗",  group: "Mon activité" },
     { href: "/espace/commissions",  label: "Commissions",     icon: "💰",  group: "Revenus" },

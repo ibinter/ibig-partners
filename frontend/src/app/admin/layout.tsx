@@ -9,6 +9,7 @@ const NAV: NavItem[] = [
   { href: "/admin/opportunites",                label: "Opportunités",                icon: "🤝", group: "Réseau" },
   { href: "/admin/besoins",                     label: "Besoins B2B",                 icon: "🔍", group: "Réseau" },
   { href: "/admin/kyb",                         label: "KYB Entreprise",               icon: "🏢", group: "Réseau" },
+  { href: "/admin/appels",                      label: "Appels à partenaires",         icon: "📣", group: "Réseau" },
   { href: "/admin/missions",                    label: "Missions Partners",           icon: "🎯", group: "Réseau" },
   { href: "/admin/connect",                     label: "IBIG CONNECT",                icon: "🔗", group: "Réseau" },
   { href: "/admin/ventes",        label: "Ventes",             icon: "🧾", group: "Finance" },

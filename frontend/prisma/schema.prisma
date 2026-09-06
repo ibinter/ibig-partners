@@ -84,6 +84,7 @@ model User {
   needs               Need[]
   needResponses       NeedResponse[]
   kybDocuments        KybDocument[]
+  partnerCallInvitations PartnerCallInvitation[]
 
   createdAt DateTime @default(now())
 }
@@ -760,5 +761,36 @@ model KybDocument {
 
   user       User @relation(fields: [userId], references: [id])
 
+  @@index([userId])
+}
+
+model PartnerCall {
+  id            String    @id @default(cuid())
+  code          String?
+  title         String
+  description   String
+  category      String    @default("AUTRE")
+  targetZone    String?
+  targetStatus  String?
+  deadline      DateTime?
+  status        String    @default("DRAFT")
+  createdBy     String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  invitations   PartnerCallInvitation[]
+  @@index([status])
+}
+
+model PartnerCallInvitation {
+  id        String   @id @default(cuid())
+  callId    String
+  userId    String
+  status    String   @default("PENDING")
+  sentAt    DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  call      PartnerCall @relation(fields: [callId], references: [id], onDelete: Cascade)
+  user      User        @relation(fields: [userId], references: [id])
+  @@unique([callId, userId])
+  @@index([callId])
   @@index([userId])
 }
