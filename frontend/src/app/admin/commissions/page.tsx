@@ -5,6 +5,7 @@ import { Badge, Button, Card, PageHeader, statusTone } from "@/components/ui";
 import { COMMISSION_STATUS_LABELS, PRICING_TYPE_LABELS } from "@/lib/constants";
 import { validateAllPending, validateCommission } from "../actions";
 import { ExportExcelButton, ExportPDFButton } from "@/components/export-buttons";
+import { ExportButton } from "@/components/export-button";
 
 export const dynamic = "force-dynamic";
 
@@ -75,6 +76,7 @@ export default async function CommissionsPage() {
           subtitle="Validation et suivi des commissions générées par le réseau."
         />
         <div className="flex shrink-0 gap-2 pt-1">
+          <ExportButton type="commissions" label="CSV" />
           <ExportExcelButton data={excelData} filename="commissions-ibig" label="Excel" />
           <ExportPDFButton
             title="Liste des commissions"

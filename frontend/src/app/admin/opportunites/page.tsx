@@ -9,6 +9,7 @@ import {
   updateLeadStatus, addLeadNote,
 } from "../actions";
 import OpportunitesClient from "./opportunites-client";
+import { ExportButton } from "@/components/export-button";
 import { computeOpportunityMatches, inviteMatchedPartner, declineMatch } from "./matching-actions";
 
 export const dynamic = "force-dynamic";
@@ -132,6 +133,7 @@ export default async function OpportunitesPage() {
       <PageHeader
         title="Opportunités B2B"
         subtitle="Pistes commerciales soumises par les partenaires — approuvez pour les rendre visibles à tout le réseau."
+        action={<ExportButton type="opportunites" label="Exporter CSV" />}
       />
       <OpportunitesClient
         rows={rows}

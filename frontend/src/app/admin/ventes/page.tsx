@@ -4,6 +4,7 @@ import { fcfa, formatDate } from "@/lib/format";
 import { Badge, Button, Card, Field, PageHeader, statusTone } from "@/components/ui";
 import { MONTHLY_DURATION, PRICING_TYPE_LABELS, SALE_STATUS_LABELS } from "@/lib/constants";
 import { addPaidMonth, cancelSale, confirmSale, createSale } from "../actions";
+import { ExportButton } from "@/components/export-button";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +34,7 @@ export default async function VentesPage() {
       <PageHeader
         title="Suivi des ventes & conversions"
         subtitle="Ventes générées par affiliation et génération des commissions."
+        action={<ExportButton type="ventes" label="Exporter CSV" />}
       />
 
       {pendingFromAffiliates.length > 0 && (

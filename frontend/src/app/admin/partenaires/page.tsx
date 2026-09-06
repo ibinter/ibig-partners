@@ -12,6 +12,7 @@ import {
   sendVerificationReminderToAll,
 } from "../actions";
 import { adminContact } from "../messages/actions";
+import { ExportButton } from "@/components/export-button";
 
 export const dynamic = "force-dynamic";
 
@@ -88,13 +89,16 @@ export default async function PartenairesPage() {
         title="Gestion des partenaires"
         subtitle={`${partners.length} comptes · ${pending.length} en attente de validation · ${unverified.length} non vérifiés`}
         action={
-          unverified.length > 0 ? (
-            <form action={sendVerificationReminderToAll}>
-              <SubmitButton variant="secondary" size="sm" pendingLabel="Envoi en cours…">
-                🔐 Rappeler la vérif à tous ({unverified.length})
-              </SubmitButton>
-            </form>
-          ) : undefined
+          <div className="flex items-center gap-2">
+            <ExportButton type="partenaires" label="Exporter CSV" />
+            {unverified.length > 0 && (
+              <form action={sendVerificationReminderToAll}>
+                <SubmitButton variant="secondary" size="sm" pendingLabel="Envoi en cours…">
+                  🔐 Rappeler la vérif à tous ({unverified.length})
+                </SubmitButton>
+              </form>
+            )}
+          </div>
         }
       />
 
