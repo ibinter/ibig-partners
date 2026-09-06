@@ -151,6 +151,21 @@ export async function addProspectNote(formData: FormData) {
   revalidatePath("/espace/prospects");
 }
 
+export async function expressInterest(formData: FormData) {
+  const user = await requireUser();
+  const opportunityId = String(formData.get("opportunityId") || "").trim();
+  const note = String(formData.get("note") || "").trim();
+  if (!opportunityId) return;
+
+  await (prisma as any).opportunityLead.upsert({
+    where: { opportunityId_userId: { opportunityId, userId: user.id } },
+    create: { opportunityId, userId: user.id, status: "INTERESTED", note: note || null },
+    update: { note: note || null, updatedAt: new Date() },
+  });
+
+  revalidatePath("/espace/opportunites");
+}
+
 export async function submitOpportunity(formData: FormData) {
   const user = await requireUser();
   const title = String(formData.get("title") || "").trim();
@@ -453,4 +468,46 @@ export async function submitConnectRequest(formData: FormData) {
   });
 
   revalidatePath("/espace/connect");
+}
+
+// ─── BESOINS ──────────────────────────────────────────────────────────────────
+export async function submitNeed(formData: FormData) {
+  const user = await requireUser();
+  const title       = String(formData.get("title") || "").trim();
+  const category    = String(formData.get("category") || "AUTRE");
+  const description = String(formData.get("description") || "").trim();
+  const budget      = Number(formData.get("budget") || 0);
+  const location    = String(formData.get("location") || "").trim();
+
+  if (!title || !description) return;
+
+  await (prisma as any).need.create({
+    data: {
+      userId: user.id,
+      title,
+      category,
+      description,
+      budget,
+      location,
+      status: "NEW",
+      visibility: "PRIVATE",
+    },
+  });
+
+  revalidatePath("/espace/besoins");
+}
+
+export async function respondToNeed(formData: FormData) {
+  const user = await requireUser();
+  const needId  = String(formData.get("needId") || "").trim();
+  const message = String(formData.get("message") || "").trim();
+  if (!needId) return;
+
+  await (prisma as any).needResponse.upsert({
+    where: { needId_userId: { needId, userId: user.id } },
+    create: { needId, userId: user.id, message, status: "PENDING" },
+    update: { message, updatedAt: new Date() },
+  });
+
+  revalidatePath("/espace/besoins");
 }

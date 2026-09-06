@@ -1,30 +1,39 @@
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/ui";
-import { replyToOpportunity } from "../actions";
+import { replyToOpportunity, submitOpportunity, expressInterest } from "../actions";
 import OpportunitesAffilieClient from "./opportunites-affilie-client";
 
 export const dynamic = "force-dynamic";
 
-const STATUS_LABELS: Record<string, string> = {
-  NEW: "Nouveau",
-  IN_PROGRESS: "En cours",
-  WON: "Gagné",
-  LOST: "Non retenu",
-};
-
 export default async function EspaceOpportunitesPage() {
   const user = await requireUser();
 
-  const opportunities = await (prisma as any).opportunity.findMany({
-    where: { userId: user.id },
-    orderBy: { createdAt: "desc" },
-    include: {
-      messages: { orderBy: { createdAt: "asc" } },
-    },
-  });
+  const [myOpportunities, publicOpportunities, myLeads] = await Promise.all([
+    // Mes soumissions
+    (prisma as any).opportunity.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+      include: { messages: { orderBy: { createdAt: "asc" } } },
+    }),
+    // Opportunités publiques approuvées (toutes)
+    (prisma as any).opportunity.findMany({
+      where: { visibility: "PUBLIC", status: "APPROVED" },
+      orderBy: { createdAt: "desc" },
+      include: {
+        _count: { select: { leads: true } },
+      },
+    }),
+    // Mes candidatures
+    (prisma as any).opportunityLead.findMany({
+      where: { userId: user.id },
+      select: { opportunityId: true, status: true, createdAt: true },
+    }),
+  ]);
 
-  const rows = opportunities.map((o: any) => ({
+  const myLeadMap = new Map(myLeads.map((l: any) => [l.opportunityId, l]));
+
+  const myRows = myOpportunities.map((o: any) => ({
     id: o.id,
     title: o.title,
     category: o.category ?? "AUTRE",
@@ -32,6 +41,9 @@ export default async function EspaceOpportunitesPage() {
     estimatedValue: o.estimatedValue,
     status: o.status,
     handler: o.handler ?? "",
+    adminNote: o.adminNote ?? "",
+    commission: o.commission ?? 0,
+    commissionType: o.commissionType ?? "FIXED",
     createdAt: o.createdAt instanceof Date ? o.createdAt.toISOString() : String(o.createdAt),
     messages: o.messages.map((m: any) => ({
       id: m.id,
@@ -43,25 +55,39 @@ export default async function EspaceOpportunitesPage() {
     unreadCount: o.messages.filter((m: any) => m.fromAdmin).length,
   }));
 
+  const publicRows = publicOpportunities.map((o: any) => ({
+    id: o.id,
+    title: o.title,
+    category: o.category ?? "AUTRE",
+    description: o.description,
+    estimatedValue: o.estimatedValue,
+    commission: o.commission ?? 0,
+    commissionType: o.commissionType ?? "FIXED",
+    adminNote: o.adminNote ?? "",
+    deadline: o.deadline ? (o.deadline instanceof Date ? o.deadline.toISOString() : String(o.deadline)) : null,
+    leadCount: o._count?.leads ?? 0,
+    createdAt: o.createdAt instanceof Date ? o.createdAt.toISOString() : String(o.createdAt),
+    myLead: myLeadMap.get(o.id) ? {
+      status: myLeadMap.get(o.id).status,
+      createdAt: myLeadMap.get(o.id).createdAt instanceof Date
+        ? myLeadMap.get(o.id).createdAt.toISOString()
+        : String(myLeadMap.get(o.id).createdAt),
+    } : null,
+  }));
+
   return (
     <div className="space-y-6 pb-10">
       <PageHeader
-        title="Mes Opportunités B2B"
-        subtitle="Suivez vos pistes commerciales et échangez avec l'équipe IBIG."
+        title="Opportunités B2B"
+        subtitle="Soumettez vos pistes commerciales et exploitez les opportunités IBIG."
       />
-
-      {rows.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-slate-200 bg-white py-20 text-center">
-          <p className="text-5xl mb-4">💼</p>
-          <p className="text-lg font-semibold text-slate-600">Aucune opportunité soumise</p>
-          <p className="text-sm text-slate-400 mt-2 max-w-sm mx-auto">
-            Vous n'avez pas encore transmis de piste commerciale à l'équipe IBIG.
-            Rendez-vous dans votre espace réseau pour en soumettre une.
-          </p>
-        </div>
-      ) : (
-        <OpportunitesAffilieClient rows={rows} replyAction={replyToOpportunity} />
-      )}
+      <OpportunitesAffilieClient
+        myRows={myRows}
+        publicRows={publicRows}
+        replyAction={replyToOpportunity}
+        submitAction={submitOpportunity}
+        interestAction={expressInterest}
+      />
     </div>
   );
 }

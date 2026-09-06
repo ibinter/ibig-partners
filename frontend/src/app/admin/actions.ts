@@ -553,6 +553,61 @@ export async function deleteProduct(formData: FormData) {
 }
 
 // --- Opportunités ---
+export async function approveOpportunity(formData: FormData) {
+  await requireAdmin();
+  const id             = String(formData.get("id"));
+  const commission     = Number(formData.get("commission") || 0);
+  const commissionType = String(formData.get("commissionType") || "FIXED");
+  const adminNote      = String(formData.get("adminNote") || "").trim();
+  const visibility     = "PUBLIC";
+
+  const opp = await (prisma as any).opportunity.update({
+    where: { id },
+    data: { status: "APPROVED", visibility, commission, commissionType, adminNote: adminNote || null, updatedAt: new Date() },
+    include: { user: { select: { id: true, email: true, firstName: true } } },
+  });
+
+  after(async () => {
+    await prisma.notification.create({
+      data: {
+        userId: opp.user.id,
+        title: "Votre opportunité a été approuvée ! 🎉",
+        body: `"${opp.title}" est maintenant visible par tous les partenaires IBIG. Commission : ${commission.toLocaleString()} FCFA.`,
+        url: "/espace/opportunites",
+      },
+    });
+  });
+
+  revalidatePath("/admin/opportunites");
+  revalidatePath("/espace/opportunites");
+}
+
+export async function rejectOpportunity(formData: FormData) {
+  await requireAdmin();
+  const id        = String(formData.get("id"));
+  const adminNote = String(formData.get("adminNote") || "").trim();
+
+  const opp = await (prisma as any).opportunity.update({
+    where: { id },
+    data: { status: "REJECTED", visibility: "PRIVATE", adminNote: adminNote || null, updatedAt: new Date() },
+    include: { user: { select: { id: true, email: true, firstName: true } } },
+  });
+
+  after(async () => {
+    await prisma.notification.create({
+      data: {
+        userId: opp.user.id,
+        title: "Opportunité non retenue",
+        body: adminNote || `Votre opportunité "${opp.title}" n'a pas été retenue pour publication.`,
+        url: "/espace/opportunites",
+      },
+    });
+  });
+
+  revalidatePath("/admin/opportunites");
+  revalidatePath("/espace/opportunites");
+}
+
 export async function updateOpportunity(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("id"));
@@ -742,4 +797,57 @@ export async function updateConnectStatus(formData: FormData) {
     data: { status, updatedAt: new Date(), ...(adminNote ? { adminNote } : {}) },
   });
   revalidatePath("/admin/connect");
+}
+
+// ─── BESOINS ──────────────────────────────────────────────────────────────────
+export async function approveNeed(formData: FormData) {
+  await requireAdmin();
+  const id         = String(formData.get("id"));
+  const adminNote  = String(formData.get("adminNote") || "").trim();
+  const commission = Number(formData.get("commission") || 0);
+  const commissionType = String(formData.get("commissionType") || "FIXED");
+
+  await (prisma as any).need.update({
+    where: { id },
+    data: {
+      status: "APPROVED",
+      visibility: "PUBLIC",
+      adminNote: adminNote || null,
+      commission,
+      commissionType,
+      updatedAt: new Date(),
+    },
+  });
+
+  revalidatePath("/admin/besoins");
+  revalidatePath("/espace/besoins");
+}
+
+export async function rejectNeed(formData: FormData) {
+  await requireAdmin();
+  const id        = String(formData.get("id"));
+  const adminNote = String(formData.get("adminNote") || "").trim();
+
+  await (prisma as any).need.update({
+    where: { id },
+    data: { status: "REJECTED", visibility: "PRIVATE", adminNote: adminNote || null, updatedAt: new Date() },
+  });
+
+  revalidatePath("/admin/besoins");
+  revalidatePath("/espace/besoins");
+}
+
+export async function updateNeedStatus(formData: FormData) {
+  await requireAdmin();
+  const id     = String(formData.get("id"));
+  const status = String(formData.get("status"));
+  const adminNote = String(formData.get("adminNote") || "").trim();
+
+  await (prisma as any).need.update({
+    where: { id },
+    data: { status, adminNote: adminNote || null, updatedAt: new Date() },
+  });
+
+  revalidatePath("/admin/besoins");
+  revalidatePath("/espace/besoins");
 }

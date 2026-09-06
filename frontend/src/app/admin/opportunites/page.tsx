@@ -1,11 +1,10 @@
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { fcfa, formatDate } from "@/lib/format";
-import { Badge, Button, Card, PageHeader } from "@/components/ui";
-import { updateOpportunity, sendOpportunityMessage } from "../actions";
+import { PageHeader } from "@/components/ui";
+import { updateOpportunity, sendOpportunityMessage, approveOpportunity, rejectOpportunity } from "../actions";
 import OpportunitesClient from "./opportunites-client";
 
-export const revalidate = 30;
+export const dynamic = "force-dynamic";
 
 export default async function OpportunitesPage() {
   await requireAdmin();
@@ -15,6 +14,7 @@ export default async function OpportunitesPage() {
     include: {
       user: { select: { firstName: true, lastName: true, code: true, phone: true } },
       messages: { orderBy: { createdAt: "asc" } },
+      _count: { select: { leads: true } },
     },
   });
 
@@ -26,6 +26,11 @@ export default async function OpportunitesPage() {
     estimatedValue: o.estimatedValue,
     status: o.status,
     handler: o.handler ?? "",
+    visibility: o.visibility ?? "PRIVATE",
+    commission: o.commission ?? 0,
+    commissionType: o.commissionType ?? "FIXED",
+    adminNote: o.adminNote ?? "",
+    leadCount: o._count?.leads ?? 0,
     createdAt: o.createdAt instanceof Date ? o.createdAt.toISOString() : String(o.createdAt),
     partnerName: `${o.user.firstName} ${o.user.lastName}`,
     partnerCode: o.user.code,
@@ -43,9 +48,15 @@ export default async function OpportunitesPage() {
     <div className="space-y-6">
       <PageHeader
         title="Opportunités B2B"
-        subtitle="Pistes commerciales transmises par le réseau de partenaires."
+        subtitle="Pistes commerciales soumises par les partenaires — approuvez pour les rendre visibles à tout le réseau."
       />
-      <OpportunitesClient rows={rows} updateAction={updateOpportunity} messageAction={sendOpportunityMessage} />
+      <OpportunitesClient
+        rows={rows}
+        updateAction={updateOpportunity}
+        messageAction={sendOpportunityMessage}
+        approveAction={approveOpportunity}
+        rejectAction={rejectOpportunity}
+      />
     </div>
   );
 }

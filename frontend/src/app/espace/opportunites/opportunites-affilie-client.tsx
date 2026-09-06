@@ -1,339 +1,288 @@
 "use client";
 
-import { useState, useRef } from "react";
-
-const STATUS_LABELS: Record<string, string> = {
-  NEW: "Nouveau",
-  IN_PROGRESS: "En cours ⚙️",
-  WON: "Gagné 🏆",
-  LOST: "Non retenu",
-};
-
-const STATUS_STYLES: Record<string, string> = {
-  NEW: "bg-amber-100 text-amber-800 border-amber-200",
-  IN_PROGRESS: "bg-blue-100 text-blue-800 border-blue-200",
-  WON: "bg-emerald-100 text-emerald-800 border-emerald-200",
-  LOST: "bg-rose-100 text-rose-800 border-rose-200",
-};
-
-type Message = {
-  id: string;
-  fromAdmin: boolean;
-  senderName: string;
-  body: string;
-  createdAt: string;
-};
+import { useState } from "react";
+import { fcfa, formatDate } from "@/lib/format";
 
 const CATEGORY_LABELS: Record<string, string> = {
-  FORMATION: "🎓 Formation", DIGITAL: "💻 Digital", INFORMATIQUE: "⚙️ Logiciels",
-  IMMOBILIER: "🏠 Immobilier", BTP: "🏗️ BTP", CONSEIL: "📋 Conseil",
-  FINANCEMENT: "💰 Financement", COMMERCIAL: "🤝 Commercial", PARTENARIAT: "🌐 Partenariat",
-  MISE_EN_RELATION: "🔗 Mise en relation", EMPLOI_RH: "👥 Emploi & RH",
-  EVENEMENTIEL: "🎪 Événementiel", MARKETING: "📢 Marketing", SERVICES: "🛠️ Services",
-  COMMERCE: "🛒 Commerce", LOGISTIQUE: "🚚 Logistique", SANTE: "🏥 Santé",
-  AGRI: "🌱 Agriculture", ENERGIE: "⚡ Énergie", INTERNATIONAL: "🌍 International",
-  AUTRE: "💡 Autre",
+  FORMATION: "Formation", DIGITAL: "Digital / IT", IMMOBILIER: "Immobilier",
+  PARTENARIAT: "Partenariat", COMMERCIAL: "Commercial", CONSEIL: "Conseil",
+  FINANCEMENT: "Financement", EMPLOI_RH: "Emploi / RH", AUTRE: "Autre",
 };
-
-type Row = {
-  id: string;
-  title: string;
-  category: string;
-  description: string;
-  estimatedValue: number;
-  status: string;
-  handler: string;
-  createdAt: string;
-  messages: Message[];
-  unreadCount: number;
+const STATUS_LABELS: Record<string, { label: string; color: string }> = {
+  NEW:      { label: "Nouveau",    color: "bg-blue-100 text-blue-700" },
+  IN_PROGRESS: { label: "En cours", color: "bg-amber-100 text-amber-700" },
+  APPROVED: { label: "Approuvé",  color: "bg-emerald-100 text-emerald-700" },
+  REJECTED: { label: "Non retenu", color: "bg-rose-100 text-rose-700" },
+  WON:      { label: "Gagné 🎉",  color: "bg-emerald-100 text-emerald-700" },
+  LOST:     { label: "Perdu",     color: "bg-slate-100 text-slate-500" },
 };
+const CATEGORIES = ["FORMATION","DIGITAL","IMMOBILIER","PARTENARIAT","COMMERCIAL","CONSEIL","FINANCEMENT","EMPLOI_RH","AUTRE"];
 
-function getMsgBodyType(body: string): "image" | "pdf" | "doc" | "sheet" | "ppt" | "zip" | "file" | "text" {
-  if (/\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(body)) return "image";
-  if (/\.pdf(\?.*)?$/i.test(body)) return "pdf";
-  if (/\.(docx?)(\?.*)?$/i.test(body)) return "doc";
-  if (/\.(xlsx?|csv)(\?.*)?$/i.test(body)) return "sheet";
-  if (/\.(pptx?)(\?.*)?$/i.test(body)) return "ppt";
-  if (/\.(zip|rar)(\?.*)?$/i.test(body)) return "zip";
-  if (/res\.cloudinary\.com/i.test(body)) return "file";
-  return "text";
-}
-
-const FILE_ICONS: Record<string, string> = {
-  pdf: "📄", doc: "📝", sheet: "📊", ppt: "📑", zip: "🗜️", file: "📁",
+type Message = { id: string; fromAdmin: boolean; senderName: string; body: string; createdAt: string };
+type MyRow = {
+  id: string; title: string; category: string; description: string;
+  estimatedValue: number; status: string; handler: string; adminNote: string;
+  commission: number; commissionType: string;
+  createdAt: string; messages: Message[]; unreadCount: number;
 };
-
-function fileLabel(url: string, type: string) {
-  try {
-    const last = new URL(url).pathname.split("/").pop() ?? "";
-    if (last.includes(".")) return decodeURIComponent(last);
-  } catch {}
-  const labels: Record<string, string> = {
-    pdf: "Document PDF", doc: "Document Word", sheet: "Feuille Excel",
-    ppt: "Présentation", zip: "Archive ZIP", file: "Fichier",
-  };
-  return labels[type] ?? "Fichier";
-}
-
-function MsgBody({ body, fromAdmin }: { body: string; fromAdmin: boolean }) {
-  const type = getMsgBodyType(body);
-  if (type === "image") {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img src={body} alt="image partagée" className="max-w-[220px] max-h-[180px] rounded-lg object-cover mt-1" />;
-  }
-  if (type !== "text") {
-    return (
-      <a href={body} target="_blank" rel="noopener noreferrer" download
-        className={`inline-flex items-center gap-2 mt-1 rounded-lg px-3 py-2 text-sm font-medium ${fromAdmin ? "bg-blue-100 text-blue-800 hover:bg-blue-200" : "bg-slate-100 text-slate-700 hover:bg-slate-200"}`}>
-        <span>{FILE_ICONS[type] ?? "📁"}</span>
-        <span className="max-w-[180px] truncate underline underline-offset-2">{fileLabel(body, type)}</span>
-        <span className="text-xs opacity-60">↓</span>
-      </a>
-    );
-  }
-  return <p className="text-slate-700 leading-relaxed whitespace-pre-line">{body}</p>;
-}
-
-function fcfaFmt(n: number) {
-  return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "XOF", maximumFractionDigits: 0 }).format(n);
-}
-
-function fmtDateTime(iso: string) {
-  return new Date(iso).toLocaleString("fr-FR", {
-    day: "2-digit", month: "short", year: "numeric",
-    hour: "2-digit", minute: "2-digit",
-  });
-}
+type PublicRow = {
+  id: string; title: string; category: string; description: string;
+  estimatedValue: number; commission: number; commissionType: string;
+  adminNote: string; deadline: string | null; leadCount: number;
+  createdAt: string; myLead: { status: string; createdAt: string } | null;
+};
 
 export default function OpportunitesAffilieClient({
-  rows,
-  replyAction,
+  myRows, publicRows, replyAction, submitAction, interestAction,
 }: {
-  rows: Row[];
+  myRows: MyRow[];
+  publicRows: PublicRow[];
   replyAction: (fd: FormData) => Promise<void>;
+  submitAction: (fd: FormData) => Promise<void>;
+  interestAction: (fd: FormData) => Promise<void>;
 }) {
-  const [expanded, setExpanded] = useState<string | null>(rows[0]?.id ?? null);
-  const [sending, setSending] = useState(false);
-  const [replyText, setReplyText] = useState<Record<string, string>>({});
-  const [uploading, setUploading] = useState<string | null>(null);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  const fileRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const [tab, setTab]           = useState<"public" | "mine" | "submit">("public");
+  const [selected, setSelected] = useState<MyRow | null>(null);
+  const [reply, setReply]       = useState("");
+  const [note, setNote]         = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [interested, setInterested] = useState<Set<string>>(
+    new Set(publicRows.filter(r => r.myLead).map(r => r.id))
+  );
 
-  const totalValue = rows.reduce((s, r) => s + r.estimatedValue, 0);
-  const wonCount   = rows.filter(r => r.status === "WON").length;
-  const adminMsgs  = rows.reduce((s, r) => s + r.messages.filter(m => m.fromAdmin).length, 0);
-
-  async function handleReply(opportunityId: string, body?: string) {
-    const text = body ?? (replyText[opportunityId] ?? "").trim();
-    if (!text) return;
-    setSending(true);
+  async function handleReply(opp: MyRow) {
+    if (!reply.trim()) return;
     const fd = new FormData();
-    fd.set("opportunityId", opportunityId);
-    fd.set("body", text);
+    fd.append("opportunityId", opp.id);
+    fd.append("body", reply.trim());
     await replyAction(fd);
-    if (!body) setReplyText(prev => ({ ...prev, [opportunityId]: "" }));
-    setSending(false);
+    setReply("");
   }
 
-  async function handleFileUpload(opportunityId: string, e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploadError(null);
-    if (file.size > 20 * 1024 * 1024) { setUploadError("Fichier trop volumineux (max 20 Mo)."); return; }
-    setUploading(opportunityId);
-    try {
-      const fd = new FormData();
-      fd.append("file", file);
-      fd.append("folder", "ibig-opportunites");
-      const res = await fetch("/api/upload", { method: "POST", body: fd });
-      if (!res.ok) { const err = await res.json().catch(() => ({})); setUploadError((err as any).error ?? "Échec upload"); return; }
-      const { url } = await res.json() as { url: string };
-      await handleReply(opportunityId, url);
-    } catch { setUploadError("Impossible d'envoyer le fichier."); }
-    finally {
-      setUploading(null);
-      if (fileRefs.current[opportunityId]) fileRefs.current[opportunityId]!.value = "";
-    }
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setSubmitting(true);
+    const fd = new FormData(e.currentTarget);
+    await submitAction(fd);
+    (e.target as HTMLFormElement).reset();
+    setSubmitting(false);
+    setTab("mine");
   }
+
+  async function handleInterest(row: PublicRow) {
+    const fd = new FormData();
+    fd.append("opportunityId", row.id);
+    fd.append("note", note);
+    await interestAction(fd);
+    setInterested(prev => new Set([...prev, row.id]));
+    setNote("");
+  }
+
+  const inputCls = "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100";
 
   return (
-    <div className="space-y-6">
-
-      {/* KPIs */}
-      <div className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-2xl border border-slate-100 bg-white px-5 py-4 shadow-sm">
-          <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Opportunités soumises</p>
-          <p className="text-3xl font-extrabold text-slate-800 mt-1">{rows.length}</p>
-        </div>
-        <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-5 py-4 shadow-sm">
-          <p className="text-xs font-bold uppercase tracking-wide text-emerald-600">Gagnées</p>
-          <p className="text-3xl font-extrabold text-emerald-700 mt-1">{wonCount}</p>
-        </div>
-        <div className="rounded-2xl border border-blue-100 bg-blue-50 px-5 py-4 shadow-sm">
-          <p className="text-xs font-bold uppercase tracking-wide text-blue-600">Messages de l'équipe IBIG</p>
-          <p className="text-3xl font-extrabold text-blue-700 mt-1">{adminMsgs}</p>
-        </div>
+    <div className="space-y-4">
+      {/* Onglets */}
+      <div className="flex gap-2 flex-wrap">
+        {([
+          { key: "public", label: `🌐 Opportunités disponibles (${publicRows.length})` },
+          { key: "mine",   label: `📤 Mes soumissions (${myRows.length})` },
+          { key: "submit", label: "➕ Soumettre une opportunité" },
+        ] as const).map(t => (
+          <button key={t.key} onClick={() => { setTab(t.key); setSelected(null); }}
+            className={`rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${tab === t.key ? "bg-brand-600 text-white shadow" : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"}`}>
+            {t.label}
+          </button>
+        ))}
       </div>
 
-      {/* Liste */}
-      <div className="space-y-4">
-        {rows.map(o => {
-          const isOpen = expanded === o.id;
-          const adminMessages = o.messages.filter(m => m.fromAdmin).length;
-
-          return (
-            <div
-              key={o.id}
-              className={`rounded-2xl border bg-white shadow-sm transition-all ${
-                o.status === "NEW" ? "border-amber-200" :
-                o.status === "WON" ? "border-emerald-200" :
-                o.status === "LOST" ? "border-rose-200" : "border-blue-200"
-              }`}
-            >
-              {/* Header */}
-              <button
-                onClick={() => setExpanded(isOpen ? null : o.id)}
-                className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-slate-50/40 rounded-2xl transition-colors"
-              >
-                <span className={`shrink-0 rounded-lg border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${STATUS_STYLES[o.status]}`}>
-                  {STATUS_LABELS[o.status] ?? o.status}
-                </span>
-
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-slate-800 text-sm">{o.title}</p>
-                  <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                    {o.category && (
-                      <span className="text-[10px] font-semibold text-blue-600">
-                        {CATEGORY_LABELS[o.category] ?? o.category}
-                      </span>
-                    )}
-                    <p className="text-xs text-slate-400 line-clamp-1">{o.description}</p>
-                  </div>
-                </div>
-
-                {adminMessages > 0 && (
-                  <span className="shrink-0 rounded-full bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5">
-                    {adminMessages} msg
-                  </span>
-                )}
-
-                <div className="shrink-0 text-right">
-                  {o.estimatedValue > 0 && (
-                    <p className="text-xs font-bold text-slate-600">{fcfaFmt(o.estimatedValue)}</p>
-                  )}
-                  <p className="text-[10px] text-slate-400">{fmtDateTime(o.createdAt).split(" à ")[0]}</p>
-                </div>
-
-                <span className={`shrink-0 text-slate-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}>▼</span>
-              </button>
-
-              {/* Contenu expandé */}
-              {isOpen && (
-                <div className="border-t border-slate-100 px-5 py-5 space-y-5">
-
-                  {/* Détail */}
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Description</p>
-                      <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">{o.description}</p>
-                    </div>
-                    <div className="space-y-3">
-                      {o.estimatedValue > 0 && (
-                        <div>
-                          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-0.5">Valeur estimée</p>
-                          <p className="text-sm font-bold text-slate-700">{fcfaFmt(o.estimatedValue)}</p>
-                        </div>
-                      )}
-                      {o.handler && (
-                        <div>
-                          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-0.5">Chargé de compte IBIG</p>
-                          <p className="text-sm text-slate-700">👤 {o.handler}</p>
-                        </div>
-                      )}
-                      <div>
-                        <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-0.5">Soumise le</p>
-                        <p className="text-sm text-slate-600">{fmtDateTime(o.createdAt)}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Fil de messages */}
-                  <div className="border-t border-slate-100 pt-4">
-                    <p className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3">
-                      💬 Échanges avec l'équipe IBIG
-                    </p>
-
-                    {o.messages.length === 0 ? (
-                      <p className="text-sm text-slate-400 italic text-center py-4">
-                        Aucun message pour le moment. L'équipe vous répondra ici.
-                      </p>
-                    ) : (
-                      <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
-                        {o.messages.map(m => (
-                          <div
-                            key={m.id}
-                            className={`flex flex-col rounded-xl px-4 py-3 text-sm ${
-                              m.fromAdmin
-                                ? "bg-blue-50 border border-blue-100 ml-0 mr-8"
-                                : "bg-slate-50 border border-slate-200 ml-8 mr-0"
-                            }`}
-                          >
-                            <div className="flex items-center justify-between mb-1">
-                              <span className={`text-[10px] font-bold uppercase tracking-wide ${m.fromAdmin ? "text-blue-600" : "text-slate-500"}`}>
-                                {m.fromAdmin ? `🏢 ${m.senderName} — IBIG Partners` : `👤 Vous`}
-                              </span>
-                              <span className="text-[10px] text-slate-400">{fmtDateTime(m.createdAt)}</span>
-                            </div>
-                            <MsgBody body={m.body} fromAdmin={m.fromAdmin} />
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Zone de réponse */}
-                    <div className="mt-4 space-y-2">
-                      <div className="flex gap-2 items-end">
-                        <button
-                          type="button"
-                          title="Joindre un fichier"
-                          disabled={!!uploading || sending}
-                          onClick={() => fileRefs.current[o.id]?.click()}
-                          className="shrink-0 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-slate-500 hover:bg-slate-50 disabled:opacity-40 transition"
-                        >
-                          {uploading === o.id ? "⏳" : "📎"}
-                        </button>
-                        <input
-                          type="file"
-                          accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.csv,.txt,.zip"
-                          className="hidden"
-                          ref={el => { fileRefs.current[o.id] = el; }}
-                          onChange={e => handleFileUpload(o.id, e)}
-                        />
-                        <textarea
-                          rows={2}
-                          value={replyText[o.id] ?? ""}
-                          onChange={e => setReplyText(prev => ({ ...prev, [o.id]: e.target.value }))}
-                          placeholder="Écrire un message à l'équipe IBIG…"
-                          className="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none resize-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-                        />
-                        <button
-                          onClick={() => handleReply(o.id)}
-                          disabled={sending || uploading === o.id || !(replyText[o.id] ?? "").trim()}
-                          className="shrink-0 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-bold px-4 py-2.5 transition"
-                        >
-                          {sending ? "…" : "Envoyer ↗"}
-                        </button>
-                      </div>
-                      {uploadError && <p className="text-xs text-red-600">{uploadError}</p>}
-                      <p className="text-[10px] text-slate-400">📎 Images, PDF, Word, Excel, ZIP (max 20 Mo)</p>
-                    </div>
-                  </div>
-                </div>
-              )}
+      {/* ── Onglet : Opportunités publiques ── */}
+      {tab === "public" && (
+        <div className="space-y-4">
+          {publicRows.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-slate-200 bg-white py-16 text-center">
+              <p className="text-4xl mb-3">🤝</p>
+              <p className="font-semibold text-slate-600">Aucune opportunité disponible pour le moment</p>
+              <p className="text-sm text-slate-400 mt-1">Revenez bientôt — l'équipe IBIG publie régulièrement de nouvelles opportunités.</p>
             </div>
-          );
-        })}
-      </div>
+          ) : (
+            publicRows.map(row => {
+              const alreadyIn = interested.has(row.id);
+              return (
+                <div key={row.id} className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm space-y-3">
+                  <div className="flex items-start justify-between gap-3 flex-wrap">
+                    <div>
+                      <p className="font-bold text-slate-900 text-base">{row.title}</p>
+                      <span className="inline-block mt-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-500">
+                        {CATEGORY_LABELS[row.category] ?? row.category}
+                      </span>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-xs text-slate-400">Commission</p>
+                      <p className="font-extrabold text-emerald-600 text-lg">
+                        {row.commissionType === "FIXED" ? fcfa(row.commission) : `${row.commission / 10}%`}
+                      </p>
+                    </div>
+                  </div>
+
+                  <p className="text-sm text-slate-600 leading-relaxed">{row.description}</p>
+
+                  <div className="flex flex-wrap gap-4 text-xs text-slate-400">
+                    {row.estimatedValue > 0 && <span>💰 Valeur estimée : <strong className="text-slate-600">{fcfa(row.estimatedValue)}</strong></span>}
+                    {row.deadline && <span>⏳ Deadline : <strong className="text-slate-600">{formatDate(row.deadline)}</strong></span>}
+                    <span>👥 {row.leadCount} partenaire{row.leadCount !== 1 ? "s" : ""} intéressé{row.leadCount !== 1 ? "s" : ""}</span>
+                  </div>
+
+                  {row.adminNote && (
+                    <div className="rounded-xl bg-brand-50 border border-brand-100 px-4 py-2 text-sm text-brand-700">
+                      <span className="font-semibold">Note IBIG :</span> {row.adminNote}
+                    </div>
+                  )}
+
+                  {alreadyIn ? (
+                    <div className="rounded-xl bg-emerald-50 border border-emerald-100 px-4 py-2 text-sm text-emerald-700 font-semibold">
+                      ✅ Vous êtes inscrit(e) sur cette opportunité — l'équipe IBIG vous contactera.
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <textarea value={note} onChange={e => setNote(e.target.value)} rows={2}
+                        placeholder="Message optionnel : précisez votre approche ou votre réseau sur cette opportunité…"
+                        className={inputCls + " resize-none"} />
+                      <button onClick={() => handleInterest(row)}
+                        className="rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-brand-700 transition-colors">
+                        🤝 Je me porte volontaire
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          )}
+        </div>
+      )}
+
+      {/* ── Onglet : Mes soumissions ── */}
+      {tab === "mine" && !selected && (
+        <div className="space-y-3">
+          {myRows.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-slate-200 bg-white py-16 text-center">
+              <p className="text-4xl mb-3">📤</p>
+              <p className="font-semibold text-slate-600">Aucune opportunité soumise</p>
+              <p className="text-sm text-slate-400 mt-1 max-w-sm mx-auto">Transmettez une piste commerciale à l'équipe IBIG — si elle est retenue, elle sera partagée à tous les partenaires.</p>
+              <button onClick={() => setTab("submit")} className="mt-4 rounded-xl bg-brand-600 px-5 py-2 text-sm font-bold text-white hover:bg-brand-700">
+                ➕ Soumettre une opportunité
+              </button>
+            </div>
+          ) : (
+            myRows.map(row => {
+              const s = STATUS_LABELS[row.status] ?? { label: row.status, color: "bg-slate-100 text-slate-600" };
+              return (
+                <div key={row.id} onClick={() => setSelected(row)}
+                  className="cursor-pointer rounded-2xl border border-slate-100 bg-white p-4 hover:border-brand-200 hover:shadow-sm transition-all flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-semibold text-slate-900 truncate">{row.title}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">{CATEGORY_LABELS[row.category] ?? row.category} · {formatDate(row.createdAt)}</p>
+                    {row.adminNote && <p className="text-xs text-brand-600 mt-1 truncate">💬 {row.adminNote}</p>}
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {row.unreadCount > 0 && (
+                      <span className="rounded-full bg-brand-600 px-2 py-0.5 text-[10px] font-bold text-white">{row.unreadCount}</span>
+                    )}
+                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${s.color}`}>{s.label}</span>
+                    {row.commission > 0 && (
+                      <span className="text-xs font-bold text-emerald-600">{fcfa(row.commission)}</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      )}
+
+      {/* ── Détail d'une soumission ── */}
+      {tab === "mine" && selected && (
+        <div className="space-y-4">
+          <button onClick={() => setSelected(null)} className="text-sm text-brand-600 hover:underline">← Retour</button>
+          <div className="rounded-2xl border border-slate-100 bg-white p-5 space-y-3">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="font-bold text-slate-900 text-lg">{selected.title}</p>
+                <span className="text-xs text-slate-400">{CATEGORY_LABELS[selected.category] ?? selected.category}</span>
+              </div>
+              <span className={`rounded-full px-3 py-1 text-xs font-bold ${(STATUS_LABELS[selected.status] ?? {color:"bg-slate-100 text-slate-600"}).color}`}>
+                {(STATUS_LABELS[selected.status] ?? {label:selected.status}).label}
+              </span>
+            </div>
+            <p className="text-sm text-slate-600">{selected.description}</p>
+            {selected.adminNote && (
+              <div className="rounded-xl bg-brand-50 border border-brand-100 px-4 py-2 text-sm text-brand-700">
+                <span className="font-semibold">Réponse IBIG :</span> {selected.adminNote}
+              </div>
+            )}
+            {selected.commission > 0 && (
+              <div className="rounded-xl bg-emerald-50 border border-emerald-100 px-4 py-2 text-sm text-emerald-700">
+                <span className="font-semibold">Commission validée :</span> {fcfa(selected.commission)}
+              </div>
+            )}
+          </div>
+
+          {/* Messages */}
+          <div className="space-y-2">
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Messages avec l'équipe IBIG</p>
+            {selected.messages.length === 0 ? (
+              <p className="text-sm text-slate-400 italic">Aucun échange pour le moment.</p>
+            ) : (
+              selected.messages.map(m => (
+                <div key={m.id} className={`rounded-xl px-4 py-3 text-sm ${m.fromAdmin ? "bg-brand-50 border border-brand-100" : "bg-slate-50 border border-slate-100"}`}>
+                  <p className="font-semibold text-xs text-slate-500 mb-1">{m.senderName} · {formatDate(m.createdAt)}</p>
+                  <p className="text-slate-700">{m.body}</p>
+                </div>
+              ))
+            )}
+          </div>
+
+          <div className="flex gap-2">
+            <textarea value={reply} onChange={e => setReply(e.target.value)} rows={2} placeholder="Votre réponse…" className={inputCls + " resize-none flex-1"} />
+            <button onClick={() => handleReply(selected)} className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-bold text-white hover:bg-brand-700 self-end">
+              Envoyer
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Onglet : Soumettre ── */}
+      {tab === "submit" && (
+        <div className="rounded-2xl border border-slate-100 bg-white p-6 max-w-2xl">
+          <p className="font-bold text-slate-900 text-base mb-1">Soumettre une opportunité B2B</p>
+          <p className="text-sm text-slate-500 mb-5">Vous avez une piste commerciale ? Transmettez-la à l'équipe IBIG. Si elle est validée, elle sera partagée à tout le réseau avec une commission.</p>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="mb-1 block text-sm font-medium text-slate-700">Titre de l'opportunité <span className="text-rose-500">*</span></label>
+              <input name="title" required placeholder="Ex : PME cherche logiciel de gestion RH" className={inputCls} />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium text-slate-700">Catégorie</label>
+              <select name="category" className={inputCls}>
+                {CATEGORIES.map(c => <option key={c} value={c}>{CATEGORY_LABELS[c] ?? c}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium text-slate-700">Description complète <span className="text-rose-500">*</span></label>
+              <textarea name="description" required rows={4} placeholder="Décrivez l'opportunité : qui, quoi, où, budget estimé, contacts disponibles…" className={inputCls + " resize-none"} />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium text-slate-700">Valeur estimée (FCFA)</label>
+              <input name="estimatedValue" type="number" min="0" placeholder="Ex : 500000" className={inputCls} />
+            </div>
+            <button type="submit" disabled={submitting}
+              className="w-full rounded-xl bg-brand-600 py-3 text-sm font-bold text-white hover:bg-brand-700 disabled:opacity-60 transition-colors">
+              {submitting ? "Envoi en cours…" : "📤 Soumettre à l'équipe IBIG"}
+            </button>
+            <p className="text-xs text-slate-400 text-center">L'équipe IBIG examinera votre soumission et vous répondra dans les 48h.</p>
+          </form>
+        </div>
+      )}
     </div>
   );
 }
