@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import ProspectsTable from "./prospects-client";
-import KanbanBoard from "./kanban-client";
+import KanbanClient from "./kanban-client";
 
 type ProspectRow = {
   id: string;
@@ -59,7 +59,7 @@ export default function ViewToggle({ rows }: { rows: ProspectRow[] }) {
       </div>
 
       {view === "kanban" ? (
-        <KanbanBoard rows={rows} />
+        <KanbanClient initialProspects={rows} />
       ) : (
         <ProspectsTable rows={rows} />
       )}
