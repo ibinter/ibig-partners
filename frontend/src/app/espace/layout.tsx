@@ -45,6 +45,7 @@ export default async function EspaceLayout({
     { href: "/espace/kyb",          label: "Vérification Entreprise", icon: "🏢", group: "Mon activité" },
     { href: "/espace/appels",       label: "Appels à partenaires",    icon: "📣", group: "Mon activité" },
     { href: "/espace/missions",     label: "Missions Partners",   icon: "🎯",  group: "Mon activité" },
+    { href: "/espace/boutique",     label: "Boutique CP",         icon: "🛍️",  group: "Mon activité" },
     { href: "/espace/connect",      label: "IBIG CONNECT",        icon: "🔗",  group: "Mon activité" },
     { href: "/espace/commissions",  label: "Commissions",     icon: "💰",  group: "Revenus" },
     { href: "/espace/paiements",    label: "Mes Paiements",   icon: "🏦",  group: "Revenus" },

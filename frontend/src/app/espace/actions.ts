@@ -441,6 +441,63 @@ export async function submitMissionProof(formData: FormData) {
   revalidatePath("/espace/missions");
 }
 
+// ─── Boutique CP ─────────────────────────────────────────────────────────────
+export async function claimReward(formData: FormData) {
+  const user = await requireUser();
+  const rewardId = String(formData.get("rewardId"));
+
+  const reward = await (prisma as any).reward.findFirst({
+    where: { id: rewardId, active: true },
+  });
+  if (!reward) return;
+
+  // Compute current CP balance
+  const txs = await (prisma as any).pointTransaction.findMany({
+    where: { userId: user.id },
+    select: { points: true, type: true },
+  });
+  const balance = txs.reduce((sum: number, tx: any) => {
+    if (["CREDIT", "BONUS"].includes(tx.type)) return sum + tx.points;
+    if (["DEBIT", "CANCELLATION", "EXPIRATION"].includes(tx.type)) return sum - tx.points;
+    return sum;
+  }, 0);
+
+  if (balance < reward.points) return; // insufficient CP
+
+  // Check stock
+  if (reward.stock !== -1) {
+    const usedCount = await (prisma as any).rewardClaim.count({
+      where: { rewardId, status: { in: ["PENDING", "APPROVED"] } },
+    });
+    if (usedCount >= reward.stock) return;
+  }
+
+  // Check no duplicate pending claim
+  const existing = await (prisma as any).rewardClaim.findFirst({
+    where: { userId: user.id, rewardId, status: "PENDING" },
+  });
+  if (existing) return;
+
+  // Debit CP immediately on claim
+  await (prisma as any).pointTransaction.create({
+    data: {
+      userId: user.id,
+      points: reward.points,
+      type: "DEBIT",
+      reason: "REWARD_CLAIM",
+      ref: rewardId,
+      adminNote: `Demande boutique : ${reward.name}`,
+    },
+  });
+
+  await (prisma as any).rewardClaim.create({
+    data: { userId: user.id, rewardId, status: "PENDING" },
+  });
+
+  revalidatePath("/espace/boutique");
+  revalidatePath("/espace/portefeuille");
+}
+
 // ─── Mon Marché ───────────────────────────────────────────────────────────────
 export async function updateMarket(formData: FormData) {
   const user = await requireUser();

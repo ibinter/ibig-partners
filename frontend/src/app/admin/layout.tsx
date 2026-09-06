@@ -12,6 +12,7 @@ const NAV: NavItem[] = [
   { href: "/admin/appels",                      label: "Appels à partenaires",         icon: "📣", group: "Réseau" },
   { href: "/admin/matching",                    label: "Dashboard Matching",           icon: "🎯", group: "Réseau" },
   { href: "/admin/missions",                    label: "Missions Partners",           icon: "🎯", group: "Réseau" },
+  { href: "/admin/niveaux",                     label: "Niveaux Partenaires",         icon: "🏅", group: "Réseau" },
   { href: "/admin/connect",                     label: "IBIG CONNECT",                icon: "🔗", group: "Réseau" },
   { href: "/admin/ventes",        label: "Ventes",             icon: "🧾", group: "Finance" },
   { href: "/admin/commissions",   label: "Commissions",        icon: "💰", group: "Finance" },
