@@ -6,12 +6,14 @@ async function fetchTree(affiliateCode: string, depth: number): Promise<any[]> {
   if (depth === 0) return [];
   const children = await (prisma as any).user.findMany({
     where: { sponsorCode: affiliateCode },
-    select: { id: true, name: true, affiliateCode: true, createdAt: true },
+    select: { id: true, firstName: true, lastName: true, code: true, createdAt: true },
   });
   return Promise.all(
     children.map(async (child: any) => ({
       ...child,
-      children: await fetchTree(child.affiliateCode, depth - 1),
+      name: `${child.firstName ?? ""} ${child.lastName ?? ""}`.trim() || "Partenaire",
+      affiliateCode: child.code,
+      children: await fetchTree(child.code, depth - 1),
     }))
   );
 }
