@@ -2,6 +2,7 @@ import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/ui";
 import NotifListClient, { type NotifRow } from "./notif-list-client";
+import PushSubscribeButton from "./push-subscribe-button";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +35,9 @@ export default async function NotificationsPage() {
         title="Notifications"
         subtitle={unread > 0 ? `${unread} non lue${unread > 1 ? "s" : ""}` : "Tout est à jour ✓"}
       />
+
+      {/* ── Push subscribe ── */}
+      <PushSubscribeButton />
 
       {/* ── KPIs ── */}
       <div className="grid gap-3 sm:grid-cols-3">
