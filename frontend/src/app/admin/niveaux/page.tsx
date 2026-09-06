@@ -1,4 +1,3 @@
-"use server";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PageHeader, Card } from "@/components/ui";
