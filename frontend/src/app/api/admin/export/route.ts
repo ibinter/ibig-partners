@@ -126,7 +126,6 @@ export async function GET(req: NextRequest) {
         code_partenaire: c.user.code,
         montant: c.amount,
         statut: c.status,
-        type: c.type,
         vente_ref: c.sale?.reference ?? "",
         date: c.createdAt.toISOString().slice(0, 10),
       }))
