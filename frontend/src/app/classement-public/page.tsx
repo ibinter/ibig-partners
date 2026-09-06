@@ -8,18 +8,18 @@ export default async function ClassementPublicPage() {
   const optedIds = optIns.map((o: any) => o.userId);
 
   const monthlySales = await (prisma as any).sale.groupBy({
-    by: ["userId"],
-    where: { createdAt: { gte: startOfMonth }, userId: { in: optedIds } },
+    by: ["sellerId"],
+    where: { createdAt: { gte: startOfMonth }, sellerId: { in: optedIds } },
     _count: { id: true },
-    _sum: { commission: true },
     orderBy: { _count: { id: "desc" } },
     take: 20,
   });
 
   const withNames = await Promise.all(
     monthlySales.map(async (s: any) => {
-      const u = await (prisma as any).user.findUnique({ where: { id: s.userId }, select: { name: true } });
-      return { ...s, name: u?.name ?? "Partenaire IBIG" };
+      const u = await (prisma as any).user.findUnique({ where: { id: s.sellerId }, select: { firstName: true, lastName: true } });
+      const name = u ? `${u.firstName ?? ""} ${u.lastName ?? ""}`.trim() || "Partenaire IBIG" : "Partenaire IBIG";
+      return { ...s, name };
     })
   );
 
@@ -44,15 +44,14 @@ export default async function ClassementPublicPage() {
         ) : (
           <div className="space-y-3">
             {withNames.map((p: any, i: number) => (
-              <div key={p.userId} className={`rounded-2xl p-5 flex items-center gap-4 ${i === 0 ? "bg-yellow-400 text-yellow-900" : i === 1 ? "bg-gray-200 text-gray-800" : i === 2 ? "bg-amber-700 text-amber-100" : "bg-white/10 text-white"}`}>
+              <div key={p.sellerId} className={`rounded-2xl p-5 flex items-center gap-4 ${i === 0 ? "bg-yellow-400 text-yellow-900" : i === 1 ? "bg-gray-200 text-gray-800" : i === 2 ? "bg-amber-700 text-amber-100" : "bg-white/10 text-white"}`}>
                 <span className="text-3xl w-10 text-center">{medals[i] ?? `#${i + 1}`}</span>
                 <div className="flex-1">
                   <p className="font-black text-lg">{p.name}</p>
-                  <p className="text-sm opacity-70">{p._count.id} vente{p._count.id !== 1 ? "s" : ""} ce mois</p>
+                  <p className="text-sm opacity-70">ce mois</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-black text-xl tabular-nums">{(p._sum.commission ?? 0).toLocaleString()}</p>
-                  <p className="text-xs opacity-70">FCFA</p>
+                  <p className="font-black text-xl tabular-nums">{p._count.id} vente{p._count.id !== 1 ? "s" : ""}</p>
                 </div>
               </div>
             ))}
