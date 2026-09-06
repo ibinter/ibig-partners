@@ -4,6 +4,7 @@ import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Badge, Button, Card, PageHeader } from "@/components/ui";
 import { markModuleComplete, markModuleStarted } from "../actions";
+import QuizInteractive from "./quiz-interactive";
 
 export const dynamic = "force-dynamic";
 
@@ -263,37 +264,14 @@ export default async function ModulePage({
           </div>
         )}
 
-        {/* QUIZ */}
+        {/* QUIZ — interactif avec score */}
         {mod.type === "QUIZ" && (
-          <div className="space-y-6">
-            {questions.length === 0 ? (
-              <p className="text-sm text-muted">Ce quiz ne contient pas encore de questions.</p>
-            ) : (
-              questions.map((q, qi) => (
-                <div key={qi} className="rounded-xl border border-slate-200 p-5">
-                  <p className="mb-3 font-semibold text-ink text-sm">
-                    {qi + 1}. {q.question}
-                  </p>
-                  <div className="space-y-2">
-                    {q.options.map((opt, oi) => (
-                      <label
-                        key={oi}
-                        className="flex cursor-pointer items-center gap-3 rounded-lg border border-slate-200 px-3 py-2 hover:border-blue-300 hover:bg-blue-50 transition"
-                      >
-                        <input
-                          type="radio"
-                          name={`q_${qi}`}
-                          value={oi}
-                          className="accent-blue-600"
-                        />
-                        <span className="text-sm text-slate-700">{opt}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
+          <QuizInteractive
+            questions={questions}
+            moduleId={mod.id}
+            moduleSlug={mod.slug}
+            alreadyCompleted={!!progress?.completedAt}
+          />
         )}
       </Card>
 

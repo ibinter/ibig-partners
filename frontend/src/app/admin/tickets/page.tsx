@@ -15,11 +15,18 @@ const PRIORITY_COLORS: Record<string, string> = {
 };
 const PRIORITY_LABELS: Record<string, string> = { LOW: "Faible", NORMAL: "Normal", HIGH: "Haute", URGENT: "Urgent" };
 
-export default async function AdminTicketsPage() {
+export default async function AdminTicketsPage({ searchParams }: { searchParams: Promise<{ priority?: string; status?: string }> }) {
   await requireAdmin();
+  const sp = await searchParams;
+  const priorityFilter = sp.priority;
+  const statusFilter = sp.status;
 
   const tickets = await prisma.ticket.findMany({
-    orderBy: [{ status: "asc" }, { updatedAt: "desc" }],
+    where: {
+      ...(priorityFilter ? { priority: priorityFilter } : {}),
+      ...(statusFilter ? { status: statusFilter } : {}),
+    },
+    orderBy: [{ priority: "desc" }, { updatedAt: "desc" }],
     include: {
       user: { select: { firstName: true, lastName: true, code: true } },
       _count: { select: { messages: true } },
@@ -27,13 +34,30 @@ export default async function AdminTicketsPage() {
   });
 
   const open = tickets.filter((t) => t.status !== "CLOSED").length;
+  const urgent = tickets.filter((t) => t.priority === "URGENT" && t.status !== "CLOSED").length;
 
   return (
     <div>
       <PageHeader
         title="Tickets support"
-        subtitle={`${open} ticket(s) ouvert(s) · ${tickets.length} au total`}
+        subtitle={`${open} ouvert(s)${urgent > 0 ? ` · ⚠ ${urgent} urgent(s)` : ""} · ${tickets.length} au total`}
       />
+
+      {/* Filtres rapides */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {[
+          { label: "Tous", href: "/admin/tickets" },
+          { label: "🔴 Urgent", href: "/admin/tickets?priority=URGENT" },
+          { label: "🟠 Haute", href: "/admin/tickets?priority=HIGH" },
+          { label: "📂 Ouverts", href: "/admin/tickets?status=OPEN" },
+          { label: "🔵 En cours", href: "/admin/tickets?status=IN_PROGRESS" },
+          { label: "✅ Résolus", href: "/admin/tickets?status=CLOSED" },
+        ].map((f) => (
+          <a key={f.href} href={f.href} className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+            {f.label}
+          </a>
+        ))}
+      </div>
 
       <Card className="p-0">
         <div className="overflow-x-auto">

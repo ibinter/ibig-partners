@@ -7,6 +7,7 @@ import { SALE_STATUS_LABELS } from "@/lib/constants";
 import { AdminChartsSection } from "./charts-section";
 import { AdminActionCenter } from "./action-center";
 import { AdminAlertsSection } from "./alerts-section";
+import AdminLiveKpis from "@/components/admin-live-kpis";
 
 export const dynamic = "force-dynamic";
 
@@ -61,6 +62,9 @@ export default async function AdminDashboard() {
         title="Tableau de bord"
         subtitle="Vue d'ensemble du programme d'affiliation IBIG PARTNERS"
       />
+
+      {/* KPIs live temps réel */}
+      <AdminLiveKpis initial={{ salesToday: 0, salesMonth: 0, commPending: pendingComm._sum?.amount ?? 0, pendingPartners: pendingApprovals, openTickets: 0, pendingPayouts: 0, updatedAt: new Date().toISOString() }} />
 
       {/* Alertes prioritaires */}
       <AdminAlertsSection />

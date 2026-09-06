@@ -44,3 +44,20 @@ export async function closeTicket(formData: FormData) {
   revalidatePath(`/admin/tickets/${id}`);
   revalidatePath("/admin/tickets");
 }
+
+export async function assignTicket(formData: FormData) {
+  const admin = await requireAdmin();
+  const id = String(formData.get("id"));
+  await prisma.ticket.update({ where: { id }, data: { assignedAdminId: admin.id, status: "IN_PROGRESS" } });
+  revalidatePath(`/admin/tickets/${id}`);
+  revalidatePath("/admin/tickets");
+}
+
+export async function changePriority(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const priority = String(formData.get("priority"));
+  await prisma.ticket.update({ where: { id }, data: { priority } });
+  revalidatePath(`/admin/tickets/${id}`);
+  revalidatePath("/admin/tickets");
+}

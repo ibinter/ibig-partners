@@ -8,6 +8,7 @@ import { OPPORTUNITY_STATUS_LABELS, STATUS_LABELS } from "@/lib/constants";
 import { submitOpportunity } from "../actions";
 import CopyButton from "../liens/copy-button";
 import ReseauClient from "./reseau-client";
+import QrCodeClient from "./qr-code-client";
 
 export const dynamic = "force-dynamic";
 
@@ -94,6 +95,9 @@ export default async function ReseauPage() {
           <span className="rounded-full bg-white/15 px-3 py-1">🔄 Revenus passifs à vie</span>
         </div>
       </div>
+
+      {/* ── QR Code parrainage ── */}
+      <QrCodeClient url={referralUrl} partnerName={user.code} />
 
       {/* ── 4 KPIs ── */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

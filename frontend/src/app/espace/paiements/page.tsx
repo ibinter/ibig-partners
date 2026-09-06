@@ -288,12 +288,21 @@ export default async function PaiementsPage() {
                       </td>
                       <td className="px-3 py-3">
                         {isPaid && (
-                          <a
-                            href={`/espace/paiements/${p.id}/recu`}
-                            className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition"
-                          >
-                            📄 Reçu
-                          </a>
+                          <div className="flex gap-1.5">
+                            <a
+                              href={`/espace/paiements/${p.id}/recu`}
+                              className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition"
+                            >
+                              📄 Reçu
+                            </a>
+                            <a
+                              href={`/api/paiements/invoice?id=${p.id}`}
+                              target="_blank"
+                              className="inline-flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-100 transition"
+                            >
+                              🧾 Facture
+                            </a>
+                          </div>
                         )}
                       </td>
                     </tr>

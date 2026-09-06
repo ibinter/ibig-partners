@@ -26,10 +26,15 @@ export default async function AdminMessagesPage() {
 
   return (
     <div>
-      <PageHeader
-        title="Messagerie"
-        subtitle="Échangez en direct avec les affiliés — bienvenue, conseils, instructions."
-      />
+      <div className="flex items-center justify-between mb-6">
+        <PageHeader
+          title="Messagerie"
+          subtitle="Échangez en direct avec les affiliés — bienvenue, conseils, instructions."
+        />
+        <Link href="/admin/partenaires" className="shrink-0 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors">
+          + Nouveau message
+        </Link>
+      </div>
 
       <Card className="p-0">
         {conversations.length === 0 ? (

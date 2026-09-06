@@ -85,6 +85,7 @@ model User {
   needResponses       NeedResponse[]
   kybDocuments        KybDocument[]
   partnerCallInvitations PartnerCallInvitation[]
+  challengeProgresses    ChallengeProgress[]
 
   createdAt DateTime @default(now())
 }
@@ -399,15 +400,16 @@ model Setting {
 
 // --- Option 8 : Tickets support ---
 model Ticket {
-  id       String          @id @default(cuid())
-  userId   String
-  user     User            @relation(fields: [userId], references: [id])
-  subject  String
-  status   String          @default("OPEN") // OPEN | IN_PROGRESS | CLOSED
-  priority String          @default("NORMAL") // LOW | NORMAL | HIGH | URGENT
-  messages TicketMessage[]
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  id              String          @id @default(cuid())
+  userId          String
+  user            User            @relation(fields: [userId], references: [id])
+  subject         String
+  status          String          @default("OPEN") // OPEN | IN_PROGRESS | CLOSED
+  priority        String          @default("NORMAL") // LOW | NORMAL | HIGH | URGENT
+  assignedAdminId String?
+  messages        TicketMessage[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
 }
 
 model TicketMessage {
@@ -806,4 +808,31 @@ model PartnerCallInvitation {
   @@unique([callId, userId])
   @@index([callId])
   @@index([userId])
+}
+
+// --- Phase 6 : Challenges dynamiques ---
+model Challenge {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  metric      String   // SALES_COUNT | COMMISSION_AMOUNT | PROSPECTS_CONVERTED | REFERRALS
+  target      Int
+  reward      Float    @default(0)
+  startAt     DateTime
+  endAt       DateTime
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  progresses  ChallengeProgress[]
+}
+
+model ChallengeProgress {
+  id          String    @id @default(cuid())
+  challengeId String
+  userId      String
+  current     Int       @default(0)
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id])
+  @@unique([challengeId, userId])
 }

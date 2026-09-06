@@ -21,6 +21,7 @@ const NAV: NavItem[] = [
   { href: "/admin/academie",      label: "Académie IBIG",      icon: "🎓", group: "Catalogue" },
   { href: "/admin/messages",      label: "Messagerie",         icon: "💬", group: "Communication" },
   { href: "/admin/tickets",       label: "Tickets Support",    icon: "🎫", group: "Communication" },
+  { href: "/admin/challenges",    label: "Challenges",         icon: "🏁", group: "Communication" },
   { href: "/admin/communication",    label: "Communication",       icon: "📣", group: "Communication" },
   { href: "/admin/email-sequences", label: "Séquences email",     icon: "🔁", group: "Communication" },
   { href: "/admin/recherche",      label: "Recherche globale",    icon: "🔍", group: "Administration" },
