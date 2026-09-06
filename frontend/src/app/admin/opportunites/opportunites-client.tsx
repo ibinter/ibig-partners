@@ -5,6 +5,8 @@ import { useState, useMemo, useRef } from "react";
 const STATUS_LABELS: Record<string, string> = {
   NEW: "Nouveau",
   IN_PROGRESS: "En cours",
+  APPROVED: "Approuvé ✅",
+  REJECTED: "Non retenu",
   WON: "Gagné",
   LOST: "Perdu",
 };
@@ -36,6 +38,8 @@ const CATEGORY_LABELS: Record<string, string> = {
 const STATUS_STYLES: Record<string, string> = {
   NEW: "bg-amber-100 text-amber-800 border-amber-200",
   IN_PROGRESS: "bg-blue-100 text-blue-800 border-blue-200",
+  APPROVED: "bg-emerald-100 text-emerald-800 border-emerald-200",
+  REJECTED: "bg-rose-100 text-rose-800 border-rose-200",
   WON: "bg-emerald-100 text-emerald-800 border-emerald-200",
   LOST: "bg-rose-100 text-rose-800 border-rose-200",
 };
@@ -70,6 +74,11 @@ type Row = {
   estimatedValue: number;
   status: string;
   handler: string;
+  visibility: string;
+  commission: number;
+  commissionType: string;
+  adminNote: string;
+  leadCount: number;
   createdAt: string;
   partnerName: string;
   partnerCode: string;
@@ -135,10 +144,14 @@ export default function OpportunitesClient({
   rows,
   updateAction,
   messageAction,
+  approveAction,
+  rejectAction,
 }: {
   rows: Row[];
   updateAction: (fd: FormData) => Promise<void>;
   messageAction: (fd: FormData) => Promise<void>;
+  approveAction: (fd: FormData) => Promise<void>;
+  rejectAction: (fd: FormData) => Promise<void>;
 }) {
   const [filter, setFilter] = useState<string>("ALL");
   const [search, setSearch] = useState("");
@@ -450,6 +463,76 @@ export default function OpportunitesClient({
                       </div>
                     )}
                   </div>
+
+                  {/* Panneau Approbation (NEW uniquement) */}
+                  {o.status === "NEW" && (
+                    <div className="pt-3 border-t border-slate-100">
+                      <p className="text-[10px] font-bold uppercase tracking-wide text-amber-600 mb-3">⚡ Décision IBIG</p>
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        {/* Approuver */}
+                        <form
+                          action={async (fd) => { await approveAction(fd); }}
+                          className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 space-y-2"
+                        >
+                          <input type="hidden" name="id" value={o.id} />
+                          <p className="text-xs font-bold text-emerald-700">✅ Approuver &amp; publier</p>
+                          <div className="flex gap-2">
+                            <div className="flex flex-col gap-1 flex-1">
+                              <label className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Commission</label>
+                              <input
+                                name="commission"
+                                type="number"
+                                min="0"
+                                placeholder="Ex : 50000"
+                                className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm outline-none focus:border-emerald-400"
+                              />
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              <label className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Type</label>
+                              <select
+                                name="commissionType"
+                                className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm outline-none focus:border-emerald-400"
+                              >
+                                <option value="FIXED">FCFA fixe</option>
+                                <option value="PERCENT">% valeur</option>
+                              </select>
+                            </div>
+                          </div>
+                          <input
+                            name="adminNote"
+                            placeholder="Note pour les partenaires (optionnel)"
+                            className="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm outline-none focus:border-emerald-400"
+                          />
+                          <button
+                            type="submit"
+                            className="w-full rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 transition"
+                          >
+                            Approuver →
+                          </button>
+                        </form>
+
+                        {/* Rejeter */}
+                        <form
+                          action={async (fd) => { await rejectAction(fd); }}
+                          className="rounded-xl border border-rose-200 bg-rose-50 p-3 space-y-2"
+                        >
+                          <input type="hidden" name="id" value={o.id} />
+                          <p className="text-xs font-bold text-rose-700">❌ Rejeter</p>
+                          <input
+                            name="adminNote"
+                            placeholder="Raison du rejet (transmise au partenaire)"
+                            className="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm outline-none focus:border-rose-400"
+                          />
+                          <button
+                            type="submit"
+                            className="w-full rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold py-2 transition"
+                          >
+                            Rejeter
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Formulaire mise à jour */}
                   <div className="pt-3 border-t border-slate-100">
