@@ -108,7 +108,7 @@ export async function inviteMatchedPartner(formData: FormData) {
       userId: match.userId,
       title: "Invitation sur une opportunité",
       body: `L'équipe IBIG vous invite à consulter l'opportunité ${match.opportunity.code ?? ""} : ${match.opportunity.title}`,
-      link: "/espace/opportunites",
+      url: "/espace/opportunites",
     },
   });
 

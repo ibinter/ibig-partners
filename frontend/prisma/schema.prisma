@@ -75,6 +75,12 @@ model User {
   badges           UserBadge[]
   missionApplications MissionApplication[]
   connectRequests     ConnectRequest[]
+  opportunityLeads    OpportunityLead[]
+  opportunityShares   OpportunityShare[]
+  opportunityMatches  OpportunityMatch[]
+  needs               Need[]
+  needResponses       NeedResponse[]
+  kybDocuments        KybDocument[]
 
   createdAt DateTime @default(now())
 }
@@ -304,6 +310,17 @@ model Opportunity {
   handler        String?
   createdAt      DateTime             @default(now())
   messages       OpportunityMessage[]
+  leads          OpportunityLead[]
+  shares         OpportunityShare[]
+  matches        OpportunityMatch[]
+
+  // Champs supplémentaires (ajoutés sans migration Prisma)
+  adminNote      String?
+  commission     Int      @default(0)
+  commissionType String   @default("FIXED")
+  visibility     String   @default("PRIVATE")
+  deadline       DateTime?
+  code           String?
 }
 
 model OpportunityMessage {
@@ -626,6 +643,119 @@ model PushSubscription {
   p256dh    String
   auth      String
   createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model OpportunityLead {
+  id            String   @id @default(cuid())
+  opportunityId String
+  userId        String
+  status        String   @default("INTERESTED")
+  note          String?
+  result        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  opportunity   Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id])
+
+  @@unique([opportunityId, userId])
+  @@index([userId])
+  @@index([opportunityId])
+}
+
+model OpportunityShare {
+  id            String   @id @default(cuid())
+  opportunityId String
+  userId        String
+  role          String   @default("PARTENAIRE")
+  shareAmount   Int      @default(0)
+  shareType     String   @default("FIXED")
+  note          String?
+  status        String   @default("PENDING")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  opportunity   Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id])
+
+  @@index([opportunityId])
+  @@index([userId])
+}
+
+model OpportunityMatch {
+  id            String    @id @default(cuid())
+  opportunityId String
+  userId        String
+  score         Int       @default(0)
+  status        String    @default("SUGGESTED")
+  invitedAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  opportunity   Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id])
+
+  @@unique([opportunityId, userId])
+  @@index([opportunityId])
+  @@index([userId])
+}
+
+model Need {
+  id             String    @id @default(cuid())
+  code           String?
+  userId         String
+  title          String
+  category       String    @default("AUTRE")
+  description    String
+  budget         Int       @default(0)
+  location       String    @default("")
+  deadline       DateTime?
+  status         String    @default("NEW")
+  visibility     String    @default("PRIVATE")
+  adminNote      String?
+  commission     Int       @default(0)
+  commissionType String    @default("FIXED")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  user      User           @relation(fields: [userId], references: [id])
+  responses NeedResponse[]
+
+  @@index([userId])
+}
+
+model NeedResponse {
+  id        String   @id @default(cuid())
+  needId    String
+  userId    String
+  message   String   @default("")
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  need      Need @relation(fields: [needId], references: [id], onDelete: Cascade)
+  user      User @relation(fields: [userId], references: [id])
+
+  @@index([needId])
+  @@index([userId])
+}
+
+model KybDocument {
+  id         String    @id @default(cuid())
+  userId     String
+  docType    String
+  docName    String
+  fileUrl    String
+  note       String?
+  status     String    @default("PENDING")
+  adminNote  String?
+  reviewedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  user       User @relation(fields: [userId], references: [id])
 
   @@index([userId])
 }
