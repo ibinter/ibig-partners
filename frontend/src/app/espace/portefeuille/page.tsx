@@ -49,6 +49,7 @@ export default async function PortefeuilleePage() {
     cpTransactions,
     cpPending,
     partnerLevels,
+    bonusTransactions,
   ] = await Promise.all([
     (prisma as any).opportunity.groupBy({
       by: ["status"],
@@ -80,6 +81,17 @@ export default async function PortefeuilleePage() {
     (async () => { try { return await (prisma as any).missionApplication.findMany({ where: { userId: user.id, status: "SUBMITTED" }, select: { cpEarned: true } }); } catch { return []; } })(),
     // Niveaux partenaires
     (async () => { try { return await (prisma as any).partnerLevel.findMany({ orderBy: { minCp: "asc" }, where: { active: true } }); } catch { return []; } })(),
+    // Bonus reçus
+    (async () => {
+      try {
+        return await (prisma as any).bonusTransaction.findMany({
+          where: { userId: user.id },
+          orderBy: { createdAt: "desc" },
+          take: 20,
+          include: { rule: { select: { title: true, type: true } } },
+        });
+      } catch { return []; }
+    })(),
   ]);
 
   const oppByStatus    = Object.fromEntries(oppStats.map((s: any) => [s.status, s._count.status]));
@@ -190,6 +202,31 @@ export default async function PortefeuilleePage() {
           </div>
         )}
       </section>
+
+      {/* ─── Bonus ──────────────────────────────────────────────── */}
+      {(bonusTransactions as any[]).length > 0 && (
+        <section>
+          <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wide mb-3">Mes Bonus</h2>
+          <div className="rounded-2xl border border-slate-100 bg-white overflow-hidden">
+            <div className="divide-y divide-slate-50">
+              {(bonusTransactions as any[]).map((b: any) => (
+                <div key={b.id} className="flex items-center gap-3 px-4 py-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-slate-800">{b.reason}</p>
+                    {b.rule && <p className="text-xs text-slate-400">Règle : {b.rule.title}</p>}
+                    {b.adminNote && <p className="text-xs text-slate-400 italic truncate">{b.adminNote}</p>}
+                    <p className="text-[10px] text-slate-400 mt-0.5">{formatDate(b.createdAt)}</p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    {b.cpAmount > 0 && <p className="font-extrabold text-sm text-violet-700">+{b.cpAmount} CP</p>}
+                    {b.cashAmount > 0 && <p className="text-xs text-emerald-700">+{b.cashAmount} FCFA</p>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Opportunités */}
       <section>
