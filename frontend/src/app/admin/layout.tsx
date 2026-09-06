@@ -28,6 +28,8 @@ const NAV: NavItem[] = [
   { href: "/admin/recompenses",     label: "Récompenses",        icon: "🎁", group: "Communication" },
   { href: "/admin/communication",    label: "Communication",       icon: "📣", group: "Communication" },
   { href: "/admin/email-sequences", label: "Séquences email",     icon: "🔁", group: "Communication" },
+  { href: "/admin/comparaison",     label: "Comparateur partenaires", icon: "⚖️", group: "Administration" },
+  { href: "/admin/devises",         label: "Taux de change",       icon: "💱", group: "Administration" },
   { href: "/admin/recherche",      label: "Recherche globale",    icon: "🔍", group: "Administration" },
   { href: "/admin/analytics",     label: "Analytics",           icon: "📈", group: "Administration" },
   { href: "/admin/reporting",     label: "Reporting avancé",    icon: "📊", group: "Administration" },

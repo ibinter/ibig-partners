@@ -57,6 +57,8 @@ export default async function EspaceLayout({
     { href: "/espace/clients",      label: "Mes Clients",     icon: "🤝",  group: "Mon activité" },
     { href: "/espace/analytics",    label: "Mes Statistiques",icon: "📊",  group: "Mon activité" },
     { href: "/espace/contrat",      label: "Mon Contrat",     icon: "📋",  group: "Compte" },
+    { href: "/espace/setup",        label: "Guide démarrage rapide", icon: "🧭", group: "Compte" },
+    { href: "/espace/notifications/preferences", label: "Préf. notifications", icon: "🔕", group: "Compte" },
     { href: "/espace/verification", label: "Vérifier mon compte", icon: "🔐", group: "Compte" },
     { href: "/espace/plan-compensation", label: "Plan de compensation", icon: "💎", group: "Ressources" },
     { href: "/espace/formation",    label: "Guide Commissions", icon: "📚",  group: "Ressources" },

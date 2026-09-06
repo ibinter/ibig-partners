@@ -1,6 +1,7 @@
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/ui";
+import Link from "next/link";
 import RapportClient from "./rapport-client";
 
 export const dynamic = "force-dynamic";
@@ -107,10 +108,16 @@ export default async function RapportPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title={`Rapport — ${monthLabel}`}
-        subtitle="Résumé de votre activité du mois en cours."
-      />
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <PageHeader
+          title={`Rapport — ${monthLabel}`}
+          subtitle="Résumé de votre activité du mois en cours."
+        />
+        <Link href="/api/espace/rapport-pdf" target="_blank"
+          className="shrink-0 rounded-xl bg-slate-800 text-white px-4 py-2 text-sm font-semibold hover:bg-slate-700 transition-colors">
+          📄 Télécharger PDF
+        </Link>
+      </div>
       <RapportClient
         monthLabel={monthLabel}
         kpis={{
