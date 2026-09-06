@@ -414,6 +414,33 @@ export async function withdrawMissionApplication(formData: FormData) {
   revalidatePath("/espace/missions");
 }
 
+export async function submitMissionProof(formData: FormData) {
+  const user = await requireUser();
+  const applicationId = String(formData.get("applicationId"));
+  const proofUrl = String(formData.get("proofUrl") || "").trim();
+  const proofNote = String(formData.get("proofNote") || "").trim();
+
+  if (!proofNote && !proofUrl) return;
+
+  const app = await (prisma as any).missionApplication.findFirst({
+    where: { id: applicationId, userId: user.id, status: "ACCEPTED" },
+  });
+  if (!app) return;
+
+  await (prisma as any).missionApplication.update({
+    where: { id: applicationId },
+    data: {
+      status: "SUBMITTED",
+      proofUrl: proofUrl || null,
+      proofNote: proofNote || null,
+      submittedAt: new Date(),
+      updatedAt: new Date(),
+    },
+  });
+
+  revalidatePath("/espace/missions");
+}
+
 // ─── Mon Marché ───────────────────────────────────────────────────────────────
 export async function updateMarket(formData: FormData) {
   const user = await requireUser();
