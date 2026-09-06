@@ -62,7 +62,7 @@ export default async function RapportPage() {
       include: { opportunity: { select: { title: true, code: true } } },
       orderBy: { createdAt: "desc" },
     }),
-    (async () => { try { return await (prisma as any).partnerCallInvitation.findMany({ where: { userId: user.id, createdAt: { gte: startOfMonth } }, include: { call: { select: { title: true, status: true } } }, orderBy: { sentAt: "desc" } }); } catch { return []; } })(),
+    (async () => { try { return await (prisma as any).partnerCallInvitation.findMany({ where: { userId: user.id, updatedAt: { gte: startOfMonth } }, include: { call: { select: { title: true, status: true } } }, orderBy: { sentAt: "desc" } }); } catch { return []; } })(),
     (prisma as any).opportunity.findMany({
       where: { userId: user.id, createdAt: { gte: startOfMonth } },
       select: { id: true, title: true, code: true, status: true, createdAt: true },

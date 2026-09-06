@@ -10,20 +10,9 @@ export default async function EspaceBesoinsPage() {
   const user = await requireUser();
 
   const [myNeeds, publicNeeds, myResponses] = await Promise.all([
-    (prisma as any).need.findMany({
-      where: { userId: user.id },
-      orderBy: { createdAt: "desc" },
-      include: { _count: { select: { responses: true } } },
-    }),
-    (prisma as any).need.findMany({
-      where: { visibility: "PUBLIC", status: "APPROVED", userId: { not: user.id } },
-      orderBy: { createdAt: "desc" },
-      include: { _count: { select: { responses: true } } },
-    }),
-    (prisma as any).needResponse.findMany({
-      where: { userId: user.id },
-      select: { needId: true, status: true, createdAt: true },
-    }),
+    (async () => { try { return await (prisma as any).need.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" }, include: { _count: { select: { responses: true } } } }); } catch { return []; } })(),
+    (async () => { try { return await (prisma as any).need.findMany({ where: { visibility: "PUBLIC", status: "APPROVED", userId: { not: user.id } }, orderBy: { createdAt: "desc" }, include: { _count: { select: { responses: true } } } }); } catch { return []; } })(),
+    (async () => { try { return await (prisma as any).needResponse.findMany({ where: { userId: user.id }, select: { needId: true, status: true, createdAt: true } }); } catch { return []; } })(),
   ]);
 
   const respondedIds = new Set(myResponses.map((r: any) => r.needId));

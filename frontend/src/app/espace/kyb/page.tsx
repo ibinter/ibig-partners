@@ -9,10 +9,7 @@ export const dynamic = "force-dynamic";
 export default async function KybPage() {
   const user = await requireUser();
 
-  const docs = await (prisma as any).kybDocument.findMany({
-    where: { userId: user.id },
-    orderBy: { createdAt: "desc" },
-  });
+  const docs = await (async () => { try { return await (prisma as any).kybDocument.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } }); } catch { return []; } })();
 
   const kybStatus: string = (user as any).kybStatus ?? "NONE";
 

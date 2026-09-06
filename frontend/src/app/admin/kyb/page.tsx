@@ -10,9 +10,7 @@ export default async function AdminKybPage() {
   await requireAdmin();
 
   // Tous les documents KYB
-  const allDocs = await (prisma as any).kybDocument.findMany({
-    orderBy: { createdAt: "asc" },
-  });
+  const allDocs = await (async () => { try { return await (prisma as any).kybDocument.findMany({ orderBy: { createdAt: "asc" } }); } catch { return []; } })();
 
   // Ids des partenaires ayant au moins un doc
   const userIds: string[] = Array.from(new Set<string>(allDocs.map((d: any) => String(d.userId))));
@@ -21,7 +19,7 @@ export default async function AdminKybPage() {
   const users = userIds.length > 0
     ? await (prisma as any).user.findMany({
         where: { id: { in: userIds } },
-        select: { id: true, firstName: true, lastName: true, code: true, phone: true, kybStatus: true, createdAt: true },
+        select: { id: true, firstName: true, lastName: true, code: true, phone: true, verificationStatus: true, createdAt: true },
       })
     : [];
 
@@ -36,7 +34,7 @@ export default async function AdminKybPage() {
     partnerName: `${u.firstName} ${u.lastName}`,
     partnerCode: u.code ?? "",
     partnerPhone: u.phone ?? "",
-    kybStatus:   (u.kybStatus as string) ?? "NONE",
+    kybStatus:   (u.verificationStatus as string) ?? "NONE",
     docs: (docsByUser.get(u.id) ?? []).map((d: any) => ({
       id:        d.id,
       docType:   d.docType,

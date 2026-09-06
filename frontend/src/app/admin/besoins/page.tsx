@@ -9,13 +9,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminBesoinsPage() {
   await requireAdmin();
 
-  const needs = await (prisma as any).need.findMany({
-    orderBy: [{ createdAt: "desc" }],
-    include: {
-      user: { select: { firstName: true, lastName: true, code: true, phone: true } },
-      _count: { select: { responses: true } },
-    },
-  });
+  const needs = await (async () => { try { return await (prisma as any).need.findMany({ orderBy: [{ createdAt: "desc" }], include: { user: { select: { firstName: true, lastName: true, code: true, phone: true } }, _count: { select: { responses: true } } } }); } catch { return []; } })();
 
   const rows = needs.map((n: any) => ({
     id: n.id,
