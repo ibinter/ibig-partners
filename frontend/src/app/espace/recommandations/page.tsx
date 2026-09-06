@@ -1,11 +1,11 @@
-import { requireAuth } from "@/lib/auth";
+import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
 export default async function RecommandationsPage() {
-  const user = await requireAuth();
+  const user = await requireUser();
 
   // Compute CP balance to infer level
   const cpBalance = await (async () => {

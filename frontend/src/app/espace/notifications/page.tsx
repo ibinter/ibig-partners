@@ -1,4 +1,4 @@
-import { requireAuth } from "@/lib/auth";
+import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/format";
 import { PageHeader } from "@/components/ui";
@@ -17,7 +17,7 @@ async function markAllRead(fd: FormData) {
 }
 
 export default async function NotificationsPage() {
-  const user = await requireAuth();
+  const user = await requireUser();
 
   const notifications = await (async () => {
     try {
