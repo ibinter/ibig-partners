@@ -18,8 +18,9 @@ async function fetchTree(affiliateCode: string, depth: number): Promise<any[]> {
 
 export default async function ReseauVisuelPage() {
   const user = await requireUser();
-  const children = await fetchTree(user.affiliateCode ?? "", 3);
-  const tree = { id: user.id, name: user.name ?? "Moi", affiliateCode: user.affiliateCode ?? "", children };
+  const myCode = (user as any).code ?? (user as any).affiliateCode ?? "";
+  const children = await fetchTree(myCode, 3);
+  const tree = { id: user.id, name: user.name ?? "Moi", affiliateCode: myCode, children };
 
   const countNodes = (node: any): number => 1 + (node.children ?? []).reduce((s: number, c: any) => s + countNodes(c), 0);
   const total = countNodes(tree) - 1;
