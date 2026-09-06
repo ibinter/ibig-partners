@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import CopyButton from "./copy-button";
 import QrCard from "./qr-card";
 import { ViralShare } from "@/components/viral-share";
+import WhatsappShareButton from "@/components/whatsapp-share-button";
 
 type LinkCard = {
   id: string;
@@ -196,7 +197,7 @@ export default function LiensClient({ cards, branches }: Props) {
                   <div className="font-mono text-xs text-blue-700 break-all leading-relaxed mb-2">
                     {card.offreUrl}
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 flex-wrap">
                     <CopyButton text={card.offreUrl} label="Copier la page" />
                     <a
                       href={card.offreUrl}
@@ -206,6 +207,7 @@ export default function LiensClient({ cards, branches }: Props) {
                     >
                       Prévisualiser →
                     </a>
+                    <WhatsappShareButton text={`Découvrez ${card.productName} via mon lien IBIG PARTNERS : ${card.offreUrl}`} />
                   </div>
                 </div>
               </div>

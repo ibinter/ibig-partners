@@ -9,6 +9,7 @@ import { OnboardingQuest } from "@/components/onboarding-quest";
 import { WeeklyChallenge } from "@/components/weekly-challenge";
 import DashboardCharts, { type SalePoint, type CommPoint } from "./dashboard-charts";
 import LiveKpisBar from "@/components/live-kpis-bar";
+import AiRecommendationsWidget from "@/components/ai-recommendations-widget";
 
 export const dynamic = "force-dynamic";
 
@@ -148,6 +149,9 @@ export default async function DashboardPage({
 
       {/* ── KPIs live ── */}
       <LiveKpisBar initial={{ salesToday, salesMonth: salesThisMonth, commPending: 0, prospectsUrgent: prospectsUrgent.length, unreadNotif: 0, updatedAt: new Date().toISOString() }} />
+
+      {/* ── Recommandations IA ── */}
+      <AiRecommendationsWidget />
 
       {/* ── Alertes ── */}
       {bienvenue && (

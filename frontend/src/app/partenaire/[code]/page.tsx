@@ -25,7 +25,7 @@ export default async function PartenairePublicPage({ params }: { params: Promise
   });
   if (!user) notFound();
 
-  const [salesCount, links, networkCount] = await Promise.all([
+  const [salesCount, links, networkCount, vitrine] = await Promise.all([
     prisma.sale.count({ where: { sellerId: user.id, status: "CONFIRMED" } }),
     prisma.affiliateLink.findMany({
       where: { userId: user.id },
@@ -33,6 +33,7 @@ export default async function PartenairePublicPage({ params }: { params: Promise
       take: 6,
     }),
     prisma.user.count({ where: { sponsorId: user.id } }),
+    (prisma as any).partnerVitrine.findUnique({ where: { userId: user.id } }),
   ]);
 
   const joinDate = new Date(user.createdAt).toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
@@ -50,7 +51,7 @@ export default async function PartenairePublicPage({ params }: { params: Promise
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <div className="bg-gradient-to-br from-blue-700 to-blue-900 py-12 px-4">
+      <div className="py-12 px-4" style={{ backgroundColor: vitrine?.bannerColor ?? "#1d4ed8" }}>
         <div className="mx-auto max-w-2xl">
           <Link href="/" className="inline-block mb-6 text-xs font-semibold text-blue-200 hover:text-white transition-colors">
             ← ibigpartners.com
@@ -67,7 +68,8 @@ export default async function PartenairePublicPage({ params }: { params: Promise
                 <span className="text-blue-200 text-sm font-mono">{user.code}</span>
                 <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${badge.color}`}>{badge.label}</span>
               </div>
-              {user.city && <p className="text-blue-300 text-xs mt-1">📍 {user.city}{user.country ? `, ${user.country}` : ""}</p>}
+              {vitrine?.slogan && <p className="text-white/80 text-sm italic mt-1">&ldquo;{vitrine.slogan}&rdquo;</p>}
+              {user.city && <p className="text-white/60 text-xs mt-1">📍 {user.city}{user.country ? `, ${user.country}` : ""}</p>}
             </div>
           </div>
         </div>

@@ -30,6 +30,10 @@
     {
       "path": "/api/cron/level-up",
       "schedule": "0 4 * * *"
+    },
+    {
+      "path": "/api/cron/daily-streak",
+      "schedule": "0 0 * * *"
     }
   ]
 }
