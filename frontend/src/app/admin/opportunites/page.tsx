@@ -38,9 +38,7 @@ export default async function OpportunitesPage() {
       orderBy: { createdAt: "desc" },
       include: { user: { select: { firstName: true, lastName: true, code: true, status: true, phone: true } } },
     }),
-    (prisma as any).opportunityActivity.findMany({
-      orderBy: { createdAt: "asc" },
-    }),
+    (async () => { try { return await (prisma as any).opportunityActivity.findMany({ orderBy: { createdAt: "asc" } }); } catch { return []; } })(),
   ]);
 
   const matchesByOpp = new Map<string, any[]>();

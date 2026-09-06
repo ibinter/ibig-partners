@@ -28,10 +28,11 @@ const STATUS_LABEL: Record<string, string> = {
 export default async function RendezVousPage() {
   const user = await requireUser();
 
-  const appointments = await (prisma as any).appointment.findMany({
-    where: { userId: user.id },
-    orderBy: { scheduledAt: "asc" },
-  });
+  const appointments: any[] = await (async () => {
+    try {
+      return await (prisma as any).appointment.findMany({ where: { userId: user.id }, orderBy: { scheduledAt: "asc" } });
+    } catch { return []; }
+  })();
 
   const now      = new Date();
   const upcoming = appointments.filter((a: any) => new Date(a.scheduledAt) >= now && a.status !== "CANCELLED");

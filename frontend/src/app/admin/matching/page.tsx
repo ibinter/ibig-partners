@@ -18,13 +18,8 @@ export default async function MatchingDashboardPage() {
     (prisma as any).opportunityLead.findMany({
       select: { id: true, opportunityId: true, userId: true, status: true, createdAt: true },
     }),
-    (prisma as any).partnerCall.findMany({
-      orderBy: { createdAt: "desc" },
-      select: { id: true, title: true, status: true, category: true, createdAt: true },
-    }),
-    (prisma as any).partnerCallInvitation.findMany({
-      select: { id: true, callId: true, userId: true, status: true, sentAt: true },
-    }),
+    (async () => { try { return await (prisma as any).partnerCall.findMany({ orderBy: { createdAt: "desc" }, select: { id: true, title: true, status: true, category: true, createdAt: true } }); } catch { return []; } })(),
+    (async () => { try { return await (prisma as any).partnerCallInvitation.findMany({ select: { id: true, callId: true, userId: true, status: true, sentAt: true } }); } catch { return []; } })(),
   ]);
 
   // --- Opportunité stats ---

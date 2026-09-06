@@ -62,11 +62,7 @@ export default async function RapportPage() {
       include: { opportunity: { select: { title: true, code: true } } },
       orderBy: { createdAt: "desc" },
     }),
-    (prisma as any).partnerCallInvitation.findMany({
-      where: { userId: user.id, createdAt: { gte: startOfMonth } },
-      include: { call: { select: { title: true, status: true } } },
-      orderBy: { sentAt: "desc" },
-    }),
+    (async () => { try { return await (prisma as any).partnerCallInvitation.findMany({ where: { userId: user.id, createdAt: { gte: startOfMonth } }, include: { call: { select: { title: true, status: true } } }, orderBy: { sentAt: "desc" } }); } catch { return []; } })(),
     (prisma as any).opportunity.findMany({
       where: { userId: user.id, createdAt: { gte: startOfMonth } },
       select: { id: true, title: true, code: true, status: true, createdAt: true },
@@ -89,7 +85,7 @@ export default async function RapportPage() {
     prisma.user.count({ where: { sponsorId: user.id } }),
     (prisma as any).opportunityLead.count({ where: { userId: user.id, status: "WON" } }),
     prisma.user.findUnique({ where: { id: user.id }, select: { kybStatus: true } as any }),
-    (prisma as any).partnerCallInvitation.count({ where: { userId: user.id, status: "ACCEPTED" } }),
+    (async () => { try { return await (prisma as any).partnerCallInvitation.count({ where: { userId: user.id, status: "ACCEPTED" } }); } catch { return 0; } })(),
     (prisma as any).opportunity.count({ where: { userId: user.id } }),
   ]);
 

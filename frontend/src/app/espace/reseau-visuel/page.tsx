@@ -5,7 +5,7 @@ import NetworkTreeClient from "./network-tree-client";
 async function fetchTree(affiliateCode: string, depth: number): Promise<any[]> {
   if (depth === 0) return [];
   const children = await (prisma as any).user.findMany({
-    where: { sponsorCode: affiliateCode },
+    where: { sponsor: { code: affiliateCode } },
     select: { id: true, firstName: true, lastName: true, code: true, createdAt: true },
   });
   return Promise.all(
