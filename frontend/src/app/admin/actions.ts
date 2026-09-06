@@ -794,19 +794,31 @@ export async function updateSetting(formData: FormData) {
 export async function createMission(formData: FormData) {
   await requireAdmin();
   const deadline = String(formData.get("deadline") || "").trim();
+  const rewardType = String(formData.get("rewardType") || "CASH");
+  const cpAmount = Number(formData.get("cpAmount") || 0);
+  const code = String(formData.get("code") || "").trim();
   await (prisma as any).mission.create({
     data: {
       title: String(formData.get("title")),
       description: String(formData.get("description")),
       category: String(formData.get("category") || "AUTRE"),
       missionType: String(formData.get("missionType") || "LEAD"),
+      branch: String(formData.get("branch") || ""),
+      rewardType,
       compensationType: String(formData.get("compensationType") || "FIXED"),
       compensationAmount: Number(formData.get("compensationAmount") || 0),
+      cpAmount: rewardType === "CASH" ? 0 : cpAmount,
+      rewardTrigger: String(formData.get("rewardTrigger") || "VALIDATION"),
       zone: String(formData.get("zone") || "Côte d'Ivoire"),
       difficulty: String(formData.get("difficulty") || "MEDIUM"),
+      minLevel: String(formData.get("minLevel") || ""),
       slots: Number(formData.get("slots") || 5),
+      proofInstructions: String(formData.get("proofInstructions") || ""),
       status: "OPEN",
+      active: true,
+      adminNote: String(formData.get("adminNote") || "").trim() || null,
       deadline: deadline ? new Date(deadline) : null,
+      ...(code ? { code } : {}),
     },
   });
   revalidatePath("/admin/missions");
@@ -825,10 +837,68 @@ export async function updateApplicationStatus(formData: FormData) {
   const id = String(formData.get("id"));
   const status = String(formData.get("status"));
   const result = String(formData.get("result") || "").trim();
-  await (prisma as any).missionApplication.update({
+  const data: any = { status, updatedAt: new Date() };
+  if (result) data.result = result;
+  if (status === "ACCEPTED") {
+    // pas de récompense ici — elle est accordée à VALIDATED
+  }
+  await (prisma as any).missionApplication.update({ where: { id }, data });
+  revalidatePath("/admin/missions");
+}
+
+export async function validateMissionApplication(formData: FormData) {
+  const admin = await requireAdmin();
+  const id = String(formData.get("id"));
+  const action = String(formData.get("action")); // VALIDATE | REJECT_PROOF
+  const adminNote = String(formData.get("adminNote") || "").trim();
+
+  const app = await (prisma as any).missionApplication.findUnique({
     where: { id },
-    data: { status, updatedAt: new Date(), ...(result ? { result } : {}) },
+    include: { mission: true },
   });
+  if (!app) return;
+
+  if (action === "VALIDATE") {
+    const mission = app.mission;
+    const cpToCredit = (mission.rewardType === "CP" || mission.rewardType === "MIXED") ? (mission.cpAmount ?? 0) : 0;
+
+    await (prisma as any).missionApplication.update({
+      where: { id },
+      data: {
+        status: "VALIDATED",
+        validatedAt: new Date(),
+        validatedBy: (admin as any).id ?? "admin",
+        cpEarned: cpToCredit,
+        commissionEarned: mission.rewardType !== "CP" ? (mission.compensationAmount ?? 0) : 0,
+        updatedAt: new Date(),
+        ...(adminNote ? { result: adminNote } : {}),
+      },
+    });
+
+    if (cpToCredit > 0) {
+      await (prisma as any).pointTransaction.create({
+        data: {
+          userId: app.userId,
+          points: cpToCredit,
+          type: "CREDIT",
+          reason: "MISSION",
+          ref: `MISSION-${mission.id}`,
+          missionApplicationId: id,
+          adminId: (admin as any).id ?? "admin",
+          adminNote: `Mission validée : ${mission.title}`,
+        },
+      });
+    }
+  } else {
+    await (prisma as any).missionApplication.update({
+      where: { id },
+      data: {
+        status: "REJECTED_PROOF",
+        updatedAt: new Date(),
+        ...(adminNote ? { result: adminNote } : {}),
+      },
+    });
+  }
   revalidatePath("/admin/missions");
 }
 
