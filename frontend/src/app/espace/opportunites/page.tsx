@@ -22,6 +22,7 @@ export default async function EspaceOpportunitesPage() {
       orderBy: { createdAt: "desc" },
       include: {
         _count: { select: { leads: true } },
+        user: { select: { kybStatus: true } },
       },
     }),
     // Mes candidatures
@@ -68,6 +69,7 @@ export default async function EspaceOpportunitesPage() {
     adminNote: o.adminNote ?? "",
     deadline: o.deadline ? (o.deadline instanceof Date ? o.deadline.toISOString() : String(o.deadline)) : null,
     leadCount: o._count?.leads ?? 0,
+    partnerVerified: (o.user?.kybStatus ?? "NONE") === "VERIFIED",
     createdAt: o.createdAt instanceof Date ? o.createdAt.toISOString() : String(o.createdAt),
     myLead: myLeadMap.get(o.id) ? {
       status: myLeadMap.get(o.id).status,
