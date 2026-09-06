@@ -2,7 +2,7 @@ import { requireAdmin } from "@/lib/auth";
 import { PageHeader, Button, Field } from "@/components/ui";
 import { createInstitutionalPartner } from "../actions";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 export default async function NewInstitutionalPartnerPage() {
   await requireAdmin();

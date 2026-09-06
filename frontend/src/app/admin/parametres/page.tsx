@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { Button, Card, PageHeader } from "@/components/ui";
 import { updateSetting } from "../actions";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 const SETTINGS_META: { key: string; label: string; description: string; type?: string }[] = [
   { key: "min_payout", label: "Montant minimum de virement (FCFA)", description: "En dessous de ce seuil, le paiement ne peut pas être déclenché.", type: "number" },

@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { PageHeader, Button, Field } from "@/components/ui";
 import { updateInstitutionalPartner, deleteInstitutionalPartner } from "../actions";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 export default async function EditInstitutionalPartnerPage({
   params,

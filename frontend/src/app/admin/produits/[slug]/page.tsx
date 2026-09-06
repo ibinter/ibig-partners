@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import FetchButton from "./fetch-button";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 type MarketingData = {
   tagline: string;

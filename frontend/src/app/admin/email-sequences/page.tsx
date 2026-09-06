@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/format";
 import { Card, PageHeader } from "@/components/ui";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 const SEQ_LABELS: Record<string, string> = {
   ONBOARDING: "Onboarding",

@@ -17,7 +17,7 @@ import {
 } from "./sync-button";
 import CatalogClient from "./catalog-client";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 const PRICING_OPTIONS = [
   { value: "MONTHLY_SUB", label: "Abonnement mensuel" },

@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/ui";
 import { createMission, updateMissionStatus, updateApplicationStatus } from "../actions";
 import MissionsAdminClient from "./missions-admin-client";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 export default async function AdminMissionsPage() {
   await requireAdmin();

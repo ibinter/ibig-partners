@@ -5,7 +5,7 @@ import { Badge, Button, Card, PageHeader } from "@/components/ui";
 import { updateOpportunity, sendOpportunityMessage } from "../actions";
 import OpportunitesClient from "./opportunites-client";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 export default async function OpportunitesPage() {
   await requireAdmin();

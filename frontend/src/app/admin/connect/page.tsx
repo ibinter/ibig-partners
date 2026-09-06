@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/ui";
 import { updateConnectStatus } from "../actions";
 import ConnectAdminClient from "./connect-admin-client";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 export default async function AdminConnectPage() {
   await requireAdmin();

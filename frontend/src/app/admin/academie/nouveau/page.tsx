@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { Card, Field, PageHeader } from "@/components/ui";
 import { createModule } from "../actions";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 const CONTENT_PLACEHOLDERS: Record<string, string> = {
   VIDEO:   "https://www.youtube.com/watch?v=... ou lien vidéo direct (YouTube, Vimeo, MP4...)",

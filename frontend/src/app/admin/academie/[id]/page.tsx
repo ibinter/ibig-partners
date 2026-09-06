@@ -5,7 +5,7 @@ import { Card, Field, PageHeader } from "@/components/ui";
 import { updateModule } from "../actions";
 import { DeleteModuleButton } from "./DeleteModuleButton";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 export default async function EditModulePage({
   params,

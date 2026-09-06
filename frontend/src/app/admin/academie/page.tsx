@@ -3,7 +3,7 @@ import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Badge, Card, PageHeader, StatCard } from "@/components/ui";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 const TYPE_LABEL: Record<string, string> = {
   VIDEO:   "Vidéo",

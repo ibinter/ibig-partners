@@ -4,7 +4,7 @@ import { formatDate } from "@/lib/format";
 import { Button, Card, Field, PageHeader } from "@/components/ui";
 import { sendAnnouncement } from "../actions";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 30;
 
 export default async function CommunicationPage() {
   await requireAdmin();
