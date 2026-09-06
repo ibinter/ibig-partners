@@ -10,7 +10,7 @@ const LEVELS = [
 
 export default async function VipPage() {
   const user = await requireUser();
-  const totalSales = await (prisma as any).sale.count({ where: { userId: user.id, status: "VALIDATED" } });
+  const totalSales = await (prisma as any).sale.count({ where: { sellerId: user.id, status: "VALIDATED" } });
 
   const currentLevel = LEVELS.findLast((l) => totalSales >= l.min) ?? LEVELS[0];
   const nextLevel = LEVELS.find((l) => l.min > totalSales);

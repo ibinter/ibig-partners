@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   let csv = "";
 
   if (type === "ventes") {
-    const sales = await (prisma as any).sale.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } });
+    const sales = await (prisma as any).sale.findMany({ where: { sellerId: user.id }, orderBy: { createdAt: "desc" } });
     csv = "Date,Produit,Montant,Commission,Statut\n";
     csv += sales.map((s: any) => `"${new Date(s.createdAt).toLocaleDateString("fr-FR")}","${s.productName ?? ""}","${s.amount ?? 0}","${s.commission ?? 0}","${s.status ?? ""}"`).join("\n");
   } else if (type === "commissions") {
