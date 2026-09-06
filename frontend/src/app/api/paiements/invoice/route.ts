@@ -17,7 +17,7 @@ export async function GET(req: Request) {
   if (!payout) return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
 
   const commissions = await prisma.commission.findMany({
-    where: { userId: user.id, status: "PAID", updatedAt: { lte: payout.createdAt } },
+    where: { userId: user.id, status: "PAID", createdAt: { lte: payout.createdAt } },
     orderBy: { createdAt: "desc" },
     take: 20,
     include: { sale: { include: { product: true } } },
