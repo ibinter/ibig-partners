@@ -1652,3 +1652,32 @@ export async function sendPayoutThresholdEmail(opts: {
     html,
   });
 }
+
+export async function sendCallInvitationEmail(opts: {
+  to: string;
+  firstName: string;
+  callTitle: string;
+  callDescription?: string;
+}) {
+  const html = layout(`
+    <h2 style="margin:0 0 6px;font-size:22px;font-weight:800;color:#0f1729;">📣 Appel à partenaires</h2>
+    <p style="margin:0 0 20px;font-size:15px;color:#5b6577;">Bonjour ${opts.firstName}, IBIG vous invite à participer à un appel à partenaires.</p>
+
+    <div style="background:linear-gradient(135deg,#0b5fff,#7c3aed);border-radius:16px;padding:24px;margin-bottom:20px;">
+      <p style="margin:0;font-size:12px;font-weight:700;color:#bfdbfe;text-transform:uppercase;letter-spacing:1px;">Appel en cours</p>
+      <p style="margin:8px 0 0;font-size:20px;font-weight:800;color:#fff;">${opts.callTitle}</p>
+      ${opts.callDescription ? `<p style="margin:10px 0 0;font-size:14px;color:#c7d2fe;">${opts.callDescription}</p>` : ""}
+    </div>
+
+    <p style="margin:0 0 16px;font-size:14px;color:#5b6577;">
+      Connectez-vous à votre espace partenaire pour accepter ou décliner cet appel. Votre réponse nous aide à mieux coordonner les missions.
+    </p>
+    ${btn("Voir l'appel →", `${SITE}/espace/appels`)}
+  `);
+
+  return sendEmail({
+    to: opts.to,
+    subject: `📣 Appel à partenaires : ${opts.callTitle} — IBIG PARTNERS`,
+    html,
+  });
+}

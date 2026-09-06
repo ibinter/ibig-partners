@@ -3,6 +3,8 @@
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
+import { sendCallInvitationEmail } from "@/lib/email";
 
 export async function createPartnerCall(formData: FormData) {
   const admin = await requireAdmin();
@@ -69,6 +71,7 @@ export async function sendCallInvitations(formData: FormData) {
   });
   const existingIds = new Set(existing.map((e: any) => e.userId));
 
+  const newPartnerIds: string[] = [];
   let count = 0;
   for (const p of zoneFiltered) {
     if (existingIds.has(p.id)) continue;
@@ -83,7 +86,26 @@ export async function sendCallInvitations(formData: FormData) {
         url: "/espace/appels",
       },
     });
+    newPartnerIds.push(p.id);
     count++;
+  }
+
+  // Envoyer emails aux nouveaux invités
+  if (newPartnerIds.length > 0) {
+    after(async () => {
+      const recipients = await (prisma as any).user.findMany({
+        where: { id: { in: newPartnerIds } },
+        select: { email: true, firstName: true },
+      });
+      for (const r of recipients) {
+        await sendCallInvitationEmail({
+          to: r.email,
+          firstName: r.firstName,
+          callTitle: call.title,
+          callDescription: call.description || undefined,
+        }).catch(() => {});
+      }
+    });
   }
 
   revalidatePath("/admin/appels");

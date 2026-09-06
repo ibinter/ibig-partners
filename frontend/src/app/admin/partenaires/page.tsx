@@ -10,6 +10,8 @@ import {
   setPartnerRole,
   sendVerificationReminder,
   sendVerificationReminderToAll,
+  bulkApproveAll,
+  bulkSuspendInactive,
 } from "../actions";
 import { adminContact } from "../messages/actions";
 import { ExportButton } from "@/components/export-button";
@@ -101,6 +103,25 @@ export default async function PartenairesPage() {
           </div>
         }
       />
+
+      {/* ── Actions groupées ── */}
+      {(pending.length > 0 || partners.some((p) => p.approved && p.active && p._count.sales === 0)) && (
+        <div className="flex flex-wrap items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-900/20 dark:border-amber-700 px-4 py-3 mb-4">
+          <span className="text-xs font-semibold text-amber-700 dark:text-amber-300 mr-2">Actions groupées :</span>
+          {pending.length > 0 && (
+            <form action={bulkApproveAll}>
+              <SubmitButton variant="success" size="sm" pendingLabel="Approbation…">
+                ✅ Approuver tous les {pending.length} en attente
+              </SubmitButton>
+            </form>
+          )}
+          <form action={bulkSuspendInactive}>
+            <SubmitButton variant="secondary" size="sm" pendingLabel="Suspension…">
+              ⏸ Suspendre inactifs (0 vente, +90j)
+            </SubmitButton>
+          </form>
+        </div>
+      )}
 
       <Card className="p-0">
         <div className="overflow-x-auto">

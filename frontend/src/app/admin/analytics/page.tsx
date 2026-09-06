@@ -2,13 +2,18 @@ import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { fcfa } from "@/lib/format";
 import { PageHeader } from "@/components/ui";
+import AnalyticsCharts from "./analytics-charts";
 
 export const revalidate = 30;
 
 export default async function AnalyticsPage() {
   await requireAdmin();
 
-  const [salesByBranch, conversionByPartner] = await Promise.all([
+  // Données 12 mois glissants
+  const now = new Date();
+  const twelveMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 11, 1);
+
+  const [salesByBranch, conversionByPartner, salesMonthly, commMonthly] = await Promise.all([
     // Ventes confirmées par branche, avec vendeur pour heatmap pays
     prisma.sale.findMany({
       where: { status: "CONFIRMED" },
@@ -27,7 +32,36 @@ export default async function AnalyticsPage() {
       orderBy: { clicks: "desc" },
       take: 20,
     }),
+    // 12 mois ventes
+    prisma.sale.findMany({
+      where: { status: "CONFIRMED", createdAt: { gte: twelveMonthsAgo } },
+      select: { createdAt: true, amount: true },
+    }),
+    // 12 mois commissions
+    prisma.commission.findMany({
+      where: { createdAt: { gte: twelveMonthsAgo } },
+      select: { createdAt: true, amount: true },
+    }),
   ]);
+
+  // Données graphique 12 mois
+  const monthMap = new Map<string, { ventes: number; montant: number; commissions: number }>();
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = d.toLocaleDateString("fr-FR", { month: "short", year: "2-digit" });
+    monthMap.set(key, { ventes: 0, montant: 0, commissions: 0 });
+  }
+  for (const s of salesMonthly) {
+    const key = new Date(s.createdAt).toLocaleDateString("fr-FR", { month: "short", year: "2-digit" });
+    const row = monthMap.get(key);
+    if (row) { row.ventes++; row.montant += s.amount; }
+  }
+  for (const c of commMonthly) {
+    const key = new Date(c.createdAt).toLocaleDateString("fr-FR", { month: "short", year: "2-digit" });
+    const row = monthMap.get(key);
+    if (row) row.commissions += c.amount;
+  }
+  const chartData = Array.from(monthMap.entries()).map(([month, v]) => ({ month, ...v }));
 
   // Heatmap branche × pays
   const branchCountryMap = new Map<string, Map<string, number>>();
@@ -81,6 +115,9 @@ export default async function AnalyticsPage() {
         title="Analytics & Performance"
         subtitle="Heatmap des ventes par branche et taux de conversion par lien affilié"
       />
+
+      {/* ── Graphiques 12 mois ── */}
+      <AnalyticsCharts data={chartData} />
 
       {/* ── KPIs ── */}
       <div className="grid gap-3 sm:grid-cols-3">

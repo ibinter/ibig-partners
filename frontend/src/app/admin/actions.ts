@@ -121,6 +121,50 @@ export async function sendVerificationReminderToAll() {
   revalidatePath("/admin/partenaires");
 }
 
+/** Approuver tous les partenaires en attente d'un coup. */
+export async function bulkApproveAll() {
+  const admin = await requireAdmin();
+  const pending = await prisma.user.findMany({
+    where: { role: "PARTNER", approved: false },
+    select: { id: true, email: true, firstName: true, code: true, sponsorId: true },
+  });
+  if (pending.length === 0) return;
+  await prisma.user.updateMany({
+    where: { id: { in: pending.map((p) => p.id) }, role: "PARTNER", approved: false },
+    data: { approved: true, active: true },
+  });
+  after(async () => {
+    for (const p of pending) {
+      await sendOnboardingJ0Email({ to: p.email, firstName: p.firstName, code: p.code }).catch(() => {});
+      await prisma.emailSequenceLog.upsert({
+        where: { userId_sequence_step: { userId: p.id, sequence: "ONBOARDING", step: "J0" } },
+        update: { sentAt: new Date() },
+        create: { userId: p.id, sequence: "ONBOARDING", step: "J0" },
+      });
+    }
+  });
+  void logAction({ userId: admin.id, action: "BULK_APPROVE_PARTNERS", detail: `${pending.length} partenaires approuvés` });
+  revalidatePath("/admin/partenaires");
+}
+
+/** Suspendre tous les partenaires actifs depuis plus de 90 jours sans vente. */
+export async function bulkSuspendInactive() {
+  const admin = await requireAdmin();
+  const cutoff = new Date(Date.now() - 90 * 24 * 3600 * 1000);
+  const partners = await prisma.user.findMany({
+    where: { role: "PARTNER", approved: true, active: true, createdAt: { lt: cutoff } },
+    select: { id: true, _count: { select: { sales: true } } },
+  });
+  const inactive = partners.filter((p) => p._count.sales === 0).map((p) => p.id);
+  if (inactive.length === 0) return;
+  await prisma.user.updateMany({
+    where: { id: { in: inactive } },
+    data: { active: false },
+  });
+  void logAction({ userId: admin.id, action: "BULK_SUSPEND_INACTIVE", detail: `${inactive.length} partenaires suspendus` });
+  revalidatePath("/admin/partenaires");
+}
+
 export async function setPartnerRole(formData: FormData) {
   const admin = await requireAdmin();
   if (admin.role !== "SUPERADMIN") return; // seul le SuperAdmin gere les roles
