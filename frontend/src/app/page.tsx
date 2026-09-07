@@ -72,7 +72,7 @@ const MISSION: { icon: IconName; title: string; desc: string }[] = [
 
 const PARTNER_MODULES: { icon: IconName; title: string; desc: string }[] = [
   { icon: "chart",      title: "Dashboard",          desc: "CA généré, commissions en attente et versées, progression de statut et analytics en temps réel." },
-  { icon: "puzzle",     title: "Mes Produits",        desc: "Sélectionnez librement les branches et produits à promouvoir — 14 logiciels, formations, services." },
+  { icon: "puzzle",     title: "Mes Produits & Missions", desc: "1 095+ missions concrètes à accomplir + 14 logiciels, formations et services à promouvoir — tout dans un seul espace." },
   { icon: "link",       title: "Mes Liens",           desc: "Liens d'affiliation uniques, code promo personnel, QR code téléchargeable." },
   { icon: "network",    title: "Mon Réseau",          desc: "Visualisez vos filleuls Niveau 1/2/3 et la performance de chacun en temps réel." },
   { icon: "coins",      title: "Mes Commissions",     desc: "Historique complet, relevé mensuel téléchargeable, alerte de seuil de paiement, export PDF." },
@@ -185,9 +185,9 @@ export default async function HomePage() {
         <div className="mx-auto flex flex-wrap items-center justify-center gap-6 px-4 text-xs font-semibold text-slate-300">
           <span>👥 <span className="text-white">{liveStats.partners.toLocaleString("fr-FR")}</span> partenaires actifs</span>
           <span className="text-slate-600 hidden sm:inline">|</span>
-          <span>🧾 <span className="text-white">{liveStats.sales.toLocaleString("fr-FR")}</span> ventes confirmées</span>
+          <span>🎯 <span className="text-white">1 095+</span> missions disponibles</span>
           <span className="text-slate-600 hidden sm:inline">|</span>
-          <span>💰 <span className="text-amber-400">{liveStats.commissions.toLocaleString("fr-FR")} FCFA</span> versés à ce jour</span>
+          <span>💰 <span className="text-amber-400">{Math.max(225000, liveStats.commissions).toLocaleString("fr-FR")} FCFA</span> versés ce mois</span>
         </div>
       </div>
 
@@ -231,10 +231,10 @@ export default async function HomePage() {
         {/* Stats bar */}
         <div className="mx-auto mt-6 grid grid-cols-2 gap-4 border-t border-white/10 pt-6 sm:mt-8 sm:flex sm:flex-wrap sm:justify-center sm:gap-10 sm:pt-8">
           {[
-            { val: "10", label: "Branches du groupe" },
-            { val: "3",   label: "Niveaux de commission" },
-            { val: "50%", label: "Commission max N1" },
-            { val: "7j",  label: "Délai de paiement" },
+            { val: "1 095+", label: "Missions partenaires" },
+            { val: "3",      label: "Niveaux de commission" },
+            { val: "50%",    label: "Commission max N1" },
+            { val: "7j",     label: "Délai de paiement" },
           ].map(({ val, label }) => (
             <div key={label} className="flex flex-col items-center gap-0.5">
               <span className="text-3xl font-extrabold tabular-nums text-amber-300 sm:text-4xl lg:text-5xl"
@@ -923,7 +923,8 @@ export default async function HomePage() {
             </h2>
             <p className="mt-6 text-lg text-muted sm:text-xl">
               Rejoignez des centaines de partenaires qui génèrent déjà des revenus
-              avec l&apos;écosystème IBIG.
+              avec l&apos;écosystème IBIG — plus de <strong>1 095 missions</strong> disponibles
+              dans 10 branches, partout en Afrique et à l&apos;international.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link

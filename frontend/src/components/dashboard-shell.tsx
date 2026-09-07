@@ -107,6 +107,27 @@ function SidebarNav({
 }) {
   const pathname = usePathname();
 
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(() => {
+    if (typeof window === "undefined") return {};
+    try {
+      const stored = localStorage.getItem("ibig_sidebar_groups");
+      return stored ? JSON.parse(stored) : {};
+    } catch { return {}; }
+  });
+
+  function toggleGroup(label: string) {
+    setExpandedGroups((prev) => {
+      const next = { ...prev, [label]: prev[label] === false ? true : false };
+      try { localStorage.setItem("ibig_sidebar_groups", JSON.stringify(next)); } catch {}
+      return next;
+    });
+  }
+
+  function isGroupExpanded(label: string | null) {
+    if (!label) return true;
+    return expandedGroups[label] !== false; // default: expanded
+  }
+
   const isActive = (href: string) => {
     if (href === "/admin" || href === "/espace") return pathname === href;
     return pathname.startsWith(href);
@@ -123,74 +144,85 @@ function SidebarNav({
 
   return (
     <nav className={`flex-1 overflow-y-auto py-3 space-y-0.5 ${collapsed ? "px-2" : "px-3"}`}>
-      {groups.map((group, gi) => (
-        <div key={gi}>
-          {/* Séparateur de groupe */}
-          {group.label && !collapsed && (
-            <p className={`mb-1 mt-4 px-3 text-[10px] font-bold uppercase tracking-widest ${
-              variant === "admin" ? "text-white/35" : "text-slate-400"
-            }`}>
-              {group.label}
-            </p>
-          )}
-          {group.label && collapsed && (
-            <div className={`my-2 mx-auto h-px w-6 ${variant === "admin" ? "bg-white/15" : "bg-slate-200"}`} />
-          )}
+      {groups.map((group, gi) => {
+        const expanded = isGroupExpanded(group.label);
+        return (
+          <div key={gi}>
+            {/* En-tête de groupe cliquable (mode plein) */}
+            {group.label && !collapsed && (
+              <button
+                onClick={() => toggleGroup(group.label!)}
+                className={`w-full flex items-center justify-between mb-1 mt-4 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all duration-150 group ${
+                  variant === "admin"
+                    ? "text-white/40 hover:bg-white/10 hover:text-white/70"
+                    : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
+                }`}
+              >
+                <span>{group.label}</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="11" height="11"
+                  viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor"
+                  strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                  className={`transition-transform duration-200 opacity-60 group-hover:opacity-100 ${expanded ? "rotate-0" : "-rotate-90"}`}
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+            )}
+            {group.label && collapsed && (
+              <div className={`my-2 mx-auto h-px w-6 ${variant === "admin" ? "bg-white/15" : "bg-slate-200"}`} />
+            )}
 
-          {group.items.map((item) => {
-            const active = isActive(item.href);
-            return collapsed ? (
-              /* Mode rail : icône seule + tooltip natif */
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={onClose}
-                title={item.label}
-                className={`relative flex h-10 w-10 mx-auto items-center justify-center rounded-xl text-base transition-all duration-150 ${
-                  variant === "admin"
-                    ? active
-                      ? "bg-white/20 text-white shadow-inner"
-                      : "text-white/60 hover:bg-white/12 hover:text-white"
-                    : active
-                    ? "bg-blue-50 text-blue-600"
-                    : "text-slate-500 hover:bg-slate-100 hover:text-slate-700"
-                }`}
-              >
-                {item.icon}
-                {item.badge != null && item.badge > 0 && (
-                  <span className="absolute top-0.5 right-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold text-white">
-                    {item.badge > 9 ? "9+" : item.badge}
-                  </span>
-                )}
-              </Link>
-            ) : (
-              /* Mode plein */
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={onClose}
-                className={`flex items-center gap-3 px-3 py-2.5 text-sm rounded-xl transition-all duration-150 ${
-                  variant === "admin"
-                    ? active
-                      ? "sidebar-admin-item active"
-                      : "sidebar-admin-item"
-                    : active
-                    ? "sidebar-partner-item active"
-                    : "sidebar-partner-item"
-                }`}
-              >
-                <span className="text-base shrink-0">{item.icon}</span>
-                <span className="flex-1 truncate">{item.label}</span>
-                {item.badge != null && item.badge > 0 && (
-                  <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-rose-500 px-1.5 text-[10px] font-bold text-white">
-                    {item.badge > 99 ? "99+" : item.badge}
-                  </span>
-                )}
-              </Link>
-            );
-          })}
-        </div>
-      ))}
+            {/* Items — affichés quand groupe ouvert (ou mode rail) */}
+            {(expanded || collapsed) && group.items.map((item) => {
+              const active = isActive(item.href);
+              return collapsed ? (
+                /* Mode rail : icône seule + tooltip natif */
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onClose}
+                  title={item.label}
+                  className={`relative flex h-10 w-10 mx-auto items-center justify-center rounded-xl text-base transition-all duration-150 ${
+                    variant === "admin"
+                      ? active ? "bg-white/20 text-white shadow-inner" : "text-white/60 hover:bg-white/12 hover:text-white"
+                      : active ? "bg-blue-50 text-blue-600" : "text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                  }`}
+                >
+                  {item.icon}
+                  {item.badge != null && item.badge > 0 && (
+                    <span className="absolute top-0.5 right-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold text-white">
+                      {item.badge > 9 ? "9+" : item.badge}
+                    </span>
+                  )}
+                </Link>
+              ) : (
+                /* Mode plein */
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={onClose}
+                  className={`flex items-center gap-3 px-3 py-2.5 text-sm rounded-xl transition-all duration-150 ${
+                    variant === "admin"
+                      ? active ? "sidebar-admin-item active" : "sidebar-admin-item"
+                      : active ? "sidebar-partner-item active" : "sidebar-partner-item"
+                  }`}
+                >
+                  <span className="text-base shrink-0">{item.icon}</span>
+                  <span className="flex-1 truncate">{item.label}</span>
+                  {item.badge != null && item.badge > 0 && (
+                    <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-rose-500 px-1.5 text-[10px] font-bold text-white">
+                      {item.badge > 99 ? "99+" : item.badge}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+        );
+      })}
     </nav>
   );
 }

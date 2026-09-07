@@ -13,18 +13,28 @@ function urlBase64ToUint8Array(base64String: string) {
 
 export function PushSubscribeButton() {
   const [state, setState] = useState<"idle" | "subscribed" | "denied" | "loading" | "unsupported">("idle");
+  const [dismissed, setDismissed] = useState(true); // start hidden until hydration
 
   useEffect(() => {
+    try {
+      if (sessionStorage.getItem("ibig_push_dismissed") === "1") return;
+    } catch {}
     if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
       setState("unsupported");
       return;
     }
+    setDismissed(false);
     navigator.serviceWorker.ready.then(async (reg) => {
       const sub = await reg.pushManager.getSubscription();
       if (sub) setState("subscribed");
       else if (Notification.permission === "denied") setState("denied");
     });
   }, []);
+
+  function dismiss() {
+    try { sessionStorage.setItem("ibig_push_dismissed", "1"); } catch {}
+    setDismissed(true);
+  }
 
   async function subscribe() {
     setState("loading");
@@ -60,34 +70,43 @@ export function PushSubscribeButton() {
     setState("idle");
   }
 
-  if (state === "unsupported") return null;
+  if (dismissed || state === "unsupported") return null;
 
   if (state === "subscribed") {
     return (
-      <button
-        onClick={unsubscribe}
-        className="flex items-center gap-2 rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 transition-colors"
-      >
-        🔔 Notifications activées
-      </button>
+      <div className="flex items-center gap-1">
+        <button
+          onClick={unsubscribe}
+          className="flex items-center gap-2 rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 transition-colors"
+        >
+          🔔 Activées
+        </button>
+        <button onClick={dismiss} title="Fermer" className="flex h-6 w-6 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 text-[10px]">✕</button>
+      </div>
     );
   }
 
   if (state === "denied") {
     return (
-      <div className="flex items-center gap-2 rounded-xl bg-slate-50 border border-slate-200 px-3 py-2 text-xs text-slate-500">
-        🔕 Notifications bloquées — autorisez-les dans votre navigateur
+      <div className="flex items-center gap-1">
+        <span className="flex items-center gap-2 rounded-xl bg-slate-50 border border-slate-200 px-3 py-2 text-xs text-slate-500">
+          🔕 Bloquées
+        </span>
+        <button onClick={dismiss} title="Fermer" className="flex h-6 w-6 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 text-[10px]">✕</button>
       </div>
     );
   }
 
   return (
-    <button
-      onClick={subscribe}
-      disabled={state === "loading"}
-      className="flex items-center gap-2 rounded-xl bg-blue-50 border border-blue-200 px-3 py-2 text-xs font-semibold text-blue-700 hover:bg-blue-100 transition-colors disabled:opacity-50"
-    >
-      {state === "loading" ? "⏳ Activation…" : "🔔 Activer les notifications"}
-    </button>
+    <div className="flex items-center gap-1">
+      <button
+        onClick={subscribe}
+        disabled={state === "loading"}
+        className="flex items-center gap-2 rounded-xl bg-blue-50 border border-blue-200 px-3 py-2 text-xs font-semibold text-blue-700 hover:bg-blue-100 transition-colors disabled:opacity-50"
+      >
+        {state === "loading" ? "⏳" : "🔔 Activer"}
+      </button>
+      <button onClick={dismiss} title="Fermer" className="flex h-6 w-6 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 text-[10px]">✕</button>
+    </div>
   );
 }
