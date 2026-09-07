@@ -86,9 +86,9 @@ type MissionRow = {
 };
 
 function rewardLabel(row: MissionRow) {
-  const cash = row.compensationType === "FIXED"
-    ? new Intl.NumberFormat("fr-FR").format(row.compensationAmount) + " F"
-    : (row.compensationAmount / 100).toFixed(1) + "%";
+  const cash = row.compensationType === "PERCENT"
+    ? (row.compensationAmount / 100).toFixed(1) + "%"
+    : new Intl.NumberFormat("fr-FR").format(row.compensationAmount) + " F";
   if (row.rewardType === "CASH") return cash;
   if (row.rewardType === "CP") return `${row.cpAmount} CP`;
   return `${cash} + ${row.cpAmount} CP`;
