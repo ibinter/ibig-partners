@@ -227,6 +227,48 @@ function SidebarNav({
   );
 }
 
+/* ── Bottom nav mobile (5 raccourcis app) ── */
+function BottomNav({ nav, variant }: { nav: NavItem[]; variant: "partner" | "admin" }) {
+  const pathname = usePathname();
+  const isActive = (href: string) => {
+    if (href === "/admin" || href === "/espace") return pathname === href;
+    return pathname.startsWith(href);
+  };
+
+  const shortcuts = variant === "admin"
+    ? nav.slice(0, 5)
+    : [
+        nav.find((n) => n.href === "/espace")!,
+        nav.find((n) => n.href === "/espace/ventes")!,
+        nav.find((n) => n.href === "/espace/missions")!,
+        nav.find((n) => n.href === "/espace/commissions")!,
+        nav.find((n) => n.href === "/espace/profil")!,
+      ].filter(Boolean);
+
+  return (
+    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 flex items-end bg-white/95 backdrop-blur-md border-t border-slate-100 shadow-[0_-1px_0_rgba(0,0,0,0.06)] print:hidden"
+         style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
+      {shortcuts.map((item) => {
+        const active = isActive(item.href);
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`flex-1 flex flex-col items-center gap-0.5 py-2 text-[10px] font-semibold transition-colors ${
+              active ? "text-brand-600" : "text-slate-400"
+            }`}
+          >
+            <span className={`flex h-7 w-7 items-center justify-center rounded-xl text-lg transition-all ${
+              active ? "bg-brand-50 scale-110" : ""
+            }`}>{item.icon}</span>
+            <span className="truncate max-w-[60px] text-center leading-tight">{item.label.split(" ")[0]}</span>
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
+
 /* ── Shell principal ── */
 export function DashboardShell({
   nav,
@@ -259,7 +301,7 @@ export function DashboardShell({
   const isAdmin = variant === "admin";
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#f2f5fb]">
+    <div className="flex overflow-hidden bg-[#f2f5fb]" style={{ height: "100dvh" }}>
       <CommandPalette />
       <FloatingWidgets />
 
@@ -448,9 +490,10 @@ export function DashboardShell({
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
 
         {/* Header */}
-        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-slate-100 bg-white/90 backdrop-blur-md px-4 py-3 md:px-6 print:hidden shadow-[0_1px_0_0_rgba(0,0,0,0.05)]">
+        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-slate-100 bg-white/90 backdrop-blur-md px-4 py-3 md:px-6 print:hidden shadow-[0_1px_0_0_rgba(0,0,0,0.05)]"
+                style={{ paddingTop: "max(12px, env(safe-area-inset-top, 12px))" }}>
           <div className="flex items-center gap-3">
-            {/* Hamburger mobile */}
+            {/* Hamburger mobile — menu complet */}
             <button
               onClick={() => setMobileOpen(true)}
               className="flex flex-col gap-1 p-2 rounded-lg hover:bg-slate-100 md:hidden"
@@ -460,16 +503,22 @@ export function DashboardShell({
               <span className="block h-0.5 w-5 rounded bg-slate-600" />
               <span className="block h-0.5 w-5 rounded bg-slate-600" />
             </button>
-            <Link href={home} className="font-bold text-ink md:hidden">IBIG PARTNERS</Link>
+            {/* Logo mobile */}
+            <Link href={home} className="font-extrabold text-ink tracking-tight md:hidden" style={{ fontSize: "15px" }}>
+              IBIG <span className="text-brand-600">PARTNERS</span>
+            </Link>
+            {/* Greeting desktop */}
             <span className="hidden text-sm text-muted md:block">
               Bonjour, <span className="font-semibold text-ink">{user.firstName}</span> 👋
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* Ctrl+K hint */}
+          <div className="flex items-center gap-2">
+            {/* Notifications — visible partout */}
             {variant === "partner" && <NotifLiveDropdown initialCount={0} />}
-            {variant === "partner" && <PushSubscribeButton />}
+            {/* Push subscribe — desktop only to avoid clutter */}
+            {variant === "partner" && <div className="hidden sm:block"><PushSubscribeButton /></div>}
+            {/* Ctrl+K search — desktop only */}
             {variant === "partner" && (
               <button
                 onClick={() => window.dispatchEvent(new KeyboardEvent("keydown", { ctrlKey: true, key: "k", bubbles: true }))}
@@ -481,19 +530,23 @@ export function DashboardShell({
                 <kbd className="ml-1 font-mono bg-white border border-slate-200 rounded px-1 text-[10px]">Ctrl K</kbd>
               </button>
             )}
+            {/* Code badge — desktop */}
             <div className={`hidden sm:flex h-7 items-center rounded-full px-3 text-xs font-semibold ${
               isAdmin ? "bg-brand-50 text-brand-700" : "bg-slate-100 text-slate-600"
             }`}>
               {user.code}
             </div>
+            {/* Status badge — desktop */}
             {variant === "partner" && (
               <span className="hidden sm:inline-flex rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
                 {STATUS_LABELS[user.status]}
               </span>
             )}
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-xs font-bold text-white shadow-sm">
+            {/* Avatar always visible */}
+            <Link href="/espace/profil" className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-xs font-bold text-white shadow-sm hover:bg-brand-700 transition-colors">
               {initials}
-            </div>
+            </Link>
+            {/* Logout — desktop only (mobile uses sidebar) */}
             <form action={logoutAction}>
               <button type="submit" className="hidden sm:block rounded-lg px-3 py-1.5 text-sm text-slate-500 hover:bg-slate-100 transition-colors">
                 Déconnexion
@@ -502,10 +555,11 @@ export function DashboardShell({
           </div>
         </header>
 
-        <main className="dash-surface flex-1 overflow-y-auto px-4 py-7 md:px-8 md:py-9 animate-fade-in">
+        <main className="dash-surface flex-1 overflow-y-auto px-4 py-5 md:px-8 md:py-9 animate-fade-in pb-safe-mobile">
           {children}
         </main>
       </div>
+      {variant === "partner" && <BottomNav nav={nav} variant={variant} />}
     </div>
   );
 }
