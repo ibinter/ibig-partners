@@ -148,15 +148,9 @@ function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
         {/* Titre */}
         <h3 className="font-extrabold text-slate-900 dark:text-white text-sm leading-snug">{m.title}</h3>
 
-        {/* Ce qu'il faut faire — toujours visible */}
-        <div className="rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700 px-3 py-2.5">
-          <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Ce qu'il faut faire</p>
-          <p className="text-xs text-slate-700 dark:text-slate-300 font-medium leading-relaxed">{mtype.action}</p>
-        </div>
-
         {/* Description — toujours visible */}
         {m.description && (
-          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">{m.description}</p>
+          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line">{m.description}</p>
         )}
 
         {/* Récompense — bien mise en avant */}
