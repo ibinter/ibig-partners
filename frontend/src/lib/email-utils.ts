@@ -12,9 +12,9 @@ export async function sendEmail(opts: { to: string; subject: string; html: strin
     console.log(`[EMAIL DEV] To: ${opts.to} | Subject: ${opts.subject}`);
     return;
   }
-  try {
-    await resend.emails.send({ from: FROM, ...opts });
-  } catch (err) {
-    console.error("[EMAIL ERROR]", err);
+  const result = await resend.emails.send({ from: FROM, ...opts });
+  if (result.error) {
+    console.error("[EMAIL ERROR]", result.error);
+    throw new Error(`Email send failed: ${result.error.message}`);
   }
 }

@@ -100,7 +100,11 @@ export async function loginAction(_prev: unknown, formData: FormData) {
   }
 
   // 2FA par email OTP pour tous les utilisateurs
-  void createAndSendOtp(user.id, user.email, user.firstName);
+  try {
+    await createAndSendOtp(user.id, user.email, user.firstName);
+  } catch {
+    return { error: "Impossible d'envoyer le code de vérification. Réessayez dans quelques instants." };
+  }
   const store = await cookies();
   store.set("ibig_otp_pending", user.id, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: 10 * 60, path: "/" });
   const otpDest = next ? `/connexion/otp?next=${encodeURIComponent(next)}` : "/connexion/otp";
@@ -125,8 +129,8 @@ export async function registerAction(_prev: unknown, formData: FormData) {
   if (partnerType !== "INDIVIDUAL" && !orgName) {
     return { error: "Merci d'indiquer le nom de votre organisation." };
   }
-  if (password.length < 6) {
-    return { error: "Le mot de passe doit contenir au moins 6 caractères." };
+  if (password.length < 8) {
+    return { error: "Le mot de passe doit contenir au moins 8 caractères." };
   }
 
   const existing = await prisma.user.findUnique({ where: { email } });

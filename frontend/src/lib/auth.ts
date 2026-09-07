@@ -6,9 +6,11 @@ import { redirect } from "next/navigation";
 import { prisma } from "./prisma";
 
 const COOKIE_NAME = "ibig_session";
-const secret = new TextEncoder().encode(
-  process.env.AUTH_SECRET || "dev-secret-change-me",
-);
+const rawSecret = process.env.AUTH_SECRET;
+if (!rawSecret && process.env.NODE_ENV === "production") {
+  throw new Error("AUTH_SECRET manquant — définissez-le dans les variables d'environnement Vercel.");
+}
+const secret = new TextEncoder().encode(rawSecret || "dev-secret-change-me-not-for-prod");
 
 export type SessionPayload = { userId: string; role: string };
 
@@ -24,16 +26,16 @@ export async function createSession(payload: SessionPayload): Promise<void> {
   const token = await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("7d")
+    .setExpirationTime("24h")
     .sign(secret);
 
   const store = await cookies();
   store.set(COOKIE_NAME, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "strict",
     path: "/",
-    maxAge: 60 * 60 * 24 * 7,
+    maxAge: 60 * 60 * 24,
   });
 }
 
