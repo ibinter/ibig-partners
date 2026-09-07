@@ -41,7 +41,10 @@ export async function verifyOtpAction(_prev: unknown, formData: FormData) {
   await createSession({ userId: user.id, role: user.role });
   await logActivity({ userId: user.id, action: "LOGIN", detail: `Rôle: ${user.role}` });
 
-  const dest = next && next.startsWith("/") ? next : "/espace";
+  // Si une destination explicite est fournie, l'utiliser ; sinon rediriger selon le rôle
+  const isAdmin = user.role === "ADMIN" || user.role === "SUPERADMIN";
+  const defaultDest = isAdmin ? "/admin" : "/espace";
+  const dest = next && next.startsWith("/") ? next : defaultDest;
   redirect(dest);
 }
 
