@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { verifyOtp } from "@/lib/otp";
 import { createSession } from "@/lib/auth";
+import { logActivity } from "@/lib/activity";
 
 export async function verifyOtpAction(_prev: unknown, formData: FormData) {
   const code = String(formData.get("code") || "").trim().replace(/\s/g, "");
@@ -38,6 +39,7 @@ export async function verifyOtpAction(_prev: unknown, formData: FormData) {
   // Code correct — créer la session complète
   store.delete("ibig_otp_pending");
   await createSession({ userId: user.id, role: user.role });
+  await logActivity({ userId: user.id, action: "LOGIN", detail: `Rôle: ${user.role}` });
 
   const dest = next && next.startsWith("/") ? next : "/espace";
   redirect(dest);

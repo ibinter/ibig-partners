@@ -12,6 +12,7 @@ import {
 } from "@/lib/auth";
 import { createAndSendOtp } from "@/lib/otp";
 import { sendRegistrationReceivedEmail } from "@/lib/email";
+import { logActivity } from "@/lib/activity";
 
 function slugifyName(s: string): string {
   return s
@@ -86,6 +87,7 @@ export async function loginAction(_prev: unknown, formData: FormData) {
         ? { loginAttempts: 0, lockedUntil: new Date(Date.now() + 15 * 60 * 1000) }
         : { loginAttempts: attempts, lockedUntil: null };
       await prisma.user.update({ where: { id: user.id }, data: lockData }).catch(() => {});
+      await logActivity({ userId: user.id, action: "LOGIN_FAILED", detail: `Tentative ${attempts}` });
     }
     return { error: "Identifiants incorrects." };
   }
@@ -102,6 +104,7 @@ export async function loginAction(_prev: unknown, formData: FormData) {
   // 2FA par email OTP pour tous les utilisateurs
   try {
     await createAndSendOtp(user.id, user.email, user.firstName);
+    await logActivity({ userId: user.id, action: "OTP_SENT", detail: `Email: ${user.email}` });
   } catch {
     return { error: "Impossible d'envoyer le code de vérification. Réessayez dans quelques instants." };
   }
@@ -201,6 +204,7 @@ export async function registerAction(_prev: unknown, formData: FormData) {
     });
   });
 
+  await logActivity({ userId: user.id, action: "REGISTER", detail: `Code: ${user.code}` });
   await createSession({ userId: user.id, role: user.role });
   store.delete("ibig_ref");
 

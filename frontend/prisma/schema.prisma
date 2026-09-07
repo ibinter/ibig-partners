@@ -98,6 +98,7 @@ model User {
   contract               Contract?
   notificationPreference NotificationPreference?
   bonusTransactions      BonusTransaction[]
+  activityLogs           ActivityLog[]
 
   preferredCurrency String @default("FCFA")
 
@@ -1188,6 +1189,22 @@ model BonusTransaction {
 
   @@index([userId])
   @@index([ruleId])
+}
+
+// ─── Journal d'activité ─────────────────────────────────────────────────────
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String   // LOGIN | LOGOUT | SALE_DECLARED | MISSION_APPLIED | OTP_SENT | PROFILE_UPDATE | PAGE_VISIT | etc.
+  detail    String?  // JSON ou texte libre
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
 }
 
 model MissionDuplicate {

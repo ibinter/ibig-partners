@@ -229,6 +229,9 @@ export async function declareSale(formData: FormData) {
     },
   });
 
+  const { logActivity } = await import("@/lib/activity");
+  await logActivity({ userId: user.id, action: "SALE_DECLARED", detail: `Produit: ${product.name} — ${amount.toLocaleString("fr-FR")} FCFA` });
+
   // Prévenir les admins qu'une vente attend leur validation (cloche → /admin/ventes).
   const admins = await prisma.user.findMany({
     where: { role: { in: ["ADMIN", "SUPERADMIN"] } },
@@ -399,6 +402,9 @@ export async function applyToMission(formData: FormData) {
     update: { note, status: "PENDING", updatedAt: new Date() },
     create: { missionId, userId: user.id, note },
   });
+
+  const { logActivity } = await import("@/lib/activity");
+  await logActivity({ userId: user.id, action: "MISSION_APPLIED", detail: `Mission ID: ${missionId}` });
 
   revalidatePath("/espace/missions");
 }

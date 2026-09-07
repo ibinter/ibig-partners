@@ -30,6 +30,7 @@ const NAV: NavItem[] = [
   { href: "/admin/recompenses",     label: "Récompenses",        icon: "🎁", group: "Communication" },
   { href: "/admin/communication",    label: "Communication",       icon: "📣", group: "Communication" },
   { href: "/admin/email-sequences", label: "Séquences email",     icon: "🔁", group: "Communication" },
+  { href: "/admin/activites",       label: "Journal d'activité",     icon: "👁️", group: "Administration" },
   { href: "/admin/statistiques",    label: "Statistiques globales",  icon: "📊", group: "Administration" },
   { href: "/admin/notifications",   label: "Notifications",           icon: "🔔", group: "Administration" },
   { href: "/admin/comparaison",     label: "Comparateur partenaires", icon: "⚖️", group: "Administration" },
