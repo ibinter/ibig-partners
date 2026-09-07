@@ -23,11 +23,17 @@ export function PushSubscribeButton() {
       setState("unsupported");
       return;
     }
-    setDismissed(false);
     navigator.serviceWorker.ready.then(async (reg) => {
       const sub = await reg.pushManager.getSubscription();
-      if (sub) setState("subscribed");
-      else if (Notification.permission === "denied") setState("denied");
+      if (sub) {
+        // Already subscribed — no need to show the banner, dismiss silently
+        try { sessionStorage.setItem("ibig_push_dismissed", "1"); } catch {}
+        return;
+      }
+      if (Notification.permission === "denied") {
+        setState("denied");
+      }
+      setDismissed(false);
     });
   }, []);
 

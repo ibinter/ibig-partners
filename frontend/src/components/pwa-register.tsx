@@ -10,15 +10,31 @@ export function PWARegister() {
   return null;
 }
 
+const PWA_INSTALL_KEY = "ibig_pwa_install_dismissed";
+
 export function PWAInstallBanner() {
   const [prompt, setPrompt] = useState<Event | null>(null);
   const [shown, setShown] = useState(false);
 
   useEffect(() => {
-    const handler = (e: Event) => { e.preventDefault(); setPrompt(e); setShown(true); };
+    // Don't show if already dismissed this session
+    try {
+      if (sessionStorage.getItem(PWA_INSTALL_KEY) === "1") return;
+    } catch {}
+
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setPrompt(e);
+      setShown(true);
+    };
     window.addEventListener("beforeinstallprompt", handler);
     return () => window.removeEventListener("beforeinstallprompt", handler);
   }, []);
+
+  function dismiss() {
+    try { sessionStorage.setItem(PWA_INSTALL_KEY, "1"); } catch {}
+    setShown(false);
+  }
 
   if (!shown || !prompt) return null;
 
@@ -29,11 +45,11 @@ export function PWAInstallBanner() {
         <p className="text-xs text-indigo-200">Accès rapide depuis votre écran d&apos;accueil</p>
       </div>
       <div className="flex gap-2 shrink-0">
-        <button onClick={() => setShown(false)} className="rounded-xl px-3 py-1.5 text-xs font-semibold text-indigo-200 hover:text-white">
+        <button onClick={dismiss} className="rounded-xl px-3 py-1.5 text-xs font-semibold text-indigo-200 hover:text-white">
           Plus tard
         </button>
         <button
-          onClick={() => { (prompt as any).prompt?.(); setShown(false); }}
+          onClick={() => { (prompt as any).prompt?.(); dismiss(); }}
           className="rounded-xl bg-white px-3 py-1.5 text-xs font-bold text-indigo-600 hover:bg-indigo-50"
         >
           Installer
