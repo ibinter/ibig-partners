@@ -89,7 +89,7 @@ export default async function BadgesPage() {
       />
 
       {/* ── KPIs ── */}
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         <div className="rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-4 text-white shadow-sm">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-100">Badges obtenus</p>
           <p className="mt-1 text-3xl font-extrabold">{usePlaceholders ? earnedReal.length : earnedCount}</p>
@@ -158,7 +158,7 @@ export default async function BadgesPage() {
               <div className="flex-1 h-px bg-slate-100" />
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {catBadges.map((badge, i) => {
                 const earned_ = isEarned(badge);
                 const userBadge = earnedBySlug.get(badge.slug);

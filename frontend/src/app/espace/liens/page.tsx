@@ -79,7 +79,7 @@ export default async function LiensPage() {
       />
 
       {/* ── 4 KPIs ── */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 p-4 text-white shadow-sm">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-blue-200">Liens actifs</p>
           <p className="mt-1 text-2xl font-extrabold">{links.length}</p>

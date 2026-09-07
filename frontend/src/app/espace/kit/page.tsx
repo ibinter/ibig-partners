@@ -53,7 +53,7 @@ export default async function KitPage() {
       />
 
       {/* ── KPI cards ── */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 p-4 text-white shadow-sm">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-blue-200">Disponibles</p>
           <p className="mt-1 text-2xl font-extrabold">{visible.length}</p>
@@ -132,7 +132,7 @@ export default async function KitPage() {
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {locked.map((k) => {
               const requiredStatus = STATUS_LABELS[k.minStatus] ?? k.minStatus;
               return (

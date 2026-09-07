@@ -253,7 +253,7 @@ export default async function DashboardPage({
       </div>
 
       {/* ── 4 KPI cards ── */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 p-4 text-white shadow-sm">
           <p className="text-xs font-semibold uppercase tracking-wide text-blue-200">CA généré</p>
           <p className="mt-1 text-2xl font-extrabold">{fcfa(summary.revenue)}</p>
@@ -277,7 +277,7 @@ export default async function DashboardPage({
       </div>
 
       {/* ── Phase 8 : CP Wallet + Niveau + Score ── */}
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {/* CP Balance */}
         <div className="rounded-2xl bg-gradient-to-br from-violet-600 to-purple-700 p-4 text-white shadow-sm">
           <div className="flex items-center justify-between mb-2">
@@ -349,7 +349,7 @@ export default async function DashboardPage({
       </div>
 
       {/* ── Temps réel : ventes du jour + objectif mois + rang ── */}
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {/* Ventes aujourd'hui */}
         <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm flex items-center gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-rose-50 text-2xl">🔥</div>

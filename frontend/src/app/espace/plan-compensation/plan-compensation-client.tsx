@@ -130,7 +130,7 @@ export default function PlanCompensationClient({ userStatus }: { userStatus: str
       {/* ── PRINCIPE DES 3 NIVEAUX ── */}
       <section className="space-y-4">
         <h2 className="text-sm font-extrabold text-slate-800">Comment fonctionnent les 3 niveaux ?</h2>
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {[
             { level: "N1", label: "Vous vendez directement", icon: "💼", desc: "Vous recommandez un produit, le client signe. Vous touchez la commission de Niveau 1 — la plus élevée.", bg: "bg-blue-50 border-blue-200", text: "text-blue-800" },
             { level: "N2", label: "Votre filleul vend", icon: "👥", desc: "Un partenaire que vous avez recruté fait une vente. Vous touchez une commission de Niveau 2 automatiquement.", bg: "bg-purple-50 border-purple-200", text: "text-purple-800" },
@@ -153,7 +153,7 @@ export default function PlanCompensationClient({ userStatus }: { userStatus: str
       {/* ── GRILLES DE TAUX ── */}
       <section className="space-y-4">
         <h2 className="text-sm font-extrabold text-slate-800">Grilles de taux par type de produit</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 
           {/* Abonnement mensuel */}
           <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
@@ -239,7 +239,7 @@ export default function PlanCompensationClient({ userStatus }: { userStatus: str
               <p className="text-[10px] text-rose-200">N1 = taux du produit · N2 = N1 × 50% · N3 = N1 × 25%</p>
             </div>
             <div className="p-4">
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {[
                   { branch: "IBIG IMMO TRUST", rate: 10, example: 5000000 },
                   { branch: "IBIG CONSEIL+",   rate: 20, example: 500000 },
@@ -326,7 +326,7 @@ export default function PlanCompensationClient({ userStatus }: { userStatus: str
             <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-3">
               Commission pour statut : {STATUSES[currentStatusIdx]?.label} (bonus +{(bonus * 100).toFixed(0)}%)
             </p>
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {[
                 { level: "N1 — Votre vente directe", value: exResult.n1, color: "bg-blue-600", light: "bg-blue-50 border-blue-200 text-blue-800" },
                 { level: "N2 — Votre filleul vend", value: exResult.n2, color: "bg-purple-600", light: "bg-purple-50 border-purple-200 text-purple-800" },

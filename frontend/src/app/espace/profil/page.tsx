@@ -160,7 +160,7 @@ export default async function ProfilPage() {
                 <h3 className="font-semibold text-white text-sm">📞 Informations de contact</h3>
                 <p className="text-xs text-slate-300 mt-0.5">Utilisées pour les communications et le versement des commissions.</p>
               </div>
-              <div className="p-5 grid gap-4 sm:grid-cols-2">
+              <div className="p-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Field label="Téléphone / WhatsApp" name="phone" defaultValue={user.phone} placeholder="+225 07 00 00 00 00" />
                 <Field label="Ville" name="city" defaultValue={user.city ?? ""} placeholder="Abidjan" />
                 <Field label="Pays" name="country" defaultValue={user.country ?? ""} placeholder="Côte d'Ivoire" />
@@ -173,7 +173,7 @@ export default async function ProfilPage() {
                 <h3 className="font-semibold text-white text-sm">💰 Coordonnées de paiement</h3>
                 <p className="text-xs text-emerald-100 mt-0.5">Comment vous souhaitez recevoir vos commissions.</p>
               </div>
-              <div className="p-5 grid gap-4 sm:grid-cols-2">
+              <div className="p-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className="block text-xs font-semibold text-slate-600 mb-1.5">
                     Mode de paiement

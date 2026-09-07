@@ -284,10 +284,12 @@ strong, b {
   height: 100dvh;
 }
 
-/* Tap targets minimum 44px (Apple HIG) */
-@media (max-width: 767px) {
-  button, a {
-    min-height: 0; /* laisse Tailwind gérer, mais... */
+/* ===================== RESPONSIVE MOBILE ===================== */
+
+/* Les tableaux larges scrollent horizontalement sans déborder */
+@media (max-width: 639px) {
+  .overflow-x-auto table {
+    min-width: 540px;
   }
 }
 

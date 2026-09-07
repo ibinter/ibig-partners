@@ -76,7 +76,7 @@ function Section({ title, color = "slate", children }: { title: string; color?: 
       <div className={`border-b px-5 py-3 ${headerCls}`}>
         <h3 className={`font-semibold text-sm ${color !== "slate" ? "text-white" : "text-ink"}`}>{title}</h3>
       </div>
-      <div className="p-5 grid gap-4 sm:grid-cols-2">{children}</div>
+      <div className="p-5 grid grid-cols-1 gap-4 sm:grid-cols-2">{children}</div>
     </div>
   );
 }
@@ -157,7 +157,7 @@ function PaymentSection({ existing }: { existing: Existing }) {
 
         {/* Mobile Money classique */}
         {isMobileMoney && (
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <F label="Numéro Mobile Money" name="mobileMoneyNum" defaultValue={existing?.mobileMoneyNum} required placeholder="+225 07 00 00 00 00" />
             <F label="Nom du titulaire du compte" name="mobileMoneyOperator" defaultValue={existing?.mobileMoneyOperator} placeholder="Ex: KOUAKOU Jean" />
           </div>
@@ -177,7 +177,7 @@ function PaymentSection({ existing }: { existing: Existing }) {
 
         {/* Banque */}
         {isBank && (
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <F label="Nom de la banque" name="bankName" defaultValue={existing?.bankName} required />
             <F label="Pays de la banque" name="bankCountry" defaultValue={existing?.bankCountry} required />
             <F label="Numéro de compte" name="bankAccountNum" defaultValue={existing?.bankAccountNum} />
@@ -213,7 +213,7 @@ function PaymentSection({ existing }: { existing: Existing }) {
 
         {/* Crypto */}
         {isCrypto && (
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label className="block text-xs font-semibold text-slate-600 mb-1">Crypto-monnaie <span className="text-rose-500">*</span></label>
               <select name="cryptoCurrency" defaultValue={existing?.cryptoCurrency ?? ""} required className={inputCls}>
@@ -239,7 +239,7 @@ function PaymentSection({ existing }: { existing: Existing }) {
 
         {/* Chèque */}
         {isCheque && (
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <F label="Libellé du chèque (à l'ordre de)" name="chequePayable" defaultValue={existing?.chequePayable} required placeholder="NOM Prénom ou raison sociale" />
             <F label="Banque émettrice" name="chequeBank" defaultValue={existing?.chequeBank} />
           </div>
@@ -254,7 +254,7 @@ function PaymentFields({ prefix, method }: { prefix: string; method: string }) {
   return (
     <div className="space-y-3 pt-1">
       {isMobileMoney && (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <F label="Numéro" name={`${prefix}_num`} placeholder="+225 07 00 00 00 00" />
           <F label="Nom titulaire" name={`${prefix}_name`} placeholder="NOM Prénom" />
         </div>
@@ -271,7 +271,7 @@ function PaymentFields({ prefix, method }: { prefix: string; method: string }) {
       {method === "WISE"          && <F label="Email Wise"         name={`${prefix}_email`} type="email" placeholder="vous@email.com" />}
       {method === "SKRILL"        && <F label="Email Skrill"       name={`${prefix}_email`} type="email" placeholder="vous@email.com" />}
       {["BANK_LOCAL","BANK_SEPA","BANK_SWIFT"].includes(method) && (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <F label="Banque" name={`${prefix}_bankName`} />
           <F label="Pays banque" name={`${prefix}_bankCountry`} />
           {method !== "BANK_LOCAL" && <>
@@ -282,7 +282,7 @@ function PaymentFields({ prefix, method }: { prefix: string; method: string }) {
         </div>
       )}
       {method === "CRYPTO" && (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div>
             <label className="block text-xs font-semibold text-slate-600 mb-1">Crypto</label>
             <select name={`${prefix}_cryptoCurrency`} className={inputCls}>
@@ -301,7 +301,7 @@ function PaymentFields({ prefix, method }: { prefix: string; method: string }) {
         </div>
       )}
       {method === "CHEQUE" && (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <F label="À l'ordre de" name={`${prefix}_chequePayable`} placeholder="NOM Prénom ou raison sociale" />
           <F label="Banque émettrice" name={`${prefix}_chequeBank`} />
         </div>
@@ -373,7 +373,7 @@ function IndividualForm({ existing }: { existing: Existing }) {
           <h3 className="font-semibold text-sm text-white">🪪 Photo de la pièce d&apos;identité</h3>
           <p className="text-xs text-blue-100 mt-0.5">CNI recto/verso, passeport ou permis — obligatoire pour la validation.</p>
         </div>
-        <div className="p-5 grid gap-4 sm:grid-cols-2">
+        <div className="p-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FileUpload
             name="idDocUrl"
             defaultUrl={existing?.idDocUrl}
@@ -433,7 +433,7 @@ function IndividualForm({ existing }: { existing: Existing }) {
           <h3 className="font-semibold text-sm text-ink">👨‍👩‍👧 2 personnes à contacter en dehors de vous (obligatoire)</h3>
           <p className="text-xs text-muted mt-0.5">Personnes joignables indépendamment — famille, amis, collègues.</p>
         </div>
-        <div className="p-5 grid gap-4 sm:grid-cols-2">
+        <div className="p-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <F label="Contact 1 — Nom et prénom" name="contact1Name" defaultValue={existing?.contact1Name} required placeholder="Kouamé Alice" />
           <F label="Contact 1 — Téléphone / WhatsApp" name="contact1Phone" defaultValue={existing?.contact1Phone} required placeholder="+225 07 00 00 00 00" />
           <F label="Contact 2 — Nom et prénom" name="contact2Name" defaultValue={existing?.contact2Name} required placeholder="Traoré Mohamed" />

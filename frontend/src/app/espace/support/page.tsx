@@ -91,7 +91,7 @@ export default async function SupportPage() {
       />
 
       {/* ── 4 KPIs ── */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <div className="rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-4 text-white shadow-sm">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-100">Tickets ouverts</p>
           <p className="mt-1 text-2xl font-extrabold">{openCount}</p>
@@ -153,7 +153,7 @@ export default async function SupportPage() {
 
         <form action={createTicket} className="p-5 space-y-5">
           {/* Catégorie + Priorité */}
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label className="block text-xs font-semibold text-slate-600 mb-1.5">
                 Catégorie <span className="text-rose-500">*</span>
@@ -283,7 +283,7 @@ export default async function SupportPage() {
       {/* ── Contact direct ── */}
       <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
         <h3 className="font-semibold text-sm text-slate-800 mb-3">Autres canaux de contact</h3>
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {[
             { icon: "💬", label: "WhatsApp Support", sub: "Réponse sous 24h", href: "https://wa.me/2250701000000", ext: true },
             { icon: "📧", label: "Email",            sub: "support@ibigpartners.com", href: "mailto:support@ibigpartners.com", ext: true },

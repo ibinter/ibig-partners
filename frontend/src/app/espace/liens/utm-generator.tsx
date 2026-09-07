@@ -41,7 +41,7 @@ export default function UtmGenerator({ links }: { links: LinkCard[] }) {
       <h3 className="font-semibold text-slate-800 text-sm mb-4">🔗 Générateur de liens UTM</h3>
       <p className="text-xs text-slate-500 mb-4">Trackez l'origine de vos visiteurs en ajoutant des paramètres UTM à vos liens d'affiliation.</p>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <div>
           <label className="block text-xs font-semibold text-slate-600 mb-1">Produit</label>
           <select

@@ -105,7 +105,7 @@ export function GainCalculator({ initialStatus = "STARTER", products }: { initia
             : `${TYPE_LABELS[type]} — taux N1 réel : ${rate}%`}
         </p>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <label className="block">
             <span className="mb-1.5 block text-xs font-semibold text-slate-600">
               {isMonthly ? "Prix mensuel (FCFA)" : "Prix / montant de base (FCFA)"}

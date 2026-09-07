@@ -239,7 +239,7 @@ export default function RapportClient({
       {calls.length > 0 && (
         <section>
           <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-3">Appels à partenaires reçus ce mois</h2>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {calls.map((c) => (
               <div key={c.id} className="rounded-xl border bg-white dark:bg-gray-900 p-4">
                 <div className="flex items-start justify-between gap-2">

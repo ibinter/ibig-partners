@@ -184,7 +184,7 @@ export default function MonMarcheClient({
           <h2 className="text-sm font-extrabold text-slate-800">3. Quel est votre type de réseau ?</h2>
           <p className="text-xs text-slate-400 mt-0.5">Cela nous aide à vous orienter vers les missions les mieux adaptées.</p>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {NETWORK_TYPES.map(n => (
             <button
               key={n.value}

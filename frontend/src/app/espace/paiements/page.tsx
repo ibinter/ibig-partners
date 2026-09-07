@@ -90,7 +90,7 @@ export default async function PaiementsPage() {
       )}
 
       {/* ── 4 KPIs ── */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <div className="rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-4 text-white shadow-sm">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-100">Disponible (payable)</p>
           <p className="mt-1 text-2xl font-extrabold">{fcfa(payable)}</p>

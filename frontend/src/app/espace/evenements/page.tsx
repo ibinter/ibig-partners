@@ -49,7 +49,7 @@ export default async function EvenementsPage() {
       {upcoming.length === 0 && <Card><p className="text-sm text-slate-400">Aucun événement à venir pour le moment.</p></Card>}
 
       {upcoming.length > 0 && (
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {upcoming.map((ev: any) => {
             const registered = ev.registrations.length > 0;
             const full = ev.maxAttendees && ev._count.registrations >= ev.maxAttendees && !registered;
@@ -89,7 +89,7 @@ export default async function EvenementsPage() {
       {past.length > 0 && (
         <div>
           <h2 className="mb-3 text-sm font-semibold text-slate-500">Événements passés</h2>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {past.map((ev: any) => (
               <div key={ev.id} className="rounded-2xl border border-slate-100 bg-white p-4 opacity-60">
                 <p className="font-semibold text-slate-700 text-sm">{ev.title}</p>

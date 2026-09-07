@@ -53,7 +53,7 @@ export default function NouveauClient({ contacts }: { contacts: Contact[] }) {
           <p className="text-sm text-slate-400">Aucun résultat pour « {search} »</p>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((c) => (
             <div
               key={c.id}

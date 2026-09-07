@@ -54,7 +54,7 @@ export default async function CommissionsPage() {
       />
 
       {/* ── KPIs globaux ── */}
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         {[
           { label: "Total cumulé", value: fcfa(grandTotal), color: "text-slate-700", bg: "bg-white" },
           { label: "Commissions payées", value: fcfa(grandPaid), color: "text-emerald-600", bg: "bg-emerald-50" },
@@ -70,7 +70,7 @@ export default async function CommissionsPage() {
       {/* ── Répartition par niveau ── */}
       <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
         <h3 className="font-semibold text-slate-800 text-sm mb-4">Répartition multi-niveaux</h3>
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {byLevel.filter((b) => b.count > 0).map((b) => (
             <div key={b.lvl} className={`rounded-xl p-4 ${LEVEL_COLOR[b.lvl]?.split(" ")[0] ?? "bg-slate-50"}`}>
               <div className="flex items-center gap-2 mb-2">
@@ -94,7 +94,34 @@ export default async function CommissionsPage() {
         <div className="px-5 py-4 border-b border-slate-50">
           <h3 className="font-semibold text-slate-800 text-sm">Détail des commissions</h3>
         </div>
-        <div className="overflow-x-auto">
+
+        {commissions.length === 0 && (
+          <div className="py-12 text-center text-sm text-slate-400">Aucune commission</div>
+        )}
+
+        {/* Vue carte — mobile uniquement */}
+        <div className="sm:hidden divide-y divide-slate-50">
+          {commissions.slice(0, 100).map((c) => (
+            <div key={c.id} className="px-4 py-3 flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
+                  <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${LEVEL_COLOR[c.level] ?? "bg-slate-100 text-slate-600"}`}>
+                    N{c.level}
+                  </span>
+                  <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${STATUS_COLOR[c.status] ?? "bg-slate-100"}`}>
+                    {STATUS_LABEL[c.status] ?? c.status}
+                  </span>
+                </div>
+                <p className="text-sm font-medium text-slate-700 truncate">{c.sale.product.name}</p>
+                <p className="text-xs text-slate-400 mt-0.5">{formatDate(c.createdAt)}</p>
+              </div>
+              <p className="font-bold tabular-nums text-slate-800 text-sm shrink-0">{fcfa(c.amount)}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Vue tableau — desktop uniquement */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-50 bg-slate-50/50">
@@ -130,9 +157,6 @@ export default async function CommissionsPage() {
               ))}
             </tbody>
           </table>
-          {commissions.length === 0 && (
-            <div className="py-12 text-center text-sm text-slate-400">Aucune commission</div>
-          )}
         </div>
       </div>
     </div>

@@ -667,7 +667,7 @@ export default function ProduitsClient({ branches, totalProducts, totalActive, m
           <p className="text-xs text-slate-400 mt-1">Essayez un autre filtre ou une autre recherche.</p>
         </div>
       ) : viewMode === "grid" ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map(p => (
             <ProductCard
               key={p.id}

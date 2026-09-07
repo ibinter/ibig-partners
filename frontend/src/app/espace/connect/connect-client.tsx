@@ -153,7 +153,7 @@ export default function ConnectClient({
             </div>
 
             {/* Deux côtés */}
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label className="block text-xs font-bold text-slate-500 mb-1">
                   🔵 Côté Besoin — Qui cherche quoi ? *
@@ -173,7 +173,7 @@ export default function ConnectClient({
             </div>
 
             {/* Zone + Valeur estimée */}
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label className="block text-xs font-bold text-slate-500 mb-1">Zone géographique</label>
                 <select name="zone" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm outline-none focus:border-teal-400">

@@ -76,7 +76,7 @@ export default async function EspaceVentesPage() {
       />
 
       {/* ── 4 KPIs ── */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <div className="rounded-2xl bg-gradient-to-br from-slate-600 to-slate-700 p-4 text-white shadow-sm">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-300">Total déclarations</p>
           <p className="mt-1 text-2xl font-extrabold">{total}</p>
@@ -100,7 +100,7 @@ export default async function EspaceVentesPage() {
       </div>
 
       {/* ── Canaux ── */}
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {[
           {
             icon: "🔗",
@@ -161,7 +161,7 @@ export default async function EspaceVentesPage() {
 
         <form action={declareSale} className="p-5 space-y-5">
           {/* Produit + Montant */}
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Produit vendu *" name="productId">
               <select name="productId" required className={selectCls}>
                 <option value="">— Choisir le produit —</option>
@@ -183,7 +183,7 @@ export default async function EspaceVentesPage() {
           {/* Infos client */}
           <div>
             <p className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3">Informations client</p>
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
               <Field label="Nom complet du client *" name="customerName" required placeholder="Ex : Kofi Asante" />
               <Field label="Téléphone client" name="customerPhone" placeholder="+225 07 01 02 03" />
               <Field label="E-mail client" name="customerEmail" type="email" placeholder="Pour son reçu (optionnel)" />
@@ -191,7 +191,7 @@ export default async function EspaceVentesPage() {
           </div>
 
           {/* Canal + Preuve texte */}
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field label="Canal de vente" name="channel">
               <select name="channel" className={selectCls}>
                 <option value="WhatsApp">WhatsApp</option>
@@ -211,7 +211,7 @@ export default async function EspaceVentesPage() {
           {/* Preuve de paiement — upload ou lien */}
           <div>
             <p className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3">Preuve de paiement</p>
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FileUpload
                 name="proofUrl"
                 folder="ibig-ventes-preuves"

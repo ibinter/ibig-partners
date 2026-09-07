@@ -228,7 +228,7 @@ export default async function BienvenuePage() {
           <span className="rounded-full bg-blue-600 px-3 py-1 text-[10px] font-bold text-white uppercase tracking-wide">Nouveautés</span>
           <h3 className="text-sm font-bold text-blue-900">Ce que la plateforme fait pour vous</h3>
         </div>
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           <div className="rounded-xl bg-white border border-blue-100 p-4">
             <p className="text-lg mb-1">📊</p>
             <p className="text-xs font-bold text-slate-800 mb-1">Relevé mensuel</p>

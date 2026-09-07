@@ -69,7 +69,7 @@ export default async function ChallengesPage() {
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {rows.map((c) => (
           <div key={c.id} className={`rounded-2xl border p-5 shadow-sm transition-all ${c.completed ? "border-emerald-200 bg-emerald-50" : "border-slate-100 bg-white"}`}>
             <div className="flex items-start justify-between gap-3 mb-3">

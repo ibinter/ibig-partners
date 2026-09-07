@@ -83,7 +83,7 @@ export default async function BoutiquePage() {
               <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wide mb-3">
                 {CATEGORY_ICONS[cat] ?? "🎁"} {CATEGORY_LABELS[cat] ?? cat}
               </h2>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {catRewards.map((r: any) => {
                   const affordable = cpBalance >= r.points;
                   const alreadyClaiming = pendingClaimIds.has(r.id);

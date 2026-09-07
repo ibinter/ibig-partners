@@ -79,7 +79,7 @@ export default async function ClientsPage() {
       <Card>
         <h2 className="mb-4 font-semibold text-slate-800">Ajouter un contact</h2>
         <form action={addClient} className="space-y-3">
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <input name="name" required placeholder="Nom complet *" className="rounded-lg border border-slate-200 px-3 py-2 text-sm" />
             <input name="phone" placeholder="Téléphone" className="rounded-lg border border-slate-200 px-3 py-2 text-sm" />
             <input name="email" type="email" placeholder="Email" className="rounded-lg border border-slate-200 px-3 py-2 text-sm" />

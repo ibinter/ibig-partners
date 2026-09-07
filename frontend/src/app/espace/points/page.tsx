@@ -82,7 +82,7 @@ export default async function PointsPage() {
       {rewards.length > 0 && (
         <div>
           <h2 className="mb-3 font-semibold text-slate-700">Boutique de récompenses</h2>
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {rewards.map((r: any) => {
               const canClaim = balance >= r.points;
               return (

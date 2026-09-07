@@ -116,7 +116,7 @@ export default async function VerificationPage() {
               <div className="bg-slate-50 border-b border-slate-100 px-5 py-3">
                 <h3 className="font-semibold text-sm text-slate-800">Récapitulatif de votre dossier</h3>
               </div>
-              <div className="p-5 grid gap-3 sm:grid-cols-2 text-sm">
+              <div className="p-5 grid grid-cols-1 gap-3 sm:grid-cols-2 text-sm">
                 {[
                   { label: "Type de compte",    val: verif.type === "COMPANY" ? "Entreprise" : "Particulier" },
                   { label: "Nom / Raison sociale", val: verif.fullName ?? verif.companyName ?? "—" },
@@ -169,7 +169,7 @@ export default async function VerificationPage() {
                   </span>
                 )}
               </div>
-              <div className="p-5 grid gap-3 sm:grid-cols-2 text-sm">
+              <div className="p-5 grid grid-cols-1 gap-3 sm:grid-cols-2 text-sm">
                 {[
                   { label: "Type de compte",    val: verif.type === "COMPANY" ? "Entreprise" : "Particulier" },
                   { label: "Nom / Raison sociale", val: verif.fullName ?? verif.companyName ?? "—" },
@@ -187,7 +187,7 @@ export default async function VerificationPage() {
             </div>
           )}
 
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Link
               href="/espace/paiements"
               className="flex items-center gap-3 rounded-2xl border border-emerald-100 bg-emerald-50 px-5 py-4 hover:bg-emerald-100 transition"

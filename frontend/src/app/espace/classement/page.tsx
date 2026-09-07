@@ -166,7 +166,7 @@ export default async function ClassementPage({
 
       {/* ── Podium top 3 ── */}
       {podium.length > 0 && (
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
           {podium.map((partner, i) => {
             const isMe = partner.id === currentUser.id;
             const colors = STATUS_COLORS[partner.status] ?? STATUS_COLORS.STARTER;

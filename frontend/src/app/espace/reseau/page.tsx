@@ -125,7 +125,7 @@ export default async function ReseauPage() {
       }} />
 
       {/* ── 4 KPIs ── */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <div className="rounded-2xl bg-gradient-to-br from-slate-700 to-slate-800 p-4 text-white shadow-sm">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-300">Réseau total</p>
           <p className="mt-1 text-2xl font-extrabold">{totalNetwork}</p>
@@ -150,7 +150,7 @@ export default async function ReseauPage() {
 
       {/* ── Répartition commissions par niveau ── */}
       {totalNetworkComm > 0 && (
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {[
             { lvl: "N1", label: "Filleuls directs",         amount: commN1, color: "from-blue-600 to-blue-700",     sub: "Taux plein" },
             { lvl: "N2", label: "Filleuls de vos filleuls", amount: commN2, color: "from-violet-600 to-purple-700", sub: "50% du taux N1" },

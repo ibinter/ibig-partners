@@ -294,7 +294,7 @@ export default async function ModulePage({
       {related.length > 0 && (
         <div className="mt-8">
           <h2 className="mb-4 font-semibold text-ink text-sm">Modules similaires</h2>
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
             {related.map((r: any) => (
               <Link
                 key={r.id}

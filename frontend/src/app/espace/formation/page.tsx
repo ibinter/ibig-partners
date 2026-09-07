@@ -344,7 +344,7 @@ export default async function FormationPage() {
       </div>
 
       {/* ── KPIs personnalisés ── */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <div className={`rounded-2xl bg-gradient-to-br ${currentStatusDef.color} p-4 text-white shadow-sm`}>
           <p className="text-[11px] font-semibold uppercase tracking-wide text-white/70">Statut actuel</p>
           <p className="mt-1 text-xl font-extrabold">{currentStatusDef.label}</p>
@@ -424,7 +424,7 @@ export default async function FormationPage() {
       <div id="systeme">
         <h2 className="text-base font-bold text-slate-800 mb-1">Le système 3 niveaux</h2>
         <p className="text-sm text-slate-500 mb-4">Vous gagnez sur vos ventes directes <strong>ET</strong> sur celles de vos filleuls (N2) et leurs filleuls (N3).</p>
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {[
             { level: "Niveau 1 (N1)", who: "Vos ventes directes", rate: "Taux plein", color: "from-blue-600 to-blue-700", ex: "Vous vendez → vous touchez le taux maximum" },
             { level: "Niveau 2 (N2)", who: "Ventes de vos filleuls", rate: "50% du taux N1", color: "from-violet-500 to-violet-700", ex: "Votre filleul vend → vous touchez la moitié de votre taux N1" },
@@ -565,7 +565,7 @@ export default async function FormationPage() {
       <div id="statuts">
         <h2 className="text-base font-bold text-slate-800 mb-1">Les 5 statuts partenaires</h2>
         <p className="text-sm text-slate-500 mb-4">Plus votre statut monte, plus vos taux augmentent automatiquement sur <strong>toutes</strong> vos commissions.</p>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {STATUS_DETAILS.map((s) => (
             <div
               key={s.status}
@@ -616,7 +616,7 @@ export default async function FormationPage() {
               En tant que parrain, vous avez la <strong className="text-slate-800">responsabilité de former vos filleuls</strong>.
               Un filleul bien formé vend mieux, et ses ventes vous rapportent des commissions N2 et N3.
             </p>
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {[
                 { icon: "📦", title: "Installation des logiciels", desc: "Accompagnez votre filleul pour l'installation et la configuration des solutions IBIG. Cette prestation peut être facturée honnêtement." },
                 { icon: "🖥️", title: "Prise en main & usage",     desc: "Formation à l'utilisation du logiciel, tutoriels, sessions de démo. Facturables de manière transparente au filleul ou au client final." },
@@ -641,7 +641,7 @@ export default async function FormationPage() {
       <div id="strategies">
         <h2 className="text-base font-bold text-slate-800 mb-1">6 stratégies pour maximiser vos revenus</h2>
         <p className="text-sm text-slate-500 mb-4">Appliquées par nos meilleurs partenaires.</p>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {[
             { icon: "🔗", title: "Partagez vos liens partout",    desc: "WhatsApp, Facebook, email — chaque clic est tracé 90 jours. La commission vous revient même si le client achète 2 mois plus tard." },
             { icon: "👥", title: "Recrutez des partenaires actifs", desc: "Un filleul actif vous rapporte N2 sur chaque vente. Avec 10 filleuls actifs, vos revenus passifs peuvent dépasser vos ventes directes." },
