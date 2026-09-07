@@ -8,6 +8,20 @@ const DIFFICULTY_CONFIG: Record<string, { label: string; badge: string; icon: st
   HARD:   { label: "Difficile", badge: "bg-rose-100 text-rose-700 border-rose-200",           icon: "🔴" },
 };
 
+const MISSION_TYPE_CONFIG: Record<string, { label: string; icon: string; action: string }> = {
+  LEAD:            { label: "Apport de prospect",   icon: "🎯", action: "Trouvez un prospect intéressé et transmettez ses coordonnées" },
+  VENTE:           { label: "Réaliser une vente",    icon: "💰", action: "Vendez le produit/service et déclarez la vente" },
+  RECRUTEMENT:     { label: "Recruter un affilié",   icon: "👥", action: "Recrutez un nouveau partenaire dans votre réseau" },
+  REPRESENTATION:  { label: "Représentation",        icon: "🏢", action: "Représentez IBIG lors d'un événement ou rendez-vous" },
+  PROSPECTION:     { label: "Prospection terrain",   icon: "🗺️", action: "Prospectez une zone géographique ou un secteur cible" },
+  SOURCING:        { label: "Sourcing",              icon: "🔎", action: "Identifiez et qualifiez des opportunités ou contacts" },
+  MISE_EN_RELATION: { label: "Mise en relation",    icon: "🤝", action: "Connectez deux parties ayant des intérêts communs" },
+  ETUDE:           { label: "Étude de marché",       icon: "📊", action: "Réalisez une étude ou collectez des données terrain" },
+  ANIMATION:       { label: "Animation réseau",      icon: "📣", action: "Animez votre réseau ou un groupe de partenaires" },
+  PARTENARIAT:     { label: "Partenariat",           icon: "🌐", action: "Négociez et concrétisez un accord de partenariat" },
+  AUTRE:           { label: "Mission spéciale",      icon: "⭐", action: "Consultez les détails ci-dessous" },
+};
+
 const APP_STATUS: Record<string, { label: string; badge: string }> = {
   PENDING:        { label: "En attente",      badge: "bg-amber-100 text-amber-700" },
   ACCEPTED:       { label: "Acceptée ✓",      badge: "bg-blue-100 text-blue-700" },
@@ -77,31 +91,44 @@ function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
   withdrawAction: (fd: FormData) => Promise<void>;
   submitProofAction: (fd: FormData) => Promise<void>;
 }) {
-  const [open, setOpen] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const [note, setNote] = useState("");
   const [proofUrl, setProofUrl] = useState("");
   const [proofNote, setProofNote] = useState("");
   const diff = DIFFICULTY_CONFIG[m.difficulty] ?? DIFFICULTY_CONFIG.MEDIUM;
   const reward = REWARD_CONFIG[m.rewardType] ?? REWARD_CONFIG.CASH;
+  const mtype = MISSION_TYPE_CONFIG[m.missionType] ?? MISSION_TYPE_CONFIG.AUTRE;
   const spots = Math.max(0, m.slots - m.totalApplications);
   const app = m.myApplication;
   const hasApp = app !== null;
   const dl = m.deadline ? daysLeft(m.deadline) : null;
   const urgent = dl !== null && dl <= 7;
+  const full = spots === 0 && !hasApp;
 
   return (
-    <div className={`rounded-2xl border bg-white shadow-sm flex flex-col transition-all hover:shadow-md ${
-      hasApp ? "border-blue-200 ring-1 ring-blue-100" : urgent ? "border-amber-200" : "border-slate-100"
+    <div className={`rounded-2xl border bg-white dark:bg-gray-900 shadow-sm flex flex-col transition-all hover:shadow-md ${
+      hasApp ? "border-blue-300 ring-2 ring-blue-100 dark:ring-blue-900/40" :
+      urgent ? "border-amber-300" :
+      full ? "border-slate-100 opacity-70" : "border-slate-200"
     }`}>
-      {/* Header */}
+
+      {/* Bandeau type de mission */}
+      <div className="flex items-center gap-2 px-4 pt-4 pb-0">
+        <span className="text-base">{mtype.icon}</span>
+        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">{mtype.label}</span>
+        {m.code && <span className="ml-auto text-[9px] text-slate-300 dark:text-slate-600 font-mono">{m.code}</span>}
+      </div>
+
+      {/* Corps principal */}
       <div className="p-4 flex-1 space-y-3">
-        {/* Badges top */}
+
+        {/* Badges statut + difficulté + branche */}
         <div className="flex flex-wrap gap-1.5 items-center">
           <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase border ${diff.badge}`}>
             {diff.icon} {diff.label}
           </span>
           {m.branch && (
-            <span className="rounded-full px-2 py-0.5 text-[9px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
+            <span className="rounded-full px-2 py-0.5 text-[9px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800">
               {m.branch}
             </span>
           )}
@@ -115,135 +142,152 @@ function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
               ⏰ Expire bientôt
             </span>
           )}
+          {full && <span className="rounded-full px-2 py-0.5 text-[9px] font-bold bg-rose-50 text-rose-600 border border-rose-200">Complet</span>}
         </div>
 
         {/* Titre */}
-        <h3 className="font-bold text-slate-900 text-sm leading-snug line-clamp-2">{m.title}</h3>
+        <h3 className="font-extrabold text-slate-900 dark:text-white text-sm leading-snug">{m.title}</h3>
 
-        {/* Récompense */}
-        <div className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 border ${reward.bg} ${reward.border}`}>
-          <span className={`text-sm font-extrabold ${reward.text}`}>{rewardLabel(m)}</span>
-          <span className={`text-[9px] font-bold uppercase tracking-wide ${reward.text} opacity-70`}>{reward.label}</span>
+        {/* Ce qu'il faut faire — toujours visible */}
+        <div className="rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700 px-3 py-2.5">
+          <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">Ce qu'il faut faire</p>
+          <p className="text-xs text-slate-700 dark:text-slate-300 font-medium leading-relaxed">{mtype.action}</p>
         </div>
 
-        {/* Méta */}
-        <div className="flex flex-wrap gap-2 text-[10px] text-slate-500">
-          <span>{ZONE_ICONS[m.zone] ?? "📍"} {m.zone}</span>
-          <span>·</span>
-          <span>👥 {spots > 0 ? `${spots} place${spots > 1 ? "s" : ""}` : <span className="text-rose-500">Complet</span>}</span>
+        {/* Description — toujours visible */}
+        {m.description && (
+          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">{m.description}</p>
+        )}
+
+        {/* Récompense — bien mise en avant */}
+        <div className={`flex items-center gap-2 rounded-xl px-4 py-2.5 border ${reward.bg} ${reward.border}`}>
+          <div className="flex-1">
+            <p className="text-[9px] font-bold uppercase tracking-widest opacity-60" style={{ color: "inherit" }}>Récompense</p>
+            <p className={`text-lg font-extrabold tabular-nums ${reward.text}`}>{rewardLabel(m)}</p>
+          </div>
+          <span className={`text-xs font-bold uppercase ${reward.text} opacity-70`}>{reward.label}</span>
+        </div>
+
+        {/* Méta infos */}
+        <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+            <span>{ZONE_ICONS[m.zone] ?? "📍"}</span>
+            <span>{m.zone}</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+            <span>👥</span>
+            {spots > 0
+              ? <span className="font-semibold text-emerald-600 dark:text-emerald-400">{spots} place{spots > 1 ? "s" : ""} disponible{spots > 1 ? "s" : ""}</span>
+              : <span className="font-semibold text-rose-500">Complet</span>}
+          </div>
           {m.deadline && (
-            <>
-              <span>·</span>
-              <span className={urgent ? "text-amber-600 font-semibold" : ""}>
-                ⏰ {dl! > 0 ? `J-${dl}` : "Expire aujourd'hui"}
-              </span>
-            </>
+            <div className={`flex items-center gap-1.5 col-span-2 ${urgent ? "text-amber-600 font-bold" : "text-slate-400"}`}>
+              <span>⏰</span>
+              <span>Deadline : {fmtDate(m.deadline)} {dl !== null && dl >= 0 ? `(J-${dl})` : "(expiré)"}</span>
+            </div>
           )}
         </div>
+
+        {/* Preuves attendues — toujours visible si renseigné */}
+        {m.proofInstructions && (
+          <div className="rounded-xl border border-violet-100 dark:border-violet-800 bg-violet-50 dark:bg-violet-900/20 px-3 py-2.5">
+            <p className="text-[9px] font-black uppercase tracking-widest text-violet-500 mb-1">📎 Preuves attendues</p>
+            <p className="text-xs text-violet-800 dark:text-violet-300 leading-relaxed">{m.proofInstructions}</p>
+          </div>
+        )}
       </div>
 
-      {/* Toggle détails */}
-      <div className="border-t border-slate-50">
-        <button onClick={() => setOpen(!open)}
-          className="w-full flex items-center justify-between px-4 py-2.5 text-xs font-bold text-slate-500 hover:text-blue-600 transition">
-          <span>{open ? "▲ Masquer" : "▼ Voir les détails et postuler"}</span>
-          {!hasApp && spots > 0 && <span className="rounded-full bg-blue-600 text-white px-2 py-0.5 text-[9px]">Postuler</span>}
-        </button>
+      {/* Zone résultat / preuve soumise */}
+      {app && (app.status === "VALIDATED" || app.status === "COMPLETED") && app.cpEarned > 0 && (
+        <div className="mx-4 mb-3 rounded-xl bg-violet-50 dark:bg-violet-900/20 border border-violet-100 dark:border-violet-800 px-4 py-3">
+          <p className="text-xs font-bold text-violet-700 dark:text-violet-300">🪙 +{app.cpEarned} Crédits Partners gagnés !</p>
+        </div>
+      )}
+      {app?.result && (
+        <div className="mx-4 mb-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 px-4 py-3">
+          <p className="text-[9px] font-bold text-emerald-600 uppercase tracking-wide mb-1">Résultat</p>
+          <p className="text-sm text-emerald-800 dark:text-emerald-300">{app.result}</p>
+        </div>
+      )}
+      {app && ["SUBMITTED","VALIDATED","REJECTED_PROOF"].includes(app.status) && (app.proofNote || app.proofUrl) && (
+        <div className="mx-4 mb-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 space-y-1">
+          <p className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">Votre preuve {app.submittedAt ? `— ${fmtDate(app.submittedAt)}` : ""}</p>
+          {app.proofNote && <p className="text-xs text-slate-700 dark:text-slate-300">{app.proofNote}</p>}
+          {app.proofUrl && <a href={app.proofUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline break-all">🔗 {app.proofUrl}</a>}
+        </div>
+      )}
 
-        {open && (
-          <div className="px-4 pb-4 space-y-4 border-t border-slate-50 pt-3">
-            {/* Description */}
-            {m.description && (
-              <div className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">{m.description}</div>
-            )}
+      {/* Actions */}
+      <div className="px-4 pb-4 space-y-3 border-t border-slate-50 dark:border-slate-800 pt-3">
 
-            {/* Preuves attendues */}
-            {m.proofInstructions && (
-              <div className="rounded-xl border border-violet-100 bg-violet-50 px-4 py-3">
-                <p className="text-[10px] font-bold text-violet-700 uppercase tracking-wide mb-1">📎 Preuves attendues</p>
-                <p className="text-xs text-violet-800 leading-relaxed">{m.proofInstructions}</p>
-              </div>
-            )}
+        {/* Formulaire preuve si ACCEPTED */}
+        {app && app.status === "ACCEPTED" && (
+          <form action={submitProofAction} className="space-y-3 rounded-xl border border-blue-100 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-4">
+            <p className="text-xs font-bold text-blue-800 dark:text-blue-300">📤 Soumettre votre preuve de réalisation</p>
+            <input type="hidden" name="applicationId" value={app.id} />
+            <div>
+              <label className="block text-[10px] font-bold text-slate-500 mb-1">Lien (URL de preuve)</label>
+              <input name="proofUrl" type="url" value={proofUrl} onChange={e => setProofUrl(e.target.value)}
+                placeholder="https://… (Drive, capture, document…)"
+                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm outline-none focus:border-blue-400" />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-500 mb-1">Description de la preuve *</label>
+              <textarea name="proofNote" rows={3} value={proofNote} onChange={e => setProofNote(e.target.value)} required
+                placeholder="Décrivez ce que vous avez réalisé, le résultat obtenu…"
+                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm outline-none resize-none focus:border-blue-400" />
+            </div>
+            <button type="submit" className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2.5 transition">
+              Soumettre ma preuve →
+            </button>
+          </form>
+        )}
 
-            {/* CP gagnés */}
-            {app && (app.status === "VALIDATED" || app.status === "COMPLETED") && app.cpEarned > 0 && (
-              <div className="rounded-xl bg-violet-50 border border-violet-100 px-4 py-3">
-                <p className="text-xs font-bold text-violet-700">🪙 +{app.cpEarned} Crédits Partners gagnés !</p>
-              </div>
-            )}
-
-            {/* Résultat */}
-            {app?.result && (
-              <div className="rounded-xl bg-emerald-50 border border-emerald-100 px-4 py-3">
-                <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wide mb-1">Résultat</p>
-                <p className="text-sm text-emerald-800">{app.result}</p>
-              </div>
-            )}
-
-            {/* Preuve soumise */}
-            {app && ["SUBMITTED","VALIDATED","REJECTED_PROOF"].includes(app.status) && (app.proofNote || app.proofUrl) && (
-              <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 space-y-1">
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Votre preuve {app.submittedAt ? `— ${fmtDate(app.submittedAt)}` : ""}</p>
-                {app.proofNote && <p className="text-xs text-slate-700">{app.proofNote}</p>}
-                {app.proofUrl && <a href={app.proofUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline break-all">🔗 {app.proofUrl}</a>}
-              </div>
-            )}
-
-            {/* Formulaire preuve (ACCEPTED) */}
-            {app && app.status === "ACCEPTED" && (
-              <form action={submitProofAction} className="space-y-3 rounded-xl border border-blue-100 bg-blue-50 p-4">
-                <p className="text-xs font-bold text-blue-800">📤 Soumettre votre preuve de réalisation</p>
-                <input type="hidden" name="applicationId" value={app.id} />
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1">Lien (URL de preuve)</label>
-                  <input name="proofUrl" type="url" value={proofUrl} onChange={e => setProofUrl(e.target.value)}
-                    placeholder="https://… (Drive, capture, document…)"
-                    className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-blue-400" />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1">Description de la preuve *</label>
-                  <textarea name="proofNote" rows={3} value={proofNote} onChange={e => setProofNote(e.target.value)} required
-                    placeholder="Décrivez ce que vous avez réalisé, le résultat obtenu…"
-                    className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none resize-none focus:border-blue-400" />
-                </div>
-                <button type="submit" className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2.5 transition">
-                  Soumettre ma preuve →
-                </button>
-              </form>
-            )}
-
-            {/* Formulaire candidature */}
-            {!hasApp && spots > 0 && (
+        {/* Candidature */}
+        {!hasApp && spots > 0 && (
+          <>
+            {!showForm ? (
+              <button onClick={() => setShowForm(true)}
+                className="w-full rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-extrabold py-3 transition shadow-sm">
+                ✋ Je candidate à cette mission
+              </button>
+            ) : (
               <form action={applyAction} className="space-y-3">
                 <input type="hidden" name="missionId" value={m.id} />
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 mb-1">Message de candidature (optionnel)</label>
+                  <label className="block text-[10px] font-bold text-slate-500 mb-1">Message de candidature (optionnel)</label>
                   <textarea name="note" rows={3} value={note} onChange={e => setNote(e.target.value)}
-                    placeholder="Présentez votre motivation, réseau ou atouts pour cette mission…"
-                    className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none resize-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100" />
+                    placeholder="Présentez votre motivation, votre réseau ou vos atouts pour cette mission…"
+                    className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-gray-900 px-3 py-2.5 text-sm outline-none resize-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" />
                 </div>
-                <button type="submit"
-                  className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2.5 transition shadow-sm">
-                  Je candidate à cette mission →
-                </button>
+                <div className="flex gap-2">
+                  <button type="button" onClick={() => setShowForm(false)}
+                    className="flex-1 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 text-sm font-bold py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                    Annuler
+                  </button>
+                  <button type="submit"
+                    className="flex-1 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-extrabold py-2.5 transition shadow-sm">
+                    Envoyer →
+                  </button>
+                </div>
               </form>
             )}
+          </>
+        )}
 
-            {/* Retirer candidature */}
-            {hasApp && app!.status === "PENDING" && (
-              <form action={withdrawAction} className="flex items-center gap-3">
-                <input type="hidden" name="missionId" value={m.id} />
-                <p className="text-xs text-slate-500 flex-1">Candidature soumise le {fmtDate(app!.createdAt)}</p>
-                <button type="submit" className="rounded-xl border border-rose-200 text-rose-600 hover:bg-rose-50 text-xs font-bold px-3 py-1.5 transition">
-                  Retirer
-                </button>
-              </form>
-            )}
+        {/* Retirer candidature */}
+        {hasApp && app!.status === "PENDING" && (
+          <form action={withdrawAction} className="flex items-center gap-3">
+            <input type="hidden" name="missionId" value={m.id} />
+            <p className="text-xs text-slate-400 flex-1">Candidature soumise le {fmtDate(app!.createdAt)}</p>
+            <button type="submit" className="rounded-xl border border-rose-200 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 text-xs font-bold px-3 py-1.5 transition">
+              Retirer
+            </button>
+          </form>
+        )}
 
-            {spots === 0 && !hasApp && (
-              <p className="text-sm text-slate-400 italic text-center py-2">Mission complète — plus de place disponible.</p>
-            )}
-          </div>
+        {full && (
+          <p className="text-xs text-slate-400 italic text-center py-1">Mission complète — plus de place disponible.</p>
         )}
       </div>
     </div>
