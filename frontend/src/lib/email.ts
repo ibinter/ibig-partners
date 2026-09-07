@@ -1681,3 +1681,50 @@ export async function sendCallInvitationEmail(opts: {
     html,
   });
 }
+
+// ─── E-mail : Réinitialisation du mot de passe ────────────────────────────
+
+export async function sendPasswordResetEmail(opts: {
+  to: string;
+  firstName: string;
+  resetUrl: string;
+}): Promise<EmailResult> {
+  const html = layout(`
+    <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
+      Réinitialisation de votre mot de passe 🔒
+    </h2>
+    <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
+      Bonjour <strong>${opts.firstName}</strong>, vous avez demandé la réinitialisation
+      de votre mot de passe IBIG PARTNERS. Cliquez sur le bouton ci-dessous pour
+      créer un nouveau mot de passe.
+    </p>
+
+    <div style="text-align:center;margin:28px 0;">
+      ${btn("Réinitialiser mon mot de passe", opts.resetUrl)}
+    </div>
+
+    <div style="background:#fffbeb;border-radius:10px;padding:16px 20px;margin-bottom:24px;border:1px solid #fde68a;">
+      <p style="margin:0;font-size:13px;color:#92400e;line-height:1.7;">
+        ⏱ Ce lien est valable <strong>1 heure</strong> uniquement.<br/>
+        🔒 Si vous n'avez pas demandé cette réinitialisation, ignorez cet e-mail — votre mot de passe reste inchangé.
+      </p>
+    </div>
+
+    <p style="color:#5b6577;font-size:13px;line-height:1.6;word-break:break-all;">
+      Ou copiez ce lien dans votre navigateur :<br/>
+      <a href="${opts.resetUrl}" style="color:#0b5fff;">${opts.resetUrl}</a>
+    </p>
+
+    <hr style="margin:28px 0;border:none;border-top:1px solid #e2e8f0;" />
+    <p style="margin:0;font-size:13px;color:#94a3b8;">
+      Besoin d'aide ? Contactez-nous à
+      <a href="mailto:support@ibigpartners.com" style="color:#0b5fff;">support@ibigpartners.com</a>
+    </p>
+  `);
+
+  return sendEmail({
+    to: opts.to,
+    subject: "Réinitialisation de votre mot de passe IBIG PARTNERS",
+    html,
+  });
+}

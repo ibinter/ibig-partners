@@ -19,7 +19,12 @@ export default async function ConnexionPage({
           Partenaires et équipe IBIG.
         </p>
         <LoginForm action={loginAction} next={next} />
-        <p className="mt-6 text-center text-sm text-muted">
+        <p className="mt-4 text-center text-sm text-muted">
+          <Link href="/connexion/mot-de-passe-oublie" className="text-brand-600 hover:underline">
+            Mot de passe oublié ?
+          </Link>
+        </p>
+        <p className="mt-3 text-center text-sm text-muted">
           Pas encore partenaire&nbsp;?{" "}
           <Link href="/rejoindre" className="font-medium text-brand-600 hover:underline">
             Créer un compte

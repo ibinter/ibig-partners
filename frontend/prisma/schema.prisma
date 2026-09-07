@@ -70,6 +70,7 @@ model User {
   ticketMessages   TicketMessage[]    @relation("TicketAuthor")
   auditLogs        AuditLog[]
   otpCode          OtpCode?
+  passwordResetTokens PasswordResetToken[]
   pushSubscriptions PushSubscription[]
   verification     VerificationRequest?
   trainingProgress TrainingProgress[]
@@ -470,6 +471,19 @@ model OtpCode {
   code      String   // 6 chiffres hashés
   expiresAt DateTime
   createdAt DateTime @default(now())
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
 }
 
 // ─── Académie IBIG — modules de formation ───────────────────────────────────
