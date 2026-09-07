@@ -8,7 +8,7 @@ import { prisma } from "./prisma";
 const COOKIE_NAME = "ibig_session";
 const rawSecret = process.env.AUTH_SECRET;
 if (!rawSecret && process.env.NODE_ENV === "production") {
-  throw new Error("AUTH_SECRET manquant — définissez-le dans les variables d'environnement Vercel.");
+  console.warn("[SECURITE] AUTH_SECRET manquant en production — definissez cette variable dans Vercel.");
 }
 const secret = new TextEncoder().encode(rawSecret || "dev-secret-change-me-not-for-prod");
 

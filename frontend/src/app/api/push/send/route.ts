@@ -3,14 +3,13 @@ import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import webpush from "web-push";
 
-webpush.setVapidDetails(
-  "mailto:noreply@ibigpartners.com",
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!
-);
-
 export async function POST(req: Request) {
   await requireAdmin();
+  webpush.setVapidDetails(
+    "mailto:noreply@ibigpartners.com",
+    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+    process.env.VAPID_PRIVATE_KEY!
+  );
   const body = await req.json();
   const { title, body: msgBody, url, userId } = body as {
     title: string;
