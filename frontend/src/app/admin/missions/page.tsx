@@ -1,7 +1,7 @@
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/ui";
-import { createMission, updateMissionStatus, updateApplicationStatus, validateMissionApplication } from "../actions";
+import { createMission, updateMission, updateMissionStatus, updateApplicationStatus, validateMissionApplication } from "../actions";
 import MissionsAdminClient from "./missions-admin-client";
 
 export const revalidate = 30;
@@ -79,6 +79,7 @@ export default async function AdminMissionsPage() {
         rows={rows}
         stats={stats}
         createAction={createMission}
+        updateAction={updateMission}
         updateStatusAction={updateMissionStatus}
         updateAppAction={updateApplicationStatus}
         validateAppAction={validateMissionApplication}

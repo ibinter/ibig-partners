@@ -99,16 +99,18 @@ function fmtDate(iso: string) {
 }
 
 export default function MissionsAdminClient({
-  rows, stats, createAction, updateStatusAction, updateAppAction, validateAppAction,
+  rows, stats, createAction, updateAction, updateStatusAction, updateAppAction, validateAppAction,
 }: {
   rows: MissionRow[];
   stats: { total: number; open: number; applications: number; pending: number; submitted: number };
   createAction: (fd: FormData) => Promise<void>;
+  updateAction: (fd: FormData) => Promise<void>;
   updateStatusAction: (fd: FormData) => Promise<void>;
   updateAppAction: (fd: FormData) => Promise<void>;
   validateAppAction: (fd: FormData) => Promise<void>;
 }) {
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [editing, setEditing] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [filterStatus, setFilterStatus] = useState("ALL");
   const [rewardTypeForm, setRewardTypeForm] = useState("CASH");
@@ -366,7 +368,7 @@ export default function MissionsAdminClient({
                   </div>
 
                   {/* Actions statut mission */}
-                  <div className="flex gap-2 flex-wrap">
+                  <div className="flex gap-2 flex-wrap items-center">
                     {["OPEN","CLOSED","COMPLETED"].map(s => (
                       <form key={s} action={updateStatusAction}>
                         <input type="hidden" name="id" value={m.id} />
@@ -377,7 +379,87 @@ export default function MissionsAdminClient({
                         </button>
                       </form>
                     ))}
+                    <button onClick={() => setEditing(editing === m.id ? null : m.id)}
+                      className={`rounded-xl px-3 py-1.5 text-xs font-bold border transition ${editing === m.id ? "bg-amber-600 text-white border-amber-600" : "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100"}`}>
+                      {editing === m.id ? "✕ Annuler édition" : "✏️ Modifier cette mission"}
+                    </button>
                   </div>
+
+                  {/* Formulaire d'édition rapide */}
+                  {editing === m.id && (
+                    <form action={async (fd) => { await updateAction(fd); setEditing(null); }}
+                      className="rounded-2xl border border-amber-100 bg-amber-50 p-5 space-y-4">
+                      <p className="font-bold text-amber-800 text-sm">✏️ Modifier la mission</p>
+                      <input type="hidden" name="id" value={m.id} />
+
+                      <div className="grid sm:grid-cols-2 gap-4">
+                        {/* Titre */}
+                        <div className="sm:col-span-2">
+                          <label className="block text-xs font-bold text-slate-500 mb-1">Titre</label>
+                          <input name="title" defaultValue={m.title}
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-amber-400" />
+                        </div>
+                        {/* Description */}
+                        <div className="sm:col-span-2">
+                          <label className="block text-xs font-bold text-slate-500 mb-1">Description — ce que doit faire l&apos;affilié</label>
+                          <textarea name="description" defaultValue={m.description} rows={4}
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none resize-y focus:border-amber-400" />
+                        </div>
+                        {/* Instructions de preuve */}
+                        <div className="sm:col-span-2">
+                          <label className="block text-xs font-bold text-slate-500 mb-1">Instructions de preuve</label>
+                          <textarea name="proofInstructions" defaultValue={m.proofInstructions} rows={3}
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none resize-y focus:border-amber-400"
+                            placeholder="Ex : Fiche prospect complète + photo du RV ou email de confirmation." />
+                        </div>
+                        {/* Type mission */}
+                        <div>
+                          <label className="block text-xs font-bold text-slate-500 mb-1">Type de mission</label>
+                          <select name="missionType" defaultValue={m.missionType}
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none">
+                            {Object.entries(MISSION_TYPE_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                          </select>
+                        </div>
+                        {/* Montant */}
+                        <div>
+                          <label className="block text-xs font-bold text-slate-500 mb-1">Montant CASH (F CFA)</label>
+                          <input name="compensationAmount" type="number" min="0" defaultValue={m.compensationAmount}
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-amber-400" />
+                        </div>
+                        {/* Places */}
+                        <div>
+                          <label className="block text-xs font-bold text-slate-500 mb-1">Places disponibles</label>
+                          <input name="slots" type="number" min="1" defaultValue={m.slots}
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-amber-400" />
+                        </div>
+                        {/* Zone */}
+                        <div>
+                          <label className="block text-xs font-bold text-slate-500 mb-1">Zone géographique</label>
+                          <select name="zone" defaultValue={m.zone}
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none">
+                            {["Côte d'Ivoire","Abidjan","Afrique de l'Ouest","Afrique","International"].map(z => <option key={z} value={z}>{z}</option>)}
+                          </select>
+                        </div>
+                        {/* Date limite */}
+                        <div>
+                          <label className="block text-xs font-bold text-slate-500 mb-1">Date limite</label>
+                          <input name="deadline" type="date" defaultValue={m.deadline ? m.deadline.slice(0, 10) : ""}
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-amber-400" />
+                        </div>
+                        {/* Note admin */}
+                        <div className="sm:col-span-2">
+                          <label className="block text-xs font-bold text-slate-500 mb-1">Note interne (admin)</label>
+                          <input name="adminNote" defaultValue={m.adminNote}
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-amber-400" />
+                        </div>
+                      </div>
+
+                      <button type="submit"
+                        className="rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-sm font-bold px-6 py-2.5 transition">
+                        Enregistrer les modifications →
+                      </button>
+                    </form>
+                  )}
 
                   {/* Candidatures */}
                   <div>
