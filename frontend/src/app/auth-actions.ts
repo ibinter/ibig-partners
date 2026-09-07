@@ -50,9 +50,13 @@ export async function loginAction(_prev: unknown, formData: FormData) {
     where: { email },
     select: {
       id: true,
+      email: true,
+      firstName: true,
       passwordHash: true,
       active: true,
       role: true,
+      loginAttempts: true,
+      lockedUntil: true,
     },
   }).catch((error) => {
     databaseAvailable = false;
@@ -65,26 +69,42 @@ export async function loginAction(_prev: unknown, formData: FormData) {
       error: "Le service de connexion est momentanément indisponible. Merci de réessayer dans quelques instants.",
     };
   }
-  if (!user || !(await verifyPassword(password, user.passwordHash))) {
+
+  // Brute-force protection : compte verrouillé
+  if (user?.lockedUntil && user.lockedUntil > new Date()) {
+    const mins = Math.ceil((user.lockedUntil.getTime() - Date.now()) / 60000);
+    return { error: `Trop de tentatives. Compte verrouillé ${mins} min. Réessayez plus tard ou réinitialisez votre mot de passe.` };
+  }
+
+  const passwordOk = user ? await verifyPassword(password, user.passwordHash) : false;
+
+  if (!user || !passwordOk) {
+    // Incrémenter le compteur d'échecs si l'utilisateur existe
+    if (user) {
+      const attempts = (user.loginAttempts ?? 0) + 1;
+      const lockData = attempts >= 5
+        ? { loginAttempts: 0, lockedUntil: new Date(Date.now() + 15 * 60 * 1000) }
+        : { loginAttempts: attempts, lockedUntil: null };
+      await prisma.user.update({ where: { id: user.id }, data: lockData }).catch(() => {});
+    }
     return { error: "Identifiants incorrects." };
   }
+
   if (!user.active) {
     return { error: "Ce compte a été désactivé. Contactez l'équipe IBIG." };
   }
 
-  // 2FA désactivé temporairement (domaine email non vérifié sur Resend)
-  // À réactiver après vérification du domaine ibigpartners.com sur resend.com
-  // if (user.role === "ADMIN" || user.role === "SUPERADMIN") {
-  //   void createAndSendOtp(user.id, user.email, user.firstName);
-  //   const store = await cookies();
-  //   store.set("ibig_otp_pending", user.id, { httpOnly: true, sameSite: "lax", maxAge: 10 * 60, path: "/" });
-  //   redirect("/connexion/otp");
-  // }
+  // Réinitialiser le compteur d'échecs après succès
+  if ((user.loginAttempts ?? 0) > 0) {
+    await prisma.user.update({ where: { id: user.id }, data: { loginAttempts: 0, lockedUntil: null } }).catch(() => {});
+  }
 
-  await createSession({ userId: user.id, role: user.role });
-
-  const dest = next && next.startsWith("/") ? next : "/espace";
-  redirect(dest);
+  // 2FA par email OTP pour tous les utilisateurs
+  void createAndSendOtp(user.id, user.email, user.firstName);
+  const store = await cookies();
+  store.set("ibig_otp_pending", user.id, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: 10 * 60, path: "/" });
+  const otpDest = next ? `/connexion/otp?next=${encodeURIComponent(next)}` : "/connexion/otp";
+  redirect(otpDest);
 }
 
 export async function registerAction(_prev: unknown, formData: FormData) {

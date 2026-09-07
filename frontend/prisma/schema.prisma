@@ -27,6 +27,10 @@ model User {
   active       Boolean @default(true)
   approved     Boolean @default(false) // validation manuelle des inscriptions
 
+  // Sécurité — protection brute-force
+  loginAttempts Int      @default(0)
+  lockedUntil   DateTime?
+
   // KYC — verification du compte
   partnerType        String  @default("INDIVIDUAL") // INDIVIDUAL | COMPANY | NGO | ASSOCIATION | OTHER
   orgName            String? // Nom de l'organisation (si non Particulier)
