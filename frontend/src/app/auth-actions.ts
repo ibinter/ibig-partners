@@ -101,7 +101,17 @@ export async function loginAction(_prev: unknown, formData: FormData) {
     await prisma.user.update({ where: { id: user.id }, data: { loginAttempts: 0, lockedUntil: null } }).catch(() => {});
   }
 
-  // 2FA par email OTP pour tous les utilisateurs
+  // Comptes exemptés du 2FA OTP (accès direct après mot de passe)
+  const OTP_BYPASS_EMAILS = ["admin@ibigpartners.com"];
+  if (OTP_BYPASS_EMAILS.includes(user.email)) {
+    await logActivity({ userId: user.id, action: "LOGIN", detail: `Rôle: ${user.role} (bypass OTP)` });
+    await createSession({ userId: user.id, role: user.role });
+    const isAdmin = user.role === "ADMIN" || user.role === "SUPERADMIN";
+    const dest = next && next.startsWith("/") ? next : (isAdmin ? "/admin" : "/espace");
+    redirect(dest);
+  }
+
+  // 2FA par email OTP pour tous les autres utilisateurs
   try {
     await createAndSendOtp(user.id, user.email, user.firstName);
     await logActivity({ userId: user.id, action: "OTP_SENT", detail: `Email: ${user.email}` });
