@@ -144,5 +144,8 @@ export async function submitVerification(formData: FormData) {
     }),
   ]);
 
+  const { logActivity } = await import("@/lib/activity");
+  await logActivity({ userId: user.id, action: "KYC_SUBMITTED", detail: `Type: ${partnerType}` });
+
   redirect("/espace/verification");
 }

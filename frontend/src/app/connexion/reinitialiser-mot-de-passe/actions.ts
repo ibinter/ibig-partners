@@ -32,5 +32,8 @@ export async function resetPasswordAction(_prev: unknown, formData: FormData) {
     prisma.$executeRaw`UPDATE "PasswordResetToken" SET used = true WHERE id = ${row.id}`,
   ]);
 
+  const { logActivity } = await import("@/lib/activity");
+  await logActivity({ userId: row.userId, action: "PASSWORD_RESET" });
+
   return { success: true };
 }

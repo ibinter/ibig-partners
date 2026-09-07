@@ -212,6 +212,18 @@ export async function registerAction(_prev: unknown, formData: FormData) {
 }
 
 export async function logoutAction() {
+  const store = await cookies();
+  const token = store.get("ibig_session")?.value;
+  if (token) {
+    try {
+      const { jwtVerify } = await import("jose");
+      const rawSecret = process.env.AUTH_SECRET || "dev-secret-change-me-not-for-prod";
+      const secret = new TextEncoder().encode(rawSecret);
+      const { payload } = await jwtVerify(token, secret);
+      const userId = payload.userId as string;
+      if (userId) await logActivity({ userId, action: "LOGOUT" });
+    } catch { /* ignore */ }
+  }
   await destroySession();
   redirect("/");
 }

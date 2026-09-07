@@ -181,6 +181,8 @@ export async function submitOpportunity(formData: FormData) {
       status: "NEW",
     },
   });
+  const { logActivity: _logOpp } = await import("@/lib/activity");
+  await _logOpp({ userId: user.id, action: "OPPORTUNITY_CREATED", detail: title });
   revalidatePath("/espace/reseau");
 }
 
@@ -325,6 +327,9 @@ export async function requestPayout() {
     });
   });
 
+  const { logActivity: _logPay } = await import("@/lib/activity");
+  await _logPay({ userId: user.id, action: "PAYOUT_REQUESTED", detail: `${totalValidated.toLocaleString("fr-FR")} FCFA via ${user.payoutMethod}` });
+
   revalidatePath("/espace/paiements");
   revalidatePath("/admin/paiements");
 }
@@ -345,6 +350,8 @@ export async function updateProfile(formData: FormData) {
       publicListing: formData.get("publicListing") === "on",
     },
   });
+  const { logActivity: _logProf } = await import("@/lib/activity");
+  await _logProf({ userId: user.id, action: "PROFILE_UPDATE" });
   revalidatePath("/espace/profil");
 }
 
@@ -443,6 +450,9 @@ export async function submitMissionProof(formData: FormData) {
       updatedAt: new Date(),
     },
   });
+
+  const { logActivity: _logProof } = await import("@/lib/activity");
+  await _logProof({ userId: user.id, action: "MISSION_PROOF_SUBMITTED", detail: `Candidature ID: ${applicationId}` });
 
   revalidatePath("/espace/missions");
 }
@@ -556,6 +566,9 @@ export async function submitConnectRequest(formData: FormData) {
       status: "NEW",
     },
   });
+
+  const { logActivity: _logConn } = await import("@/lib/activity");
+  await _logConn({ userId: user.id, action: "CONNECT_REQUEST", detail: `${connectionType} — ${estimatedValue.toLocaleString("fr-FR")} FCFA` });
 
   revalidatePath("/espace/connect");
 }
