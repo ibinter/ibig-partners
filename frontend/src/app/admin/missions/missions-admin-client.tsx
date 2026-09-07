@@ -412,6 +412,23 @@ export default function MissionsAdminClient({
                             className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none resize-y focus:border-amber-400"
                             placeholder="Ex : Fiche prospect complète + photo du RV ou email de confirmation." />
                         </div>
+                        {/* Branche IBIG */}
+                        <div>
+                          <label className="block text-xs font-bold text-slate-500 mb-1">Branche IBIG</label>
+                          <select name="branch" defaultValue={m.branch}
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none">
+                            <option value="">— Toutes branches —</option>
+                            {Object.entries(BRANCH_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                          </select>
+                        </div>
+                        {/* Domaine / Catégorie */}
+                        <div>
+                          <label className="block text-xs font-bold text-slate-500 mb-1">Domaine / Catégorie</label>
+                          <select name="category" defaultValue={m.category}
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none">
+                            {Object.entries(CATEGORY_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                          </select>
+                        </div>
                         {/* Type mission */}
                         <div>
                           <label className="block text-xs font-bold text-slate-500 mb-1">Type de mission</label>
@@ -420,11 +437,37 @@ export default function MissionsAdminClient({
                             {Object.entries(MISSION_TYPE_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                           </select>
                         </div>
-                        {/* Montant */}
+                        {/* Montant CASH */}
                         <div>
                           <label className="block text-xs font-bold text-slate-500 mb-1">Montant CASH (F CFA)</label>
                           <input name="compensationAmount" type="number" min="0" defaultValue={m.compensationAmount}
                             className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-amber-400" />
+                        </div>
+                        {/* CP */}
+                        <div>
+                          <label className="block text-xs font-bold text-slate-500 mb-1">Crédits Partners (CP)</label>
+                          <input name="cpAmount" type="number" min="0" defaultValue={m.cpAmount}
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-amber-400" />
+                        </div>
+                        {/* Type récompense */}
+                        <div>
+                          <label className="block text-xs font-bold text-slate-500 mb-1">Type de récompense</label>
+                          <select name="rewardType" defaultValue={m.rewardType}
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none">
+                            <option value="CASH">💵 CASH uniquement</option>
+                            <option value="CP">🪙 CP uniquement</option>
+                            <option value="MIXED">💎 MIXTE (Cash + CP)</option>
+                          </select>
+                        </div>
+                        {/* Difficulté */}
+                        <div>
+                          <label className="block text-xs font-bold text-slate-500 mb-1">Difficulté</label>
+                          <select name="difficulty" defaultValue={m.difficulty}
+                            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none">
+                            <option value="EASY">Facile</option>
+                            <option value="MEDIUM">Moyenne</option>
+                            <option value="HARD">Difficile</option>
+                          </select>
                         </div>
                         {/* Places */}
                         <div>

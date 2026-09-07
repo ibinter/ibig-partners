@@ -832,6 +832,46 @@ export async function updateMissionStatus(formData: FormData) {
   revalidatePath("/admin/missions");
 }
 
+export async function updateMission(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const title = String(formData.get("title") || "").trim();
+  const description = String(formData.get("description") || "").trim();
+  const proofInstructions = String(formData.get("proofInstructions") || "").trim();
+  const compensationAmount = Number(formData.get("compensationAmount") || 0);
+  const cpAmount = Number(formData.get("cpAmount") || 0);
+  const slots = Number(formData.get("slots") || 5);
+  const missionType = String(formData.get("missionType") || "");
+  const rewardType = String(formData.get("rewardType") || "");
+  const zone = String(formData.get("zone") || "").trim();
+  const deadline = String(formData.get("deadline") || "").trim();
+  const adminNote = String(formData.get("adminNote") || "").trim();
+  const branch = String(formData.get("branch") || "").trim();
+  const category = String(formData.get("category") || "").trim();
+  const difficulty = String(formData.get("difficulty") || "").trim();
+
+  const data: Record<string, unknown> = { updatedAt: new Date() };
+  if (title) data.title = title;
+  if (description) data.description = description;
+  if (proofInstructions) data.proofInstructions = proofInstructions;
+  if (compensationAmount >= 0) data.compensationAmount = compensationAmount;
+  if (cpAmount >= 0) data.cpAmount = cpAmount;
+  if (slots > 0) data.slots = slots;
+  if (missionType) data.missionType = missionType;
+  if (rewardType) data.rewardType = rewardType;
+  if (zone) data.zone = zone;
+  if (deadline) data.deadline = new Date(deadline);
+  else data.deadline = null;
+  if (adminNote !== undefined) data.adminNote = adminNote || null;
+  if (branch) data.branch = branch; else data.branch = null;
+  if (category) data.category = category;
+  if (difficulty) data.difficulty = difficulty;
+
+  await (prisma as any).mission.update({ where: { id }, data });
+  revalidatePath("/admin/missions");
+  revalidatePath("/espace/missions");
+}
+
 export async function updateApplicationStatus(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("id"));
