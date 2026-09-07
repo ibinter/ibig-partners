@@ -175,19 +175,19 @@ const COLOR_MAP: Record<string, { header: string; badge: string; row: string }> 
 const FAQ_ITEMS = [
   {
     q: "Quand est-ce que je reçois mon argent ?",
-    a: "Les commissions sont versées sous 7 jours ouvrables après encaissement confirmé du client. Le seuil minimum de versement est de 5 000 FCFA.",
+    a: "Les commissions sont versées sous 7 jours ouvrables après encaissement confirmé du client. Le seuil minimum de versement est de 5 000 FCFA. Les modes de paiement disponibles sont Orange Money, Wave, MTN MoMo et virement bancaire.",
   },
   {
     q: "Combien de temps dure le cookie de tracking ?",
-    a: "90 jours. Si quelqu'un clique sur votre lien aujourd'hui et achète dans les 90 jours suivants, vous touchez la commission — même s'il n'achète pas immédiatement.",
+    a: "90 jours. Si quelqu'un clique sur votre lien aujourd'hui et achète dans les 90 jours suivants, vous touchez la commission — même s'il n'achète pas immédiatement. C'est pourquoi il faut activer tous vos produits pour maximiser les chances.",
   },
   {
     q: "Qu'est-ce que l'équipe active pour les conditions de statut ?",
-    a: "L'équipe active comprend tous vos filleuls N1, N2 et N3 ayant effectué au moins 1 vente confirmée. Ils doivent être dans votre réseau à 3 niveaux ET avoir vendu.",
+    a: "L'équipe active comprend tous vos filleuls N1, N2 et N3 ayant effectué au moins 1 vente confirmée. Ils doivent être dans votre réseau à 3 niveaux ET avoir vendu. Un filleul inscrit mais qui n'a jamais vendu ne compte pas dans l'équipe active.",
   },
   {
     q: "Est-ce que je touche une commission si mon filleul vend ?",
-    a: "Oui ! Vous touchez N2 sur toutes les ventes de vos filleuls directs, et N3 sur les ventes de leurs filleuls — automatiquement.",
+    a: "Oui ! Vous touchez N2 sur toutes les ventes de vos filleuls directs, et N3 sur les ventes de leurs filleuls — automatiquement et sans effort supplémentaire de votre part. C'est le principe des revenus passifs.",
   },
   {
     q: "Comment devenir Elite Représentant ?",
@@ -195,11 +195,11 @@ const FAQ_ITEMS = [
   },
   {
     q: "Les commissions sur abonnement continuent indéfiniment ?",
-    a: "Non. Pour les SaaS mensuels, les commissions s'arrêtent après 4 mois par client. Mais chaque nouveau client que fait votre filleul relance un nouveau cycle de 4 mois.",
+    a: "Non. Pour les SaaS mensuels, les commissions s'arrêtent après 4 mois par client (M1=20%, M2=15%, M3=10%, M4=5%). Mais chaque nouveau client que fait votre filleul relance un nouveau cycle de 4 mois. L'objectif est d'accumuler le plus de clients actifs possible.",
   },
   {
     q: "Peut-on cumuler plusieurs produits pour un même client ?",
-    a: "Oui ! Si un client clique votre lien et achète Scolaby ET une formation dans les 90 jours, vous touchez une commission sur les deux achats. Activez tous vos produits pour maximiser cette fenêtre.",
+    a: "Oui ! Si un client clique votre lien et achète Scolaby ET une formation dans les 90 jours, vous touchez une commission sur les deux achats. Activez tous vos produits pour maximiser cette fenêtre. Un même client peut potentiellement acheter dans plusieurs branches IBIG.",
   },
   {
     q: "Comment fonctionne la promotion de statut automatique ?",
@@ -215,11 +215,67 @@ const FAQ_ITEMS = [
   },
   {
     q: "Comment répondre si un prospect me demande si c'est un Ponzi ?",
-    a: "Répondez avec confiance : IBIG PARTNERS est un programme d'affiliation — pas un Ponzi, pas un MLM pyramidal. Les 3 points clés à expliquer : (1) L'inscription est gratuite, vous n'investissez rien. (2) Vous êtes payé uniquement sur des ventes réelles de produits existants (logiciels utilisés par de vraies entreprises, formations dispensées en salle, biens immobiliers livrés). (3) Si personne ne vend rien, personne n'est payé — il n'y a pas de 'rendement garanti'. Le modèle est identique à celui d'Amazon Associates ou de Shopify Affiliates. Proposez à votre prospect de visiter les sites des branches (ibigsoft.com, ibig-eduform.com…) pour voir les produits par lui-même.",
+    a: "Répondez avec confiance : IBIG PARTNERS est un programme d'affiliation — pas un Ponzi, pas un MLM pyramidal. Les 3 points clés : (1) L'inscription est gratuite, vous n'investissez rien. (2) Vous êtes payé uniquement sur des ventes réelles de produits existants. (3) Si personne ne vend rien, personne n'est payé — pas de rendement garanti. Le modèle est identique à Amazon Associates. Proposez à votre prospect de visiter ibigsoft.com ou ibig-eduform.com pour voir les produits par lui-même.",
   },
   {
     q: "Comment prouver la légitimité d'IBIG à un prospect sceptique ?",
-    a: "Plusieurs preuves concrètes : (1) Les sites des branches existent et présentent des produits réels avec des démonstrations. (2) IBIG SARL est une société enregistrée en Côte d'Ivoire — vous pouvez orienter votre prospect vers une prise de contact directe avec l'équipe. (3) Les commissions viennent d'actes commerciaux documentés — chaque vente génère une confirmation écrite avec référence. (4) Aucun frais d'adhésion, aucun achat minimum — un schéma de Ponzi fait toujours payer l'entrée. Si votre prospect reste sceptique, proposez-lui un rendez-vous avec l'équipe IBIG ou de tester lui-même un produit avant de décider.",
+    a: "Plusieurs preuves concrètes : (1) Les sites des branches existent et présentent des produits réels avec démonstrations. (2) IBIG SARL est une société enregistrée en Côte d'Ivoire. (3) Les commissions viennent d'actes commerciaux documentés. (4) Aucun frais d'adhésion ni achat minimum. Si votre prospect reste sceptique, proposez-lui un rendez-vous avec l'équipe IBIG ou de tester lui-même un produit.",
+  },
+  {
+    q: "Qu'est-ce qu'une mission CASH et comment l'accomplir ?",
+    a: "Une mission CASH est un objectif commercial dont la récompense est une somme d'argent versée directement sur votre compte affilié (en plus de vos commissions normales). Exemple : 'Réalisez 5 ventes Scolaby ce mois → gagnez 50 000 FCFA bonus'. Pour l'accomplir, rendez-vous dans la section Missions, lisez les conditions précises et accomplissez l'objectif avant la date limite. La récompense est versée en même temps que vos commissions.",
+  },
+  {
+    q: "Qu'est-ce qu'une mission CP (Crédibilité Points) ?",
+    a: "Les CP (Crédibilité Points) sont des points non monétaires qui servent à progresser plus vite dans les statuts et à débloquer des avantages exclusifs. Les missions CP récompensent des actions importantes : compléter votre KYC (+50 CP), réaliser votre 1ère vente (+100 CP), recruter votre 1er filleul (+75 CP), compléter un module de l'Académie (+30 CP), etc. Plus vous avez de CP, plus votre profil est crédible et votre progression rapide.",
+  },
+  {
+    q: "Qu'est-ce qu'une mission MIXTE ? Est-ce la meilleure option ?",
+    a: "Une mission MIXTE combine les deux : vous gagnez à la fois de l'argent (FCFA) ET des CP. Exemple : 'Recrutez 3 filleuls actifs ce mois → 30 000 FCFA + 150 CP'. C'est effectivement la meilleure option car vous obtenez une récompense immédiate en cash ET des points de progression long terme. La majorité des missions disponibles sur la plateforme sont de type MIXTE, et c'est ce que les partenaires les plus performants privilégient.",
+  },
+  {
+    q: "Comment accéder aux missions disponibles ?",
+    a: "Dans votre espace partenaire, allez dans la section 'Missions'. Vous y trouverez toutes les missions disponibles filtrées par type (CASH, CP, MIXTE), par branche IBIG, et par difficulté. Chaque mission affiche clairement l'objectif, la récompense, et la date limite. Cliquez sur une mission pour voir les conditions précises et suivre votre progression.",
+  },
+  {
+    q: "Quelle est la différence entre commission normale et récompense de mission ?",
+    a: "La commission normale est calculée automatiquement sur chaque vente selon les taux IBIG (N1/N2/N3). La récompense de mission est un bonus supplémentaire versé quand vous atteignez un objectif spécifique. Vous pouvez cumuler les deux : une vente peut vous rapporter votre commission normale + contribuer à une mission CASH ou MIXTE. C'est pour ça qu'il faut toujours vérifier les missions actives avant de prospecter.",
+  },
+  {
+    q: "Quelle est la meilleure stratégie pour maximiser mes revenus avec les missions ?",
+    a: "Stratégie recommandée : (1) Consultez les missions actives chaque lundi matin. (2) Priorisez les missions MIXTES pour le double bénéfice. (3) Alignez vos efforts de prospection avec les missions en cours — si une mission récompense les ventes Scolaby, concentrez-vous dessus. (4) Combinez missions CASH (revenus immédiats) avec missions CP (progression statut). (5) Partagez les missions atteignables avec vos filleuls pour stimuler l'activité N2/N3.",
+  },
+  {
+    q: "Mon KYC a été rejeté. Que faire ?",
+    a: "Un rejet KYC est fréquent et facile à corriger. Lisez attentivement le motif indiqué dans le mail (document illisible, information manquante, photo floue, etc.). Corrigez le problème spécifique et soumettez à nouveau immédiatement. Le nouveau dossier est traité sous 24-48h. En cas de doute, contactez support@ibigpartners.com avec votre code affilié et une description du problème.",
+  },
+  {
+    q: "Comment calculer précisément ce que je vais gagner sur une vente ?",
+    a: "Formule de base : Commission = Prix de vente × Taux N1 (si vente directe) ou × Taux N2 (si filleul vend). Pour IBIG SOFT mensuel : un client à 10 000 FCFA/mois vous rapporte 10 000 × 20% = 2 000 FCFA le mois 1, puis 1 500, 1 000, 500 FCFA les mois suivants. Total sur 4 mois : 5 000 FCFA par client. Utilisez le simulateur dans votre espace partenaire pour des calculs complexes.",
+  },
+  {
+    q: "Comment prospecter efficacement sur les réseaux sociaux ?",
+    a: "Les 3 plateformes les plus efficaces pour les affiliés IBIG : (1) WhatsApp : messages personnalisés (jamais de masse), groupes WhatsApp dédiés, statuts avec témoignages clients. (2) Facebook : posts avec résultats concrets + visuels IBIG, groupes thématiques (chefs d'entreprise, enseignants, DRH). (3) LinkedIn : cibler DRH, directeurs d'école, DG de PME avec un message de connexion professionnel. Fréquence recommandée : 1 post/jour minimum sur au moins 2 plateformes.",
+  },
+  {
+    q: "Quels produits IBIG sont les plus faciles à vendre pour un débutant ?",
+    a: "Les 3 produits les plus accessibles pour débuter : (1) Scolaby — cible facile (écoles, crèches, académies), besoin universel, prix abordable (10 000 FCFA/mois), démo rapide en 10 min. (2) IBIG FactPro — toute TPE/PME a besoin de facturer, prix doux (4 900 FCFA/mois), démonstration intuitive. (3) Formations IBIG EDUFORM catalogue — pas besoin de démo, partagez le lien et les gens s'inscrivent directement. Évitez l'immobilier et le financement au début, ce sont des cycles de vente plus longs.",
+  },
+  {
+    q: "Comment gérer un filleul qui ne vend pas depuis 30 jours ?",
+    a: "Protocole de relance en 3 étapes : (1) Message WhatsApp personnalisé : 'Bonjour [Prénom], j'ai vu que tu n'as pas encore réalisé ta 1ère vente. Est-ce qu'il y a quelque chose qui te bloque ? Je suis là pour t'aider.' (2) Si pas de réponse après 3 jours : appel de 15 minutes pour identifier le blocage réel (manque de confiance, de prospects, de compréhension du produit). (3) Proposez-lui de faire sa première démo avec vous, en co-selling. Un filleul qui vend une fois continue généralement à vendre.",
+  },
+  {
+    q: "Que faire si un client me demande un devis ?",
+    a: "Pour un devis, contactez directement l'équipe IBIG par email ou WhatsApp. Donnez-leur : (1) Le produit/service concerné, (2) Le profil du prospect (taille entreprise, secteur, besoins spécifiques), (3) Vos coordonnées affilié (code + nom). L'équipe IBIG préparera le devis officiel et vous sera attribué la commission si la vente se conclut via votre référence. Ne promettez jamais de prix avant d'avoir le devis officiel.",
+  },
+  {
+    q: "Puis-je promouvoir IBIG en dehors de Côte d'Ivoire ?",
+    a: "Oui ! IBIG PARTNERS est un programme panafricain et international sans limite de pays. Vous pouvez recruter des filleuls et vendre à des clients partout en Afrique et dans la diaspora. Les formations IBIG EDUFORM ont un format spécial diaspora/international. Les paiements sont disponibles via virement bancaire international en plus des méthodes Mobile Money africaines.",
+  },
+  {
+    q: "Combien de filleuls puis-je avoir au maximum ?",
+    a: "Aucune limite ! Vous pouvez recruter autant de filleuls directs (N1) que vous le souhaitez. Chacun de vos filleuls peut lui-même recruter sans limite, créant votre N2. Et leurs filleuls créent votre N3. La seule limite est votre capacité à les former et à les animer. Qualité > quantité : 10 filleuls actifs valent mieux que 100 filleuls inactifs.",
   },
 ];
 

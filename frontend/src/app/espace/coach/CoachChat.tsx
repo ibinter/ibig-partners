@@ -45,8 +45,18 @@ const CATEGORIES = [
       },
       {
         icon: "💡",
-        label: "Quel produit proposer ?",
-        prompt: "J'ai un contact qui dirige une PME de 12 employés à Abidjan. Quel produit IBIG je dois lui proposer en priorité et pourquoi ? Donne un argumentaire de 3 points.",
+        label: "Quel produit proposer à une PME ?",
+        prompt: "J'ai un contact qui dirige une PME de 12 employés à Abidjan dans le commerce. Quel(s) produit(s) IBIG je dois lui proposer en priorité et pourquoi ? Donne un argumentaire de 3 points et un message WhatsApp prêt à envoyer.",
+      },
+      {
+        icon: "🏢",
+        label: "Argumentaire pour un DRH",
+        prompt: "J'ai un rendez-vous avec un DRH d'une entreprise de 50 personnes la semaine prochaine. Quels produits IBIG EMPLOI & TALENTS et IBIG FINANCEMENT dois-je lui proposer ? Donne-moi un argumentaire structuré et les commissions que je peux gagner.",
+      },
+      {
+        icon: "🚀",
+        label: "Closer un prospect qui hésite",
+        prompt: "J'ai fait une démo Scolaby il y a 1 semaine. Le directeur est intéressé mais dit qu'il doit encore réfléchir. Donne-moi 3 arguments de closing et un message WhatsApp de relance pour le pousser à décider aujourd'hui.",
       },
     ],
   },
@@ -72,7 +82,39 @@ const CATEGORIES = [
       {
         icon: "❓",
         label: "Répondre aux objections fréquentes",
-        prompt: "Quelles sont les 5 objections les plus fréquentes quand je présente IBIG à quelqu'un, et comment y répondre efficacement ?",
+        prompt: "Quelles sont les 5 objections les plus fréquentes quand je présente IBIG à quelqu'un, et comment y répondre efficacement ? Inclus la réponse à 'c'est un Ponzi'.",
+      },
+      {
+        icon: "📋",
+        label: "Message de bienvenue pour nouveau filleul",
+        prompt: "Mon nouveau filleul vient de s'inscrire sur IBIG PARTNERS. Rédige un message de bienvenue WhatsApp qui l'enthousiasme, explique les premières étapes à faire et lui donne confiance.",
+      },
+    ],
+  },
+  {
+    key: "missions",
+    label: "🎯 Missions",
+    prompts: [
+      {
+        icon: "💰",
+        label: "Quelle mission CASH accomplir ?",
+        prompt: "Explique-moi comment les missions CASH fonctionnent sur IBIG PARTNERS et comment choisir les plus rentables selon mon profil. Donne-moi une stratégie pour en accomplir 2-3 par mois.",
+      },
+      {
+        icon: "🔵",
+        label: "Comprendre les missions CP",
+        prompt: "Je suis nouveau sur IBIG PARTNERS. Qu'est-ce que les CP (Crédibilité Points) et comment les missions CP peuvent m'aider à progresser plus vite ? Donne-moi les 5 missions CP les plus faciles à accomplir en premier.",
+      },
+      {
+        icon: "🟡",
+        label: "Stratégie missions MIXTES",
+        prompt: "Pourquoi les missions MIXTES sont-elles les meilleures ? Comment je dois organiser mon activité commerciale pour accomplir le maximum de missions MIXTES chaque mois et doubler mes revenus ?",
+      },
+      {
+        icon: "📊",
+        label: "Plan missions + ventes combiné",
+        prompt: `Je suis au statut ${"{status}"}. Donne-moi un plan sur 30 jours qui combine mes ventes normales avec les missions CASH et MIXTES disponibles pour maximiser mes revenus et accumuler des CP en même temps.`,
+        dynamic: true,
       },
     ],
   },
@@ -89,17 +131,23 @@ const CATEGORIES = [
       {
         icon: "📅",
         label: "Plan sur 30 jours — débutant",
-        prompt: "Je débute sur IBIG PARTNERS. Donne-moi un plan d'action réaliste sur 30 jours pour faire mes premières ventes et recruter mes premiers filleuls.",
+        prompt: "Je débute sur IBIG PARTNERS. Donne-moi un plan d'action réaliste sur 30 jours pour faire mes premières ventes, recruter mes premiers filleuls et accomplir mes premières missions.",
       },
       {
         icon: "🏆",
         label: "Stratégie réseau multi-niveaux",
-        prompt: "Comment je dois organiser mon équipe (filleuls N1 et N2) pour maximiser mes commissions résiduelles tout en restant actif sur les ventes directes ?",
+        prompt: "Comment je dois organiser mon équipe (filleuls N1 et N2) pour maximiser mes commissions résiduelles tout en restant actif sur les ventes directes ? Donne-moi un modèle concret.",
       },
       {
         icon: "🗺️",
         label: "Quels secteurs cibler dans ma ville ?",
-        prompt: `Je suis basé à ${"{city}"}. Quels secteurs d'activité dois-je cibler en priorité pour vendre les produits IBIG (ERP, logiciels, solutions RH) ? Donne des exemples de types d'entreprises.`,
+        prompt: `Je suis basé à ${"{city}"}. Quels secteurs d'activité dois-je cibler en priorité pour vendre les produits IBIG (ERP, logiciels, solutions RH, formations) ? Donne des exemples concrets d'entreprises et des scripts adaptés.`,
+        dynamic: true,
+      },
+      {
+        icon: "💎",
+        label: "Calculer mes gains potentiels",
+        prompt: `J'ai actuellement ${"{salesMissing > 0 ? 'peu de' : 'plusieurs'}"} ventes et ${"{directMissing > 0 ? 'peu de' : 'plusieurs'}"} filleuls. Si je fais 5 ventes Scolaby ce mois et recrute 2 filleuls qui font 2 ventes chacun, calcule exactement mes commissions N1, N2 et l'impact sur mon statut.`,
         dynamic: true,
       },
     ],
@@ -127,6 +175,11 @@ const CATEGORIES = [
         icon: "🔁",
         label: "Story WhatsApp — témoignage client",
         prompt: "Rédige un court texte de story WhatsApp (2-3 lignes max) racontant le succès d'un client fictif avec un produit IBIG, pour donner envie à mes contacts de s'informer.",
+      },
+      {
+        icon: "📣",
+        label: "Post Instagram/Facebook motivant",
+        prompt: "Rédige un post Instagram/Facebook court (max 6 lignes) qui montre l'opportunité IBIG PARTNERS de façon authentique et motivante, sans être du spam. Je veux que mes amis posent des questions.",
       },
     ],
   },
