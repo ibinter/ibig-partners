@@ -8,7 +8,8 @@ type Lang = "fr" | "en";
 
 const NAV = {
   fr: [
-    { href: "/#branches", icon: "🏢", label: "Branches" },
+    { href: "/catalogue", icon: "🛍️", label: "Catalogue des produits" },
+    { href: "/missions", icon: "🎯", label: "Missions disponibles" },
     { href: "/#commissions", icon: "💰", label: "Commissions" },
     { href: "/#statuts", icon: "⭐", label: "Statuts" },
     { href: "/#espace", icon: "🖥️", label: "Espace partenaire" },

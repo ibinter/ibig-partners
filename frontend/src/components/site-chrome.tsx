@@ -78,10 +78,10 @@ function MarqueeBanner({ lang = "fr" }: { lang?: Lang }) {
 
 const HEADER_NAV: Record<Lang, { href: string; label: string }[]> = {
   fr: [
-    { href: "/#branches", label: "Branches" },
+    { href: "/catalogue", label: "Catalogue" },
+    { href: "/missions", label: "Missions" },
     { href: "/#commissions", label: "Commissions" },
     { href: "/#statuts", label: "Statuts" },
-    { href: "/#espace", label: "Espace partenaire" },
     { href: "/#faq", label: "FAQ" },
   ],
   en: [
@@ -174,7 +174,8 @@ const FOOTER_T = {
     builtBy: "— Développé par IBIG Soft",
     program: "Programme",
     nav: [
-      { href: "/#branches", label: "Branches", cls: "text-slate-400 hover:text-brand-400" },
+      { href: "/catalogue", label: "Catalogue", cls: "text-slate-400 hover:text-brand-400" },
+      { href: "/missions", label: "Missions", cls: "text-slate-400 hover:text-brand-400" },
       { href: "/#commissions", label: "Commissions", cls: "text-slate-400 hover:text-brand-400" },
       { href: "/#statuts", label: "Statuts", cls: "text-slate-400 hover:text-brand-400" },
       { href: "/#faq", label: "FAQ", cls: "text-slate-400 hover:text-brand-400" },
