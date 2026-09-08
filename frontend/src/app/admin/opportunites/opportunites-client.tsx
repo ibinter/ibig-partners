@@ -239,6 +239,8 @@ export default function OpportunitesClient({
   declineMatchAction,
   updateLeadStatusAction,
   addLeadNoteAction,
+  broadcastAction,
+  quickSplitAction,
 }: {
   rows: Row[];
   updateAction: (fd: FormData) => Promise<void>;
