@@ -24,6 +24,11 @@ export default async function AdminDashboard() {
     paidComm,
     openOpportunities,
     recentSales,
+    productsTotal,
+    productsActive,
+    missionsTotal,
+    missionsActive,
+    pendingApplications,
   ] = await Promise.all([
     prisma.user.count({ where: { role: "PARTNER" } }),
     prisma.user.count({ where: { role: "PARTNER", active: true, approved: true } }),
@@ -38,6 +43,11 @@ export default async function AdminDashboard() {
       take: 8,
       include: { product: true, seller: true },
     }),
+    prisma.product.count(),
+    prisma.product.count({ where: { active: true } }),
+    prisma.mission.count(),
+    prisma.mission.count({ where: { active: true } }),
+    prisma.missionApplication.count({ where: { status: "PENDING" } }),
   ]);
 
   const topSellers = await prisma.sale.groupBy({
@@ -142,6 +152,88 @@ export default async function AdminDashboard() {
             {openOpportunities}
           </span>
         </Link>
+      </div>
+
+      {/* ── Produits & Missions admin ── */}
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        {/* PRODUITS */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-600 via-brand-700 to-indigo-800 p-6 text-white shadow-xl">
+          <div className="pointer-events-none absolute -top-8 -right-8 h-40 w-40 rounded-full bg-white/10 blur-xl" />
+          <div className="pointer-events-none absolute -bottom-6 -left-6 h-28 w-28 rounded-full bg-indigo-400/20 blur-lg" />
+          <div className="relative">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wider">
+                  🧩 Catalogue Produits
+                </span>
+                <p className="mt-3 text-4xl font-extrabold tracking-tight leading-none">{productsActive}</p>
+                <p className="mt-1 text-sm text-brand-200 font-medium">produits actifs / {productsTotal} au total</p>
+              </div>
+              <div className="shrink-0 text-right">
+                <p className="text-[11px] text-brand-200 uppercase font-semibold tracking-wide">10 branches</p>
+                <p className="text-3xl font-extrabold">IBIG</p>
+              </div>
+            </div>
+            <p className="text-xs text-brand-200 leading-relaxed mb-5">
+              Gérez les produits proposés aux partenaires — activation, tarifs, taux de commission par branche.
+            </p>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/admin/produits"
+                className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-extrabold text-brand-700 shadow-lg hover:bg-brand-50 transition-all hover:-translate-y-0.5"
+              >
+                ⚙️ Gérer les produits
+              </Link>
+              <Link
+                href="/catalogue"
+                className="inline-flex items-center gap-2 rounded-xl bg-white/15 hover:bg-white/25 px-4 py-2.5 text-sm font-semibold text-white transition"
+              >
+                Vue publique →
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* MISSIONS */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 via-orange-600 to-rose-700 p-6 text-white shadow-xl">
+          <div className="pointer-events-none absolute -top-8 -right-8 h-40 w-40 rounded-full bg-white/10 blur-xl" />
+          <div className="pointer-events-none absolute -bottom-6 -left-6 h-28 w-28 rounded-full bg-rose-300/20 blur-lg" />
+          <div className="relative">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wider">
+                  🎯 Missions partenaires
+                </span>
+                <p className="mt-3 text-4xl font-extrabold tracking-tight leading-none">{missionsActive}</p>
+                <p className="mt-1 text-sm text-amber-100 font-medium">missions actives / {missionsTotal} créées</p>
+              </div>
+              {pendingApplications > 0 && (
+                <div className="shrink-0 text-right">
+                  <p className="text-[11px] text-amber-200 uppercase font-semibold tracking-wide">Candidatures</p>
+                  <p className="text-3xl font-extrabold">{pendingApplications}</p>
+                  <p className="text-[10px] text-amber-200">en attente</p>
+                </div>
+              )}
+            </div>
+            <p className="text-xs text-amber-100 leading-relaxed mb-5">
+              Créez, activez et suivez les missions terrain — candidatures, preuves, récompenses et paiements.
+            </p>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/admin/missions"
+                className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-extrabold text-orange-700 shadow-lg hover:bg-orange-50 transition-all hover:-translate-y-0.5"
+              >
+                ⚡ Gérer les missions
+              </Link>
+              <Link
+                href="/missions"
+                className="inline-flex items-center gap-2 rounded-xl bg-white/15 hover:bg-white/25 px-4 py-2.5 text-sm font-semibold text-white transition"
+              >
+                Vue publique →
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Graphique */}

@@ -71,7 +71,7 @@ export default async function DashboardPage({
     } catch { return []; }
   })();
 
-  const [recentCommissions, chartSales, chartComms, salesToday, salesThisMonth, myRank, prospectsUrgent] = await Promise.all([
+  const [recentCommissions, chartSales, chartComms, salesToday, salesThisMonth, myRank, prospectsUrgent, productsCount, missionsCount, myLinksCount, myMissionsCount] = await Promise.all([
     prisma.commission.findMany({
       where: { userId: user.id },
       orderBy: { createdAt: "desc" },
@@ -106,6 +106,11 @@ export default async function DashboardPage({
       take: 5,
       select: { id: true, name: true, contact: true, reminderAt: true, status: true },
     }),
+    // Compteurs produits & missions
+    prisma.product.count({ where: { active: true } }),
+    prisma.mission.count({ where: { active: true } }),
+    prisma.affiliateLink.count({ where: { userId: user.id } }),
+    prisma.missionApplication.count({ where: { partnerId: user.id } }),
   ]);
 
   const salePoints: SalePoint[]  = chartSales.map((s) => ({ createdAt: s.createdAt instanceof Date ? s.createdAt.toISOString() : String(s.createdAt) }));
@@ -331,6 +336,86 @@ export default async function DashboardPage({
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-300">Mon réseau</p>
           <p className="mt-1 text-2xl font-extrabold">{counts.reduce((a, b) => a + b, 0)}</p>
           <p className="mt-0.5 text-xs text-slate-400">N1 : {counts[0]} · N2 : {counts[1]} · N3 : {counts[2]}</p>
+        </div>
+      </div>
+
+      {/* ── Produits & Missions — blocs héros ── */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        {/* PRODUITS */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-600 via-brand-700 to-indigo-800 p-6 text-white shadow-xl">
+          {/* Cercles décoratifs */}
+          <div className="pointer-events-none absolute -top-8 -right-8 h-40 w-40 rounded-full bg-white/10 blur-xl" />
+          <div className="pointer-events-none absolute -bottom-6 -left-6 h-28 w-28 rounded-full bg-indigo-400/20 blur-lg" />
+          <div className="relative">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wider">
+                  🧩 Catalogue Produits
+                </span>
+                <p className="mt-3 text-4xl font-extrabold tracking-tight leading-none">{productsCount}</p>
+                <p className="mt-1 text-sm text-brand-200 font-medium">produits actifs dans 10 branches</p>
+              </div>
+              <div className="shrink-0 text-right">
+                <p className="text-[11px] text-brand-200 uppercase font-semibold tracking-wide">Mes liens activés</p>
+                <p className="text-3xl font-extrabold">{myLinksCount}</p>
+              </div>
+            </div>
+            <p className="text-xs text-brand-200 leading-relaxed mb-5">
+              Logiciels SaaS · Formations certifiantes · Immobilier · Digital · Services — jusqu'à <strong className="text-white">20 % de commission</strong> par vente.
+            </p>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/espace/produits"
+                className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-extrabold text-brand-700 shadow-lg hover:bg-brand-50 transition-all hover:-translate-y-0.5"
+              >
+                🚀 Activer des produits
+              </Link>
+              <Link
+                href="/espace/liens"
+                className="inline-flex items-center gap-2 rounded-xl bg-white/15 hover:bg-white/25 px-4 py-2.5 text-sm font-semibold text-white transition"
+              >
+                Mes liens →
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* MISSIONS */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500 via-orange-600 to-rose-700 p-6 text-white shadow-xl">
+          <div className="pointer-events-none absolute -top-8 -right-8 h-40 w-40 rounded-full bg-white/10 blur-xl" />
+          <div className="pointer-events-none absolute -bottom-6 -left-6 h-28 w-28 rounded-full bg-rose-300/20 blur-lg" />
+          <div className="relative">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wider">
+                  🎯 Missions disponibles
+                </span>
+                <p className="mt-3 text-4xl font-extrabold tracking-tight leading-none">{missionsCount}</p>
+                <p className="mt-1 text-sm text-amber-100 font-medium">missions actives en ce moment</p>
+              </div>
+              <div className="shrink-0 text-right">
+                <p className="text-[11px] text-amber-200 uppercase font-semibold tracking-wide">Mes candidatures</p>
+                <p className="text-3xl font-extrabold">{myMissionsCount}</p>
+              </div>
+            </div>
+            <p className="text-xs text-amber-100 leading-relaxed mb-5">
+              Prospection · Démonstrations · Événements · Recrutement — rémunérées en <strong className="text-white">cash, CP ou % de vente</strong>.
+            </p>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/espace/missions"
+                className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-extrabold text-orange-700 shadow-lg hover:bg-orange-50 transition-all hover:-translate-y-0.5"
+              >
+                ⚡ Voir les missions
+              </Link>
+              <Link
+                href="/catalogue"
+                className="inline-flex items-center gap-2 rounded-xl bg-white/15 hover:bg-white/25 px-4 py-2.5 text-sm font-semibold text-white transition"
+              >
+                Catalogue →
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
 
