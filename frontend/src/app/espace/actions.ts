@@ -4,7 +4,7 @@ import { after } from "next/server";
 import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { sendPayoutRequestedEmail, sendOpportunityMessageEmail } from "@/lib/email";
+import { sendPayoutRequestedEmail, sendOpportunityMessageEmail, sendOpportunityInterestEmail } from "@/lib/email";
 
 /** Active (cree le lien) ou desactive (supprime le lien) un produit pour le partenaire. */
 export async function toggleProduct(formData: FormData) {
@@ -157,11 +157,32 @@ export async function expressInterest(formData: FormData) {
   const note = String(formData.get("note") || "").trim();
   if (!opportunityId) return;
 
+  const existing = await (prisma as any).opportunityLead.findUnique({
+    where: { opportunityId_userId: { opportunityId, userId: user.id } },
+  });
+
   await (prisma as any).opportunityLead.upsert({
     where: { opportunityId_userId: { opportunityId, userId: user.id } },
     create: { opportunityId, userId: user.id, status: "INTERESTED", note: note || null },
     update: { note: note || null, updatedAt: new Date() },
   });
+
+  // Notifier le soumetteur uniquement au premier intérêt (pas à chaque update)
+  if (!existing) {
+    const opp = await (prisma as any).opportunity.findUnique({
+      where: { id: opportunityId },
+      include: { user: { select: { email: true, firstName: true } } },
+    });
+    if (opp && opp.user.email !== user.email) {
+      after(() => sendOpportunityInterestEmail({
+        to: opp.user.email,
+        firstName: opp.user.firstName,
+        opportunityTitle: opp.title,
+        interestedPartnerName: `${(user as any).firstName} ${(user as any).lastName}`,
+        interestedPartnerCode: (user as any).code ?? "",
+      }).catch(() => {}));
+    }
+  }
 
   revalidatePath("/espace/opportunites");
 }

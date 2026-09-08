@@ -1729,6 +1729,45 @@ export async function sendPasswordResetEmail(opts: {
   });
 }
 
+// ─── OPPORTUNITÉS — Notification intérêt ─────────────────────────────────
+
+export async function sendOpportunityInterestEmail(opts: {
+  to: string; firstName: string; opportunityTitle: string;
+  interestedPartnerName: string; interestedPartnerCode: string;
+}): Promise<EmailResult> {
+  const html = layout(`
+    <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
+      Un partenaire s'intéresse à votre opportunité 👋
+    </h2>
+    <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
+      Bonjour <strong>${opts.firstName}</strong>, un membre du réseau IBIG PARTNERS
+      vient d'exprimer son intérêt pour votre opportunité :
+    </p>
+    <div style="background:#f0f4ff;border-radius:12px;padding:20px 24px;margin-bottom:24px;border-left:4px solid #0b5fff;">
+      <p style="margin:0;font-size:16px;font-weight:700;color:#0f1729;">${opts.opportunityTitle}</p>
+    </div>
+    <div style="background:#f0fdf4;border-radius:10px;padding:16px 20px;margin-bottom:24px;border:1px solid #bbf7d0;">
+      <p style="margin:0 0 4px;font-size:12px;color:#166534;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;">Partenaire intéressé</p>
+      <p style="margin:0;font-size:15px;font-weight:700;color:#15803d;">${opts.interestedPartnerName}</p>
+      <p style="margin:2px 0 0;font-size:12px;color:#166534;font-family:monospace;">${opts.interestedPartnerCode}</p>
+    </div>
+    <p style="color:#5b6577;font-size:14px;line-height:1.6;margin:0 0 24px;">
+      L'équipe IBIG PARTNERS coordonne la mise en relation. Vous serez contacté(e)
+      dès qu'un partenariat peut être formalisé.
+    </p>
+    ${btn("Voir mes opportunités →", `${SITE}/espace/opportunites`)}
+    <hr style="margin:28px 0;border:none;border-top:1px solid #e2e8f0;" />
+    <p style="margin:0;font-size:13px;color:#94a3b8;">
+      Support WhatsApp : <a href="https://wa.me/2250778882592" style="color:#0b5fff;font-weight:700;">+225 07 78 88 25 92</a>
+    </p>
+  `);
+  return sendEmail({
+    to: opts.to,
+    subject: `👋 ${opts.interestedPartnerName} s'intéresse à votre opportunité`,
+    html,
+  });
+}
+
 // ─── MISSIONS — Emails partenaire ─────────────────────────────────────────
 
 export async function sendMissionApplicationAcceptedEmail(opts: {
