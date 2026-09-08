@@ -121,20 +121,18 @@ function EnterpriseRow({ e }: { e: any }) {
           <form action={approvePartner}>
             <input type="hidden" name="id" value={e.id} />
             <SubmitButton
-              label="✅ Approuver"
-              loadingLabel="…"
+              pendingLabel="…"
               className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 transition"
-            />
+            >✅ Approuver</SubmitButton>
           </form>
         ) : (
           <form action={setPartnerActive}>
             <input type="hidden" name="id" value={e.id} />
             <input type="hidden" name="active" value={e.active ? "false" : "true"} />
             <SubmitButton
-              label={e.active ? "Suspendre" : "Réactiver"}
-              loadingLabel="…"
+              pendingLabel="…"
               className={`rounded-xl text-xs font-bold px-4 py-2 transition ${e.active ? "bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200" : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200"}`}
-            />
+            >{e.active ? "Suspendre" : "Réactiver"}</SubmitButton>
           </form>
         )}
         <a
