@@ -77,4 +77,11 @@ export async function requireAdmin() {
   return user;
 }
 
+export async function requireEnterprise() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/connexion?next=/entreprise");
+  if (user.role !== "ENTERPRISE") redirect("/espace");
+  return user;
+}
+
 export const SESSION_COOKIE = COOKIE_NAME;

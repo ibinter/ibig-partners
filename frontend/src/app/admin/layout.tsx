@@ -3,7 +3,8 @@ import { DashboardShell, type NavItem } from "@/components/dashboard-shell";
 
 const NAV: NavItem[] = [
   { href: "/admin",               label: "Tableau de bord",    icon: "📈", group: "Vue globale" },
-  { href: "/admin/partenaires",   label: "Partenaires",        icon: "👥", group: "Réseau" },
+  { href: "/admin/partenaires",   label: "Partenaires affiliés", icon: "👥", group: "Réseau" },
+  { href: "/admin/entreprises",   label: "Entreprises clientes", icon: "🏢", group: "Réseau" },
   { href: "/admin/verifications",               label: "Vérifications KYC",       icon: "🔐", group: "Réseau" },
   { href: "/admin/partenaires-institutionnels", label: "Partenaires institutionnels", icon: "🌐", group: "Réseau" },
   { href: "/admin/opportunites",                label: "Opportunités",                icon: "🤝", group: "Réseau" },

@@ -22,7 +22,7 @@ model User {
   email        String  @unique
   phone        String
   passwordHash String
-  role         String  @default("PARTNER") // PARTNER | ADMIN | SUPERADMIN
+  role         String  @default("PARTNER") // PARTNER | ENTERPRISE | ADMIN | SUPERADMIN
   status       String  @default("STARTER") // STARTER | SILVER | GOLD | MASTER | ELITE
   active       Boolean @default(true)
   approved     Boolean @default(false) // validation manuelle des inscriptions
@@ -57,6 +57,10 @@ model User {
 
   // KYB — vérification entreprise
   kybStatus          String  @default("NONE") // NONE | SUBMITTED | VERIFIED | REJECTED
+
+  // Entreprise externe — abonnement
+  subscriptionPlan   String  @default("FREE") // FREE | MONTHLY | ANNUAL
+  subscriptionExpiry DateTime?
 
   // Parrainage : structure du reseau multi-niveaux
   sponsorId String?

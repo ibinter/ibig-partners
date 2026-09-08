@@ -43,7 +43,8 @@ export async function verifyOtpAction(_prev: unknown, formData: FormData) {
 
   // Si une destination explicite est fournie, l'utiliser ; sinon rediriger selon le rôle
   const isAdmin = user.role === "ADMIN" || user.role === "SUPERADMIN";
-  const defaultDest = isAdmin ? "/admin" : "/espace";
+  const isEnterprise = user.role === "ENTERPRISE";
+  const defaultDest = isAdmin ? "/admin" : isEnterprise ? "/entreprise" : "/espace";
   const dest = next && next.startsWith("/") ? next : defaultDest;
   redirect(dest);
 }

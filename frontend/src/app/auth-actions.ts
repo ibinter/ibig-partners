@@ -107,7 +107,8 @@ export async function loginAction(_prev: unknown, formData: FormData) {
     await logActivity({ userId: user.id, action: "LOGIN", detail: `Rôle: ${user.role} (bypass OTP)` });
     await createSession({ userId: user.id, role: user.role });
     const isAdmin = user.role === "ADMIN" || user.role === "SUPERADMIN";
-    const dest = next && next.startsWith("/") ? next : (isAdmin ? "/admin" : "/espace");
+    const isEnterprise = user.role === "ENTERPRISE";
+    const dest = next && next.startsWith("/") ? next : (isAdmin ? "/admin" : isEnterprise ? "/entreprise" : "/espace");
     redirect(dest);
   }
 
@@ -219,6 +220,73 @@ export async function registerAction(_prev: unknown, formData: FormData) {
   store.delete("ibig_ref");
 
   redirect("/espace?bienvenue=1");
+}
+
+export async function registerEnterpriseAction(_prev: unknown, formData: FormData) {
+  const firstName  = String(formData.get("firstName") || "").trim();
+  const lastName   = String(formData.get("lastName") || "").trim();
+  const email      = String(formData.get("email") || "").trim().toLowerCase();
+  const phone      = String(formData.get("phone") || "").trim();
+  const orgName    = String(formData.get("orgName") || "").trim();
+  const city       = String(formData.get("city") || "").trim();
+  const country    = String(formData.get("country") || "").trim();
+  const password   = String(formData.get("password") || "");
+  const website    = String(formData.get("website") || "").trim();
+  const sector     = String(formData.get("sector") || "").trim();
+
+  if (!firstName || !lastName || !email || !phone || !orgName || !password || !country) {
+    return { error: "Merci de remplir tous les champs obligatoires." };
+  }
+  if (password.length < 8) {
+    return { error: "Le mot de passe doit contenir au moins 8 caractères." };
+  }
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing) return { error: "Un compte existe déjà avec cet email." };
+
+  const code = await generateCode(orgName);
+  const store = await cookies();
+  const user = await prisma.user.create({
+    data: {
+      code,
+      firstName,
+      lastName,
+      email,
+      phone,
+      city: city || null,
+      country: country || null,
+      passwordHash: await hashPassword(password),
+      role: "ENTERPRISE",
+      partnerType: "COMPANY",
+      orgName,
+      website: website || null,
+      marketSectors: sector || null,
+      approved: false,
+      verificationStatus: "NONE",
+      subscriptionPlan: "FREE",
+    } as any,
+  });
+
+  await prisma.notification.create({
+    data: {
+      userId: user.id,
+      title: "🏢 Bienvenue sur IBIG PARTNERS Entreprise !",
+      body: "Votre compte entreprise est en cours de validation. Vous pourrez publier vos premières opportunités dès l'approbation.",
+      url: "/entreprise",
+    },
+  });
+
+  after(async () => {
+    await sendRegistrationReceivedEmail({
+      to: user.email,
+      firstName: user.firstName,
+      code: user.code,
+    });
+  });
+
+  await logActivity({ userId: user.id, action: "REGISTER", detail: `Entreprise: ${orgName}` });
+  await createSession({ userId: user.id, role: "ENTERPRISE" });
+  store.delete("ibig_ref");
+  redirect("/entreprise?bienvenue=1");
 }
 
 export async function logoutAction() {
