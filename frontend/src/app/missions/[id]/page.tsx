@@ -85,19 +85,17 @@ export default async function MissionDetailPage({ params }: { params: Promise<{ 
   const cashAmt  = mission.compensationAmount ?? 0;
   const cpAmt    = mission.cpAmount ?? 0;
   const isPct    = mission.compensationType === "PERCENT";
+  const cashFmt  = isPct ? `${(cashAmt / 100).toFixed(1)}%` : `${cashAmt.toLocaleString("fr-FR")} FCFA`;
   let rewardLine = "";
   let rewardSub  = "";
-  if (mission.rewardType === "CP" && cpAmt > 0) {
-    rewardLine = `${cpAmt.toLocaleString("fr-FR")} CP`;
+  if (mission.rewardType === "CP") {
+    rewardLine = cpAmt > 0 ? `${cpAmt.toLocaleString("fr-FR")} CP` : "";
     rewardSub  = "Points de crédit versés après validation du lead";
-  } else if (mission.rewardType === "CASH" && cashAmt > 0) {
-    rewardLine = isPct ? `${cashAmt / 100}% de la vente` : `${cashAmt.toLocaleString("fr-FR")} FCFA`;
+  } else if (mission.rewardType === "CASH") {
+    rewardLine = cashAmt > 0 ? cashFmt : "";
     rewardSub  = "Commission versée après encaissement de la vente";
   } else if (mission.rewardType === "MIXED") {
-    const parts: string[] = [];
-    if (cpAmt > 0)   parts.push(`${cpAmt.toLocaleString("fr-FR")} CP`);
-    if (cashAmt > 0) parts.push(isPct ? `${cashAmt / 100}%` : `${cashAmt.toLocaleString("fr-FR")} FCFA`);
-    rewardLine = parts.join(" + ");
+    rewardLine = [cashAmt > 0 ? cashFmt : "", cpAmt > 0 ? `${cpAmt.toLocaleString("fr-FR")} CP` : ""].filter(Boolean).join(" + ");
     rewardSub  = "Lead validé (CP) + commission après encaissement (CASH)";
   }
 

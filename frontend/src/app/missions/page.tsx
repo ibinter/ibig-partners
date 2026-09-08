@@ -255,17 +255,11 @@ export default async function MissionsPage({
                   const cashAmt   = m.compensationAmount ?? 0;
                   const cpAmt     = m.cpAmount ?? 0;
                   const isPct     = m.compensationType === "PERCENT";
+                  const cashFmt   = isPct ? `${(cashAmt / 100).toFixed(1)}%` : `${cashAmt.toLocaleString("fr-FR")} FCFA`;
                   let rewardLine  = "";
-                  if (m.rewardType === "CP" && cpAmt > 0) {
-                    rewardLine = `${cpAmt.toLocaleString("fr-FR")} CP`;
-                  } else if (m.rewardType === "CASH" && cashAmt > 0) {
-                    rewardLine = isPct ? `${cashAmt / 100}% de la vente` : `${cashAmt.toLocaleString("fr-FR")} FCFA`;
-                  } else if (m.rewardType === "MIXED") {
-                    const parts: string[] = [];
-                    if (cpAmt > 0)   parts.push(`${cpAmt.toLocaleString("fr-FR")} CP`);
-                    if (cashAmt > 0) parts.push(isPct ? `${cashAmt / 100}%` : `${cashAmt.toLocaleString("fr-FR")} FCFA`);
-                    rewardLine = parts.join(" + ");
-                  }
+                  if (m.rewardType === "CP")    rewardLine = cpAmt > 0 ? `${cpAmt.toLocaleString("fr-FR")} CP` : "";
+                  else if (m.rewardType === "CASH")  rewardLine = cashAmt > 0 ? cashFmt : "";
+                  else if (m.rewardType === "MIXED") rewardLine = [cashAmt > 0 ? cashFmt : "", cpAmt > 0 ? `${cpAmt.toLocaleString("fr-FR")} CP` : ""].filter(Boolean).join(" + ");
 
                   return (
                     <Link
