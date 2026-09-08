@@ -187,7 +187,11 @@ function SidebarNav({
                   onClick={onClose}
                   title={item.label}
                   className={`relative flex h-10 w-10 mx-auto items-center justify-center rounded-xl text-base transition-all duration-150 ${
-                    variant === "admin"
+                    item.highlight === "brand" && !active
+                      ? "bg-gradient-to-br from-brand-600 to-indigo-700 text-white shadow-md"
+                      : item.highlight === "orange" && !active
+                      ? "bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-md"
+                      : variant === "admin"
                       ? active ? "bg-white/20 text-white shadow-inner" : "text-white/60 hover:bg-white/12 hover:text-white"
                       : active ? "bg-blue-50 text-blue-600" : "text-slate-500 hover:bg-slate-100 hover:text-slate-700"
                   }`}
