@@ -133,10 +133,8 @@ export default function OpportunitesAffilieClient({
                       </span>
                     </div>
                     <div className="text-right shrink-0">
-                      <p className="text-xs text-slate-400">Commission</p>
-                      <p className="font-extrabold text-emerald-600 text-lg">
-                        {row.commissionType === "FIXED" ? fcfa(row.commission) : `${row.commission / 10}%`}
-                      </p>
+                      <p className="text-xs text-slate-400">Rémunération</p>
+                      <p className="font-extrabold text-emerald-600 text-sm">Sur résultat ✓</p>
                     </div>
                   </div>
 
@@ -205,9 +203,7 @@ export default function OpportunitesAffilieClient({
                       <span className="rounded-full bg-brand-600 px-2 py-0.5 text-[10px] font-bold text-white">{row.unreadCount}</span>
                     )}
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${s.color}`}>{s.label}</span>
-                    {row.commission > 0 && (
-                      <span className="text-xs font-bold text-emerald-600">{fcfa(row.commission)}</span>
-                    )}
+                    <span className="text-xs font-bold text-emerald-600">Sur résultat ✓</span>
                   </div>
                 </div>
               );
@@ -238,7 +234,7 @@ export default function OpportunitesAffilieClient({
             )}
             {selected.commission > 0 && (
               <div className="rounded-xl bg-emerald-50 border border-emerald-100 px-4 py-2 text-sm text-emerald-700">
-                <span className="font-semibold">Commission validée :</span> {fcfa(selected.commission)}
+                <span className="font-semibold">Frais de mise en relation IBIG :</span> {fcfa(selected.commission)}
               </div>
             )}
           </div>

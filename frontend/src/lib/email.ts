@@ -2017,16 +2017,10 @@ export async function sendOpportunityBroadcastEmail(opts: {
       <p style="margin:0;font-size:14px;color:#374151;line-height:1.7;">${opts.opportunityDescription}</p>
     </div>
 
-    <div style="display:flex;gap:12px;margin-bottom:20px;">
-      <div style="flex:1;background:#f0fdf4;border-radius:12px;padding:16px;border:1px solid #bbf7d0;text-align:center;">
-        <p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#166534;text-transform:uppercase;">💰 Commission IBIG</p>
-        <p style="margin:0;font-size:20px;font-weight:800;color:#15803d;">${commissionDisplay}</p>
-      </div>
-      ${opts.estimatedValue > 0 ? `
-      <div style="flex:1;background:#f0f4ff;border-radius:12px;padding:16px;border:1px solid #c7d2fe;text-align:center;">
-        <p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#4338ca;text-transform:uppercase;">💼 Valeur estimée</p>
-        <p style="margin:0;font-size:20px;font-weight:800;color:#4338ca;">${new Intl.NumberFormat("fr-FR", { style: "currency", currency: "XOF", maximumFractionDigits: 0 }).format(opts.estimatedValue)}</p>
-      </div>` : ""}
+    <div style="background:#f0fdf4;border-radius:12px;padding:16px 20px;margin-bottom:20px;border:1px solid #bbf7d0;text-align:center;">
+      <p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#166534;text-transform:uppercase;">💰 Rémunération</p>
+      <p style="margin:0;font-size:18px;font-weight:800;color:#15803d;">Sur résultat — définie par IBIG PARTNERS</p>
+      <p style="margin:6px 0 0;font-size:12px;color:#166534;">Votre part sera confirmée par l'équipe IBIG si votre profil est retenu pour la mise en relation.</p>
     </div>
 
     ${opts.adminNote ? `
