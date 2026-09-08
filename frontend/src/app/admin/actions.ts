@@ -27,6 +27,7 @@ import {
 } from "@/lib/email";
 import { logAction } from "@/lib/audit";
 import { checkAndPromoteStatusAfter } from "@/lib/status";
+import { autoComputeMatches } from "@/app/admin/opportunites/matching-actions";
 
 // --- Partenaires ---
 export async function approvePartner(formData: FormData) {
@@ -627,6 +628,8 @@ export async function approveOpportunity(formData: FormData) {
         url: "/espace/opportunites",
       },
     });
+    // Calcul automatique des matches lors de l'approbation
+    await autoComputeMatches(id);
   });
 
   revalidatePath("/admin/opportunites");

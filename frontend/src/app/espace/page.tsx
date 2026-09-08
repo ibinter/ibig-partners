@@ -56,6 +56,21 @@ export default async function DashboardPage({
   };
   const monthlyTarget = STATUS_MONTHLY_TARGET[user.status] ?? 3;
 
+  const suggestedOpportunities = await (async () => {
+    try {
+      return await (prisma as any).opportunityMatch.findMany({
+        where: { userId: user.id, status: { in: ["SUGGESTED", "INVITED"] } },
+        orderBy: [{ status: "asc" }, { score: "desc" }],
+        take: 3,
+        include: {
+          opportunity: {
+            select: { id: true, code: true, title: true, category: true, description: true, estimatedValue: true, deadline: true },
+          },
+        },
+      });
+    } catch { return []; }
+  })();
+
   const [recentCommissions, chartSales, chartComms, salesToday, salesThisMonth, myRank, prospectsUrgent] = await Promise.all([
     prisma.commission.findMany({
       where: { userId: user.id },
@@ -192,6 +207,49 @@ export default async function DashboardPage({
 
       {/* ── Recommandations IA ── */}
       <AiRecommendationsWidget />
+
+      {/* ── Opportunités suggérées par matching ── */}
+      {suggestedOpportunities.length > 0 && (
+        <div className="rounded-2xl border border-violet-200 bg-gradient-to-br from-violet-50 to-white p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">🎯</span>
+              <div>
+                <p className="font-extrabold text-slate-900 text-sm leading-tight">Opportunités sélectionnées pour vous</p>
+                <p className="text-xs text-violet-600 font-medium">Identifiées par l'algorithme IBIG selon votre profil</p>
+              </div>
+            </div>
+            <Link href="/espace/opportunites" className="text-xs font-bold text-violet-600 hover:underline whitespace-nowrap">
+              Voir tout →
+            </Link>
+          </div>
+          <div className="space-y-2">
+            {suggestedOpportunities.map((m: any) => (
+              <div key={m.id} className="rounded-xl border border-violet-100 bg-white px-4 py-3 flex items-center gap-3">
+                <div className="shrink-0 h-10 w-10 rounded-xl bg-violet-600 flex items-center justify-center">
+                  <span className="text-white font-extrabold text-sm">{m.score}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5 mb-0.5">
+                    <span className="text-[10px] font-mono font-bold text-amber-600">{m.opportunity.code}</span>
+                    {m.status === "INVITED" && (
+                      <span className="text-[9px] font-bold bg-violet-100 text-violet-700 rounded-full px-1.5 py-0.5">⚡ Invité</span>
+                    )}
+                  </div>
+                  <p className="font-semibold text-slate-900 text-sm truncate">{m.opportunity.title}</p>
+                  <p className="text-[11px] text-slate-400">{m.opportunity.category} · Score de compatibilité : {m.score}/100</p>
+                </div>
+                <Link
+                  href="/espace/opportunites"
+                  className="shrink-0 rounded-xl bg-violet-600 hover:bg-violet-700 text-white text-xs font-bold px-3 py-1.5 transition"
+                >
+                  Voir →
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ── Alertes ── */}
       {bienvenue && (

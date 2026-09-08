@@ -2054,3 +2054,72 @@ export async function sendOpportunityBroadcastEmail(opts: {
     html,
   });
 }
+
+export async function sendOpportunityMatchInviteEmail(opts: {
+  to: string;
+  firstName: string;
+  opportunityTitle: string;
+  opportunityCode: string;
+  opportunityCategory: string;
+  opportunityDescription: string;
+  estimatedValue: number;
+  deadline?: string | null;
+  score: number;
+}): Promise<EmailResult> {
+  const scoreLabel = opts.score >= 80 ? "Excellent ★★★" : opts.score >= 50 ? "Très bon ★★" : "Bon ★";
+  const html = layout(`
+    <div style="background:linear-gradient(135deg,#5b21b6,#7c3aed);border-radius:14px;padding:28px 28px 24px;margin-bottom:24px;">
+      <p style="margin:0 0 4px;font-size:11px;color:rgba(255,255,255,0.75);text-transform:uppercase;letter-spacing:1px;font-weight:700;">🎯 Matching IBIG PARTNERS</p>
+      <h2 style="margin:0;font-size:22px;font-weight:800;color:#ffffff;line-height:1.3;">${opts.opportunityTitle}</h2>
+      <p style="margin:10px 0 0;font-size:13px;color:rgba(255,255,255,0.8);">${opts.opportunityCode} · ${opts.opportunityCategory}</p>
+    </div>
+
+    <p style="margin:0 0 16px;color:#5b6577;font-size:15px;line-height:1.6;">
+      Bonjour <strong>${opts.firstName}</strong>,<br/>
+      Notre algorithme de matching a identifié cette opportunité comme <strong>particulièrement adaptée à votre profil</strong>.
+      L'équipe IBIG vous invite à y répondre en priorité.
+    </p>
+
+    <div style="background:#f5f3ff;border-radius:12px;padding:16px 20px;margin-bottom:20px;border:1px solid #ddd6fe;text-align:center;">
+      <p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#5b21b6;text-transform:uppercase;">Score de compatibilité</p>
+      <p style="margin:0;font-size:28px;font-weight:900;color:#7c3aed;">${opts.score}<span style="font-size:14px;color:#a78bfa;">/100</span></p>
+      <p style="margin:4px 0 0;font-size:12px;color:#6d28d9;font-weight:700;">${scoreLabel}</p>
+    </div>
+
+    <div style="background:#f8fafc;border-radius:12px;padding:18px 20px;margin-bottom:20px;border:1px solid #e2e8f0;">
+      <p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;">Description</p>
+      <p style="margin:0;font-size:14px;color:#374151;line-height:1.7;">${opts.opportunityDescription}</p>
+    </div>
+
+    ${opts.estimatedValue > 0 ? `
+    <div style="background:#f0fdf4;border-radius:12px;padding:14px 18px;margin-bottom:20px;border:1px solid #bbf7d0;">
+      <p style="margin:0;font-size:13px;font-weight:700;color:#15803d;">💼 Valeur estimée du deal : ${new Intl.NumberFormat("fr-FR").format(opts.estimatedValue)} FCFA</p>
+    </div>` : ""}
+
+    ${opts.deadline ? `
+    <div style="background:#fef2f2;border-radius:10px;padding:12px 16px;margin-bottom:20px;border:1px solid #fecaca;">
+      <p style="margin:0;font-size:13px;color:#dc2626;font-weight:700;">⏳ Deadline : ${opts.deadline}</p>
+    </div>` : ""}
+
+    <div style="background:#fefce8;border-radius:12px;padding:16px 20px;margin-bottom:24px;border:1px solid #fef08a;">
+      <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:#713f12;">Rémunération : Sur résultat ✓</p>
+      <p style="margin:0;font-size:13px;color:#92400e;line-height:1.6;">
+        Votre commission sera confirmée par l'équipe IBIG si la mise en relation est retenue. Vous ne payez rien à l'avance.
+      </p>
+    </div>
+
+    ${btn("Je suis intéressé(e) →", `${SITE}/espace/opportunites`)}
+    <p style="margin:16px 0 0;font-size:12px;color:#94a3b8;text-align:center;">
+      Rendez-vous dans l'onglet <strong>Opportunités</strong> de votre espace partenaire pour postuler.
+    </p>
+    <hr style="margin:28px 0;border:none;border-top:1px solid #e2e8f0;" />
+    <p style="margin:0;font-size:13px;color:#94a3b8;">
+      Support WhatsApp : <a href="https://wa.me/2250778882592" style="color:#0b5fff;font-weight:700;">+225 07 78 88 25 92</a>
+    </p>
+  `);
+  return sendEmail({
+    to: opts.to,
+    subject: `🎯 Match IBIG : vous êtes sélectionné(e) pour "${opts.opportunityTitle}"`,
+    html,
+  });
+}
