@@ -87,7 +87,6 @@ export default async function MissionsPage({
         description: true,
         branch: true,
         rewardType: true,
-        rewardValue: true,
         compensationType: true,
         compensationAmount: true,
         cpAmount: true,
@@ -249,7 +248,7 @@ export default async function MissionsPage({
               </div>
             ) : (
               <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                {missions.map((m: { id: string; title: string; description: string; branch: string; rewardType: string; rewardValue: number | null; compensationType: string | null; compensationAmount: number | null; cpAmount: number | null; difficulty: string | null }) => {
+                {missions.map((m: { id: string; title: string; description: string; branch: string; rewardType: string; compensationType: string | null; compensationAmount: number | null; cpAmount: number | null; difficulty: string | null }) => {
                   const c = getBranchColor(m.branch);
                   const rc = REWARD_COLOR[m.rewardType] ?? { bg: "#f1f5f9", text: "#475569" };
 
