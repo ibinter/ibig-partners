@@ -109,18 +109,23 @@ export default function MissionsAdminClient({
   updateAppAction: (fd: FormData) => Promise<void>;
   validateAppAction: (fd: FormData) => Promise<void>;
 }) {
+  const [tab, setTab] = useState<"missions" | "applications">("missions");
   const [expanded, setExpanded] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [rewardTypeForm, setRewardTypeForm] = useState("CASH");
 
-  // Filtres
+  // Filtres missions
   const [filterStatus, setFilterStatus] = useState("ALL");
   const [filterBranch, setFilterBranch] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
   const [filterDifficulty, setFilterDifficulty] = useState("");
   const [filterUrgent, setFilterUrgent] = useState(false);
   const [search, setSearch] = useState("");
+
+  // Filtres candidatures
+  const [appFilterStatus, setAppFilterStatus] = useState("ALL");
+  const [appSearch, setAppSearch] = useState("");
 
   const filtered = rows.filter(r => {
     if (filterStatus !== "ALL" && r.status !== filterStatus) return false;
@@ -149,6 +154,38 @@ export default function MissionsAdminClient({
     setSearch("");
   }
 
+  // Toutes les candidatures aplaties avec contexte mission
+  type FlatApp = Application & { missionId: string; missionTitle: string; missionCode: string; missionBranch: string; missionRewardType: string; missionCpAmount: number };
+  const allApplications: FlatApp[] = rows.flatMap(m =>
+    m.applications.map(a => ({
+      ...a,
+      missionId: m.id,
+      missionTitle: m.title,
+      missionCode: m.code,
+      missionBranch: m.branch,
+      missionRewardType: m.rewardType,
+      missionCpAmount: m.cpAmount,
+    }))
+  );
+
+  const filteredApps = allApplications.filter(a => {
+    if (appFilterStatus !== "ALL" && a.status !== appFilterStatus) return false;
+    if (appSearch.trim()) {
+      const q = appSearch.toLowerCase();
+      if (
+        !a.partnerName.toLowerCase().includes(q) &&
+        !a.partnerCode.toLowerCase().includes(q) &&
+        !a.partnerEmail.toLowerCase().includes(q) &&
+        !a.missionTitle.toLowerCase().includes(q)
+      ) return false;
+    }
+    return true;
+  }).sort((a, b) => {
+    // Priorité : SUBMITTED > PENDING > autres
+    const priority: Record<string, number> = { SUBMITTED: 0, PENDING: 1 };
+    return (priority[a.status] ?? 2) - (priority[b.status] ?? 2);
+  });
+
   return (
     <div className="space-y-6">
 
@@ -167,6 +204,150 @@ export default function MissionsAdminClient({
           </div>
         ))}
       </div>
+
+      {/* Onglets */}
+      <div className="flex gap-2 border-b border-slate-100 pb-1">
+        <button onClick={() => setTab("missions")}
+          className={`px-4 py-2 text-sm font-bold rounded-t-xl transition ${tab === "missions" ? "bg-white border border-b-white border-slate-200 text-slate-900 -mb-px" : "text-slate-400 hover:text-slate-700"}`}>
+          🎯 Missions ({rows.length})
+        </button>
+        <button onClick={() => setTab("applications")}
+          className={`px-4 py-2 text-sm font-bold rounded-t-xl transition flex items-center gap-1.5 ${tab === "applications" ? "bg-white border border-b-white border-slate-200 text-slate-900 -mb-px" : "text-slate-400 hover:text-slate-700"}`}>
+          📋 Candidatures ({allApplications.length})
+          {(stats.pending + stats.submitted) > 0 && (
+            <span className="rounded-full bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5">
+              {stats.pending + stats.submitted}
+            </span>
+          )}
+        </button>
+      </div>
+
+      {/* ===== VUE CANDIDATURES ===== */}
+      {tab === "applications" && (
+        <div className="space-y-4">
+          {/* Filtres candidatures */}
+          <div className="rounded-2xl border border-slate-100 bg-white shadow-sm p-4 space-y-3">
+            <div className="flex gap-3 items-center flex-wrap">
+              <div className="relative flex-1 min-w-[180px]">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
+                <input type="text" placeholder="Partenaire, email, mission…" value={appSearch}
+                  onChange={e => setAppSearch(e.target.value)}
+                  className="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 text-sm outline-none focus:border-blue-400 bg-slate-50" />
+              </div>
+              <span className="text-xs text-slate-400 font-semibold">{filteredApps.length} résultat{filteredApps.length > 1 ? "s" : ""}</span>
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              {[
+                { v: "ALL", label: "Toutes" },
+                { v: "PENDING", label: "🟡 En attente" },
+                { v: "SUBMITTED", label: "🟣 Preuve soumise" },
+                { v: "ACCEPTED", label: "🔵 Acceptées" },
+                { v: "VALIDATED", label: "✅ Validées" },
+                { v: "REJECTED", label: "❌ Refusées" },
+                { v: "COMPLETED", label: "🏁 Terminées" },
+              ].map(s => (
+                <button key={s.v} onClick={() => setAppFilterStatus(s.v)}
+                  className={`rounded-xl px-3 py-1.5 text-xs font-bold border transition ${appFilterStatus === s.v ? "bg-slate-900 text-white border-slate-900" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"}`}>
+                  {s.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Liste candidatures */}
+          {filteredApps.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 py-12 text-center">
+              <p className="text-sm text-slate-400">Aucune candidature correspondante.</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {filteredApps.map(a => (
+                <div key={a.id} className={`rounded-2xl border bg-white shadow-sm px-5 py-4 ${a.status === "SUBMITTED" ? "border-violet-200" : a.status === "PENDING" ? "border-amber-200" : "border-slate-100"}`}>
+                  <div className="flex items-start gap-4 flex-wrap">
+                    <div className="flex-1 min-w-0 space-y-1">
+                      {/* Mission */}
+                      <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wide">
+                        {a.missionBranch ? (BRANCH_LABELS[a.missionBranch] ?? a.missionBranch) + " · " : ""}
+                        {a.missionCode || "—"}
+                      </p>
+                      <p className="font-semibold text-sm text-slate-800">{a.missionTitle}</p>
+                      {/* Partenaire */}
+                      <div className="flex items-center gap-2 flex-wrap mt-1">
+                        <span className="font-bold text-slate-700 text-sm">{a.partnerName}</span>
+                        <span className="text-[10px] text-slate-400 font-mono">{a.partnerCode}</span>
+                        <span className={`rounded-md px-1.5 py-0.5 text-[9px] font-bold uppercase ${APP_STATUS_BADGE[a.status] ?? "bg-slate-100 text-slate-500"}`}>
+                          {APP_STATUS_LABEL[a.status] ?? a.status}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-500">{a.partnerEmail} · {a.partnerPhone}</p>
+                      {a.note && <p className="text-xs text-slate-600 italic mt-1">« {a.note} »</p>}
+                      {a.result && <p className="text-xs text-emerald-700 mt-1 font-medium">Résultat : {a.result}</p>}
+
+                      {/* Preuve */}
+                      {(a.proofNote || a.proofUrl) && (
+                        <div className="mt-2 rounded-xl border border-violet-200 bg-violet-50 px-3 py-2 space-y-1">
+                          <p className="text-[10px] font-bold text-violet-700">Preuve soumise {a.submittedAt ? `le ${fmtDate(a.submittedAt)}` : ""}</p>
+                          {a.proofNote && <p className="text-xs text-slate-700">{a.proofNote}</p>}
+                          {a.proofUrl && (
+                            <a href={a.proofUrl} target="_blank" rel="noopener noreferrer"
+                              className="text-xs text-blue-600 hover:underline break-all">🔗 {a.proofUrl}</a>
+                          )}
+                        </div>
+                      )}
+
+                      <p className="text-[10px] text-slate-400 mt-1">Candidaturé le {fmtDate(a.createdAt)}</p>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex flex-col gap-1.5 shrink-0">
+                      {a.status === "PENDING" && (
+                        <div className="flex gap-1.5">
+                          <form action={updateAppAction}>
+                            <input type="hidden" name="id" value={a.id} />
+                            <input type="hidden" name="status" value="ACCEPTED" />
+                            <button type="submit" className="rounded-xl px-3 py-1.5 text-xs font-bold border border-blue-200 text-blue-700 bg-white hover:bg-blue-50 transition">✓ Accepter</button>
+                          </form>
+                          <form action={updateAppAction}>
+                            <input type="hidden" name="id" value={a.id} />
+                            <input type="hidden" name="status" value="REJECTED" />
+                            <button type="submit" className="rounded-xl px-3 py-1.5 text-xs font-bold border border-rose-200 text-rose-700 bg-white hover:bg-rose-50 transition">✗ Refuser</button>
+                          </form>
+                        </div>
+                      )}
+                      {a.status === "SUBMITTED" && (
+                        <div className="flex flex-col gap-1.5">
+                          <form action={validateAppAction} className="flex">
+                            <input type="hidden" name="id" value={a.id} />
+                            <input type="hidden" name="action" value="VALIDATE" />
+                            <button type="submit" className="rounded-xl px-3 py-1.5 text-xs font-bold border border-emerald-300 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition">
+                              ✓ Valider {a.missionRewardType !== "CASH" ? `+${a.missionCpAmount} CP` : ""}
+                            </button>
+                          </form>
+                          <form action={validateAppAction} className="flex">
+                            <input type="hidden" name="id" value={a.id} />
+                            <input type="hidden" name="action" value="REJECT_PROOF" />
+                            <button type="submit" className="rounded-xl px-3 py-1.5 text-xs font-bold border border-rose-200 text-rose-700 bg-white hover:bg-rose-50 transition">✗ Rejeter preuve</button>
+                          </form>
+                        </div>
+                      )}
+                      {a.status === "VALIDATED" && (
+                        <form action={updateAppAction}>
+                          <input type="hidden" name="id" value={a.id} />
+                          <input type="hidden" name="status" value="COMPLETED" />
+                          <button type="submit" className="rounded-xl px-3 py-1.5 text-xs font-bold border border-emerald-200 text-emerald-700 bg-white hover:bg-emerald-50 transition">★ Marquer terminée</button>
+                        </form>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ===== VUE MISSIONS ===== */}
+      {tab === "missions" && <>
 
       {/* Barre d'outils + filtres */}
       <div className="rounded-2xl border border-slate-100 bg-white shadow-sm p-4 space-y-3">
@@ -697,6 +878,8 @@ export default function MissionsAdminClient({
           );
         })}
       </div>
+
+      </> /* fin VUE MISSIONS */}
     </div>
   );
 }
