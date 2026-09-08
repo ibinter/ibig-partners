@@ -17,7 +17,6 @@ import { Testimonials } from "@/components/testimonials";
 import { HallOfFame } from "@/components/hall-of-fame";
 import { ParrainDuMois } from "@/components/parrain-du-mois";
 
-import { SoftwareCatalog } from "@/components/software-catalog";
 import { MarketingKitPacks } from "@/components/marketing-kit-packs";
 import { AffiliateTraining } from "@/components/affiliate-training";
 import { CommissionDetails } from "@/components/commission-details";
@@ -433,9 +432,6 @@ export default async function HomePage() {
 
       {/* ═══════════ ÉCOSYSTÈME COMPLET — 10 BRANCHES ═══════════ */}
       <BranchEcosystem />
-
-      {/* ═══════════ CATALOGUE LOGICIELS (NEW) ═══════════ */}
-      <SoftwareCatalog />
 
       {/* ═══════════ COMMISSIONS PAR PRODUIT (NEW) ═══════════ */}
       <CommissionDetails />

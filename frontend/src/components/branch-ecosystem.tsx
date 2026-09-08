@@ -8,6 +8,7 @@ type BranchData = {
   name: string;
   tagline: string;
   website: string;
+  catalogSlug: string;
   commission: string;
   commissionFull: string;
   icon: IconName;
@@ -23,6 +24,7 @@ const BRANCHES: BranchData[] = [
     name: "IBIG SOFT",
     tagline: "14 logiciels SaaS & ERP métiers",
     website: "https://ibigsoft.com/",
+    catalogSlug: "ibig-soft",
     commission: "20% N1",
     commissionFull: "20% N1 • 10% N2 • 5% N3",
     icon: "cpu",
@@ -40,6 +42,7 @@ const BRANCHES: BranchData[] = [
     name: "IBIG EDUFORM",
     tagline: "200+ formations certifiantes",
     website: "https://ibig-eduform.com/",
+    catalogSlug: "ibig-eduform",
     commission: "10% N1",
     commissionFull: "10% N1 • 5% N2 • 2% N3",
     icon: "graduation",
@@ -57,6 +60,7 @@ const BRANCHES: BranchData[] = [
     name: "IBIG IMMO TRUST",
     tagline: "Immobilier sécurisé & rentable",
     website: "https://ibigimmotrust.com/",
+    catalogSlug: "ibig-immo-trust",
     commission: "5% N1",
     commissionFull: "5% N1 • 3% N2 • 1% N3",
     icon: "home",
@@ -74,6 +78,7 @@ const BRANCHES: BranchData[] = [
     name: "IBIG MARKET",
     tagline: "E-commerce & vente physique",
     website: "https://ibig-market.com/",
+    catalogSlug: "ibig-market",
     commission: "8% N1",
     commissionFull: "8% N1 • 4% N2 • 2% N3",
     icon: "store",
@@ -91,6 +96,7 @@ const BRANCHES: BranchData[] = [
     name: "IBIG DIGITAL",
     tagline: "Sites, apps & identité visuelle",
     website: "https://digital.intermark-business.com/",
+    catalogSlug: "ibig-digital",
     commission: "10% N1",
     commissionFull: "10% N1 • 5% N2 • 2% N3",
     icon: "rocket",
@@ -108,6 +114,7 @@ const BRANCHES: BranchData[] = [
     name: "IBIG DIGITAL KITS",
     tagline: "ERP, IA & transformation numérique",
     website: "https://kits.intermark-business.com/",
+    catalogSlug: "ibig-digital-kits",
     commission: "10% N1",
     commissionFull: "10% N1 • 5% N2 • 2% N3",
     icon: "sparkles",
@@ -125,6 +132,7 @@ const BRANCHES: BranchData[] = [
     name: "IBIG CONSEIL+",
     tagline: "Structuration, comptabilité & juridique",
     website: "https://intermark-business.com/conseil",
+    catalogSlug: "ibig-conseil",
     commission: "10% N1",
     commissionFull: "10% N1 • 5% N2 • 2% N3",
     icon: "chart",
@@ -142,6 +150,7 @@ const BRANCHES: BranchData[] = [
     name: "IBIG MULTISERVICES",
     tagline: "Événementiel, logistique & services",
     website: "https://intermark-business.com/multiservices",
+    catalogSlug: "ibig-multiservices",
     commission: "10% N1",
     commissionFull: "10% N1 • 5% N2 • 2% N3",
     icon: "users",
@@ -159,6 +168,7 @@ const BRANCHES: BranchData[] = [
     name: "IBIG FINANCEMENT",
     tagline: "Microfinance, assurance & investissement",
     website: "https://ibigpartners.com/financement",
+    catalogSlug: "ibig-financement",
     commission: "5% N1",
     commissionFull: "5% N1 • 3% N2 • 1% N3",
     icon: "coins",
@@ -176,6 +186,7 @@ const BRANCHES: BranchData[] = [
     name: "IBIG EMPLOI & TALENTS",
     tagline: "Recrutement, placement & RH",
     website: "https://ibigpartners.com/emploi",
+    catalogSlug: "ibig-emploi-talents",
     commission: "10% N1",
     commissionFull: "10% N1 • 5% N2 • 2% N3",
     icon: "handshake",
@@ -259,14 +270,22 @@ export function BranchEcosystem() {
                     <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${b.chip}`}>
                       {b.commissionFull}
                     </span>
-                    <a
-                      href={b.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[11px] font-semibold text-brand-600 hover:underline shrink-0"
-                    >
-                      Voir le site ↗
-                    </a>
+                    <div className="flex items-center gap-3 shrink-0">
+                      <Link
+                        href={`/catalogue#${b.catalogSlug}`}
+                        className="text-[11px] font-bold text-brand-600 hover:underline"
+                      >
+                        Voir les produits →
+                      </Link>
+                      <a
+                        href={b.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[11px] text-slate-400 hover:underline"
+                      >
+                        Site ↗
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
