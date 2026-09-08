@@ -254,6 +254,7 @@ export default function OpportunitesClient({
   declineMatchAction: (fd: FormData) => Promise<void>;
   updateLeadStatusAction: (fd: FormData) => Promise<void>;
   addLeadNoteAction: (fd: FormData) => Promise<void>;
+  broadcastAction: (fd: FormData) => Promise<void>;
 }) {
   const [filter, setFilter] = useState<string>("ALL");
   const [search, setSearch] = useState("");
@@ -720,6 +721,39 @@ export default function OpportunitesClient({
                           + Ajouter
                         </button>
                       </form>
+                    </div>
+                  )}
+
+                  {/* Panneau Diffusion */}
+                  {(o.status === "APPROVED" || o.status === "IN_PROGRESS") && (
+                    <div className="pt-3 border-t border-slate-100">
+                      <p className="text-[10px] font-bold uppercase tracking-wide text-orange-600 mb-3">📢 Diffuser aux partenaires</p>
+                      <form
+                        action={async (fd) => { await broadcastAction(fd); }}
+                        className="flex flex-wrap items-end gap-3 rounded-xl bg-orange-50 border border-orange-200 p-4"
+                      >
+                        <input type="hidden" name="id" value={o.id} />
+                        <div className="flex flex-col gap-1 flex-1 min-w-[180px]">
+                          <label className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Cibler</label>
+                          <select
+                            name="target"
+                            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100"
+                          >
+                            <option value="ALL">Tous les partenaires actifs</option>
+                            <option value="GOLD_PLUS">Gold, Master &amp; Elite uniquement</option>
+                            <option value="VERIFIED">Partenaires vérifiés uniquement</option>
+                          </select>
+                        </div>
+                        <button
+                          type="submit"
+                          className="rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold px-5 py-2.5 transition"
+                        >
+                          📢 Envoyer l'email + notif
+                        </button>
+                      </form>
+                      <p className="text-[10px] text-slate-400 mt-2">
+                        Envoie un email attractif + une notification in-app à chaque partenaire ciblé. La commission est visible dans l'email.
+                      </p>
                     </div>
                   )}
 

@@ -23,6 +23,7 @@ import {
   sendMissionApplicationRejectedEmail,
   sendMissionProofValidatedEmail,
   sendMissionProofRejectedEmail,
+  sendOpportunityBroadcastEmail,
 } from "@/lib/email";
 import { logAction } from "@/lib/audit";
 import { checkAndPromoteStatusAfter } from "@/lib/status";
@@ -656,6 +657,83 @@ export async function rejectOpportunity(formData: FormData) {
 
   revalidatePath("/admin/opportunites");
   revalidatePath("/espace/opportunites");
+}
+
+export async function broadcastOpportunity(formData: FormData) {
+  await requireAdmin();
+  const id     = String(formData.get("id"));
+  const target = String(formData.get("target") || "ALL"); // ALL | GOLD_PLUS | VERIFIED
+
+  const opp = await (prisma as any).opportunity.findUnique({
+    where: { id },
+    select: {
+      title: true, category: true, description: true,
+      commission: true, commissionType: true, estimatedValue: true,
+      adminNote: true, deadline: true,
+    },
+  });
+  if (!opp) return;
+
+  // Filtre des partenaires cibles
+  const whereClause: Record<string, unknown> = { role: "PARTNER", active: true, approved: true };
+  if (target === "GOLD_PLUS") whereClause.status = { in: ["GOLD", "MASTER", "ELITE"] };
+  if (target === "VERIFIED")  whereClause.verificationStatus = "VERIFIED";
+
+  const partners = await prisma.user.findMany({
+    where: whereClause as any,
+    select: { id: true, email: true, firstName: true },
+  });
+  if (partners.length === 0) return;
+
+  // Créer les notifications en base (en une seule requête batch)
+  await prisma.notification.createMany({
+    data: partners.map(p => ({
+      userId: p.id,
+      title: `🤝 Nouvelle opportunité : ${opp.title}`,
+      body: `IBIG partage une opportunité avec vous — commission : ${
+        opp.commissionType === "PERCENT" ? `${opp.commission}%` : `${opp.commission.toLocaleString()} FCFA`
+      }. Connectez-vous pour en savoir plus.`,
+      url: "/espace/opportunites",
+    })),
+    skipDuplicates: true,
+  });
+
+  // Logger l'activité
+  await (prisma as any).opportunityActivity.create({
+    data: {
+      opportunityId: id,
+      type: "BROADCAST",
+      content: `Diffusion à ${partners.length} partenaire(s) (cible : ${target})`,
+    },
+  }).catch(() => {});
+
+  // Envoyer les emails en arrière-plan (par batch de 20 pour ne pas saturer Resend)
+  const deadlineDisplay = opp.deadline
+    ? new Date(opp.deadline).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })
+    : null;
+
+  after(async () => {
+    const BATCH = 20;
+    for (let i = 0; i < partners.length; i += BATCH) {
+      const batch = partners.slice(i, i + BATCH);
+      await Promise.allSettled(batch.map(p =>
+        sendOpportunityBroadcastEmail({
+          to: p.email,
+          firstName: p.firstName ?? "",
+          opportunityTitle: opp.title,
+          opportunityCategory: opp.category,
+          opportunityDescription: opp.description,
+          commission: opp.commission,
+          commissionType: opp.commissionType,
+          estimatedValue: opp.estimatedValue,
+          adminNote: opp.adminNote ?? undefined,
+          deadline: deadlineDisplay,
+        })
+      ));
+    }
+  });
+
+  revalidatePath("/admin/opportunites");
 }
 
 export async function updateOpportunity(formData: FormData) {

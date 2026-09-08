@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/ui";
 import {
   updateOpportunity, sendOpportunityMessage,
   approveOpportunity, rejectOpportunity,
+  broadcastOpportunity,
   addOpportunityShare, removeOpportunityShare,
   confirmOpportunityShares, markSharePaid,
   updateLeadStatus, addLeadNote,
@@ -148,6 +149,7 @@ export default async function OpportunitesPage() {
         declineMatchAction={declineMatch}
         updateLeadStatusAction={updateLeadStatus}
         addLeadNoteAction={addLeadNote}
+        broadcastAction={broadcastOpportunity}
       />
     </div>
   );
