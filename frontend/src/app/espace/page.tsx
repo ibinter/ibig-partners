@@ -110,7 +110,7 @@ export default async function DashboardPage({
     prisma.product.count({ where: { active: true } }),
     prisma.mission.count({ where: { active: true } }),
     prisma.affiliateLink.count({ where: { userId: user.id } }),
-    prisma.missionApplication.count({ where: { partnerId: user.id } }),
+    prisma.missionApplication.count({ where: { userId: user.id } }),
   ]);
 
   const salePoints: SalePoint[]  = chartSales.map((s) => ({ createdAt: s.createdAt instanceof Date ? s.createdAt.toISOString() : String(s.createdAt) }));
