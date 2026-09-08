@@ -864,6 +864,30 @@ export default function OpportunitesClient({
                           />
                         </div>
 
+                        <div className="flex flex-col gap-1">
+                          <label className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Commission IBIG</label>
+                          <input
+                            name="commission"
+                            type="number"
+                            min="0"
+                            defaultValue={o.commission || ""}
+                            placeholder="Ex : 50000"
+                            className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm w-32 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                          />
+                        </div>
+
+                        <div className="flex flex-col gap-1">
+                          <label className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Type</label>
+                          <select
+                            name="commissionType"
+                            defaultValue={o.commissionType || "FIXED"}
+                            className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                          >
+                            <option value="FIXED">FCFA fixe</option>
+                            <option value="PERCENT">% valeur</option>
+                          </select>
+                        </div>
+
                         <div className="flex gap-2">
                           <button
                             type="submit"

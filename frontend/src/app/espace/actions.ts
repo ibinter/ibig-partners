@@ -171,7 +171,7 @@ export async function expressInterest(formData: FormData) {
   if (!existing) {
     const opp = await (prisma as any).opportunity.findUnique({
       where: { id: opportunityId },
-      include: { user: { select: { email: true, firstName: true } } },
+      include: { user: { select: { email: true, firstName: true, code: true } } },
     });
     if (opp && opp.user.email !== user.email) {
       const adminEmail = process.env.ADMIN_EMAIL ?? "admin@ibigpartners.com";
@@ -191,6 +191,8 @@ export async function expressInterest(formData: FormData) {
           opportunityId,
           submitterName: opp.user.firstName,
           submitterCode: opp.user.code ?? "",
+          proposedCommission: opp.commission ?? 0,
+          proposedCommissionType: opp.commissionType ?? "FIXED",
           interestedPartnerName: partnerName,
           interestedPartnerCode: partnerCode,
           interestedPartnerNote: note || undefined,
@@ -214,6 +216,8 @@ export async function submitOpportunity(formData: FormData) {
       category: String(formData.get("category") || "AUTRE"),
       description,
       estimatedValue: Number(formData.get("estimatedValue") || 0) || 0,
+      commission: Number(formData.get("proposedCommission") || 0) || 0,
+      commissionType: String(formData.get("proposedCommissionType") || "FIXED"),
       status: "NEW",
     },
   });

@@ -288,8 +288,28 @@ export default function OpportunitesAffilieClient({
               <textarea name="description" required rows={4} placeholder="Décrivez l'opportunité : qui, quoi, où, budget estimé, contacts disponibles…" className={inputCls + " resize-none"} />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Valeur estimée (FCFA)</label>
+              <label className="mb-1 block text-sm font-medium text-slate-700">Valeur estimée du deal (FCFA)</label>
               <input name="estimatedValue" type="number" min="0" placeholder="Ex : 500000" className={inputCls} />
+            </div>
+            <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 space-y-3">
+              <p className="text-sm font-semibold text-amber-800">💰 Rémunération de la mise en relation</p>
+              <p className="text-xs text-amber-700">Indiquez ce que vous êtes prêt(e) à verser à IBIG pour organiser et formaliser la mise en relation avec un partenaire qualifié.</p>
+              <div className="flex gap-3">
+                <div className="flex-1">
+                  <label className="mb-1 block text-xs font-semibold text-slate-600 uppercase tracking-wide">Montant proposé</label>
+                  <input name="proposedCommission" type="number" min="0" placeholder="Ex : 25000"
+                    className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-semibold text-slate-600 uppercase tracking-wide">Type</label>
+                  <select name="proposedCommissionType"
+                    className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100">
+                    <option value="FIXED">FCFA fixe</option>
+                    <option value="PERCENT">% de la valeur</option>
+                  </select>
+                </div>
+              </div>
+              <p className="text-xs text-amber-600">Ce montant sera confirmé ou ajusté par l'équipe IBIG avant publication.</p>
             </div>
             <button type="submit" disabled={submitting}
               className="w-full rounded-xl bg-brand-600 py-3 text-sm font-bold text-white hover:bg-brand-700 disabled:opacity-60 transition-colors">

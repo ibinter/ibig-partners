@@ -1776,8 +1776,15 @@ export async function sendOpportunityInterestAdminEmail(opts: {
   to: string;
   opportunityTitle: string; opportunityId: string;
   submitterName: string; submitterCode: string;
+  proposedCommission?: number; proposedCommissionType?: string;
   interestedPartnerName: string; interestedPartnerCode: string; interestedPartnerNote?: string;
 }): Promise<EmailResult> {
+  const commissionDisplay = opts.proposedCommission && opts.proposedCommission > 0
+    ? (opts.proposedCommissionType === "PERCENT"
+        ? `${opts.proposedCommission}% de la valeur du deal`
+        : new Intl.NumberFormat("fr-FR", { style: "currency", currency: "XOF", maximumFractionDigits: 0 }).format(opts.proposedCommission))
+    : null;
+
   const html = layout(`
     <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
       🔔 Nouvel intérêt sur une opportunité — action requise
@@ -1788,6 +1795,11 @@ export async function sendOpportunityInterestAdminEmail(opts: {
     <div style="background:#f0f4ff;border-radius:12px;padding:20px 24px;margin-bottom:16px;">
       <p style="margin:0 0 4px;font-size:11px;color:#5b6577;text-transform:uppercase;letter-spacing:0.5px;">Opportunité</p>
       <p style="margin:0;font-size:16px;font-weight:700;color:#0f1729;">${opts.opportunityTitle}</p>
+      ${commissionDisplay ? `
+      <div style="margin-top:12px;display:inline-block;background:#0b5fff;border-radius:8px;padding:6px 14px;">
+        <p style="margin:0;font-size:13px;font-weight:700;color:#ffffff;">💰 Commission proposée : ${commissionDisplay}</p>
+      </div>` : `
+      <p style="margin:10px 0 0;font-size:12px;color:#94a3b8;font-style:italic;">Aucune commission proposée — à définir avant publication.</p>`}
     </div>
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
       <tr>

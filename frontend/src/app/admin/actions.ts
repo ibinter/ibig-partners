@@ -663,10 +663,19 @@ export async function updateOpportunity(formData: FormData) {
   const id = String(formData.get("id"));
   const status = String(formData.get("status"));
   const handler = String(formData.get("handler") || "").trim();
+  const commissionRaw = formData.get("commission");
+  const commissionType = String(formData.get("commissionType") || "FIXED");
 
   const opp = await prisma.opportunity.update({
     where: { id },
-    data: { status, handler: handler || null },
+    data: {
+      status,
+      handler: handler || null,
+      ...(commissionRaw !== null && commissionRaw !== "" ? {
+        commission: Number(commissionRaw) || 0,
+        commissionType,
+      } : {}),
+    },
     include: { user: { select: { id: true, email: true, firstName: true } } },
   });
 
