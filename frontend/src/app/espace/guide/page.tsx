@@ -28,7 +28,7 @@ export default function GuideAffilie() {
       const WHITE = [255,255,255] as [number,number,number];
       const GREEN = [16,185,129] as [number,number,number];
 
-      const TOTAL_PAGES = 17;
+      const TOTAL_PAGES = 18;
 
       // ── Accent-stripping helper (also defined above for catch scope) ───────
       function t(s: string): string {
@@ -1043,9 +1043,79 @@ export default function GuideAffilie() {
       y = bullet(t("Événements mensuels : webinaires de formation et sessions Q&A avec l'équipe IBIG."),y);
 
       // ══════════════════════════════════════════════════════════════════════
+      // PAGE 15b : MATCHING INTELLIGENT & OPPORTUNITES
+      // ══════════════════════════════════════════════════════════════════════
+      newPage(); header(15); footer();
+      y = 22; y = secTitle(t("15b. Opportunités suggérées par l'algorithme de Matching"),y); y += 3;
+      y = body(t("IBIG PARTNERS dispose d'un algorithme intelligent qui analyse votre profil et vous suggère automatiquement les opportunités les plus adaptées à votre expertise. Dès qu'une opportunité est approuvée, le système calcule un score de compatibilité pour chaque partenaire actif."),y); y += 5;
+
+      y = sub(t("Comment fonctionne le score de matching ?"),y);
+      // @ts-ignore
+      autoTable(doc,{
+        startY: y,
+        head: [[t("Critère"),t("Points attribués")]],
+        body: [
+          [t("Secteur exact dans votre profil correspond à l'opportunité"),t("+40 pts")],
+          [t("Secteur connexe (ex : COMMERCIAL ↔ PARTENARIAT)"),t("+20 pts")],
+          [t("Zone géographique correspondante (pays / ville)"),t("+20 pts")],
+          [t("Niveau ELITE ou MASTER"),t("+20 pts")],
+          [t("Niveau GOLD"),t("+12 pts")],
+          [t("Niveau SILVER"),t("+6 pts")],
+          [t("Déjà candidat sur cette opportunité"),t("−30 pts")],
+        ],
+        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 9 },
+        bodyStyles: { fontSize: 8.5 },
+        alternateRowStyles: { fillColor: LIGHT },
+        margin: { left: 14,right: 14 },styles: { cellPadding: 3 },
+      });
+      // @ts-ignore
+      y = (doc as any).lastAutoTable.finalY + 8;
+
+      y = sub(t("Comment optimiser votre score de matching ?"),y);
+      const matchTips = [
+        t("Completez vos secteurs d'activite : allez dans Espace > Profil > champ 'Secteurs de marché'. Plus vos secteurs sont precis, plus vous matcherez avec les bonnes opportunites."),
+        t("Renseignez votre zone géographique : indiquez votre ville et pays dans votre profil. Les opportunites locales sont mieux remunérées car la proximite facilite le closing."),
+        t("Montez en niveau : les partenaires GOLD, MASTER et ELITE reçoivent systematiquement plus d'invitations car leur score est plus eleve."),
+        t("Ne postulez pas a toutes les opportunites : postuler a une opportunite inadaptee reduit votre score de -30 pts sur les futurs calculs."),
+      ];
+      matchTips.forEach(tip => { y = checkPage(y,15); y = bullet(tip,y); });
+      y += 4;
+
+      y = sub(t("Que se passe-t-il quand vous êtes sélectionné(e) ?"),y);
+      const matchFlow = [
+        [t("1. Notification in-app"),t("Une alerte apparait dans votre espace : 'IBIG vous invite sur l'opportunité XXX'")],
+        [t("2. Email de sélection"),t("Vous recevez un email détaillé : titre, description, valeur estimée, deadline et votre score sur 100")],
+        [t("3. Label de score"),t("Excellent (80+) = ★★★ | Très bon (60-79) = ★★ | Bon (40-59) = ★")],
+        [t("4. Postuler"),t("Rendez-vous dans Espace > Opportunités pour consulter les détails et soumettre votre candidature")],
+        [t("5. Commission sur résultat"),t("Aucun frais, aucun investissement. Vous êtes rémunéré uniquement si l'opportunité aboutit à une vente")],
+      ];
+      // @ts-ignore
+      autoTable(doc,{
+        startY: y,
+        head: [[t("Étape"),t("Ce qui se passe")]],
+        body: matchFlow,
+        headStyles: { fillColor: GOLD,textColor: DARK,fontStyle: "bold",fontSize: 9 },
+        bodyStyles: { fontSize: 8.5 },
+        alternateRowStyles: { fillColor: LIGHT },
+        columnStyles: { 0: { fontStyle: "bold",cellWidth: 45 } },
+        margin: { left: 14,right: 14 },styles: { cellPadding: 3 },
+      });
+      // @ts-ignore
+      y = (doc as any).lastAutoTable.finalY + 8;
+
+      doc.setFillColor(239,246,255); doc.roundedRect(14,y - 4,W - 28,22,2,2,"F");
+      doc.setFillColor(...BLUE); doc.roundedRect(14,y - 4,3,22,1,1,"F");
+      doc.setFontSize(9); doc.setFont("helvetica","bold"); doc.setTextColor(...BLUE);
+      doc.text(t("Conseil clé :"),20,y + 2);
+      doc.setFont("helvetica","normal"); doc.setTextColor(...DARK);
+      const matchAdvice = doc.splitTextToSize(t("Vérifiez votre espace chaque lundi matin. Les nouvelles opportunités sont approuvées en début de semaine et les invitations sont envoyées immédiatement après approbation. Être réactif augmente vos chances de sélection."),W - 40);
+      doc.text(matchAdvice,20,y + 8);
+      y += 28;
+
+      // ══════════════════════════════════════════════════════════════════════
       // PAGE 16-17 : CONCLUSION + FAQ
       // ══════════════════════════════════════════════════════════════════════
-      newPage(); header(16); footer();
+      newPage(); header(17); footer();
       y = 22; y = secTitle(t("17. Conclusion et prochaines étapes"),y); y += 3;
       y = body(t("Vous avez maintenant toutes les cles pour réussir en tant que Partenaire Affilié IBIG PARTNERS. Ce guide couvre l'ensemble du programme, de l'inscription a la gestion avancee de votre réseau. La réussite depend de votre constance et de votre engagement."),y); y += 5;
 

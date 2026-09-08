@@ -824,6 +824,78 @@ export default async function HomePage() {
       {/* ═══════════ FORMATION (NEW) ═══════════ */}
       <AffiliateTraining />
 
+      {/* ═══════════ ENTREPRISES CLIENTES ═══════════ */}
+      <section id="entreprises" className="py-20 bg-gradient-to-br from-blue-950 to-blue-800">
+        <div className="mx-auto max-w-5xl px-4">
+          <ScrollReveal animation="fade-up">
+            <div className="text-center mb-12">
+              <span className="inline-block rounded-full px-4 py-1.5 bg-blue-800 text-blue-200 text-xs font-bold uppercase tracking-widest">
+                Pour les entreprises
+              </span>
+              <h2 className="mt-4 text-3xl font-extrabold text-white sm:text-4xl">
+                Développez votre activité grâce à notre réseau
+              </h2>
+              <p className="mx-auto mt-3 max-w-2xl text-blue-200 text-base">
+                Publiez vos opportunités commerciales et accédez immédiatement à des centaines de partenaires qualifiés, sélectionnés par notre algorithme de matching.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid gap-6 sm:grid-cols-3 mb-10">
+            {([
+              {
+                icon: "🎯",
+                title: "Matching automatique",
+                desc: "Notre algorithme analyse le profil de chaque partenaire (secteur, zone géographique, niveau) et sélectionne les plus compatibles avec votre opportunité.",
+              },
+              {
+                icon: "💼",
+                title: "Réseau de +200 partenaires actifs",
+                desc: "Commerciaux, consultants, formateurs — présents dans toute l'Afrique francophone, disponibles immédiatement.",
+              },
+              {
+                icon: "✅",
+                title: "Rémunération sur résultat uniquement",
+                desc: "Aucun coût fixe lié aux partenaires. Vous payez une commission uniquement si une vente est conclue. Zéro risque.",
+              },
+            ] as const).map((item) => (
+              <div key={item.title} className="rounded-2xl bg-white/10 border border-white/20 p-6">
+                <div className="text-3xl mb-3">{item.icon}</div>
+                <h3 className="font-bold text-white text-base mb-2">{item.title}</h3>
+                <p className="text-blue-200 text-sm leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="rounded-2xl bg-white/10 border border-white/20 p-6 mb-8">
+            <h3 className="text-white font-bold text-base mb-4">Plans d&apos;accès au réseau</h3>
+            <div className="grid sm:grid-cols-3 gap-4">
+              {([
+                { plan: "FREE", price: "0 FCFA", desc: "1 opportunité active, accès au réseau de base" },
+                { plan: "MENSUEL", price: "50 000 FCFA/mois", desc: "5 opportunités actives, matching prioritaire, support dédié" },
+                { plan: "ANNUEL", price: "450 000 FCFA/an", desc: "Opportunités illimitées, matching en temps réel, gestionnaire de compte" },
+              ] as const).map((p) => (
+                <div key={p.plan} className="rounded-xl bg-white/10 p-4 text-center">
+                  <div className="text-xs font-bold text-blue-300 uppercase tracking-widest mb-1">{p.plan}</div>
+                  <div className="text-white font-extrabold text-sm mb-2">{p.price}</div>
+                  <div className="text-blue-200 text-xs leading-relaxed">{p.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="text-center">
+            <Link
+              href="/entreprise/rejoindre"
+              className="inline-block rounded-2xl bg-white px-8 py-3.5 text-sm font-bold text-blue-900 hover:bg-blue-50 transition-colors shadow-lg"
+            >
+              Accéder au réseau IBIG →
+            </Link>
+            <p className="mt-3 text-blue-300 text-xs">Inscription gratuite — accès immédiat à l&apos;espace entreprise</p>
+          </div>
+        </div>
+      </section>
+
       {/* ═══════════ CONFIANCE & TRANSPARENCE ═══════════ */}
       <section id="transparence" className="bg-slate-50 py-20">
         <div className="mx-auto max-w-5xl px-4">

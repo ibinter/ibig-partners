@@ -1047,10 +1047,77 @@ export default function GuidePage() {
       py = bullet("Un partenaire rejeté peut corriger son dossier et le soumettre à nouveau depuis son espace.",py);
 
       // ═══════════════════════════════════════════════════════════
-      // PAGE 11 — BADGES + FAQ
+      // PAGE 10b — ENTREPRISES CLIENTES & MATCHING INTELLIGENT
       // ═══════════════════════════════════════════════════════════
       newPage();
       header(13,14);
+      footer();
+
+      py = 22;
+      py = sectionTitle("11b. Entreprises clientes & Matching intelligent (Phases 3-4)",py);
+      py += 4;
+
+      py = infoBox("Ces deux fonctionnalités ont été ajoutées en septembre 2026. Elles permettent à des entreprises clientes de publier des opportunités commerciales, et à l'algorithme de matching d'associer automatiquement les meilleurs partenaires à chaque opportunité.",py,[239,246,255]);
+      py += 5;
+
+      py = subTitle("Gestion des entreprises clientes — /admin/entreprises",py);
+      py = bullet("Chaque entreprise dispose d'un compte avec le rôle ENTERPRISE et d'un plan d'abonnement : FREE (0 FCFA), MENSUEL (50 000 FCFA/mois) ou ANNUEL (450 000 FCFA/an).",py);
+      py = bullet("Depuis /admin/entreprises : approuver, suspendre ou réactiver un compte entreprise, voir ses opportunités publiées.",py);
+      py = bullet("Le champ subscriptionPlan sur le modèle User enregistre le plan actif (FREE par défaut).",py);
+      py += 4;
+
+      py = subTitle("Gestion des opportunités avec Matching — /admin/opportunites",py);
+      // @ts-ignore
+      autoTable(doc,{
+        startY: py,
+        head: [["Action admin","Comment procéder","Effet automatique"]],
+        body: [
+          ["Approuver une opportunité","Cliquer 'Approuver' dans /admin/opportunites","L'algo de matching calcule les scores pour tous les partenaires actifs — aucune action supplémentaire requise"],
+          ["Voir les matchs calculés","Onglet 'Matching' dans le détail de l'opportunité","Score sur 100, profil du partenaire, statut SUGGESTED/INVITED/DECLINED"],
+          ["Inviter un partenaire","Cliquer 'Inviter' sur un match SUGGESTED","Statut passe à INVITED + notification in-app + email HTML avec score et détails"],
+          ["Décliner un match","Cliquer 'Décliner'","Statut passe à DECLINED — le partenaire n'est pas notifié"],
+          ["Recalculer manuellement","Bouton 'Calculer les matchs' dans l'onglet Matching","Recalcule tous les scores — utile après mise à jour des profils partenaires"],
+        ],
+        headStyles: { fillColor: DARK,textColor: WHITE,fontStyle: "bold",fontSize: 9 },
+        bodyStyles: { fontSize: 8 },
+        alternateRowStyles: { fillColor: LIGHT },
+        columnStyles: { 0: { cellWidth: 42 },1: { cellWidth: 55 } },
+        margin: { left: 14,right: 14 },
+        styles: { cellPadding: 2.5 },
+      });
+      // @ts-ignore
+      py = (doc as any).lastAutoTable.finalY + 8;
+
+      py = subTitle("Barème de scoring du matching",py);
+      // @ts-ignore
+      autoTable(doc,{
+        startY: py,
+        head: [["Critère","Points"]],
+        body: [
+          ["Secteur exact du partenaire correspond à l'opportunité","+40 pts"],
+          ["Secteur connexe (COMMERCIAL ↔ PARTENARIAT, DIGITAL ↔ MARKETING…)","+20 pts"],
+          ["Zone géographique correspondante","+20 pts"],
+          ["Niveau ELITE ou MASTER","+20 pts"],
+          ["Niveau GOLD","+12 pts"],
+          ["Niveau SILVER","+6 pts"],
+          ["Déjà candidat sur cette opportunité","−30 pts"],
+        ],
+        headStyles: { fillColor: [245,158,11] as [number,number,number],textColor: DARK,fontStyle: "bold",fontSize: 9 },
+        bodyStyles: { fontSize: 8.5 },
+        alternateRowStyles: { fillColor: LIGHT },
+        margin: { left: 14,right: 14 },
+        styles: { cellPadding: 2.5 },
+      });
+      // @ts-ignore
+      py = (doc as any).lastAutoTable.finalY + 6;
+
+      py = infoBox("Seuil retenu : seuls les partenaires avec un score ≥ 20 pts sont suggérés. Maximum 20 partenaires par opportunité. L'email d'invitation affiche le score et un label : Excellent (80+) ★★★ · Très bon (60-79) ★★ · Bon (40-59) ★.",py,[239,246,255]);
+
+      // ═══════════════════════════════════════════════════════════
+      // PAGE 11 — BADGES + FAQ
+      // ═══════════════════════════════════════════════════════════
+      newPage();
+      header(14,14);
       footer();
 
       py = 22;
