@@ -71,6 +71,7 @@ export type NavItem = {
   icon: string;
   badge?: number;
   group?: string;
+  highlight?: "brand" | "orange";
 };
 
 /* ── Icône chevron ── */
@@ -205,13 +206,24 @@ function SidebarNav({
                   href={item.href}
                   onClick={onClose}
                   className={`flex items-center gap-3 px-3 py-2.5 text-sm rounded-xl transition-all duration-150 ${
-                    variant === "admin"
+                    item.highlight === "brand" && !active
+                      ? "bg-gradient-to-r from-brand-600 to-indigo-700 text-white font-bold shadow-md hover:from-brand-700 hover:to-indigo-800"
+                      : item.highlight === "orange" && !active
+                      ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold shadow-md hover:from-amber-600 hover:to-orange-700"
+                      : item.highlight && active
+                      ? "bg-white/20 text-white font-bold shadow-inner"
+                      : variant === "admin"
                       ? active ? "sidebar-admin-item active" : "sidebar-admin-item"
                       : active ? "sidebar-partner-item active" : "sidebar-partner-item"
                   }`}
                 >
                   <span className="text-base shrink-0">{item.icon}</span>
                   <span className="flex-1 truncate">{item.label}</span>
+                  {item.highlight && !active && (
+                    <span className="shrink-0 rounded-full bg-white/25 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide text-white">
+                      NEW
+                    </span>
+                  )}
                   {item.badge != null && item.badge > 0 && (
                     <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-rose-500 px-1.5 text-[10px] font-bold text-white">
                       {item.badge > 99 ? "99+" : item.badge}
