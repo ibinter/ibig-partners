@@ -7,12 +7,13 @@ const SITE_URL =
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-      // Espaces privés et techniques exclus de l'indexation.
-      disallow: ["/admin", "/espace", "/api", "/paiement", "/offline"],
-    },
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/espace/", "/admin/", "/api/", "/connexion"],
+      },
+    ],
     sitemap: `${SITE_URL}/sitemap.xml`,
     host: SITE_URL,
   };
