@@ -19,6 +19,10 @@ import {
   sendStatusUpEmail,
   sendNewProductEmail,
   sendPayoutThresholdEmail,
+  sendMissionApplicationAcceptedEmail,
+  sendMissionApplicationRejectedEmail,
+  sendMissionProofValidatedEmail,
+  sendMissionProofRejectedEmail,
 } from "@/lib/email";
 import { logAction } from "@/lib/audit";
 import { checkAndPromoteStatusAfter } from "@/lib/status";
@@ -879,10 +883,32 @@ export async function updateApplicationStatus(formData: FormData) {
   const result = String(formData.get("result") || "").trim();
   const data: any = { status, updatedAt: new Date() };
   if (result) data.result = result;
+
+  const app = await (prisma as any).missionApplication.update({
+    where: { id },
+    data,
+    include: {
+      user: { select: { email: true, firstName: true } },
+      mission: { select: { title: true, code: true } },
+    },
+  });
+
   if (status === "ACCEPTED") {
-    // pas de récompense ici — elle est accordée à VALIDATED
+    after(() => sendMissionApplicationAcceptedEmail({
+      to: app.user.email,
+      firstName: app.user.firstName,
+      missionTitle: app.mission.title,
+      missionCode: app.mission.code ?? undefined,
+    }).catch(() => {}));
+  } else if (status === "REJECTED") {
+    after(() => sendMissionApplicationRejectedEmail({
+      to: app.user.email,
+      firstName: app.user.firstName,
+      missionTitle: app.mission.title,
+      missionCode: app.mission.code ?? undefined,
+    }).catch(() => {}));
   }
-  await (prisma as any).missionApplication.update({ where: { id }, data });
+
   revalidatePath("/admin/missions");
 }
 
@@ -929,6 +955,18 @@ export async function validateMissionApplication(formData: FormData) {
         },
       });
     }
+
+    after(() => sendMissionProofValidatedEmail({
+      to: app.user.email,
+      firstName: app.user.firstName,
+      missionTitle: mission.title,
+      missionCode: mission.code ?? undefined,
+      rewardType: mission.rewardType ?? "CASH",
+      compensationAmount: mission.compensationAmount ?? 0,
+      cpAmount: mission.cpAmount ?? 0,
+      compensationType: mission.compensationType ?? "FIXED",
+    }).catch(() => {}));
+
   } else {
     await (prisma as any).missionApplication.update({
       where: { id },
@@ -938,6 +976,13 @@ export async function validateMissionApplication(formData: FormData) {
         ...(adminNote ? { result: adminNote } : {}),
       },
     });
+
+    after(() => sendMissionProofRejectedEmail({
+      to: app.user.email,
+      firstName: app.user.firstName,
+      missionTitle: app.mission.title,
+      missionCode: app.mission.code ?? undefined,
+    }).catch(() => {}));
   }
   revalidatePath("/admin/missions");
 }

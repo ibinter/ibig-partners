@@ -1728,3 +1728,152 @@ export async function sendPasswordResetEmail(opts: {
     html,
   });
 }
+
+// ─── MISSIONS — Emails partenaire ─────────────────────────────────────────
+
+export async function sendMissionApplicationAcceptedEmail(opts: {
+  to: string; firstName: string; missionTitle: string; missionCode?: string;
+}): Promise<EmailResult> {
+  const html = layout(`
+    <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
+      Votre candidature a été acceptée ✅
+    </h2>
+    <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
+      Bonjour <strong>${opts.firstName}</strong>, bonne nouvelle ! L'équipe IBIG PARTNERS a accepté
+      votre candidature pour la mission suivante :
+    </p>
+    <div style="background:#f0f4ff;border-radius:12px;padding:20px 24px;margin-bottom:24px;border-left:4px solid #0b5fff;">
+      ${opts.missionCode ? `<p style="margin:0 0 4px;font-size:12px;color:#5b6577;font-family:monospace;text-transform:uppercase;">${opts.missionCode}</p>` : ""}
+      <p style="margin:0;font-size:16px;font-weight:700;color:#0f1729;">${opts.missionTitle}</p>
+    </div>
+    <div style="background:#f0fdf4;border-radius:10px;padding:16px 20px;margin-bottom:24px;border:1px solid #bbf7d0;">
+      <p style="margin:0;font-size:14px;color:#166534;line-height:1.8;">
+        ✓ Vous pouvez maintenant commencer à travailler sur cette mission<br/>
+        ✓ Une fois la mission réalisée, soumettez votre preuve depuis votre espace<br/>
+        ✓ La récompense sera créditée dès validation de la preuve par notre équipe
+      </p>
+    </div>
+    ${btn("Voir mes missions →", `${SITE}/espace/missions`)}
+    <hr style="margin:28px 0;border:none;border-top:1px solid #e2e8f0;" />
+    <p style="margin:0;font-size:13px;color:#94a3b8;">
+      Support WhatsApp : <a href="https://wa.me/2250778882592" style="color:#0b5fff;font-weight:700;">+225 07 78 88 25 92</a>
+    </p>
+  `);
+  return sendEmail({
+    to: opts.to,
+    subject: `✅ Candidature acceptée — ${opts.missionTitle}`,
+    html,
+  });
+}
+
+export async function sendMissionApplicationRejectedEmail(opts: {
+  to: string; firstName: string; missionTitle: string; missionCode?: string;
+}): Promise<EmailResult> {
+  const html = layout(`
+    <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
+      Candidature non retenue
+    </h2>
+    <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
+      Bonjour <strong>${opts.firstName}</strong>, après examen de votre dossier, nous ne pouvons
+      pas retenir votre candidature pour la mission :
+    </p>
+    <div style="background:#f8fafc;border-radius:12px;padding:20px 24px;margin-bottom:24px;border-left:4px solid #cbd5e1;">
+      ${opts.missionCode ? `<p style="margin:0 0 4px;font-size:12px;color:#5b6577;font-family:monospace;">${opts.missionCode}</p>` : ""}
+      <p style="margin:0;font-size:16px;font-weight:700;color:#0f1729;">${opts.missionTitle}</p>
+    </div>
+    <div style="background:#fffbeb;border-radius:10px;padding:16px 20px;margin-bottom:24px;border:1px solid #fde68a;">
+      <p style="margin:0;font-size:14px;color:#92400e;line-height:1.7;">
+        💡 D'autres missions sont disponibles dans votre espace — certaines sont peut-être
+        mieux adaptées à votre profil et votre réseau actuel. Continuez à candidater !
+      </p>
+    </div>
+    ${btn("Voir toutes les missions →", `${SITE}/espace/missions`)}
+  `);
+  return sendEmail({
+    to: opts.to,
+    subject: `Candidature mission — décision de l'équipe IBIG`,
+    html,
+  });
+}
+
+export async function sendMissionProofValidatedEmail(opts: {
+  to: string; firstName: string; missionTitle: string; missionCode?: string;
+  rewardType: string; compensationAmount: number; cpAmount: number; compensationType: string;
+}): Promise<EmailResult> {
+  const cashLabel = opts.compensationType === "PERCENT"
+    ? (opts.compensationAmount / 100).toFixed(1) + "%"
+    : new Intl.NumberFormat("fr-FR").format(opts.compensationAmount) + " FCFA";
+
+  const rewardLine = opts.rewardType === "CASH"
+    ? `<strong style="color:#15803d;">${cashLabel}</strong>`
+    : opts.rewardType === "CP"
+    ? `<strong style="color:#7c3aed;">${opts.cpAmount} Crédits Partners (CP)</strong>`
+    : `<strong style="color:#15803d;">${cashLabel}</strong> + <strong style="color:#7c3aed;">${opts.cpAmount} CP</strong>`;
+
+  const html = layout(`
+    <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
+      Mission validée — Votre récompense est créditée 🎉
+    </h2>
+    <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
+      Félicitations <strong>${opts.firstName}</strong> ! Votre preuve pour la mission suivante
+      a été validée par l'équipe IBIG PARTNERS :
+    </p>
+    <div style="background:#f0f4ff;border-radius:12px;padding:20px 24px;margin-bottom:24px;border-left:4px solid #0b5fff;">
+      ${opts.missionCode ? `<p style="margin:0 0 4px;font-size:12px;color:#5b6577;font-family:monospace;">${opts.missionCode}</p>` : ""}
+      <p style="margin:0;font-size:16px;font-weight:700;color:#0f1729;">${opts.missionTitle}</p>
+    </div>
+    <div style="background:#f0fdf4;border-radius:10px;padding:20px 24px;margin-bottom:24px;border:1px solid #bbf7d0;text-align:center;">
+      <p style="margin:0 0 6px;font-size:13px;color:#166534;text-transform:uppercase;letter-spacing:0.5px;">Récompense créditée</p>
+      <p style="margin:0;font-size:24px;">${rewardLine}</p>
+    </div>
+    <p style="color:#5b6577;font-size:14px;line-height:1.6;margin:0 0 24px;">
+      Vos CP sont disponibles immédiatement dans votre espace.
+      Les commissions en FCFA seront versées lors du prochain cycle de paiement.
+    </p>
+    ${btn("Voir mes missions & récompenses →", `${SITE}/espace/missions`)}
+  `);
+  return sendEmail({
+    to: opts.to,
+    subject: `🎉 Mission validée — ${opts.missionTitle}`,
+    html,
+  });
+}
+
+export async function sendMissionProofRejectedEmail(opts: {
+  to: string; firstName: string; missionTitle: string; missionCode?: string;
+}): Promise<EmailResult> {
+  const html = layout(`
+    <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
+      Preuve de mission non validée
+    </h2>
+    <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
+      Bonjour <strong>${opts.firstName}</strong>, après examen, votre preuve pour la mission
+      suivante n'a pas pu être validée :
+    </p>
+    <div style="background:#f8fafc;border-radius:12px;padding:20px 24px;margin-bottom:24px;border-left:4px solid #f87171;">
+      ${opts.missionCode ? `<p style="margin:0 0 4px;font-size:12px;color:#5b6577;font-family:monospace;">${opts.missionCode}</p>` : ""}
+      <p style="margin:0;font-size:16px;font-weight:700;color:#0f1729;">${opts.missionTitle}</p>
+    </div>
+    <div style="background:#fffbeb;border-radius:10px;padding:16px 20px;margin-bottom:24px;border:1px solid #fde68a;">
+      <p style="margin:0 0 8px;font-size:14px;font-weight:700;color:#92400e;">Ce qu'il faut vérifier :</p>
+      <p style="margin:0;font-size:14px;color:#92400e;line-height:1.8;">
+        ✓ La preuve doit correspondre exactement aux instructions de la mission<br/>
+        ✓ Les documents/photos doivent être lisibles et complets<br/>
+        ✓ Si vous avez un lien, vérifiez qu'il est accessible
+      </p>
+    </div>
+    <p style="color:#5b6577;font-size:14px;margin:0 0 24px;">
+      Vous pouvez soumettre une nouvelle preuve depuis votre espace partenaire.
+    </p>
+    ${btn("Soumettre une nouvelle preuve →", `${SITE}/espace/missions`)}
+    <hr style="margin:28px 0;border:none;border-top:1px solid #e2e8f0;" />
+    <p style="margin:0;font-size:13px;color:#94a3b8;">
+      Support WhatsApp : <a href="https://wa.me/2250778882592" style="color:#0b5fff;font-weight:700;">+225 07 78 88 25 92</a>
+    </p>
+  `);
+  return sendEmail({
+    to: opts.to,
+    subject: `Preuve non validée — ${opts.missionTitle}`,
+    html,
+  });
+}
