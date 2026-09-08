@@ -112,10 +112,42 @@ export default function MissionsAdminClient({
   const [expanded, setExpanded] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [filterStatus, setFilterStatus] = useState("ALL");
   const [rewardTypeForm, setRewardTypeForm] = useState("CASH");
 
-  const filtered = rows.filter(r => filterStatus === "ALL" || r.status === filterStatus);
+  // Filtres
+  const [filterStatus, setFilterStatus] = useState("ALL");
+  const [filterBranch, setFilterBranch] = useState("");
+  const [filterCategory, setFilterCategory] = useState("");
+  const [filterDifficulty, setFilterDifficulty] = useState("");
+  const [filterUrgent, setFilterUrgent] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const filtered = rows.filter(r => {
+    if (filterStatus !== "ALL" && r.status !== filterStatus) return false;
+    if (filterBranch && r.branch !== filterBranch) return false;
+    if (filterCategory && r.category !== filterCategory) return false;
+    if (filterDifficulty && r.difficulty !== filterDifficulty) return false;
+    if (filterUrgent) {
+      const hasUrgent = r.applications.some(a => a.status === "SUBMITTED" || a.status === "PENDING");
+      if (!hasUrgent) return false;
+    }
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      if (!r.title.toLowerCase().includes(q) && !(r.code ?? "").toLowerCase().includes(q)) return false;
+    }
+    return true;
+  });
+
+  const hasActiveFilters = filterBranch || filterCategory || filterDifficulty || filterUrgent || search.trim();
+
+  function resetFilters() {
+    setFilterStatus("ALL");
+    setFilterBranch("");
+    setFilterCategory("");
+    setFilterDifficulty("");
+    setFilterUrgent(false);
+    setSearch("");
+  }
 
   return (
     <div className="space-y-6">
@@ -136,21 +168,79 @@ export default function MissionsAdminClient({
         ))}
       </div>
 
-      {/* Barre d'outils */}
-      <div className="flex items-center gap-3 flex-wrap">
-        <div className="flex gap-2 flex-wrap">
+      {/* Barre d'outils + filtres */}
+      <div className="rounded-2xl border border-slate-100 bg-white shadow-sm p-4 space-y-3">
+        {/* Ligne 1 : recherche + bouton créer */}
+        <div className="flex gap-3 items-center flex-wrap">
+          <div className="relative flex-1 min-w-[180px]">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
+            <input
+              type="text"
+              placeholder="Rechercher par titre ou code…"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 text-sm outline-none focus:border-blue-400 bg-slate-50"
+            />
+          </div>
+          <button onClick={() => setShowForm(!showForm)}
+            className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 transition shrink-0">
+            {showForm ? "✕ Annuler" : "+ Créer une mission"}
+          </button>
+        </div>
+
+        {/* Ligne 2 : filtres rapides */}
+        <div className="flex gap-2 flex-wrap items-center">
+          {/* Statut */}
           {["ALL", "OPEN", "CLOSED", "COMPLETED"].map(s => (
             <button key={s} onClick={() => setFilterStatus(s)}
               className={`rounded-xl px-3 py-1.5 text-xs font-bold border transition ${filterStatus === s ? "bg-slate-900 text-white border-slate-900" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"}`}>
               {s === "ALL" ? "Toutes" : s === "OPEN" ? "Ouvertes" : s === "CLOSED" ? "Fermées" : "Terminées"}
             </button>
           ))}
+
+          <span className="h-4 w-px bg-slate-200 mx-1" />
+
+          {/* Branche */}
+          <select value={filterBranch} onChange={e => setFilterBranch(e.target.value)}
+            className={`rounded-xl border px-3 py-1.5 text-xs font-bold outline-none transition cursor-pointer ${filterBranch ? "bg-indigo-600 text-white border-indigo-600" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"}`}>
+            <option value="">🏢 Toutes branches</option>
+            {Object.entries(BRANCH_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+          </select>
+
+          {/* Catégorie */}
+          <select value={filterCategory} onChange={e => setFilterCategory(e.target.value)}
+            className={`rounded-xl border px-3 py-1.5 text-xs font-bold outline-none transition cursor-pointer ${filterCategory ? "bg-indigo-600 text-white border-indigo-600" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"}`}>
+            <option value="">📂 Catégorie</option>
+            {Object.entries(CATEGORY_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+          </select>
+
+          {/* Difficulté */}
+          <select value={filterDifficulty} onChange={e => setFilterDifficulty(e.target.value)}
+            className={`rounded-xl border px-3 py-1.5 text-xs font-bold outline-none transition cursor-pointer ${filterDifficulty ? "bg-indigo-600 text-white border-indigo-600" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"}`}>
+            <option value="">⚡ Difficulté</option>
+            <option value="EASY">Facile</option>
+            <option value="MEDIUM">Moyenne</option>
+            <option value="HARD">Difficile</option>
+          </select>
+
+          {/* Urgences */}
+          <button onClick={() => setFilterUrgent(!filterUrgent)}
+            className={`rounded-xl px-3 py-1.5 text-xs font-bold border transition ${filterUrgent ? "bg-amber-500 text-white border-amber-500" : "bg-white text-slate-600 border-slate-200 hover:bg-amber-50 hover:text-amber-700"}`}>
+            🔔 Urgences
+          </button>
+
+          {/* Reset */}
+          {hasActiveFilters && (
+            <button onClick={resetFilters}
+              className="rounded-xl px-3 py-1.5 text-xs font-bold border border-rose-200 text-rose-600 bg-rose-50 hover:bg-rose-100 transition">
+              ✕ Réinitialiser
+            </button>
+          )}
+
+          <span className="ml-auto text-xs text-slate-400 font-semibold">
+            {filtered.length} / {rows.length} mission{rows.length > 1 ? "s" : ""}
+          </span>
         </div>
-        <div className="flex-1" />
-        <button onClick={() => setShowForm(!showForm)}
-          className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 transition">
-          {showForm ? "✕ Annuler" : "+ Créer une mission"}
-        </button>
       </div>
 
       {/* Formulaire de création */}
