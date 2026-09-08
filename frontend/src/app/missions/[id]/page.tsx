@@ -81,6 +81,26 @@ export default async function MissionDetailPage({ params }: { params: Promise<{ 
   const c = getBranchColor(mission.branch);
   const isClosed = mission.status === "CLOSED";
 
+  // Calcul récompense affichée
+  const cashAmt  = mission.compensationAmount ?? 0;
+  const cpAmt    = mission.cpAmount ?? 0;
+  const isPct    = mission.compensationType === "PERCENT";
+  let rewardLine = "";
+  let rewardSub  = "";
+  if (mission.rewardType === "CP" && cpAmt > 0) {
+    rewardLine = `${cpAmt.toLocaleString("fr-FR")} CP`;
+    rewardSub  = "Points de crédit versés après validation du lead";
+  } else if (mission.rewardType === "CASH" && cashAmt > 0) {
+    rewardLine = isPct ? `${cashAmt / 100}% de la vente` : `${cashAmt.toLocaleString("fr-FR")} FCFA`;
+    rewardSub  = "Commission versée après encaissement de la vente";
+  } else if (mission.rewardType === "MIXED") {
+    const parts: string[] = [];
+    if (cpAmt > 0)   parts.push(`${cpAmt.toLocaleString("fr-FR")} CP`);
+    if (cashAmt > 0) parts.push(isPct ? `${cashAmt / 100}%` : `${cashAmt.toLocaleString("fr-FR")} FCFA`);
+    rewardLine = parts.join(" + ");
+    rewardSub  = "Lead validé (CP) + commission après encaissement (CASH)";
+  }
+
   // Chercher 3 autres missions de la même branche
   const related = await (prisma as any).mission.findMany({
     where: { branch: mission.branch, status: "OPEN", id: { not: id } },
@@ -135,10 +155,19 @@ export default async function MissionDetailPage({ params }: { params: Promise<{ 
 
           {/* Stats rapides hero */}
           <div className="flex flex-wrap gap-3">
-            <div className="rounded-2xl bg-white/15 border border-white/20 backdrop-blur-sm px-4 py-3">
-              <p className="text-[10px] font-extrabold uppercase tracking-widest text-white/50 mb-0.5">Type de récompense</p>
-              <p className="text-sm font-extrabold text-white">{REWARD_LABEL[mission.rewardType] ?? mission.rewardType}</p>
-            </div>
+            {/* Récompense — mise en avant */}
+            {rewardLine ? (
+              <div className="rounded-2xl bg-amber-400/90 border border-amber-300/50 backdrop-blur-sm px-4 py-3">
+                <p className="text-[10px] font-extrabold uppercase tracking-widest text-amber-900/70 mb-0.5">🏆 Vous gagnez</p>
+                <p className="text-xl font-extrabold text-amber-900">{rewardLine}</p>
+                {rewardSub && <p className="text-[10px] text-amber-800/70 mt-0.5 font-medium">{rewardSub}</p>}
+              </div>
+            ) : (
+              <div className="rounded-2xl bg-white/15 border border-white/20 backdrop-blur-sm px-4 py-3">
+                <p className="text-[10px] font-extrabold uppercase tracking-widest text-white/50 mb-0.5">Type de récompense</p>
+                <p className="text-sm font-extrabold text-white">{REWARD_LABEL[mission.rewardType] ?? mission.rewardType}</p>
+              </div>
+            )}
             {mission.difficulty && (
               <div className="rounded-2xl bg-white/15 border border-white/20 backdrop-blur-sm px-4 py-3">
                 <p className="text-[10px] font-extrabold uppercase tracking-widest text-white/50 mb-0.5">Difficulté</p>
@@ -183,6 +212,7 @@ export default async function MissionDetailPage({ params }: { params: Promise<{ 
                 {[
                   { label: "Branche", value: mission.branch, icon: c.emoji },
                   { label: "Type de récompense", value: REWARD_LABEL[mission.rewardType] ?? mission.rewardType, icon: "💎" },
+                  rewardLine && { label: "Montant de la récompense", value: rewardLine, icon: "🏆" },
                   mission.difficulty && { label: "Difficulté", value: DIFFICULTY_LABEL[mission.difficulty], icon: "📊" },
                   mission.zone && { label: "Zone géographique", value: mission.zone, icon: "🌍" },
                   mission.minLevel && { label: "Niveau minimum requis", value: mission.minLevel, icon: "⭐" },

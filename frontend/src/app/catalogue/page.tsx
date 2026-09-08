@@ -98,6 +98,12 @@ export default async function CataloguePage({
           pricingType: true,
           category: true,
           marketingData: true,
+          rate: true,
+          commissionRates: {
+            where: { level: 1, monthIndex: 1 },
+            select: { rate: true },
+            take: 1,
+          },
         },
       },
     },
@@ -222,6 +228,14 @@ export default async function CataloguePage({
                     const priceDisplay = product.price > 0 ? `${fcfa(product.price)}${suffix}` : "Sur devis";
                     const pc           = PRICING_COLOR[product.pricingType] ?? { bg: "#f8fafc", text: "#475569" };
 
+                    // Commission N1 : grille détaillée en priorité, sinon taux par défaut
+                    const commRate: number = product.commissionRates?.[0]?.rate ?? product.rate ?? 0;
+                    const commDisplay = commRate > 0 ? `${commRate}%` : null;
+                    // Estimation commission si prix connu
+                    const commEst = commRate > 0 && product.price > 0
+                      ? `≈ ${fcfa(Math.round(product.price * commRate / 100))}${suffix}`
+                      : null;
+
                     let tagline = "";
                     try {
                       if (product.marketingData) {
@@ -248,7 +262,7 @@ export default async function CataloguePage({
                               {PRICING_LABEL[product.pricingType] ?? product.pricingType}
                             </span>
                             {product.category && (
-                              <span className="inline-flex items-center rounded-lg bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-500 truncate max-w-[130px]">
+                              <span className="inline-flex items-center rounded-lg bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-500 truncate max-w-[110px]">
                                 {product.category}
                               </span>
                             )}
@@ -264,11 +278,30 @@ export default async function CataloguePage({
                             {tagline || product.description || ""}
                           </p>
 
-                          {/* Prix + CTA */}
-                          <div className="flex items-center justify-between pt-2 border-t border-slate-50 mt-auto">
-                            <span className="text-sm font-extrabold" style={{ color: style.accent }}>
-                              {priceDisplay}
-                            </span>
+                          {/* Commission mise en avant */}
+                          {commDisplay && (
+                            <div className="rounded-xl bg-emerald-50 border border-emerald-100 px-3 py-2 flex items-center justify-between">
+                              <div>
+                                <p className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-600">💰 Votre commission N1</p>
+                                <p className="text-base font-extrabold text-emerald-700">{commDisplay}</p>
+                              </div>
+                              {commEst && (
+                                <div className="text-right">
+                                  <p className="text-[10px] text-emerald-500 font-semibold">par vente</p>
+                                  <p className="text-xs font-extrabold text-emerald-800">{commEst}</p>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Prix du produit + CTA */}
+                          <div className="flex items-center justify-between pt-1 border-t border-slate-50 mt-auto">
+                            <div>
+                              <p className="text-[10px] text-slate-400 font-semibold">Prix produit</p>
+                              <span className="text-sm font-extrabold" style={{ color: style.accent }}>
+                                {priceDisplay}
+                              </span>
+                            </div>
                             <span className="text-[11px] font-bold text-slate-400 group-hover:text-[#FF6A00] transition">
                               Voir l&apos;offre →
                             </span>

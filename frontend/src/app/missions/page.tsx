@@ -86,6 +86,9 @@ export default async function MissionsPage({
         branch: true,
         rewardType: true,
         rewardValue: true,
+        compensationType: true,
+        compensationAmount: true,
+        cpAmount: true,
         difficulty: true,
       },
     }),
@@ -244,9 +247,26 @@ export default async function MissionsPage({
               </div>
             ) : (
               <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
-                {missions.map((m: { id: string; title: string; description: string; branch: string; rewardType: string; rewardValue: number | null; difficulty: string | null }) => {
+                {missions.map((m: { id: string; title: string; description: string; branch: string; rewardType: string; rewardValue: number | null; compensationType: string | null; compensationAmount: number | null; cpAmount: number | null; difficulty: string | null }) => {
                   const c = getBranchColor(m.branch);
                   const rc = REWARD_COLOR[m.rewardType] ?? { bg: "#f1f5f9", text: "#475569" };
+
+                  // Calcul affichage récompense
+                  const cashAmt   = m.compensationAmount ?? 0;
+                  const cpAmt     = m.cpAmount ?? 0;
+                  const isPct     = m.compensationType === "PERCENT";
+                  let rewardLine  = "";
+                  if (m.rewardType === "CP" && cpAmt > 0) {
+                    rewardLine = `${cpAmt.toLocaleString("fr-FR")} CP`;
+                  } else if (m.rewardType === "CASH" && cashAmt > 0) {
+                    rewardLine = isPct ? `${cashAmt / 100}% de la vente` : `${cashAmt.toLocaleString("fr-FR")} FCFA`;
+                  } else if (m.rewardType === "MIXED") {
+                    const parts: string[] = [];
+                    if (cpAmt > 0)   parts.push(`${cpAmt.toLocaleString("fr-FR")} CP`);
+                    if (cashAmt > 0) parts.push(isPct ? `${cashAmt / 100}%` : `${cashAmt.toLocaleString("fr-FR")} FCFA`);
+                    rewardLine = parts.join(" + ");
+                  }
+
                   return (
                     <Link
                       key={m.id}
@@ -272,12 +292,20 @@ export default async function MissionsPage({
                         </h2>
 
                         {/* Description */}
-                        <p className="text-xs text-slate-500 leading-relaxed line-clamp-3 flex-1">
+                        <p className="text-xs text-slate-500 leading-relaxed line-clamp-2 flex-1">
                           {m.description}
                         </p>
 
+                        {/* Récompense mise en avant */}
+                        <div className="rounded-xl bg-amber-50 border border-amber-100 px-3 py-2 flex items-center justify-between">
+                          <p className="text-[10px] font-extrabold uppercase tracking-wider text-amber-600">🏆 Récompense</p>
+                          <p className="text-sm font-extrabold text-amber-700">
+                            {rewardLine || "Voir les détails →"}
+                          </p>
+                        </div>
+
                         {/* Footer carte */}
-                        <div className="flex items-center justify-between pt-1 mt-auto border-t border-slate-50">
+                        <div className="flex items-center justify-between mt-auto">
                           {m.difficulty && (
                             <span className="text-[11px] font-semibold text-slate-400">
                               {m.difficulty === "EASY" ? "🟢 Facile" : m.difficulty === "MEDIUM" ? "🟡 Moyen" : "🔴 Difficile"}
