@@ -3,6 +3,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 import { fcfa } from "@/lib/format";
+import { getCurrentUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -71,6 +72,7 @@ export default async function CataloguePage({
   const sp = await searchParams;
   const typeFilter = sp.type ?? null;
   const search     = sp.q?.trim() ?? null;
+  const user = await getCurrentUser();
 
   // Récupérer branches + produits actifs
   const branches = await (prisma as any).branch.findMany({
@@ -245,9 +247,8 @@ export default async function CataloguePage({
                     } catch { /**/ }
 
                     return (
-                      <Link
+                      <div
                         key={product.id}
-                        href={`/offres/${product.slug}`}
                         className="group flex flex-col rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all overflow-hidden"
                       >
                         {/* Bande accent */}
@@ -294,20 +295,47 @@ export default async function CataloguePage({
                             </div>
                           )}
 
-                          {/* Prix du produit + CTA */}
-                          <div className="flex items-center justify-between pt-1 border-t border-slate-50 mt-auto">
+                          {/* Prix du produit */}
+                          <div className="flex items-center justify-between pt-1 border-t border-slate-50">
                             <div>
                               <p className="text-[10px] text-slate-400 font-semibold">Prix produit</p>
                               <span className="text-sm font-extrabold" style={{ color: style.accent }}>
                                 {priceDisplay}
                               </span>
                             </div>
-                            <span className="text-[11px] font-bold text-slate-400 group-hover:text-[#FF6A00] transition">
+                            <Link href={`/offres/${product.slug}`} className="text-[11px] font-bold text-slate-400 hover:text-[#FF6A00] transition">
                               Voir l&apos;offre →
-                            </span>
+                            </Link>
+                          </div>
+
+                          {/* CTA Promouvoir */}
+                          <div className="mt-1">
+                            {user ? (
+                              <Link
+                                href="/espace/liens"
+                                className="flex items-center justify-center gap-2 w-full rounded-xl bg-[#041B4D] hover:bg-[#0c2d6b] text-white px-3 py-2 text-xs font-extrabold transition"
+                              >
+                                🔗 Promouvoir cette offre
+                              </Link>
+                            ) : (
+                              <div className="flex flex-col gap-1">
+                                <Link
+                                  href="/rejoindre"
+                                  className="flex items-center justify-center gap-2 w-full rounded-xl bg-[#FF6A00] hover:bg-orange-600 text-white px-3 py-2 text-xs font-extrabold transition"
+                                >
+                                  🚀 Promouvoir cette offre
+                                </Link>
+                                <Link
+                                  href="/connexion"
+                                  className="text-center text-[10px] text-slate-400 hover:text-[#041B4D] transition font-semibold"
+                                >
+                                  Déjà partenaire ? Connexion →
+                                </Link>
+                              </div>
+                            )}
                           </div>
                         </div>
-                      </Link>
+                      </div>
                     );
                   })}
                 </div>
@@ -316,20 +344,41 @@ export default async function CataloguePage({
           })
         )}
 
-        {/* CTA inscription */}
+        {/* CTA inscription / espace */}
         {allBranches.length > 0 && (
           <div className="rounded-3xl bg-gradient-to-br from-[#041B4D] to-[#0c2d6b] text-white p-8 text-center space-y-4">
-            <p className="text-xl font-extrabold">Gagnez des commissions sur ces produits</p>
+            <p className="text-xl font-extrabold">
+              {user ? "Accédez à votre espace partenaire" : "Gagnez des commissions sur ces produits"}
+            </p>
             <p className="text-sm text-white/70">
-              Recommandez les produits IBIG autour de vous et touchez des commissions sur chaque vente. Inscription 100% gratuite.
+              {user
+                ? "Retrouvez vos liens d'affiliation et suivez vos ventes depuis votre tableau de bord."
+                : "Recommandez les produits IBIG autour de vous et touchez des commissions sur chaque vente. Inscription 100% gratuite."}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Link
-                href="/rejoindre"
-                className="inline-flex items-center gap-2 rounded-2xl bg-[#FF6A00] hover:bg-orange-600 transition px-8 py-3 text-sm font-extrabold text-white shadow-lg"
-              >
-                🚀 Rejoindre gratuitement →
-              </Link>
+              {user ? (
+                <Link
+                  href="/espace/liens"
+                  className="inline-flex items-center gap-2 rounded-2xl bg-[#FF6A00] hover:bg-orange-600 transition px-8 py-3 text-sm font-extrabold text-white shadow-lg"
+                >
+                  🔗 Mes liens d&apos;affiliation →
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    href="/rejoindre"
+                    className="inline-flex items-center gap-2 rounded-2xl bg-[#FF6A00] hover:bg-orange-600 transition px-8 py-3 text-sm font-extrabold text-white shadow-lg"
+                  >
+                    🚀 Rejoindre gratuitement →
+                  </Link>
+                  <Link
+                    href="/connexion"
+                    className="inline-flex items-center gap-2 rounded-2xl bg-white/10 border border-white/20 hover:bg-white/20 transition px-6 py-3 text-sm font-semibold text-white"
+                  >
+                    Déjà partenaire ? Connexion
+                  </Link>
+                </>
+              )}
               <Link
                 href="/missions"
                 className="inline-flex items-center gap-2 rounded-2xl bg-white/10 border border-white/20 hover:bg-white/20 transition px-6 py-3 text-sm font-semibold text-white"

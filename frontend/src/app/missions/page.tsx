@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
+import { getCurrentUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -63,6 +64,7 @@ export default async function MissionsPage({
   const branchFilter = sp.branch ?? null;
   const typeFilter   = sp.type   ?? null;
   const search       = sp.q?.trim() ?? null;
+  const user = await getCurrentUser();
 
   const where: Record<string, unknown> = { active: true, status: { not: "ARCHIVED" } };
   if (branchFilter) where.branch = branchFilter;
@@ -262,9 +264,8 @@ export default async function MissionsPage({
                   else if (m.rewardType === "MIXED") rewardLine = [cashAmt > 0 ? cashFmt : "", cpAmt > 0 ? `${cpAmt.toLocaleString("fr-FR")} CP` : ""].filter(Boolean).join(" + ");
 
                   return (
-                    <Link
+                    <div
                       key={m.id}
-                      href={`/missions/${m.id}`}
                       className="group flex flex-col rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all overflow-hidden"
                     >
                       {/* Bande couleur branche */}
@@ -305,28 +306,78 @@ export default async function MissionsPage({
                               {m.difficulty === "EASY" ? "🟢 Facile" : m.difficulty === "MEDIUM" ? "🟡 Moyen" : "🔴 Difficile"}
                             </span>
                           )}
-                          <span className="ml-auto text-[11px] font-bold text-[#041B4D] group-hover:text-[#FF6A00] transition">
+                          <Link href={`/missions/${m.id}`} className="ml-auto text-[11px] font-bold text-[#041B4D] hover:text-[#FF6A00] transition">
                             Voir la mission →
-                          </span>
+                          </Link>
+                        </div>
+
+                        {/* CTA Candidater */}
+                        <div className="mt-1">
+                          {user ? (
+                            <Link
+                              href="/espace/missions"
+                              className="flex items-center justify-center gap-2 w-full rounded-xl bg-[#041B4D] hover:bg-[#0c2d6b] text-white px-3 py-2 text-xs font-extrabold transition"
+                            >
+                              🎯 Candidater à cette mission
+                            </Link>
+                          ) : (
+                            <div className="flex flex-col gap-1">
+                              <Link
+                                href="/rejoindre"
+                                className="flex items-center justify-center gap-2 w-full rounded-xl bg-[#FF6A00] hover:bg-orange-600 text-white px-3 py-2 text-xs font-extrabold transition"
+                              >
+                                🚀 Candidater à cette mission
+                              </Link>
+                              <Link
+                                href="/connexion"
+                                className="text-center text-[10px] text-slate-400 hover:text-[#041B4D] transition font-semibold"
+                              >
+                                Déjà partenaire ? Connexion →
+                              </Link>
+                            </div>
+                          )}
                         </div>
                       </div>
-                    </Link>
+                    </div>
                   );
                 })}
               </div>
             )}
 
-            {/* CTA inscription bas de page */}
+            {/* CTA bas de page */}
             {missions.length > 0 && (
               <div className="mt-10 rounded-3xl bg-gradient-to-br from-[#041B4D] to-[#0c2d6b] text-white p-8 text-center space-y-4">
-                <p className="text-xl font-extrabold">Prêt à candidater à ces missions ?</p>
-                <p className="text-sm text-white/70">L&apos;inscription est gratuite et vous donne accès à toutes les missions et à votre tableau de bord partenaire.</p>
-                <Link
-                  href="/rejoindre"
-                  className="inline-flex items-center gap-2 rounded-2xl bg-[#FF6A00] hover:bg-orange-600 transition px-8 py-3 text-sm font-extrabold text-white shadow-lg"
-                >
-                  🚀 Rejoindre gratuitement →
-                </Link>
+                <p className="text-xl font-extrabold">
+                  {user ? "Accédez à vos missions" : "Prêt à candidater à ces missions ?"}
+                </p>
+                <p className="text-sm text-white/70">
+                  {user
+                    ? "Retrouvez toutes les missions disponibles dans votre espace partenaire et suivez vos candidatures."
+                    : "L'inscription est gratuite et vous donne accès à toutes les missions et à votre tableau de bord partenaire."}
+                </p>
+                {user ? (
+                  <Link
+                    href="/espace/missions"
+                    className="inline-flex items-center gap-2 rounded-2xl bg-[#FF6A00] hover:bg-orange-600 transition px-8 py-3 text-sm font-extrabold text-white shadow-lg"
+                  >
+                    🎯 Mes missions →
+                  </Link>
+                ) : (
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <Link
+                      href="/rejoindre"
+                      className="inline-flex items-center gap-2 rounded-2xl bg-[#FF6A00] hover:bg-orange-600 transition px-8 py-3 text-sm font-extrabold text-white shadow-lg"
+                    >
+                      🚀 Rejoindre gratuitement →
+                    </Link>
+                    <Link
+                      href="/connexion"
+                      className="inline-flex items-center gap-2 rounded-2xl bg-white/10 border border-white/20 hover:bg-white/20 transition px-6 py-3 text-sm font-semibold text-white"
+                    >
+                      Déjà partenaire ? Connexion
+                    </Link>
+                  </div>
+                )}
               </div>
             )}
           </div>
