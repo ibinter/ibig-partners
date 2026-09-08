@@ -60,7 +60,6 @@ export default async function MissionDetailPage({ params }: { params: Promise<{ 
       description: true,
       branch: true,
       rewardType: true,
-      rewardValue: true,
       cpAmount: true,
       compensationAmount: true,
       compensationType: true,
