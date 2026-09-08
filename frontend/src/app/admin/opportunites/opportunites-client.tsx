@@ -255,6 +255,7 @@ export default function OpportunitesClient({
   updateLeadStatusAction: (fd: FormData) => Promise<void>;
   addLeadNoteAction: (fd: FormData) => Promise<void>;
   broadcastAction: (fd: FormData) => Promise<void>;
+  quickSplitAction: (fd: FormData) => Promise<void>;
 }) {
   const [filter, setFilter] = useState<string>("ALL");
   const [search, setSearch] = useState("");
@@ -646,10 +647,16 @@ export default function OpportunitesClient({
                           💰 Répartition commission ({o.shares.length} part{o.shares.length !== 1 ? "s" : ""})
                         </p>
                         {o.commission > 0 && (
-                          <span className="text-xs font-bold text-emerald-600">
-                            Pool : {fcfaFmt(o.commission)}
-                            {o.shares.length > 0 && ` — attribué : ${fcfaFmt(o.shares.reduce((s: number, sh: Share) => s + sh.shareAmount, 0))}`}
-                          </span>
+                          <div className="text-right">
+                            <span className="text-xs font-bold text-emerald-600">
+                              Pool : {fcfaFmt(o.commission)}
+                              {o.shares.length > 0 && ` — attribué : ${fcfaFmt(o.shares.reduce((s: number, sh: Share) => s + sh.shareAmount, 0))}`}
+                            </span>
+                            <div className="text-[10px] text-slate-400 mt-0.5">
+                              Apporteur 35% = <strong className="text-emerald-600">{fcfaFmt(Math.floor(o.commission * 0.35))}</strong>
+                              {" · "}IBIG 65% = <strong className="text-blue-600">{fcfaFmt(Math.floor(o.commission * 0.65))}</strong>
+                            </div>
+                          </div>
                         )}
                       </div>
 
@@ -688,6 +695,31 @@ export default function OpportunitesClient({
                             </form>
                           )}
                         </div>
+                      )}
+
+                      {/* Répartition rapide 35/65 */}
+                      {o.commission > 0 && o.leads.length > 0 && (
+                        <form
+                          action={async (fd) => { await quickSplitAction(fd); }}
+                          className="flex flex-wrap items-end gap-3 p-3 rounded-xl bg-emerald-50 border border-emerald-200"
+                        >
+                          <input type="hidden" name="opportunityId" value={o.id} />
+                          <div className="flex flex-col gap-1 flex-1 min-w-[180px]">
+                            <label className="text-[10px] font-bold uppercase tracking-wide text-emerald-700">
+                              ⚡ Répartition rapide — Apporteur 35% / IBIG 65%
+                            </label>
+                            <select name="partnerCode" className="rounded-lg border border-emerald-200 bg-white px-2 py-1.5 text-sm outline-none focus:border-emerald-400">
+                              {o.leads.map((l: LeadRow) => (
+                                <option key={l.id} value={l.partnerCode}>
+                                  {l.partnerName} ({l.partnerCode}) — {fcfaFmt(Math.floor(o.commission * 0.35))} FCFA
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <button type="submit" className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 transition">
+                            ⚡ Appliquer
+                          </button>
+                        </form>
                       )}
 
                       {/* Ajouter un partner */}

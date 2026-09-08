@@ -1141,6 +1141,60 @@ export async function updateNeedStatus(formData: FormData) {
 }
 
 // ─── COMMISSION PARTAGÉE ───────────────────────────────────────────────────────
+export async function quickSplitOpportunity(formData: FormData) {
+  await requireAdmin();
+  const opportunityId = String(formData.get("opportunityId"));
+  const partnerCode   = String(formData.get("partnerCode") || "").trim().toUpperCase();
+  if (!opportunityId || !partnerCode) return;
+
+  const [opp, partner] = await Promise.all([
+    (prisma as any).opportunity.findUnique({
+      where: { id: opportunityId },
+      select: { commission: true, commissionType: true, title: true },
+    }),
+    (prisma as any).user.findFirst({
+      where: { code: partnerCode },
+      select: { id: true, firstName: true, lastName: true },
+    }),
+  ]);
+  if (!opp || !partner) return;
+
+  // Calcul 35% de la commission totale (arrondi à l'entier inférieur)
+  const apporteurAmount = opp.commissionType === "PERCENT"
+    ? Math.floor(opp.commission * 0.35)   // si % : 35% du pourcentage
+    : Math.floor(opp.commission * 0.35);  // si FCFA fixe : 35% du montant
+
+  await (prisma as any).opportunityShare.upsert({
+    where: { opportunityId_userId: { opportunityId, userId: partner.id } },
+    create: {
+      opportunityId,
+      userId: partner.id,
+      role: "APPORTEUR_CLIENT",
+      shareAmount: apporteurAmount,
+      shareType: "FIXED",
+      note: "Répartition standard 35% apporteur / 65% IBIG",
+      status: "PENDING",
+    },
+    update: {
+      role: "APPORTEUR_CLIENT",
+      shareAmount: apporteurAmount,
+      shareType: "FIXED",
+      note: "Répartition standard 35% apporteur / 65% IBIG",
+      updatedAt: new Date(),
+    },
+  });
+
+  await (prisma as any).opportunityActivity.create({
+    data: {
+      opportunityId,
+      type: "NOTE",
+      content: `Répartition rapide appliquée : ${partner.firstName} ${partner.lastName} (${partnerCode}) → ${apporteurAmount.toLocaleString()} FCFA (35%) — IBIG retient 65%`,
+    },
+  }).catch(() => {});
+
+  revalidatePath("/admin/opportunites");
+}
+
 export async function addOpportunityShare(formData: FormData) {
   await requireAdmin();
   const opportunityId = String(formData.get("opportunityId"));

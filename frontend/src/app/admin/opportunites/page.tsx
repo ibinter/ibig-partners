@@ -5,6 +5,7 @@ import {
   updateOpportunity, sendOpportunityMessage,
   approveOpportunity, rejectOpportunity,
   broadcastOpportunity,
+  quickSplitOpportunity,
   addOpportunityShare, removeOpportunityShare,
   confirmOpportunityShares, markSharePaid,
   updateLeadStatus, addLeadNote,
@@ -150,6 +151,7 @@ export default async function OpportunitesPage() {
         updateLeadStatusAction={updateLeadStatus}
         addLeadNoteAction={addLeadNote}
         broadcastAction={broadcastOpportunity}
+        quickSplitAction={quickSplitOpportunity}
       />
     </div>
   );
