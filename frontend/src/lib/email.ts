@@ -1731,31 +1731,34 @@ export async function sendPasswordResetEmail(opts: {
 
 // ─── OPPORTUNITÉS — Notification intérêt ─────────────────────────────────
 
+// Email au SOUMETTEUR — sans révéler l'identité du partenaire intéressé
 export async function sendOpportunityInterestEmail(opts: {
   to: string; firstName: string; opportunityTitle: string;
-  interestedPartnerName: string; interestedPartnerCode: string;
 }): Promise<EmailResult> {
   const html = layout(`
     <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
-      Un partenaire s'intéresse à votre opportunité 👋
+      Un partenaire est intéressé par votre opportunité 🎯
     </h2>
     <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
-      Bonjour <strong>${opts.firstName}</strong>, un membre du réseau IBIG PARTNERS
+      Bonjour <strong>${opts.firstName}</strong>, un membre qualifié du réseau IBIG PARTNERS
       vient d'exprimer son intérêt pour votre opportunité :
     </p>
     <div style="background:#f0f4ff;border-radius:12px;padding:20px 24px;margin-bottom:24px;border-left:4px solid #0b5fff;">
       <p style="margin:0;font-size:16px;font-weight:700;color:#0f1729;">${opts.opportunityTitle}</p>
     </div>
-    <div style="background:#f0fdf4;border-radius:10px;padding:16px 20px;margin-bottom:24px;border:1px solid #bbf7d0;">
-      <p style="margin:0 0 4px;font-size:12px;color:#166534;text-transform:uppercase;letter-spacing:0.5px;font-weight:700;">Partenaire intéressé</p>
-      <p style="margin:0;font-size:15px;font-weight:700;color:#15803d;">${opts.interestedPartnerName}</p>
-      <p style="margin:2px 0 0;font-size:12px;color:#166534;font-family:monospace;">${opts.interestedPartnerCode}</p>
+    <div style="background:#fffbeb;border-radius:10px;padding:16px 20px;margin-bottom:24px;border:1px solid #fde68a;">
+      <p style="margin:0 0 6px;font-size:13px;font-weight:700;color:#92400e;">⏳ Prochaine étape</p>
+      <p style="margin:0;font-size:14px;color:#92400e;line-height:1.7;">
+        L'équipe IBIG PARTNERS va analyser le profil du partenaire intéressé
+        et vous recontactera pour organiser la mise en relation si le profil est adapté.
+        <strong>Aucune démarche n'est nécessaire de votre côté.</strong>
+      </p>
     </div>
     <p style="color:#5b6577;font-size:14px;line-height:1.6;margin:0 0 24px;">
-      L'équipe IBIG PARTNERS coordonne la mise en relation. Vous serez contacté(e)
-      dès qu'un partenariat peut être formalisé.
+      IBIG PARTNERS coordonne chaque mise en relation pour garantir sa qualité
+      et protéger les intérêts des deux parties.
     </p>
-    ${btn("Voir mes opportunités →", `${SITE}/espace/opportunites`)}
+    ${btn("Suivre mon opportunité →", `${SITE}/espace/opportunites`)}
     <hr style="margin:28px 0;border:none;border-top:1px solid #e2e8f0;" />
     <p style="margin:0;font-size:13px;color:#94a3b8;">
       Support WhatsApp : <a href="https://wa.me/2250778882592" style="color:#0b5fff;font-weight:700;">+225 07 78 88 25 92</a>
@@ -1763,7 +1766,57 @@ export async function sendOpportunityInterestEmail(opts: {
   `);
   return sendEmail({
     to: opts.to,
-    subject: `👋 ${opts.interestedPartnerName} s'intéresse à votre opportunité`,
+    subject: `🎯 Votre opportunité intéresse un partenaire IBIG`,
+    html,
+  });
+}
+
+// Email à l'ADMIN — avec tous les détails pour qu'il coordonne
+export async function sendOpportunityInterestAdminEmail(opts: {
+  to: string;
+  opportunityTitle: string; opportunityId: string;
+  submitterName: string; submitterCode: string;
+  interestedPartnerName: string; interestedPartnerCode: string; interestedPartnerNote?: string;
+}): Promise<EmailResult> {
+  const html = layout(`
+    <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
+      🔔 Nouvel intérêt sur une opportunité — action requise
+    </h2>
+    <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
+      Un partenaire vient d'exprimer son intérêt. Vous devez décider si vous organisez la mise en relation.
+    </p>
+    <div style="background:#f0f4ff;border-radius:12px;padding:20px 24px;margin-bottom:16px;">
+      <p style="margin:0 0 4px;font-size:11px;color:#5b6577;text-transform:uppercase;letter-spacing:0.5px;">Opportunité</p>
+      <p style="margin:0;font-size:16px;font-weight:700;color:#0f1729;">${opts.opportunityTitle}</p>
+    </div>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+      <tr>
+        <td style="padding:0 8px 0 0;width:50%;vertical-align:top;">
+          <div style="background:#f8fafc;border-radius:10px;padding:16px;border:1px solid #e2e8f0;">
+            <p style="margin:0 0 4px;font-size:11px;color:#5b6577;text-transform:uppercase;">Soumetteur</p>
+            <p style="margin:0;font-size:14px;font-weight:700;color:#0f1729;">${opts.submitterName}</p>
+            <p style="margin:2px 0 0;font-size:12px;color:#5b6577;font-family:monospace;">${opts.submitterCode}</p>
+          </div>
+        </td>
+        <td style="padding:0 0 0 8px;width:50%;vertical-align:top;">
+          <div style="background:#f0fdf4;border-radius:10px;padding:16px;border:1px solid #bbf7d0;">
+            <p style="margin:0 0 4px;font-size:11px;color:#166534;text-transform:uppercase;">Partenaire intéressé</p>
+            <p style="margin:0;font-size:14px;font-weight:700;color:#15803d;">${opts.interestedPartnerName}</p>
+            <p style="margin:2px 0 0;font-size:12px;color:#166534;font-family:monospace;">${opts.interestedPartnerCode}</p>
+          </div>
+        </td>
+      </tr>
+    </table>
+    ${opts.interestedPartnerNote ? `
+    <div style="background:#fffbeb;border-radius:10px;padding:14px 18px;margin-bottom:24px;border:1px solid #fde68a;">
+      <p style="margin:0 0 4px;font-size:11px;color:#92400e;font-weight:700;text-transform:uppercase;">Message du partenaire</p>
+      <p style="margin:0;font-size:14px;color:#92400e;font-style:italic;">"${opts.interestedPartnerNote}"</p>
+    </div>` : ""}
+    ${btn("Gérer cette opportunité →", `${SITE}/admin/opportunites`)}
+  `);
+  return sendEmail({
+    to: opts.to,
+    subject: `🔔 ${opts.interestedPartnerName} intéressé par "${opts.opportunityTitle}"`,
     html,
   });
 }

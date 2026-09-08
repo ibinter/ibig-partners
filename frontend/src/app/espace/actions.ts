@@ -4,7 +4,7 @@ import { after } from "next/server";
 import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { sendPayoutRequestedEmail, sendOpportunityMessageEmail, sendOpportunityInterestEmail } from "@/lib/email";
+import { sendPayoutRequestedEmail, sendOpportunityMessageEmail, sendOpportunityInterestEmail, sendOpportunityInterestAdminEmail } from "@/lib/email";
 
 /** Active (cree le lien) ou desactive (supprime le lien) un produit pour le partenaire. */
 export async function toggleProduct(formData: FormData) {
@@ -174,13 +174,28 @@ export async function expressInterest(formData: FormData) {
       include: { user: { select: { email: true, firstName: true } } },
     });
     if (opp && opp.user.email !== user.email) {
-      after(() => sendOpportunityInterestEmail({
-        to: opp.user.email,
-        firstName: opp.user.firstName,
-        opportunityTitle: opp.title,
-        interestedPartnerName: `${(user as any).firstName} ${(user as any).lastName}`,
-        interestedPartnerCode: (user as any).code ?? "",
-      }).catch(() => {}));
+      const adminEmail = process.env.ADMIN_EMAIL ?? "admin@ibigpartners.com";
+      const partnerName = `${(user as any).firstName} ${(user as any).lastName}`;
+      const partnerCode = (user as any).code ?? "";
+      after(async () => {
+        // Email au soumetteur : juste "quelqu'un est intéressé", sans révéler l'identité
+        await sendOpportunityInterestEmail({
+          to: opp.user.email,
+          firstName: opp.user.firstName,
+          opportunityTitle: opp.title,
+        }).catch(() => {});
+        // Email à l'admin : tous les détails pour coordonner la mise en relation
+        await sendOpportunityInterestAdminEmail({
+          to: adminEmail,
+          opportunityTitle: opp.title,
+          opportunityId,
+          submitterName: opp.user.firstName,
+          submitterCode: opp.user.code ?? "",
+          interestedPartnerName: partnerName,
+          interestedPartnerCode: partnerCode,
+          interestedPartnerNote: note || undefined,
+        }).catch(() => {});
+      });
     }
   }
 
