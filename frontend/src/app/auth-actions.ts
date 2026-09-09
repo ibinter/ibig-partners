@@ -10,7 +10,6 @@ import {
   hashPassword,
   verifyPassword,
 } from "@/lib/auth";
-import { createAndSendOtp } from "@/lib/otp";
 import { sendRegistrationReceivedEmail } from "@/lib/email";
 import { logActivity } from "@/lib/activity";
 
@@ -101,28 +100,12 @@ export async function loginAction(_prev: unknown, formData: FormData) {
     await prisma.user.update({ where: { id: user.id }, data: { loginAttempts: 0, lockedUntil: null } }).catch(() => {});
   }
 
-  // Comptes exemptés du 2FA OTP (accès direct après mot de passe)
-  const OTP_BYPASS_EMAILS = ["admin@ibigpartners.com"];
-  if (OTP_BYPASS_EMAILS.includes(user.email)) {
-    await logActivity({ userId: user.id, action: "LOGIN", detail: `Rôle: ${user.role} (bypass OTP)` });
-    await createSession({ userId: user.id, role: user.role });
-    const isAdmin = user.role === "ADMIN" || user.role === "SUPERADMIN";
-    const isEnterprise = user.role === "ENTERPRISE";
-    const dest = next && next.startsWith("/") ? next : (isAdmin ? "/admin" : isEnterprise ? "/entreprise" : "/espace");
-    redirect(dest);
-  }
-
-  // 2FA par email OTP pour tous les autres utilisateurs
-  try {
-    await createAndSendOtp(user.id, user.email, user.firstName);
-    await logActivity({ userId: user.id, action: "OTP_SENT", detail: `Email: ${user.email}` });
-  } catch {
-    return { error: "Impossible d'envoyer le code de vérification. Réessayez dans quelques instants." };
-  }
-  const store = await cookies();
-  store.set("ibig_otp_pending", user.id, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: 10 * 60, path: "/" });
-  const otpDest = next ? `/connexion/otp?next=${encodeURIComponent(next)}` : "/connexion/otp";
-  redirect(otpDest);
+  await logActivity({ userId: user.id, action: "LOGIN", detail: `Rôle: ${user.role}` });
+  await createSession({ userId: user.id, role: user.role });
+  const isAdmin = user.role === "ADMIN" || user.role === "SUPERADMIN";
+  const isEnterprise = user.role === "ENTERPRISE";
+  const dest = next && next.startsWith("/") ? next : (isAdmin ? "/admin" : isEnterprise ? "/entreprise" : "/espace");
+  redirect(dest);
 }
 
 export async function registerAction(_prev: unknown, formData: FormData) {
