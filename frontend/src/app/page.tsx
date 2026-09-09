@@ -185,8 +185,6 @@ export default async function HomePage() {
           <span>👥 <span className="text-white">{liveStats.partners.toLocaleString("fr-FR")}</span> partenaires actifs</span>
           <span className="text-slate-600 hidden sm:inline">|</span>
           <span>🎯 <span className="text-white">1 095+</span> missions disponibles</span>
-          <span className="text-slate-600 hidden sm:inline">|</span>
-          <span>💰 <span className="text-amber-400">{Math.max(225000, liveStats.commissions).toLocaleString("fr-FR")} FCFA</span> versés ce mois</span>
         </div>
       </div>
 
