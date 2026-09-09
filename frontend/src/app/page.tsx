@@ -133,14 +133,15 @@ export default async function HomePage() {
   // ligne en mode dégradé (repli vide) plutôt que de renvoyer une erreur 500.
   let branches: Awaited<ReturnType<typeof prisma.branch.findMany>> = [];
   let tickerPartners: { id: string; firstName: string; lastName: string; city: string | null; status: string }[] = [];
-  let liveStats = { partners: 0, sales: 0, commissions: 0 };
+  let liveStats = { partners: 0, sales: 0, commissions: 0, products: 0 };
   try {
-    const [partnerCount, salesCount, commSum] = await Promise.all([
+    const [partnerCount, salesCount, commSum, productCount] = await Promise.all([
       prisma.user.count({ where: { role: "PARTNER", active: true, approved: true } }),
       prisma.sale.count({ where: { status: "CONFIRMED" } }),
       prisma.commission.aggregate({ where: { status: "PAID" }, _sum: { amount: true } }),
+      prisma.product.count({ where: { active: true } }),
     ]);
-    liveStats = { partners: partnerCount, sales: salesCount, commissions: commSum._sum.amount ?? 0 };
+    liveStats = { partners: partnerCount, sales: salesCount, commissions: commSum._sum.amount ?? 0, products: productCount };
     branches = await prisma.branch.findMany({ where: { active: true }, orderBy: { order: "asc" } });
     tickerPartners = await prisma.user.findMany({
       where: { role: "PARTNER", active: true, status: { in: ["SILVER", "GOLD", "MASTER", "ELITE"] } },
@@ -183,6 +184,8 @@ export default async function HomePage() {
       <div className="bg-gradient-to-r from-slate-900 to-slate-800 py-2.5 text-center">
         <div className="mx-auto flex flex-wrap items-center justify-center gap-6 px-4 text-xs font-semibold text-slate-300">
           <span>👥 <span className="text-white">{liveStats.partners.toLocaleString("fr-FR")}</span> partenaires actifs</span>
+          <span className="text-slate-600 hidden sm:inline">|</span>
+          <span>🛍️ <span className="text-white">{liveStats.products.toLocaleString("fr-FR")}</span> produits disponibles</span>
           <span className="text-slate-600 hidden sm:inline">|</span>
           <span>🎯 <span className="text-white">1 095+</span> missions disponibles</span>
         </div>
