@@ -15,6 +15,7 @@ import {
 } from "../actions";
 import { adminContact } from "../messages/actions";
 import { ExportButton } from "@/components/export-button";
+import PartenairesFilter from "./partenaires-filter";
 
 export const dynamic = "force-dynamic";
 
@@ -44,8 +45,13 @@ function scoreBadge(score: number): { label: string; cls: string } {
   return { label: "🌱 STARTER", cls: "bg-green-50 text-green-700" };
 }
 
-export default async function PartenairesPage() {
+export default async function PartenairesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; etat?: string; verif?: string; badge?: string }>;
+}) {
   const admin = await requireAdmin();
+  const { q = "", etat = "", verif = "", badge: badgeFilter = "" } = await searchParams;
   const [partners, paidByUser, wonLeadsByUser, callsAcceptedByUser, oppsByUser] = await Promise.all([
     prisma.user.findMany({
       orderBy: [{ approved: "asc" }, { createdAt: "desc" }],
@@ -85,6 +91,37 @@ export default async function PartenairesPage() {
     (p) => p.role === "PARTNER" && p.verificationStatus !== "VERIFIED",
   );
 
+  // Filtrage côté serveur
+  const filtered = partners.filter((p) => {
+    if (q) {
+      const search = q.toLowerCase();
+      const match =
+        p.firstName.toLowerCase().includes(search) ||
+        p.lastName.toLowerCase().includes(search) ||
+        p.email.toLowerCase().includes(search) ||
+        (p.code ?? "").toLowerCase().includes(search) ||
+        (p.phone ?? "").includes(search);
+      if (!match) return false;
+    }
+    if (etat === "pending" && p.approved) return false;
+    if (etat === "active" && (!p.approved || !p.active)) return false;
+    if (etat === "suspended" && (!p.approved || p.active)) return false;
+    if (verif && p.role === "PARTNER" && (p.verificationStatus ?? "NONE") !== verif) return false;
+    if (badgeFilter) {
+      const score = computeScore({
+        salesCount: p._count.sales,
+        referralsCount: p._count.referrals,
+        wonLeads: wonOf(p.id),
+        kybStatus: (p as any).kybStatus ?? "NONE",
+        callsAccepted: callsOf(p.id),
+        oppsSubmitted: oppsOf(p.id),
+      });
+      const b = scoreBadge(score);
+      if (!b.label.includes(badgeFilter)) return false;
+    }
+    return true;
+  });
+
   return (
     <div>
       <PageHeader
@@ -103,6 +140,8 @@ export default async function PartenairesPage() {
           </div>
         }
       />
+
+      <PartenairesFilter total={filtered.length} />
 
       {/* ── Actions groupées ── */}
       {(pending.length > 0 || partners.some((p) => p.approved && p.active && p._count.sales === 0)) && (
@@ -142,7 +181,7 @@ export default async function PartenairesPage() {
               </tr>
             </thead>
             <tbody>
-              {partners.map((p) => {
+              {filtered.map((p) => {
                 const score = computeScore({
                   salesCount: p._count.sales,
                   referralsCount: p._count.referrals,
@@ -250,10 +289,10 @@ export default async function PartenairesPage() {
                 </tr>
                 );
               })}
-              {partners.length === 0 && (
+              {filtered.length === 0 && (
                 <tr>
                   <td colSpan={11} className="py-12 text-center text-muted text-sm">
-                    Aucun partenaire inscrit.
+                    {partners.length === 0 ? "Aucun partenaire inscrit." : "Aucun résultat pour ces filtres."}
                   </td>
                 </tr>
               )}
