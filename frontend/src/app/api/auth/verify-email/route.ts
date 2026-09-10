@@ -58,7 +58,7 @@ export async function GET(req: Request) {
     response.cookies.set(COOKIE_NAME, sessionToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "lax",   // lax requis : navigation cross-site depuis email
       path: "/",
       maxAge: 60 * 60 * 24,
     });
