@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/format";
 import { Card, PageHeader } from "@/components/ui";
 
-export const revalidate = 30;
+export const dynamic = "force-dynamic";
 
 const ACTION_LABELS: Record<string, string> = {
   APPROVE_PARTNER: "Partenaire validé",

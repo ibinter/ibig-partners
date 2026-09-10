@@ -314,19 +314,20 @@ export async function validateCommission(formData: FormData) {
 export async function validateAllPending(formData: FormData) {
   await requireAdmin();
   const userId = String(formData.get("userId") || "");
-  await prisma.commission.updateMany({
-    where: { status: "PENDING", ...(userId ? { userId } : {}) },
-    data: { status: "VALIDATED" },
-  });
 
-  // Notifier les partenaires concernés
+  // Capturer les userId concernés AVANT la mise à jour
   const targets = userId ? [userId] : (
     await prisma.commission.findMany({
-      where: { status: "VALIDATED" },
+      where: { status: "PENDING" },
       select: { userId: true },
       distinct: ["userId"],
     })
   ).map((c) => c.userId);
+
+  await prisma.commission.updateMany({
+    where: { status: "PENDING", ...(userId ? { userId } : {}) },
+    data: { status: "VALIDATED" },
+  });
 
   for (const uid of targets) {
     const [user, agg] = await Promise.all([
@@ -615,7 +616,7 @@ export async function approveOpportunity(formData: FormData) {
 
   const opp = await (prisma as any).opportunity.update({
     where: { id },
-    data: { status: "APPROVED", visibility, commission, commissionType, adminNote: adminNote || null, updatedAt: new Date() },
+    data: { status: "NEW", visibility, commission, commissionType, adminNote: adminNote || null, updatedAt: new Date() },
     include: { user: { select: { id: true, email: true, firstName: true } } },
   });
 
@@ -643,7 +644,7 @@ export async function rejectOpportunity(formData: FormData) {
 
   const opp = await (prisma as any).opportunity.update({
     where: { id },
-    data: { status: "REJECTED", visibility: "PRIVATE", adminNote: adminNote || null, updatedAt: new Date() },
+    data: { status: "LOST", visibility: "PRIVATE", adminNote: adminNote || null, updatedAt: new Date() },
     include: { user: { select: { id: true, email: true, firstName: true } } },
   });
 
@@ -707,6 +708,7 @@ export async function broadcastOpportunity(formData: FormData) {
       opportunityId: id,
       type: "BROADCAST",
       content: `Diffusion à ${partners.length} partenaire(s) (cible : ${target})`,
+      createdBy: (admin as any).id ?? "admin",
     },
   }).catch(() => {});
 
@@ -1010,7 +1012,10 @@ export async function validateMissionApplication(formData: FormData) {
 
   const app = await (prisma as any).missionApplication.findUnique({
     where: { id },
-    include: { mission: true },
+    include: {
+      mission: true,
+      user: { select: { email: true, firstName: true } },
+    },
   });
   if (!app) return;
 

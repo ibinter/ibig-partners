@@ -4,7 +4,7 @@ import { fcfa } from "@/lib/format";
 import { PageHeader } from "@/components/ui";
 import AnalyticsCharts from "./analytics-charts";
 
-export const revalidate = 30;
+export const dynamic = "force-dynamic";
 
 export default async function AnalyticsPage() {
   await requireAdmin();
