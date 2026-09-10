@@ -34,6 +34,10 @@
     {
       "path": "/api/cron/daily-streak",
       "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/kyc-reminders",
+      "schedule": "0 9 * * *"
     }
   ]
 }
