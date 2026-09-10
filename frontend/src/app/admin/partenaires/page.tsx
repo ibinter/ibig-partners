@@ -1,6 +1,6 @@
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { fcfa, formatDate } from "@/lib/format";
+import { fcfa, formatDateTimeGMT } from "@/lib/format";
 import { Badge, Card, PageHeader } from "@/components/ui";
 import { SubmitButton } from "@/components/submit-button";
 import { STATUS_LABELS, STATUS_COLORS } from "@/lib/constants";
@@ -245,7 +245,9 @@ export default async function PartenairesPage({
                       )}
                     </div>
                   </td>
-                  <td className="text-xs text-muted">{formatDate(p.createdAt)}</td>
+                  <td className="text-xs text-muted whitespace-nowrap">
+                    {(() => { const { date, time } = formatDateTimeGMT(p.createdAt); return (<><span className="block">{date}</span><span className="block font-mono text-[11px]">{time} <span className="text-[10px] text-slate-400">GMT</span></span></>); })()}
+                  </td>
                   <td>
                     <div className="flex items-center gap-1.5">
                       {p.id !== admin.id && (

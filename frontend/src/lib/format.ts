@@ -26,6 +26,24 @@ export function formatDateTime(date: Date | string): string {
   }).format(d);
 }
 
+export function formatDateTimeGMT(date: Date | string): { date: string; time: string } {
+  const d = typeof date === "string" ? new Date(date) : date;
+  const datePart = new Intl.DateTimeFormat("fr-FR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(d);
+  const timePart = new Intl.DateTimeFormat("fr-FR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZone: "UTC",
+    hour12: false,
+  }).format(d);
+  return { date: datePart, time: timePart };
+}
+
 export function pct(rate: number): string {
   return (rate * 100).toFixed(rate * 100 % 1 === 0 ? 0 : 1) + "%";
 }
