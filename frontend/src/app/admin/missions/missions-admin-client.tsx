@@ -98,6 +98,8 @@ type MissionRow = {
 };
 
 function rewardLabel(row: MissionRow) {
+  if (row.compensationAmount === 0 && row.compensationType === "PER_RESULT") return "Variable";
+  if (row.compensationAmount === 0 && row.compensationType !== "PERCENT") return "Variable";
   const cash = row.compensationType === "PERCENT"
     ? (row.compensationAmount / 100).toFixed(1) + "%"
     : new Intl.NumberFormat("fr-FR").format(row.compensationAmount) + " F";
@@ -438,7 +440,15 @@ export default function MissionsAdminClient({
                       </select>
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Commission (FCFA)</label>
+                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Type de rémunération</label>
+                      <select name="compensationType" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
+                        <option value="FIXED">Montant fixe (FCFA)</option>
+                        <option value="PER_RESULT">Variable (négocié au cas par cas)</option>
+                        <option value="PERCENT">Pourcentage (%)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Montant (0 si variable)</label>
                       <input name="compensationAmount" type="number" defaultValue={0} className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm" />
                     </div>
                     <div>
@@ -453,7 +463,6 @@ export default function MissionsAdminClient({
                       <label className="block text-[10px] font-bold text-slate-500 mb-1">Slots disponibles</label>
                       <input name="slots" type="number" defaultValue={5} className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm" />
                     </div>
-                    <input type="hidden" name="compensationType" value="FIXED" />
                     <input type="hidden" name="rewardTrigger" value="VALIDATION" />
                   </div>
                   <input name="adminNote" placeholder="Note interne (optionnel)" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm" />
