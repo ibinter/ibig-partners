@@ -79,7 +79,7 @@ export default async function ClassementPage({
     const userIds = monthlySales.map((s) => s.sellerId);
     const usersMap = userIds.length > 0
       ? await (prisma as any).user.findMany({
-          where: { id: { in: userIds }, active: true, approved: true },
+          where: { id: { in: userIds }, active: true, approved: true, publicListing: true },
           select: { id: true, firstName: true, lastName: true, status: true, photoUrl: true, city: true, country: true, partnerType: true },
         })
       : [];
@@ -89,7 +89,7 @@ export default async function ClassementPage({
       .sort((a: any, b: any) => b._count.sales - a._count.sales);
   } else {
     topBySales = await (prisma as any).user.findMany({
-      where: { active: true, approved: true },
+      where: { active: true, approved: true, publicListing: true },
       select: {
         id: true, firstName: true, lastName: true, status: true,
         photoUrl: true, city: true, country: true, partnerType: true,

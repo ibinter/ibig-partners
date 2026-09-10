@@ -251,10 +251,9 @@ export async function declareSale(formData: FormData) {
   // Montant réellement encaissé (l'affilié peut l'ajuster ; défaut = prix produit).
   const amount = amountRaw > 0 ? Math.round(amountRaw) : product.price;
 
-  const count = await prisma.sale.count();
   await prisma.sale.create({
     data: {
-      reference: `VTE-${String(count + 1).padStart(4, "0")}`,
+      reference: `VTE-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
       productId,
       sellerId: user.id,
       customerName: `${customerName} [${channel}]`,

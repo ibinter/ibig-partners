@@ -1,9 +1,11 @@
 "use server";
 import { prisma } from "@/lib/prisma";
+import { requireUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import { randomUUID } from "crypto";
 
 export async function createService(formData: FormData) {
-  const userId = formData.get("userId") as string;
+  const user = await requireUser();
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
   const category = formData.get("category") as string;
@@ -11,8 +13,8 @@ export async function createService(formData: FormData) {
 
   await (prisma as any).marketplaceService.create({
     data: {
-      id: `mkt_${Date.now()}`,
-      userId,
+      id: `mkt_${randomUUID()}`,
+      userId: user.id,
       title,
       description,
       category,
@@ -23,9 +25,10 @@ export async function createService(formData: FormData) {
   revalidatePath("/espace/marketplace");
 }
 
-export async function deleteService(id: string, userId: string) {
+export async function deleteService(id: string) {
+  const user = await requireUser();
   await (prisma as any).marketplaceService.updateMany({
-    where: { id, userId },
+    where: { id, userId: user.id },
     data: { status: "DELETED" },
   });
   revalidatePath("/espace/marketplace");

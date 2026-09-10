@@ -7,11 +7,9 @@ const CATEGORIES = ["Consulting", "Formation", "Marketing", "Tech", "Vente", "Ju
 export default function MarketplaceClient({
   myServices,
   allServices,
-  userId,
 }: {
   myServices: any[];
   allServices: any[];
-  userId: string;
 }) {
   const [tab, setTab] = useState<"browse" | "mine" | "add">("browse");
   const [isPending, startTransition] = useTransition();
@@ -73,7 +71,7 @@ export default function MarketplaceClient({
                 <p className="text-xs text-gray-500">{s.category} · {s.price > 0 ? `${s.price.toLocaleString()} ${s.currency}` : "Sur devis"}</p>
                 <p className="text-sm text-gray-600 mt-1 line-clamp-1">{s.description}</p>
               </div>
-              <form action={async () => { startTransition(() => deleteService(s.id, userId)); }}>
+              <form action={async () => { startTransition(() => deleteService(s.id)); }}>
                 <button type="submit" className="text-xs text-red-500 hover:text-red-700 font-medium">Supprimer</button>
               </form>
             </div>
@@ -83,7 +81,6 @@ export default function MarketplaceClient({
 
       {tab === "add" && (
         <form action={createService} className="space-y-4 max-w-md">
-          <input type="hidden" name="userId" value={userId} />
           <div>
             <label className="block text-sm font-medium mb-1">Titre du service *</label>
             <input name="title" required className="w-full rounded-xl border px-3 py-2 text-sm" placeholder="ex: Coaching vente B2B" />

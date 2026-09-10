@@ -98,6 +98,7 @@ model User {
   needResponses       NeedResponse[]
   kybDocuments        KybDocument[]
   partnerCallInvitations PartnerCallInvitation[]
+  appointments           Appointment[]
   challengeProgresses    ChallengeProgress[]
   partnerClients         PartnerClient[]
   pointTransactions      PointTransaction[]
@@ -864,6 +865,7 @@ model NeedResponse {
   need      Need @relation(fields: [needId], references: [id], onDelete: Cascade)
   user      User @relation(fields: [userId], references: [id])
 
+  @@unique([needId, userId])
   @@index([needId])
   @@index([userId])
 }
@@ -896,6 +898,28 @@ model OpportunityActivity {
   createdAt     DateTime @default(now())
   opportunity   Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
   @@index([opportunityId])
+}
+
+// ─── Rendez-vous partenaires ─────────────────────────────────────────────────
+model Appointment {
+  id           String    @id @default(cuid())
+  userId       String
+  title        String
+  scheduledAt  DateTime
+  duration     Int       @default(30)
+  guestName    String?
+  guestEmail   String?
+  guestPhone   String?
+  meetUrl      String?
+  notes        String?
+  status       String    @default("PENDING") // PENDING | CONFIRMED | CANCELLED | DONE
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  user         User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([scheduledAt])
 }
 
 model PartnerCall {

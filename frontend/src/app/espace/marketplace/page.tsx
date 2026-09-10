@@ -33,7 +33,6 @@ export default async function MarketplacePage() {
       <MarketplaceClient
         myServices={myServices}
         allServices={allServices.map((s: any) => ({ ...s, partner: userMap[s.userId] ?? null }))}
-        userId={user.id}
       />
     </div>
   );

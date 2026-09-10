@@ -5,12 +5,12 @@ import { PageHeader } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
-async function markAllRead(fd: FormData) {
+async function markAllRead() {
   "use server";
-  const userId = fd.get("userId") as string;
+  const user = await requireUser();
   try {
     await (prisma as any).notification.updateMany({
-      where: { userId, read: false },
+      where: { userId: user.id, read: false },
       data: { read: true },
     });
   } catch { /* ignore */ }
@@ -49,7 +49,6 @@ export default async function NotificationsPage() {
         />
         {unread > 0 && (
           <form action={markAllRead}>
-            <input type="hidden" name="userId" value={user.id} />
             <button type="submit" className="text-sm text-blue-600 hover:underline">
               Tout marquer comme lu
             </button>
@@ -66,7 +65,7 @@ export default async function NotificationsPage() {
       ) : (
         <div className="space-y-3">
           {notifications.map((n: any) => {
-            const cfg = typeConfig[n.type] || typeConfig.INFO;
+            const cfg = typeConfig[n.category as string] || typeConfig.INFO;
             return (
               <div
                 key={n.id}
@@ -79,7 +78,7 @@ export default async function NotificationsPage() {
                 <span className="text-2xl flex-shrink-0">{cfg.icon}</span>
                 <div className="flex-1 min-w-0">
                   <div className={`font-semibold ${n.read ? "" : cfg.color}`}>{n.title}</div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">{n.message}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">{n.body}</p>
                   <div className="text-xs text-gray-400 mt-1">{formatDate(n.createdAt)}</div>
                 </div>
                 {!n.read && (
