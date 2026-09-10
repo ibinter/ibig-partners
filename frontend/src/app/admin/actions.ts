@@ -664,7 +664,7 @@ export async function rejectOpportunity(formData: FormData) {
 }
 
 export async function broadcastOpportunity(formData: FormData) {
-  await requireAdmin();
+  const admin = await requireAdmin();
   const id     = String(formData.get("id"));
   const target = String(formData.get("target") || "ALL"); // ALL | GOLD_PLUS | VERIFIED
 
