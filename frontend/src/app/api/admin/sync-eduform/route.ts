@@ -1,6 +1,5 @@
 ﻿import { NextResponse } from "next/server";
 import { isSyncAuthorized } from "@/lib/sync-auth";
-import { syncBranchWithFeed } from "@/lib/catalog-feed";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -6528,91 +6527,36 @@ export async function POST() {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
 
-    // ── 1. Récupérer le catalogue live depuis ibig-eduform.com/api/formations.php ──
-    type ApiFormation = {
-      id: number; titre: string; slug: string; url: string;
-      domaine: string; type: string; duree: string; pitch: string;
-      tarif_en_ligne: number | null; tarif_presentiel: number | null;
-      frais_inscription: number;
-    };
-    let apiFormations: ApiFormation[] = [];
-    try {
-      const apiRes = await fetch("https://ibig-eduform.com/api/formations.php", { cache: "no-store" });
-      if (apiRes.ok) {
-        const apiData = await apiRes.json();
-        apiFormations = Array.isArray(apiData?.formations) ? apiData.formations : [];
-      }
-    } catch (e) {
-      console.warn("sync-eduform: API live indisponible, utilisation de la liste statique", e);
+    const mainBranch = await prisma.branch.findUnique({ where: { slug: "ibig-eduform" } });
+    if (!mainBranch) {
+      return NextResponse.json({ error: "Branche ibig-eduform introuvable en base" }, { status: 500 });
     }
 
-    // ── 2. Construire la liste finale : API live + fallback statique pour les slugs absents ──
-    type SyncProduct = { slug: string; name: string; pricingType: string; price: number; rate: number; siteUrl: string; description?: string };
-
-    /** Génère l'URL de détail EDUFORM au format /formation/{slug-sans-prefixe} (format retourné par l'API) */
-    function eduformUrl(partnerSlug: string, existingSiteUrl: string): string {
-      if (existingSiteUrl && existingSiteUrl !== "https://ibig-eduform.com" && existingSiteUrl !== "https://ibig-eduform.com/") return existingSiteUrl;
-      const slugSansPrefixe = partnerSlug.replace(/^eduform-/, "");
-      return `https://ibig-eduform.com/formation/${slugSansPrefixe}`;
-    }
-
-    // Produits issus de l'API live
-    const apiSlugs = new Set<string>();
-    const fromApi: SyncProduct[] = apiFormations.map(f => {
-      const slug = `eduform-${f.slug}`;
-      apiSlugs.add(slug);
-      return {
-        slug,
-        name: f.titre,
-        pricingType: "COURSE",
-        price: f.tarif_en_ligne ?? f.tarif_presentiel ?? f.frais_inscription ?? 0,
-        rate: 10,
-        siteUrl: f.url,   // URL réelle retournée par l'API
-        description: f.pitch || undefined,
-      };
-    });
-
-    // Produits du catalogue statique non couverts par l'API (ou tout le catalogue si l'API est indisponible)
-    const seen = new Set<string>(apiSlugs);
-    const fromStatic: SyncProduct[] = EDUFORM_PRODUCTS
-      .filter(p => { if (seen.has(p.slug)) return false; seen.add(p.slug); return true; })
-      .map(p => ({ ...p, siteUrl: eduformUrl(p.slug, p.siteUrl) }));
-
-    const productsToSync: SyncProduct[] = [...fromApi, ...fromStatic];
-
-    // ── 5. Upsert direct vers ibig-eduform — PAS de deleteMany ──────────
-    let step5Upserted = 0;
-    try {
-      const mainBranch = await prisma.branch.findUnique({ where: { slug: "ibig-eduform" } });
-      if (mainBranch) {
-        // Diviser en lots de 50 exécutés en parallèle pour rester dans le timeout Vercel
-        const BATCH = 50;
-        for (let i = 0; i < productsToSync.length; i += BATCH) {
-          const batch = productsToSync.slice(i, i + BATCH);
-          await Promise.all(
-            batch.map(p =>
-              prisma.product.upsert({
-                where: { slug: p.slug },
-                update: { name: p.name, price: p.price, branchId: mainBranch.id, active: true, siteUrl: p.siteUrl },
-                create: {
-                  slug: p.slug, name: p.name, pricingType: p.pricingType, price: p.price,
-                  rate: p.rate, siteUrl: p.siteUrl ?? "", description: p.description ?? "",
-                  branchId: mainBranch.id, active: true,
-                },
-              })
-            )
-          );
-          step5Upserted += batch.length;
-        }
-      }
-    } catch (e) {
-      console.error("step5 error:", e);
+    let upserted = 0;
+    const BATCH = 50;
+    for (let i = 0; i < EDUFORM_PRODUCTS.length; i += BATCH) {
+      const batch = EDUFORM_PRODUCTS.slice(i, i + BATCH);
+      await Promise.all(
+        batch.map(p =>
+          prisma.product.upsert({
+            where: { slug: p.slug },
+            update: { name: p.name, price: p.price, branchId: mainBranch.id, active: true, siteUrl: p.siteUrl || "" },
+            create: {
+              slug: p.slug, name: p.name, pricingType: p.pricingType, price: p.price,
+              rate: p.rate, siteUrl: p.siteUrl || "", description: p.description || "",
+              branchId: mainBranch.id, active: true,
+            },
+          })
+        )
+      );
+      upserted += batch.length;
     }
 
     return NextResponse.json({
       ok: true,
-      mainBranchUpserted: step5Upserted,
-      message: `${step5Upserted} formations upsertées dans ibig-eduform (branche principale).`,
+      upserted,
+      total: EDUFORM_PRODUCTS.length,
+      message: `${upserted}/${EDUFORM_PRODUCTS.length} formations upsertées dans ibig-eduform.`,
     });
   } catch (err: any) {
     console.error("sync-eduform error:", err);
