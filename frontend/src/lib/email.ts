@@ -2198,3 +2198,72 @@ export async function sendOpportunityMatchInviteEmail(opts: {
     html,
   });
 }
+
+// ─── E-mail : Notification activité → ADMIN ──────────────────────────────────
+
+const ADMIN_NOTIF_EMAIL = process.env.ADMIN_NOTIF_EMAIL ?? "contact@ibigpartners.com";
+
+type AdminNotifEvent =
+  | { type: "NEW_PARTNER"; partnerName: string; partnerCode: string; partnerEmail: string; sponsorName?: string }
+  | { type: "MISSION_SUBMISSION"; partnerName: string; partnerCode: string; missionTitle: string; submissionType: "OFFER" | "DEMAND" }
+  | { type: "MISSION_APPLICATION"; partnerName: string; partnerCode: string; missionTitle: string; note?: string }
+  | { type: "PROOF_SUBMITTED"; partnerName: string; partnerCode: string; missionTitle: string; proofNote?: string };
+
+const adminEventConfig: Record<AdminNotifEvent["type"], { emoji: string; label: string; color: string; adminUrl: string }> = {
+  NEW_PARTNER: { emoji: "👤", label: "Nouveau partenaire inscrit", color: "#3b82f6", adminUrl: "/admin/partenaires" },
+  MISSION_SUBMISSION: { emoji: "📥", label: "Soumission de mission partenaire", color: "#8b5cf6", adminUrl: "/admin/missions" },
+  MISSION_APPLICATION: { emoji: "✋", label: "Candidature à une mission", color: "#10b981", adminUrl: "/admin/missions" },
+  PROOF_SUBMITTED: { emoji: "📎", label: "Justificatif soumis", color: "#f59e0b", adminUrl: "/admin/missions" },
+};
+
+export async function sendAdminActivityEmail(event: AdminNotifEvent): Promise<EmailResult> {
+  const cfg = adminEventConfig[event.type];
+  const rows: [string, string][] = [];
+
+  if (event.type === "NEW_PARTNER") {
+    rows.push(["Nom", event.partnerName], ["Code", event.partnerCode], ["Email", event.partnerEmail]);
+    if (event.sponsorName) rows.push(["Parrain", event.sponsorName]);
+  } else if (event.type === "MISSION_SUBMISSION") {
+    rows.push(["Partenaire", `${event.partnerName} (${event.partnerCode})`], ["Mission", event.missionTitle], ["Type", event.submissionType === "OFFER" ? "Offre de service" : "Demande de prestation"]);
+  } else if (event.type === "MISSION_APPLICATION") {
+    rows.push(["Partenaire", `${event.partnerName} (${event.partnerCode})`], ["Mission", event.missionTitle]);
+    if (event.note) rows.push(["Note", event.note]);
+  } else if (event.type === "PROOF_SUBMITTED") {
+    rows.push(["Partenaire", `${event.partnerName} (${event.partnerCode})`], ["Mission", event.missionTitle]);
+    if (event.proofNote) rows.push(["Note", event.proofNote]);
+  }
+
+  const tableRows = rows.map(([k, v]) => `
+    <tr>
+      <td style="padding:10px 12px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#6b7280;white-space:nowrap;font-weight:600;">${k}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#111827;">${v}</td>
+    </tr>`).join("");
+
+  const html = layout(`
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+      <div style="width:44px;height:44px;border-radius:12px;background:${cfg.color}20;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">${cfg.emoji}</div>
+      <div>
+        <p style="margin:0;font-size:11px;text-transform:uppercase;letter-spacing:0.7px;color:#9ca3af;font-weight:700;">IBIG PARTNERS · ACTIVITÉ</p>
+        <h2 style="margin:4px 0 0;font-size:20px;font-weight:800;color:#111827;">${cfg.label}</h2>
+      </div>
+    </div>
+
+    <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;margin-bottom:24px;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+        <tbody>${tableRows}</tbody>
+      </table>
+    </div>
+
+    <p style="margin:0 0 20px;font-size:13px;color:#6b7280;">
+      Ce message a été généré automatiquement à ${new Date().toLocaleString("fr-FR", { timeZone: "Africa/Abidjan" })} (heure Abidjan).
+    </p>
+
+    ${btn("Voir dans l'admin →", `${SITE}${cfg.adminUrl}`)}
+  `);
+
+  return sendEmail({
+    to: ADMIN_NOTIF_EMAIL,
+    subject: `${cfg.emoji} ${cfg.label} — IBIG PARTNERS`,
+    html,
+  });
+}

@@ -93,8 +93,10 @@ function daysLeft(iso: string) {
   return d;
 }
 
-function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
+// ── Mission Detail Modal ──────────────────────────────────────────────────────
+function MissionModal({ m, onClose, applyAction, withdrawAction, submitProofAction }: {
   m: MissionRow;
+  onClose: () => void;
   applyAction: (fd: FormData) => Promise<void>;
   withdrawAction: (fd: FormData) => Promise<void>;
   submitProofAction: (fd: FormData) => Promise<void>;
@@ -109,14 +111,15 @@ function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
   const [interestLoading, setInterestLoading] = useState(false);
 
   const isPartnerMission = m.source === "PARTNER";
-
-  useEffect(() => {
-    fetch("/api/missions/view", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ missionId: m.id }),
-    }).catch(() => {});
-  }, [m.id]);
+  const diff = DIFFICULTY_CONFIG[m.difficulty] ?? DIFFICULTY_CONFIG.MEDIUM;
+  const reward = REWARD_CONFIG[m.rewardType] ?? REWARD_CONFIG.CASH;
+  const mtype = MISSION_TYPE_CONFIG[m.missionType] ?? MISSION_TYPE_CONFIG.AUTRE;
+  const spots = Math.max(0, m.slots - m.totalApplications);
+  const app = m.myApplication;
+  const hasApp = app !== null;
+  const dl = m.deadline ? daysLeft(m.deadline) : null;
+  const urgent = dl !== null && dl <= 7;
+  const full = spots === 0 && !hasApp;
 
   async function handleInterest() {
     setInterestLoading(true);
@@ -129,6 +132,236 @@ function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
     setShowInterestForm(false);
     setInterestLoading(false);
   }
+
+  // Close on backdrop click or Escape
+  useEffect(() => {
+    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", esc);
+    document.body.style.overflow = "hidden";
+    return () => { document.removeEventListener("keydown", esc); document.body.style.overflow = ""; };
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
+      onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+
+      {/* Panel */}
+      <div className="relative w-full sm:max-w-xl max-h-[90vh] flex flex-col bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden">
+        {/* Drag handle mobile */}
+        <div className="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0">
+          <div className="w-10 h-1 rounded-full bg-slate-300 dark:bg-slate-600" />
+        </div>
+
+        {/* Header */}
+        <div className="flex items-start gap-3 px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex-shrink-0">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-sm">{mtype.icon}</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{mtype.label}</span>
+              {m.code && <span className="ml-auto text-[9px] font-mono text-slate-300">{m.code}</span>}
+            </div>
+            <h2 className="font-extrabold text-slate-900 dark:text-white text-base leading-snug">{m.title}</h2>
+          </div>
+          <button onClick={onClose} className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex-shrink-0">
+            ✕
+          </button>
+        </div>
+
+        {/* Scrollable body */}
+        <div className="overflow-y-auto flex-1 px-5 py-4 space-y-4">
+
+          {/* Badges */}
+          <div className="flex flex-wrap gap-1.5">
+            <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase border ${diff.badge}`}>{diff.icon} {diff.label}</span>
+            {m.branch && <span className="rounded-full px-2 py-0.5 text-[9px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800">{m.branch}</span>}
+            {hasApp && <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase ${APP_STATUS[app!.status]?.badge ?? "bg-slate-100 text-slate-500"}`}>{APP_STATUS[app!.status]?.label ?? app!.status}</span>}
+            {urgent && !hasApp && <span className="rounded-full px-2 py-0.5 text-[9px] font-bold bg-amber-100 text-amber-700 border border-amber-200">⏰ Expire bientôt</span>}
+            {full && <span className="rounded-full px-2 py-0.5 text-[9px] font-bold bg-rose-50 text-rose-600 border border-rose-200">Complet</span>}
+          </div>
+
+          {/* Récompense */}
+          <div className={`flex items-center gap-2 rounded-xl px-4 py-3 border ${reward.bg} ${reward.border}`}>
+            <div className="flex-1">
+              <p className="text-[9px] font-bold uppercase tracking-widest opacity-60">Récompense</p>
+              <p className={`text-xl font-extrabold tabular-nums ${reward.text}`}>{rewardLabel(m)}</p>
+            </div>
+            <span className={`text-xs font-bold uppercase ${reward.text} opacity-70`}>{reward.label}</span>
+          </div>
+
+          {/* Description */}
+          {m.description && <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line">{m.description}</p>}
+
+          {/* Méta */}
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="flex items-center gap-1.5 text-slate-500"><span>{ZONE_ICONS[m.zone] ?? "📍"}</span><span>{m.zone}</span></div>
+            <div className="flex items-center gap-1.5 text-slate-500">
+              <span>👥</span>
+              {spots > 0 ? <span className="font-semibold text-emerald-600">{spots} place{spots > 1 ? "s" : ""}</span> : <span className="font-semibold text-rose-500">Complet</span>}
+            </div>
+            {m.deadline && (
+              <div className={`flex items-center gap-1.5 col-span-2 ${urgent ? "text-amber-600 font-bold" : "text-slate-400"}`}>
+                <span>⏰</span><span>Deadline : {fmtDate(m.deadline)} {dl !== null && dl >= 0 ? `(J-${dl})` : "(expiré)"}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Preuves attendues */}
+          {m.proofInstructions && (
+            <div className="rounded-xl border border-violet-100 dark:border-violet-800 bg-violet-50 dark:bg-violet-900/20 px-3 py-2.5">
+              <p className="text-[9px] font-black uppercase tracking-widest text-violet-500 mb-1">📎 Preuves attendues</p>
+              <p className="text-xs text-violet-800 dark:text-violet-300 leading-relaxed">{m.proofInstructions}</p>
+            </div>
+          )}
+
+          {/* Médias */}
+          {isPartnerMission && m.media.length > 0 && (
+            <div>
+              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wide mb-2">📎 Pièces jointes</p>
+              <div className="flex flex-wrap gap-2">
+                {m.media.map((med, i) => (
+                  med.mediaType === "IMAGE" ? (
+                    <a key={i} href={med.url} target="_blank" rel="noopener noreferrer" className="block">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={med.url} alt={med.name || "Image"} className="w-24 h-24 object-cover rounded-xl border border-slate-200 hover:opacity-80 transition" />
+                    </a>
+                  ) : (
+                    <a key={i} href={med.url} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-2.5 py-1.5 text-xs hover:border-blue-300 transition">
+                      <span>{med.mediaType === "PDF" ? "📄" : "🎥"}</span>
+                      <span className="text-blue-600 underline">{med.name || "Voir"}</span>
+                    </a>
+                  )
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* CP gagnés */}
+          {app && (app.status === "VALIDATED" || app.status === "COMPLETED") && app.cpEarned > 0 && (
+            <div className="rounded-xl bg-violet-50 dark:bg-violet-900/20 border border-violet-100 dark:border-violet-800 px-4 py-3">
+              <p className="text-xs font-bold text-violet-700 dark:text-violet-300">🪙 +{app.cpEarned} Crédits Partners gagnés !</p>
+            </div>
+          )}
+
+          {/* Résultat */}
+          {app?.result && (
+            <div className="rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 px-4 py-3">
+              <p className="text-[9px] font-bold text-emerald-600 uppercase tracking-wide mb-1">Résultat</p>
+              <p className="text-sm text-emerald-800 dark:text-emerald-300">{app.result}</p>
+            </div>
+          )}
+
+          {/* Preuve soumise */}
+          {app && ["SUBMITTED","VALIDATED","REJECTED_PROOF"].includes(app.status) && (app.proofNote || app.proofUrl) && (
+            <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 space-y-1">
+              <p className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">Votre preuve {app.submittedAt ? `— ${fmtDate(app.submittedAt)}` : ""}</p>
+              {app.proofNote && <p className="text-xs text-slate-700 dark:text-slate-300">{app.proofNote}</p>}
+              {app.proofUrl && <a href={app.proofUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline break-all">🔗 {app.proofUrl}</a>}
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="space-y-3 pb-2">
+            {/* Formulaire preuve si ACCEPTED */}
+            {app && app.status === "ACCEPTED" && (
+              <form action={submitProofAction} className="space-y-3 rounded-xl border border-blue-100 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-4">
+                <p className="text-xs font-bold text-blue-800 dark:text-blue-300">📤 Soumettre votre preuve de réalisation</p>
+                <input type="hidden" name="applicationId" value={app.id} />
+                <input name="proofUrl" type="url" value={proofUrl} onChange={e => setProofUrl(e.target.value)}
+                  placeholder="https://… (Drive, capture, document…)"
+                  className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm outline-none focus:border-blue-400" />
+                <textarea name="proofNote" rows={3} value={proofNote} onChange={e => setProofNote(e.target.value)} required
+                  placeholder="Décrivez ce que vous avez réalisé…"
+                  className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm outline-none resize-none focus:border-blue-400" />
+                <button type="submit" className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2.5 transition">
+                  Soumettre ma preuve →
+                </button>
+              </form>
+            )}
+
+            {/* Candidature */}
+            {!hasApp && spots > 0 && (
+              !showForm ? (
+                <button onClick={() => setShowForm(true)}
+                  className="w-full rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-extrabold py-3 transition shadow-sm">
+                  ✋ Je candidate à cette mission
+                </button>
+              ) : (
+                <form action={applyAction} className="space-y-3">
+                  <input type="hidden" name="missionId" value={m.id} />
+                  <textarea name="note" rows={3} value={note} onChange={e => setNote(e.target.value)}
+                    placeholder="Présentez votre motivation, votre réseau ou vos atouts…"
+                    className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-gray-900 px-3 py-2.5 text-sm outline-none resize-none focus:border-indigo-400" />
+                  <div className="flex gap-2">
+                    <button type="button" onClick={() => setShowForm(false)}
+                      className="flex-1 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 text-sm font-bold py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                      Annuler
+                    </button>
+                    <button type="submit" className="flex-1 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-extrabold py-2.5 transition">
+                      Envoyer →
+                    </button>
+                  </div>
+                </form>
+              )
+            )}
+
+            {/* Retirer candidature */}
+            {hasApp && app!.status === "PENDING" && (
+              <form action={withdrawAction} className="flex items-center gap-3">
+                <input type="hidden" name="missionId" value={m.id} />
+                <p className="text-xs text-slate-400 flex-1">Candidature le {fmtDate(app!.createdAt)}</p>
+                <button type="submit" className="rounded-xl border border-rose-200 text-rose-600 hover:bg-rose-50 text-xs font-bold px-3 py-1.5 transition">Retirer</button>
+              </form>
+            )}
+
+            {full && !isPartnerMission && <p className="text-xs text-slate-400 italic text-center py-1">Mission complète — plus de place disponible.</p>}
+
+            {/* Intérêt missions partenaires */}
+            {isPartnerMission && !app && (
+              interestDone ? (
+                <div className="rounded-xl border border-purple-200 bg-purple-50 dark:bg-purple-900/20 px-4 py-3 text-center">
+                  <p className="text-sm font-semibold text-purple-700 dark:text-purple-300">✅ Intérêt signalé — IBIG vous contactera.</p>
+                </div>
+              ) : showInterestForm ? (
+                <div className="space-y-2">
+                  <textarea rows={2} value={interestNote} onChange={e => setInterestNote(e.target.value)}
+                    placeholder="Précisez votre intérêt (optionnel)…"
+                    className="w-full rounded-xl border border-purple-200 bg-white dark:bg-slate-900 px-3 py-2 text-sm outline-none resize-none" />
+                  <div className="flex gap-2">
+                    <button type="button" onClick={() => setShowInterestForm(false)}
+                      className="flex-1 rounded-xl border border-slate-200 text-slate-500 text-sm font-bold py-2.5 hover:bg-slate-50 transition">Annuler</button>
+                    <button type="button" onClick={handleInterest} disabled={interestLoading}
+                      className="flex-1 rounded-xl bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white text-sm font-extrabold py-2.5 transition">
+                      {interestLoading ? "Envoi…" : "Envoyer →"}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button onClick={() => setShowInterestForm(true)}
+                  className="w-full rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-sm font-extrabold py-3 transition shadow-sm">
+                  🤝 Je suis intéressé(e) — Contacter via IBIG
+                </button>
+              )
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Compact Mission Card ──────────────────────────────────────────────────────
+function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
+  m: MissionRow;
+  applyAction: (fd: FormData) => Promise<void>;
+  withdrawAction: (fd: FormData) => Promise<void>;
+  submitProofAction: (fd: FormData) => Promise<void>;
+}) {
+  const [open, setOpen] = useState(false);
+
+  const isPartnerMission = m.source === "PARTNER";
   const diff = DIFFICULTY_CONFIG[m.difficulty] ?? DIFFICULTY_CONFIG.MEDIUM;
   const reward = REWARD_CONFIG[m.rewardType] ?? REWARD_CONFIG.CASH;
   const mtype = MISSION_TYPE_CONFIG[m.missionType] ?? MISSION_TYPE_CONFIG.AUTRE;
@@ -139,234 +372,96 @@ function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
   const urgent = dl !== null && dl <= 7;
   const full = spots === 0 && !hasApp;
 
+  // Première image disponible
+  const firstImage = m.media.find(med => med.mediaType === "IMAGE");
+
+  useEffect(() => {
+    fetch("/api/missions/view", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ missionId: m.id }),
+    }).catch(() => {});
+  }, [m.id]);
+
   return (
-    <div className={`rounded-2xl border bg-white dark:bg-gray-900 shadow-sm flex flex-col transition-all hover:shadow-md ${
-      hasApp ? "border-blue-300 ring-2 ring-blue-100 dark:ring-blue-900/40" :
-      urgent ? "border-amber-300" :
-      full ? "border-slate-100 opacity-70" : "border-slate-200"
-    }`}>
+    <>
+      <div className={`rounded-2xl border bg-white dark:bg-gray-900 shadow-sm flex flex-col transition-all hover:shadow-md hover:-translate-y-0.5 cursor-pointer ${
+        hasApp ? "border-blue-300 ring-2 ring-blue-100 dark:ring-blue-900/40" :
+        urgent ? "border-amber-300" :
+        full ? "border-slate-100 opacity-70" : "border-slate-200"
+      }`} onClick={() => setOpen(true)}>
 
-      {/* Bandeau type de mission */}
-      <div className="flex items-center gap-2 px-4 pt-4 pb-0">
-        <span className="text-base">{mtype.icon}</span>
-        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">{mtype.label}</span>
-        {m.code && <span className="ml-auto text-[9px] text-slate-300 dark:text-slate-600 font-mono">{m.code}</span>}
-      </div>
-
-      {/* Corps principal */}
-      <div className="p-4 flex-1 space-y-3">
-
-        {/* Badges statut + difficulté + branche */}
-        <div className="flex flex-wrap gap-1.5 items-center">
-          <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase border ${diff.badge}`}>
-            {diff.icon} {diff.label}
-          </span>
-          {m.branch && (
-            <span className="rounded-full px-2 py-0.5 text-[9px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800">
-              {m.branch}
-            </span>
-          )}
-          {hasApp && (
-            <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase ${APP_STATUS[app!.status]?.badge ?? "bg-slate-100 text-slate-500"}`}>
-              {APP_STATUS[app!.status]?.label ?? app!.status}
-            </span>
-          )}
-          {urgent && !hasApp && (
-            <span className="rounded-full px-2 py-0.5 text-[9px] font-bold bg-amber-100 text-amber-700 border border-amber-200">
-              ⏰ Expire bientôt
-            </span>
-          )}
-          {full && <span className="rounded-full px-2 py-0.5 text-[9px] font-bold bg-rose-50 text-rose-600 border border-rose-200">Complet</span>}
-        </div>
-
-        {/* Titre */}
-        <h3 className="font-extrabold text-slate-900 dark:text-white text-sm leading-snug">{m.title}</h3>
-
-        {/* Description — toujours visible */}
-        {m.description && (
-          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line">{m.description}</p>
+        {/* Photo de couverture si disponible */}
+        {firstImage && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={firstImage.url} alt={m.title}
+            className="w-full h-36 object-cover rounded-t-2xl" />
         )}
 
-        {/* Récompense — bien mise en avant */}
-        <div className={`flex items-center gap-2 rounded-xl px-4 py-2.5 border ${reward.bg} ${reward.border}`}>
-          <div className="flex-1">
-            <p className="text-[9px] font-bold uppercase tracking-widest opacity-60" style={{ color: "inherit" }}>Récompense</p>
-            <p className={`text-lg font-extrabold tabular-nums ${reward.text}`}>{rewardLabel(m)}</p>
+        <div className="p-4 flex-1 space-y-3">
+          {/* Type + code */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm">{mtype.icon}</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{mtype.label}</span>
+            {m.code && <span className="ml-auto text-[9px] font-mono text-slate-300">{m.code}</span>}
           </div>
-          <span className={`text-xs font-bold uppercase ${reward.text} opacity-70`}>{reward.label}</span>
-        </div>
 
-        {/* Méta infos */}
-        <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
-            <span>{ZONE_ICONS[m.zone] ?? "📍"}</span>
-            <span>{m.zone}</span>
+          {/* Badges */}
+          <div className="flex flex-wrap gap-1">
+            <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase border ${diff.badge}`}>{diff.icon} {diff.label}</span>
+            {m.branch && <span className="rounded-full px-2 py-0.5 text-[9px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800">{m.branch}</span>}
+            {hasApp && <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase ${APP_STATUS[app!.status]?.badge ?? "bg-slate-100 text-slate-500"}`}>{APP_STATUS[app!.status]?.label ?? app!.status}</span>}
+            {urgent && !hasApp && <span className="rounded-full px-2 py-0.5 text-[9px] font-bold bg-amber-100 text-amber-700 border border-amber-200">⏰ Urgent</span>}
           </div>
-          <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
-            <span>👥</span>
+
+          {/* Titre */}
+          <h3 className="font-extrabold text-slate-900 dark:text-white text-sm leading-snug line-clamp-2">{m.title}</h3>
+
+          {/* Description courte */}
+          {m.description && (
+            <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">{m.description}</p>
+          )}
+
+          {/* Récompense */}
+          <div className={`flex items-center gap-2 rounded-xl px-3 py-2 border ${reward.bg} ${reward.border}`}>
+            <p className={`text-base font-extrabold tabular-nums flex-1 ${reward.text}`}>{rewardLabel(m)}</p>
+            <span className={`text-[10px] font-bold uppercase ${reward.text} opacity-70`}>{reward.label}</span>
+          </div>
+
+          {/* Méta */}
+          <div className="flex items-center justify-between text-xs text-slate-400">
+            <span>{ZONE_ICONS[m.zone] ?? "📍"} {m.zone}</span>
             {spots > 0
-              ? <span className="font-semibold text-emerald-600 dark:text-emerald-400">{spots} place{spots > 1 ? "s" : ""} disponible{spots > 1 ? "s" : ""}</span>
-              : <span className="font-semibold text-rose-500">Complet</span>}
+              ? <span className="text-emerald-600 font-semibold">👥 {spots} place{spots > 1 ? "s" : ""}</span>
+              : <span className="text-rose-500 font-semibold">Complet</span>}
           </div>
-          {m.deadline && (
-            <div className={`flex items-center gap-1.5 col-span-2 ${urgent ? "text-amber-600 font-bold" : "text-slate-400"}`}>
-              <span>⏰</span>
-              <span>Deadline : {fmtDate(m.deadline)} {dl !== null && dl >= 0 ? `(J-${dl})` : "(expiré)"}</span>
-            </div>
+
+          {isPartnerMission && m.media.length > 1 && (
+            <p className="text-[10px] text-slate-400">📎 {m.media.length} pièces jointes</p>
           )}
         </div>
 
-        {/* Preuves attendues — toujours visible si renseigné */}
-        {m.proofInstructions && (
-          <div className="rounded-xl border border-violet-100 dark:border-violet-800 bg-violet-50 dark:bg-violet-900/20 px-3 py-2.5">
-            <p className="text-[9px] font-black uppercase tracking-widest text-violet-500 mb-1">📎 Preuves attendues</p>
-            <p className="text-xs text-violet-800 dark:text-violet-300 leading-relaxed">{m.proofInstructions}</p>
-          </div>
-        )}
+        {/* CTA */}
+        <div className="px-4 pb-4">
+          <button onClick={e => { e.stopPropagation(); setOpen(true); }}
+            className={`w-full rounded-xl text-sm font-extrabold py-2.5 transition ${
+              hasApp ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
+              : full ? "bg-slate-50 dark:bg-slate-800 text-slate-400 border border-slate-200 cursor-default"
+              : isPartnerMission ? "bg-purple-600 hover:bg-purple-700 text-white shadow-sm"
+              : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm"
+            }`}>
+            {hasApp ? `📋 Ma candidature — ${APP_STATUS[app!.status]?.label ?? app!.status}`
+              : full ? "Mission complète"
+              : "Voir le détail →"}
+          </button>
+        </div>
       </div>
 
-      {/* Zone résultat / preuve soumise */}
-      {app && (app.status === "VALIDATED" || app.status === "COMPLETED") && app.cpEarned > 0 && (
-        <div className="mx-4 mb-3 rounded-xl bg-violet-50 dark:bg-violet-900/20 border border-violet-100 dark:border-violet-800 px-4 py-3">
-          <p className="text-xs font-bold text-violet-700 dark:text-violet-300">🪙 +{app.cpEarned} Crédits Partners gagnés !</p>
-        </div>
+      {open && (
+        <MissionModal m={m} onClose={() => setOpen(false)}
+          applyAction={applyAction} withdrawAction={withdrawAction} submitProofAction={submitProofAction} />
       )}
-      {app?.result && (
-        <div className="mx-4 mb-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 px-4 py-3">
-          <p className="text-[9px] font-bold text-emerald-600 uppercase tracking-wide mb-1">Résultat</p>
-          <p className="text-sm text-emerald-800 dark:text-emerald-300">{app.result}</p>
-        </div>
-      )}
-      {app && ["SUBMITTED","VALIDATED","REJECTED_PROOF"].includes(app.status) && (app.proofNote || app.proofUrl) && (
-        <div className="mx-4 mb-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-3 space-y-1">
-          <p className="text-[9px] font-bold text-slate-500 uppercase tracking-wide">Votre preuve {app.submittedAt ? `— ${fmtDate(app.submittedAt)}` : ""}</p>
-          {app.proofNote && <p className="text-xs text-slate-700 dark:text-slate-300">{app.proofNote}</p>}
-          {app.proofUrl && <a href={app.proofUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline break-all">🔗 {app.proofUrl}</a>}
-        </div>
-      )}
-
-      {/* Médias partenaire */}
-      {isPartnerMission && m.media.length > 0 && (
-        <div className="mx-4 mb-3">
-          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wide mb-2">📎 Pièces jointes</p>
-          <div className="flex flex-wrap gap-2">
-            {m.media.map((med, i) => (
-              <a key={i} href={med.url} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-2.5 py-1.5 text-xs hover:border-blue-300 transition">
-                <span>{med.mediaType === "IMAGE" ? "🖼" : med.mediaType === "PDF" ? "📄" : "🎥"}</span>
-                <span className="text-blue-600 underline">{med.name || "Voir"}</span>
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Actions */}
-      <div className="px-4 pb-4 space-y-3 border-t border-slate-50 dark:border-slate-800 pt-3">
-
-        {/* Formulaire preuve si ACCEPTED */}
-        {app && app.status === "ACCEPTED" && (
-          <form action={submitProofAction} className="space-y-3 rounded-xl border border-blue-100 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-4">
-            <p className="text-xs font-bold text-blue-800 dark:text-blue-300">📤 Soumettre votre preuve de réalisation</p>
-            <input type="hidden" name="applicationId" value={app.id} />
-            <div>
-              <label className="block text-[10px] font-bold text-slate-500 mb-1">Lien (URL de preuve)</label>
-              <input name="proofUrl" type="url" value={proofUrl} onChange={e => setProofUrl(e.target.value)}
-                placeholder="https://… (Drive, capture, document…)"
-                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm outline-none focus:border-blue-400" />
-            </div>
-            <div>
-              <label className="block text-[10px] font-bold text-slate-500 mb-1">Description de la preuve *</label>
-              <textarea name="proofNote" rows={3} value={proofNote} onChange={e => setProofNote(e.target.value)} required
-                placeholder="Décrivez ce que vous avez réalisé, le résultat obtenu…"
-                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm outline-none resize-none focus:border-blue-400" />
-            </div>
-            <button type="submit" className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2.5 transition">
-              Soumettre ma preuve →
-            </button>
-          </form>
-        )}
-
-        {/* Candidature */}
-        {!hasApp && spots > 0 && (
-          <>
-            {!showForm ? (
-              <button onClick={() => setShowForm(true)}
-                className="w-full rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-extrabold py-3 transition shadow-sm">
-                ✋ Je candidate à cette mission
-              </button>
-            ) : (
-              <form action={applyAction} className="space-y-3">
-                <input type="hidden" name="missionId" value={m.id} />
-                <div>
-                  <label className="block text-[10px] font-bold text-slate-500 mb-1">Message de candidature (optionnel)</label>
-                  <textarea name="note" rows={3} value={note} onChange={e => setNote(e.target.value)}
-                    placeholder="Présentez votre motivation, votre réseau ou vos atouts pour cette mission…"
-                    className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-gray-900 px-3 py-2.5 text-sm outline-none resize-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" />
-                </div>
-                <div className="flex gap-2">
-                  <button type="button" onClick={() => setShowForm(false)}
-                    className="flex-1 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 text-sm font-bold py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
-                    Annuler
-                  </button>
-                  <button type="submit"
-                    className="flex-1 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-extrabold py-2.5 transition shadow-sm">
-                    Envoyer →
-                  </button>
-                </div>
-              </form>
-            )}
-          </>
-        )}
-
-        {/* Retirer candidature */}
-        {hasApp && app!.status === "PENDING" && (
-          <form action={withdrawAction} className="flex items-center gap-3">
-            <input type="hidden" name="missionId" value={m.id} />
-            <p className="text-xs text-slate-400 flex-1">Candidature soumise le {fmtDate(app!.createdAt)}</p>
-            <button type="submit" className="rounded-xl border border-rose-200 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 text-xs font-bold px-3 py-1.5 transition">
-              Retirer
-            </button>
-          </form>
-        )}
-
-        {full && !isPartnerMission && (
-          <p className="text-xs text-slate-400 italic text-center py-1">Mission complète — plus de place disponible.</p>
-        )}
-
-        {/* Bouton intérêt pour missions partenaires (OFFER/DEMAND) */}
-        {isPartnerMission && !app && (
-          interestDone ? (
-            <div className="rounded-xl border border-purple-200 bg-purple-50 dark:bg-purple-900/20 px-4 py-3 text-center">
-              <p className="text-sm font-semibold text-purple-700 dark:text-purple-300">
-                ✅ Intérêt signalé — IBIG vous contactera si une mise en relation est possible.
-              </p>
-            </div>
-          ) : showInterestForm ? (
-            <div className="space-y-2">
-              <textarea rows={2} value={interestNote} onChange={e => setInterestNote(e.target.value)}
-                placeholder="Précisez votre intérêt (optionnel)…"
-                className="w-full rounded-xl border border-purple-200 bg-white dark:bg-slate-900 px-3 py-2 text-sm outline-none resize-none focus:border-purple-400" />
-              <div className="flex gap-2">
-                <button type="button" onClick={() => setShowInterestForm(false)}
-                  className="flex-1 rounded-xl border border-slate-200 text-slate-500 text-sm font-bold py-2.5 hover:bg-slate-50 transition">
-                  Annuler
-                </button>
-                <button type="button" onClick={handleInterest} disabled={interestLoading}
-                  className="flex-1 rounded-xl bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white text-sm font-extrabold py-2.5 transition">
-                  {interestLoading ? "Envoi…" : "Envoyer →"}
-                </button>
-              </div>
-            </div>
-          ) : (
-            <button onClick={() => setShowInterestForm(true)}
-              className="w-full rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-sm font-extrabold py-3 transition shadow-sm">
-              🤝 Je suis intéressé(e) — Contacter via IBIG
-            </button>
-          )
-        )}
-      </div>
-    </div>
+    </>
   );
 }
 

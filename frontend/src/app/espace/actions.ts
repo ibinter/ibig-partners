@@ -4,7 +4,7 @@ import { after } from "next/server";
 import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { sendPayoutRequestedEmail, sendOpportunityMessageEmail, sendOpportunityInterestEmail, sendOpportunityInterestAdminEmail } from "@/lib/email";
+import { sendPayoutRequestedEmail, sendOpportunityMessageEmail, sendOpportunityInterestEmail, sendOpportunityInterestAdminEmail, sendAdminActivityEmail } from "@/lib/email";
 
 /** Active (cree le lien) ou desactive (supprime le lien) un produit pour le partenaire. */
 export async function toggleProduct(formData: FormData) {
@@ -452,6 +452,15 @@ export async function applyToMission(formData: FormData) {
   const { logActivity } = await import("@/lib/activity");
   await logActivity({ userId: user.id, action: "MISSION_APPLIED", detail: `Mission ID: ${missionId}` });
 
+  const mission = await (prisma as any).mission.findUnique({ where: { id: missionId }, select: { title: true } }).catch(() => null);
+  after(() => sendAdminActivityEmail({
+    type: "MISSION_APPLICATION",
+    partnerName: `${user.firstName} ${user.lastName}`,
+    partnerCode: (user as any).code ?? "",
+    missionTitle: mission?.title ?? missionId,
+    note: note || undefined,
+  }).catch(() => {}));
+
   revalidatePath("/espace/missions");
 }
 
@@ -492,6 +501,18 @@ export async function submitMissionProof(formData: FormData) {
 
   const { logActivity: _logProof } = await import("@/lib/activity");
   await _logProof({ userId: user.id, action: "MISSION_PROOF_SUBMITTED", detail: `Candidature ID: ${applicationId}` });
+
+  const appWithMission = await (prisma as any).missionApplication.findUnique({
+    where: { id: applicationId },
+    include: { mission: { select: { title: true } } },
+  }).catch(() => null);
+  after(() => sendAdminActivityEmail({
+    type: "PROOF_SUBMITTED",
+    partnerName: `${user.firstName} ${user.lastName}`,
+    partnerCode: (user as any).code ?? "",
+    missionTitle: appWithMission?.mission?.title ?? applicationId,
+    proofNote: proofNote || undefined,
+  }).catch(() => {}));
 
   revalidatePath("/espace/missions");
 }

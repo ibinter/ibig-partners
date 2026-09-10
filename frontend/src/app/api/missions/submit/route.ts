@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { sendAdminActivityEmail } from "@/lib/email";
 
 export async function POST(req: Request) {
   const user = await requireUser();
@@ -58,6 +59,15 @@ export async function POST(req: Request) {
       });
     }
   } catch { /* non bloquant */ }
+
+  // Email admin
+  sendAdminActivityEmail({
+    type: "MISSION_SUBMISSION",
+    partnerName: `${user.firstName} ${user.lastName}`,
+    partnerCode: (user as any).code ?? "",
+    missionTitle: title.trim(),
+    submissionType: (submissionType === "DEMAND" ? "DEMAND" : "OFFER") as "OFFER" | "DEMAND",
+  }).catch(() => {});
 
   return NextResponse.json({ ok: true, id: mission.id });
 }

@@ -10,7 +10,7 @@ import {
   hashPassword,
   verifyPassword,
 } from "@/lib/auth";
-import { sendRegistrationReceivedEmail, sendEmailVerificationEmail } from "@/lib/email";
+import { sendRegistrationReceivedEmail, sendEmailVerificationEmail, sendAdminActivityEmail } from "@/lib/email";
 import { logActivity } from "@/lib/activity";
 import { addToBroadcast } from "@/app/admin/messages/actions";
 
@@ -216,6 +216,13 @@ export async function registerAction(_prev: unknown, formData: FormData) {
       firstName: user.firstName,
       verifyUrl,
     });
+    await sendAdminActivityEmail({
+      type: "NEW_PARTNER",
+      partnerName: `${user.firstName} ${user.lastName}`,
+      partnerCode: user.code,
+      partnerEmail: user.email,
+      sponsorName,
+    }).catch(() => {});
   });
 
   // Ajouter au canal broadcast (silencieux si le canal n'existe pas encore)
