@@ -1,7 +1,6 @@
 ﻿import { NextResponse } from "next/server";
 import { isSyncAuthorized } from "@/lib/sync-auth";
 import { syncBranchWithFeed } from "@/lib/catalog-feed";
-import { syncBranchCatalog } from "@/lib/catalog-sync";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -6600,29 +6599,6 @@ export async function POST() {
       urlsFixed += updates.reduce((s, r) => s + r.count, 0);
     }
 
-    // ── 4. Sync par branche-catégorie (crée/retire les produits si la branche existe) ──
-    const grouped: Record<string, SyncProduct[]> = {};
-    for (const p of productsToSync) {
-      const cat = SLUG_CATEGORY[p.slug] ?? "metiers";
-      if (!grouped[cat]) grouped[cat] = [];
-      grouped[cat].push(p);
-    }
-
-    const results = [];
-    for (const [catKey, products] of Object.entries(grouped)) {
-      const branch = CATEGORY_BRANCHES[catKey] ?? { slug: `eduform-${catKey}`, label: `EDUFORM — ${catKey}` };
-      const result = await syncBranchCatalog(branch.slug, branch.label, products, { notify: false });
-      results.push(result);
-    }
-
-    const okResults    = results.filter(r => r.ok);
-    const errorCount   = results.length - okResults.length;
-    const totalAdded   = okResults.reduce((s, r) => s + (r as any).diff.added.length, 0);
-    const totalUpdated = okResults.reduce((s, r) => s + (r as any).diff.updated.length, 0);
-    const totalRemoved = okResults.reduce((s, r) => s + (r as any).diff.removed, 0);
-    const totalTotal   = okResults.reduce((s, r) => s + (r as any).diff.total, 0);
-    const branches     = okResults.length;
-
     // ── 5. (SAFE) Upsert direct vers ibig-eduform — PAS de deleteMany ──────────
     // Cette étape restaure / maintient toutes les formations dans la branche
     // principale ibig-eduform qui est lue par /api/catalogue.
@@ -6657,14 +6633,8 @@ export async function POST() {
     return NextResponse.json({
       ok: true,
       urlsFixed,
-      branches,
-      upserted: totalTotal,
-      added: totalAdded,
-      updated: totalUpdated,
-      deleted: totalRemoved,
-      branchErrors: errorCount,
       mainBranchUpserted: step5Upserted,
-      message: `${urlsFixed} siteUrl mis à jour directement. ${totalTotal} formations synchronisées dans ${branches} branches (${totalAdded} ajoutée(s), ${totalUpdated} mise(s) à jour, ${totalRemoved} retirée(s))${errorCount > 0 ? ` — ${errorCount} branche(s) introuvable(s) ignorée(s)` : ""}. ${step5Upserted} formations upsertées dans ibig-eduform (branche principale).`,
+      message: `${urlsFixed} siteUrl mis à jour. ${step5Upserted} formations upsertées dans ibig-eduform (branche principale).`,
     });
   } catch (err: any) {
     console.error("sync-eduform error:", err);
