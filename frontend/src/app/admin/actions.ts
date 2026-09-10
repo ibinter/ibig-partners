@@ -1094,6 +1094,7 @@ export async function validateMissionSubmission(formData: FormData) {
     where: { id },
     data: {
       validationStatus: "VALIDATED",
+      status: "OPEN",
       active: true,
       branch: branch || null,
       compensationType,
