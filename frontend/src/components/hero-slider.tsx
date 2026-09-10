@@ -37,10 +37,10 @@ export const CATALOG_HERO_SLIDES: HeroSlide[] = [
   },
   {
     eyebrow: "IBIG EDUFORM — Formations certifiantes",
-    titleLead: "200+ formations,",
+    titleLead: "1 000+ formations,",
     titleHighlight: "10% de commission",
     desc: "MBA accéléré, développement web, BTP, marketing digital, comptabilité, langues — en présentiel et e-learning.",
-    stat: "200+", statLabel: "formations disponibles",
+    stat: "1 000+", statLabel: "formations disponibles",
     bg: "linear-gradient(135deg,#78350f 0%,#b45309 100%)",
     accent: "amber",
   },
@@ -727,7 +727,7 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
 
                 {/* H1 */}
                 <h1
-                  className="hero-s2 text-[2.1rem] font-extrabold leading-[1.08] text-white sm:text-5xl lg:text-6xl xl:text-[3.75rem]"
+                  className="hero-s2 text-[2.6rem] font-extrabold leading-[1.05] text-white sm:text-6xl lg:text-7xl xl:text-[5rem]"
                   style={{ textWrap: "balance" } as React.CSSProperties}
                 >
                   {s.titleLead}{" "}
