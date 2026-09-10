@@ -5873,13 +5873,7 @@ const EDUFORM_PRODUCTS = [
     price: 240000,
     rate: 10,
     siteUrl: 'https://ibig-eduform.com/formation/grh-1',
-    description: 'GRH 1 – Certificat 3 en 1 :
-
-• Gestion de la Paie & Administration du Personnel
-
-• Management des Ressources Humaines
-
-• GRH & Transformation Digitale',
+    description: 'GRH 1 – Certificat 3 en 1 : • Gestion de la Paie & Administration du Personnel • Management des Ressources Humaines • GRH & Transformation Digitale',
   },
   {
     slug: 'eduform-management-interculturel-international',
