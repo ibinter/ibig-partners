@@ -71,10 +71,26 @@ export default function RegisterForm({
   const [country, setCountry] = useState("");
   const [dial, setDial] = useState("");
   const [localNum, setLocalNum] = useState("");
+  const [phoneError, setPhoneError] = useState("");
   const fullPhone = `${dial}${dial && localNum ? " " : ""}${localNum}`.trim();
 
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    if (!dial) {
+      e.preventDefault();
+      setPhoneError(lang === "fr" ? "Veuillez sélectionner votre pays pour obtenir l'indicatif téléphonique." : "Please select your country to get the phone dial code.");
+      document.getElementById("country")?.focus();
+      return;
+    }
+    if (!localNum.trim()) {
+      e.preventDefault();
+      setPhoneError(lang === "fr" ? "Veuillez saisir votre numéro de téléphone." : "Please enter your phone number.");
+      return;
+    }
+    setPhoneError("");
+  }
+
   return (
-    <form action={formAction} className="mt-6 space-y-4">
+    <form action={formAction} onSubmit={handleSubmit} className="mt-6 space-y-4">
       {/* Type de compte */}
       <div>
         <label className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">
@@ -170,6 +186,7 @@ export default function RegisterForm({
             />
           </div>
           <input type="hidden" name="phone" value={fullPhone} />
+          {phoneError && <p className="mt-1 text-xs text-rose-600 font-medium">{phoneError}</p>}
         </Field>
         <Field label={t.city} name="city" />
       </div>
