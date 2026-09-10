@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 
 const DIFFICULTY_CONFIG: Record<string, { label: string; badge: string; icon: string }> = {
   EASY:   { label: "Facile",    badge: "bg-emerald-100 text-emerald-700 border-emerald-200", icon: "🟢" },
@@ -57,6 +58,8 @@ type MissionApp = {
 
 type MyApp = MissionApp & { missionId: string; missionTitle: string; missionStatus: string; };
 
+type MediaItem = { url: string; mediaType: string; name: string };
+
 type MissionRow = {
   id: string; code: string; title: string; description: string;
   category: string; missionType: string; branch: string;
@@ -65,6 +68,10 @@ type MissionRow = {
   zone: string; difficulty: string; slots: number;
   deadline: string | null; status: string; createdAt: string;
   totalApplications: number; myApplication: MissionApp | null;
+  // soumission partenaire
+  source: string; submissionType: string;
+  media: MediaItem[];
+  myInterest: { id: string; status: string } | null;
 };
 
 function rewardLabel(m: MissionRow) {
@@ -95,6 +102,24 @@ function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
   const [note, setNote] = useState("");
   const [proofUrl, setProofUrl] = useState("");
   const [proofNote, setProofNote] = useState("");
+  const [interestNote, setInterestNote] = useState("");
+  const [showInterestForm, setShowInterestForm] = useState(false);
+  const [interestDone, setInterestDone] = useState(!!m.myInterest);
+  const [interestLoading, setInterestLoading] = useState(false);
+
+  const isPartnerMission = m.source === "PARTNER";
+
+  async function handleInterest() {
+    setInterestLoading(true);
+    await fetch("/api/missions/interest", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ missionId: m.id, note: interestNote }),
+    });
+    setInterestDone(true);
+    setShowInterestForm(false);
+    setInterestLoading(false);
+  }
   const diff = DIFFICULTY_CONFIG[m.difficulty] ?? DIFFICULTY_CONFIG.MEDIUM;
   const reward = REWARD_CONFIG[m.rewardType] ?? REWARD_CONFIG.CASH;
   const mtype = MISSION_TYPE_CONFIG[m.missionType] ?? MISSION_TYPE_CONFIG.AUTRE;
@@ -211,6 +236,22 @@ function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
         </div>
       )}
 
+      {/* Médias partenaire */}
+      {isPartnerMission && m.media.length > 0 && (
+        <div className="mx-4 mb-3">
+          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wide mb-2">📎 Pièces jointes</p>
+          <div className="flex flex-wrap gap-2">
+            {m.media.map((med, i) => (
+              <a key={i} href={med.url} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-2.5 py-1.5 text-xs hover:border-blue-300 transition">
+                <span>{med.mediaType === "IMAGE" ? "🖼" : med.mediaType === "PDF" ? "📄" : "🎥"}</span>
+                <span className="text-blue-600 underline">{med.name || "Voir"}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Actions */}
       <div className="px-4 pb-4 space-y-3 border-t border-slate-50 dark:border-slate-800 pt-3">
 
@@ -280,8 +321,40 @@ function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
           </form>
         )}
 
-        {full && (
+        {full && !isPartnerMission && (
           <p className="text-xs text-slate-400 italic text-center py-1">Mission complète — plus de place disponible.</p>
+        )}
+
+        {/* Bouton intérêt pour missions partenaires (OFFER/DEMAND) */}
+        {isPartnerMission && !app && (
+          interestDone ? (
+            <div className="rounded-xl border border-purple-200 bg-purple-50 dark:bg-purple-900/20 px-4 py-3 text-center">
+              <p className="text-sm font-semibold text-purple-700 dark:text-purple-300">
+                ✅ Intérêt signalé — IBIG vous contactera si une mise en relation est possible.
+              </p>
+            </div>
+          ) : showInterestForm ? (
+            <div className="space-y-2">
+              <textarea rows={2} value={interestNote} onChange={e => setInterestNote(e.target.value)}
+                placeholder="Précisez votre intérêt (optionnel)…"
+                className="w-full rounded-xl border border-purple-200 bg-white dark:bg-slate-900 px-3 py-2 text-sm outline-none resize-none focus:border-purple-400" />
+              <div className="flex gap-2">
+                <button type="button" onClick={() => setShowInterestForm(false)}
+                  className="flex-1 rounded-xl border border-slate-200 text-slate-500 text-sm font-bold py-2.5 hover:bg-slate-50 transition">
+                  Annuler
+                </button>
+                <button type="button" onClick={handleInterest} disabled={interestLoading}
+                  className="flex-1 rounded-xl bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white text-sm font-extrabold py-2.5 transition">
+                  {interestLoading ? "Envoi…" : "Envoyer →"}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button onClick={() => setShowInterestForm(true)}
+              className="w-full rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-sm font-extrabold py-3 transition shadow-sm">
+              🤝 Je suis intéressé(e) — Contacter via IBIG
+            </button>
+          )
         )}
       </div>
     </div>
@@ -291,15 +364,16 @@ function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
 const PAGE_SIZE = 24;
 
 export default function MissionsAffilieClient({
-  rows, myApps, applyAction, withdrawAction, submitProofAction,
+  rows, myApps, mySubmissions, applyAction, withdrawAction, submitProofAction,
 }: {
   rows: MissionRow[];
   myApps: MyApp[];
+  mySubmissions: { id: string; title: string; submissionType: string; validationStatus: string; createdAt: string; rejectionNote: string }[];
   applyAction: (fd: FormData) => Promise<void>;
   withdrawAction: (fd: FormData) => Promise<void>;
   submitProofAction: (fd: FormData) => Promise<void>;
 }) {
-  const [tab, setTab] = useState<"missions" | "mes-candidatures">("missions");
+  const [tab, setTab] = useState<"missions" | "mes-candidatures" | "mes-soumissions">("missions");
   const [search, setSearch] = useState("");
   const [filterReward, setFilterReward] = useState("ALL");
   const [filterDiff, setFilterDiff] = useState("ALL");
@@ -369,7 +443,13 @@ export default function MissionsAffilieClient({
           <p className="text-sm text-white/70 max-w-xl leading-relaxed">
             {rows.length.toLocaleString("fr-FR")} missions disponibles dans tous les secteurs. Choisissez, candidatez, accomplissez et percevez votre récompense.
           </p>
-          <div className="mt-4 flex gap-3 flex-wrap">
+          <div className="mt-4 flex gap-3 flex-wrap items-center">
+            <Link href="/espace/missions/soumettre"
+              className="rounded-xl bg-white/15 hover:bg-white/25 border border-white/30 text-white text-sm font-bold px-4 py-2 transition backdrop-blur">
+              ✨ Soumettre une opportunité →
+            </Link>
+          </div>
+          <div className="mt-3 flex gap-3 flex-wrap">
             <div className="rounded-xl bg-white/10 backdrop-blur px-4 py-2 text-center">
               <p className="text-2xl font-extrabold">{rows.length.toLocaleString("fr-FR")}</p>
               <p className="text-[10px] text-white/60 uppercase tracking-wide">Missions ouvertes</p>
@@ -404,10 +484,14 @@ export default function MissionsAffilieClient({
 
       {/* Tabs */}
       <div className="flex gap-1 bg-slate-100 rounded-xl p-1">
-        {(["missions", "mes-candidatures"] as const).map(t => (
-          <button key={t} onClick={() => setTab(t)}
-            className={`flex-1 rounded-lg py-2 text-sm font-bold transition ${tab === t ? "bg-white shadow-sm text-slate-900" : "text-slate-500 hover:text-slate-700"}`}>
-            {t === "missions" ? `🎯 Missions (${rows.length.toLocaleString("fr-FR")})` : `📋 Mes candidatures (${myApps.length})`}
+        {([
+          { id: "missions", label: `🎯 Missions (${rows.length.toLocaleString("fr-FR")})` },
+          { id: "mes-candidatures", label: `📋 Candidatures (${myApps.length})` },
+          { id: "mes-soumissions", label: `📤 Mes soumissions (${mySubmissions.length})` },
+        ] as const).map(t => (
+          <button key={t.id} onClick={() => setTab(t.id)}
+            className={`flex-1 rounded-lg py-2 text-xs font-bold transition ${tab === t.id ? "bg-white shadow-sm text-slate-900" : "text-slate-500 hover:text-slate-700"}`}>
+            {t.label}
           </button>
         ))}
       </div>
@@ -576,7 +660,7 @@ export default function MissionsAffilieClient({
                 ))}
               </div>
 
-              {myApps.map(a => (
+              {(myApps as any).map((a: any) => (
                 <div key={a.id} className={`rounded-2xl border bg-white p-4 flex items-center gap-4 ${a.status === "SUBMITTED" ? "border-violet-200 ring-1 ring-violet-100" : "border-slate-100"}`}>
                   <span className={`shrink-0 rounded-xl px-3 py-1.5 text-[10px] font-bold uppercase ${APP_STATUS[a.status]?.badge ?? "bg-slate-100 text-slate-500"}`}>
                     {APP_STATUS[a.status]?.label ?? a.status}
@@ -593,6 +677,57 @@ export default function MissionsAffilieClient({
               ))}
             </>
           )}
+        </div>
+      )}
+
+      {/* Mes soumissions */}
+      {tab === "mes-soumissions" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-slate-500">Vos soumissions d'opportunités à IBIG</p>
+            <Link href="/espace/missions/soumettre"
+              className="rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold px-4 py-2 transition">
+              + Soumettre
+            </Link>
+          </div>
+          {mySubmissions.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-slate-200 py-16 text-center">
+              <p className="text-4xl mb-3">📤</p>
+              <p className="text-slate-500 text-sm font-semibold">Vous n'avez encore rien soumis</p>
+              <p className="text-xs text-slate-400 mt-1">Partagez une offre ou une demande — IBIG la valide et la publie pour tous.</p>
+              <Link href="/espace/missions/soumettre"
+                className="mt-4 inline-block rounded-xl bg-indigo-600 text-white text-sm font-bold px-5 py-2 hover:bg-indigo-700 transition">
+                Soumettre une opportunité →
+              </Link>
+            </div>
+          ) : mySubmissions.map(s => {
+            const vstatus = s.validationStatus;
+            const badge = vstatus === "VALIDATED"
+              ? { label: "✅ Publiée", cls: "bg-emerald-100 text-emerald-700" }
+              : vstatus === "REJECTED"
+              ? { label: "❌ Refusée", cls: "bg-rose-100 text-rose-700" }
+              : { label: "⏳ En attente", cls: "bg-amber-100 text-amber-700" };
+            return (
+              <div key={s.id} className={`rounded-2xl border bg-white dark:bg-slate-900 p-4 flex items-start gap-4 ${vstatus === "REJECTED" ? "border-rose-100" : vstatus === "VALIDATED" ? "border-emerald-100" : "border-amber-100"}`}>
+                <span className={`shrink-0 rounded-xl px-3 py-1.5 text-[10px] font-bold uppercase whitespace-nowrap ${badge.cls}`}>{badge.label}</span>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sm text-slate-800 dark:text-white truncate">{s.title}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    {s.submissionType === "OFFER" ? "📤 Offre" : "📥 Demande"} · {fmtDate(s.createdAt)}
+                  </p>
+                  {vstatus === "REJECTED" && s.rejectionNote && (
+                    <p className="text-xs text-rose-600 mt-1 italic">Motif : {s.rejectionNote}</p>
+                  )}
+                  {vstatus === "VALIDATED" && (
+                    <p className="text-xs text-emerald-600 mt-1">Visible par tous les partenaires dans la bourse d'opportunités.</p>
+                  )}
+                  {vstatus === "PENDING_VALIDATION" && (
+                    <p className="text-xs text-amber-600 mt-1">IBIG examine votre soumission. Vous serez notifié(e).</p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

@@ -88,6 +88,8 @@ model User {
   sentMessages     ChatMessage[]      @relation("ChatSender")
   badges           UserBadge[]
   missionApplications MissionApplication[]
+  submittedMissions   Mission[]           @relation("SubmittedMissions")
+  missionInterests    MissionInterest[]   @relation("MissionInterests")
   connectRequests     ConnectRequest[]
   opportunityLeads    OpportunityLead[]
   opportunityShares   OpportunityShare[]
@@ -657,8 +659,22 @@ model Mission {
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 
+  // Soumission partenaire
+  source            String  @default("IBIG")          // IBIG | PARTNER
+  submissionType    String  @default("MISSION")        // MISSION | OFFER | DEMAND
+  submittedByUserId String?
+  submittedBy       User?   @relation("SubmittedMissions", fields: [submittedByUserId], references: [id])
+  validationStatus  String  @default("VALIDATED")      // VALIDATED | PENDING_VALIDATION | REJECTED
+  rejectionNote     String?
+  // Contact privé du soumettant (visible admin uniquement)
+  contactName       String  @default("")
+  contactPhone      String  @default("")
+  contactEmail      String  @default("")
+
   applications MissionApplication[]
   duplicates   MissionDuplicate[]
+  media        MissionMedia[]
+  interests    MissionInterest[]
 }
 
 model MissionApplication {
@@ -690,6 +706,31 @@ model MissionApplication {
   @@unique([missionId, userId])
   @@index([userId])
   @@index([missionId])
+}
+
+model MissionMedia {
+  id        String   @id @default(cuid())
+  missionId String
+  mission   Mission  @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  url       String
+  mediaType String   @default("IMAGE") // IMAGE | VIDEO | PDF | LINK
+  name      String   @default("")
+  createdAt DateTime @default(now())
+  @@index([missionId])
+}
+
+model MissionInterest {
+  id        String   @id @default(cuid())
+  missionId String
+  mission   Mission  @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation("MissionInterests", fields: [userId], references: [id], onDelete: Cascade)
+  note      String?
+  status    String   @default("PENDING") // PENDING | CONNECTED | DISMISSED
+  createdAt DateTime @default(now())
+  @@unique([missionId, userId])
+  @@index([missionId])
+  @@index([userId])
 }
 
 // ─── Séquences email marketing automatiques ─────────────────────────────────

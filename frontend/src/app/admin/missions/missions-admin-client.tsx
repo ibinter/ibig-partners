@@ -74,6 +74,12 @@ type Application = {
   partnerName: string; partnerCode: string; partnerPhone: string; partnerEmail: string;
 };
 
+type MediaItem = { id: string; url: string; mediaType: string; name: string };
+type Interest = {
+  id: string; status: string; note: string; createdAt: string;
+  partnerName: string; partnerCode: string; partnerPhone: string; partnerEmail: string;
+};
+
 type MissionRow = {
   id: string; code: string; title: string; description: string;
   category: string; missionType: string; branch: string;
@@ -82,6 +88,12 @@ type MissionRow = {
   difficulty: string; minLevel: string; slots: number;
   proofInstructions: string; adminNote: string;
   deadline: string | null; status: string; active: boolean; createdAt: string;
+  // soumission partenaire
+  source: string; submissionType: string; validationStatus: string;
+  rejectionNote: string; contactName: string; contactPhone: string; contactEmail: string;
+  submittedBy: { name: string; code: string; email: string; phone: string } | null;
+  media: MediaItem[];
+  interests: Interest[];
   applications: Application[];
 };
 
@@ -100,16 +112,20 @@ function fmtDate(iso: string) {
 
 export default function MissionsAdminClient({
   rows, stats, createAction, updateAction, updateStatusAction, updateAppAction, validateAppAction,
+  validateSubmissionAction, rejectSubmissionAction, connectInterestAction,
 }: {
   rows: MissionRow[];
-  stats: { total: number; open: number; applications: number; pending: number; submitted: number };
+  stats: { total: number; open: number; applications: number; pending: number; submitted: number; pendingSubmissions: number; interests: number };
   createAction: (fd: FormData) => Promise<void>;
   updateAction: (fd: FormData) => Promise<void>;
   updateStatusAction: (fd: FormData) => Promise<void>;
   updateAppAction: (fd: FormData) => Promise<void>;
   validateAppAction: (fd: FormData) => Promise<void>;
+  validateSubmissionAction: (fd: FormData) => Promise<void>;
+  rejectSubmissionAction: (fd: FormData) => Promise<void>;
+  connectInterestAction: (fd: FormData) => Promise<void>;
 }) {
-  const [tab, setTab] = useState<"missions" | "applications">("missions");
+  const [tab, setTab] = useState<"missions" | "applications" | "soumissions">("missions");
   const [expanded, setExpanded] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -217,6 +233,15 @@ export default function MissionsAdminClient({
           {(stats.pending + stats.submitted) > 0 && (
             <span className="rounded-full bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5">
               {stats.pending + stats.submitted}
+            </span>
+          )}
+        </button>
+        <button onClick={() => setTab("soumissions")}
+          className={`px-4 py-2 text-sm font-bold rounded-t-xl transition flex items-center gap-1.5 ${tab === "soumissions" ? "bg-white border border-b-white border-slate-200 text-slate-900 -mb-px" : "text-slate-400 hover:text-slate-700"}`}>
+          📥 Soumissions partenaires
+          {(stats.pendingSubmissions + stats.interests) > 0 && (
+            <span className="rounded-full bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5">
+              {stats.pendingSubmissions + stats.interests}
             </span>
           )}
         </button>
@@ -343,6 +368,160 @@ export default function MissionsAdminClient({
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* ===== VUE SOUMISSIONS PARTENAIRES ===== */}
+      {tab === "soumissions" && (
+        <div className="space-y-6">
+          {/* Soumissions en attente */}
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-rose-500 mb-3">
+              📥 En attente de validation ({stats.pendingSubmissions})
+            </p>
+            {rows.filter(r => r.source === "PARTNER" && r.validationStatus === "PENDING_VALIDATION").length === 0 ? (
+              <div className="rounded-xl border border-dashed border-slate-200 py-10 text-center text-slate-400 text-sm">
+                Aucune soumission en attente
+              </div>
+            ) : rows.filter(r => r.source === "PARTNER" && r.validationStatus === "PENDING_VALIDATION").map(r => (
+              <div key={r.id} className="rounded-2xl border border-amber-200 bg-amber-50/50 p-5 space-y-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${r.submissionType === "OFFER" ? "bg-blue-100 text-blue-700" : "bg-purple-100 text-purple-700"}`}>
+                        {r.submissionType === "OFFER" ? "📤 OFFRE" : "📥 DEMANDE"}
+                      </span>
+                      <span className="text-[10px] text-slate-400">{fmtDate(r.createdAt)}</span>
+                    </div>
+                    <h3 className="font-extrabold text-slate-900 text-base">{r.title}</h3>
+                    <p className="text-sm text-slate-600 mt-1 leading-relaxed">{r.description}</p>
+                  </div>
+                </div>
+
+                {/* Soumettant */}
+                {r.submittedBy && (
+                  <div className="rounded-xl border border-amber-300 bg-white px-4 py-3 space-y-1">
+                    <p className="text-[10px] font-bold text-amber-700 uppercase tracking-wide">🔒 Contact du partenaire (confidentiel)</p>
+                    <p className="text-sm font-semibold text-slate-800">{r.submittedBy.name} <span className="font-mono text-xs text-slate-400">{r.submittedBy.code}</span></p>
+                    {r.contactPhone && <p className="text-xs text-slate-600">📱 {r.contactPhone}</p>}
+                    {r.contactEmail && <p className="text-xs text-slate-600">✉️ {r.contactEmail}</p>}
+                    {r.contactName && r.contactName !== r.submittedBy.name && <p className="text-xs text-slate-500">Nom déclaré : {r.contactName}</p>}
+                  </div>
+                )}
+
+                {/* Médias */}
+                {r.media.length > 0 && (
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-500 mb-2">📎 Pièces jointes</p>
+                    <div className="flex flex-wrap gap-2">
+                      {r.media.map(m => (
+                        <a key={m.id} href={m.url} target="_blank" rel="noopener noreferrer"
+                          className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs hover:border-blue-300 transition">
+                          <span>{m.mediaType === "IMAGE" ? "🖼" : m.mediaType === "PDF" ? "📄" : "🎥"}</span>
+                          <span className="text-blue-600 underline">{m.name || "Ouvrir"}</span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Formulaire de validation */}
+                <form action={validateSubmissionAction} className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 space-y-3">
+                  <p className="text-xs font-bold text-emerald-800">✅ Valider et publier cette soumission</p>
+                  <input type="hidden" name="id" value={r.id} />
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Branche IBIG</label>
+                      <select name="branch" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
+                        <option value="">— Choisir —</option>
+                        {Object.entries(BRANCH_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Commission (FCFA)</label>
+                      <input name="compensationAmount" type="number" defaultValue={0} className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm" />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Difficulté</label>
+                      <select name="difficulty" defaultValue="MEDIUM" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
+                        <option value="EASY">🟢 Facile</option>
+                        <option value="MEDIUM">🟡 Moyenne</option>
+                        <option value="HARD">🔴 Difficile</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Slots disponibles</label>
+                      <input name="slots" type="number" defaultValue={5} className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm" />
+                    </div>
+                    <input type="hidden" name="compensationType" value="FIXED" />
+                    <input type="hidden" name="rewardTrigger" value="VALIDATION" />
+                  </div>
+                  <input name="adminNote" placeholder="Note interne (optionnel)" className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm" />
+                  <button type="submit" className="w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 text-sm transition">
+                    ✅ Valider et notifier tous les partenaires →
+                  </button>
+                </form>
+
+                {/* Refus */}
+                <form action={rejectSubmissionAction} className="flex gap-2">
+                  <input type="hidden" name="id" value={r.id} />
+                  <input name="rejectionNote" placeholder="Motif du refus (optionnel)" className="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm" />
+                  <button type="submit" className="rounded-xl border border-rose-200 text-rose-600 hover:bg-rose-50 font-bold px-4 py-2 text-sm transition">
+                    ❌ Refuser
+                  </button>
+                </form>
+              </div>
+            ))}
+          </div>
+
+          {/* Intérêts en attente de mise en relation */}
+          {stats.interests > 0 && (
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-purple-500 mb-3">
+                🤝 Intérêts à traiter ({stats.interests})
+              </p>
+              {rows.filter(r => r.interests.some(i => i.status === "PENDING")).map(r => (
+                <div key={r.id} className="rounded-2xl border border-purple-100 bg-purple-50/30 p-4 mb-3">
+                  <p className="font-bold text-sm text-slate-800 mb-3">{r.title}</p>
+                  {r.interests.filter(i => i.status === "PENDING").map(i => (
+                    <div key={i.id} className="flex items-center gap-3 py-2 border-t border-purple-100">
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-slate-700">{i.partnerName} <span className="font-mono text-xs text-slate-400">{i.partnerCode}</span></p>
+                        <p className="text-xs text-slate-500">📱 {i.partnerPhone || "—"} · ✉️ {i.partnerEmail}</p>
+                        {i.note && <p className="text-xs text-purple-600 italic mt-0.5">« {i.note} »</p>}
+                        <p className="text-[10px] text-slate-400 mt-0.5">{fmtDate(i.createdAt)}</p>
+                      </div>
+                      <form action={connectInterestAction}>
+                        <input type="hidden" name="id" value={i.id} />
+                        <button type="submit" className="rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold px-4 py-2 text-xs transition">
+                          🤝 Mettre en contact
+                        </button>
+                      </form>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Soumissions validées/refusées (historique) */}
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Historique soumissions</p>
+            {rows.filter(r => r.source === "PARTNER" && r.validationStatus !== "PENDING_VALIDATION").map(r => (
+              <div key={r.id} className={`rounded-xl border px-4 py-3 mb-2 flex items-center gap-3 ${r.validationStatus === "VALIDATED" ? "border-emerald-100 bg-emerald-50/40" : "border-rose-100 bg-rose-50/30"}`}>
+                <span className={`text-sm ${r.validationStatus === "VALIDATED" ? "text-emerald-600" : "text-rose-500"}`}>
+                  {r.validationStatus === "VALIDATED" ? "✅" : "❌"}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-slate-800 truncate">{r.title}</p>
+                  <p className="text-xs text-slate-400">{r.submittedBy?.name} · {fmtDate(r.createdAt)}</p>
+                </div>
+                <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${r.validationStatus === "VALIDATED" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}>
+                  {r.validationStatus === "VALIDATED" ? "Publié" : "Refusé"}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

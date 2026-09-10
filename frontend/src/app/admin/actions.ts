@@ -1077,6 +1077,104 @@ export async function validateMissionApplication(formData: FormData) {
   revalidatePath("/admin/missions");
 }
 
+// ─── SOUMISSIONS PARTENAIRES ──────────────────────────────────────────────────
+
+export async function validateMissionSubmission(formData: FormData) {
+  await requireAdmin();
+  const id             = String(formData.get("id"));
+  const branch         = String(formData.get("branch") || "").trim();
+  const compensationType = String(formData.get("compensationType") || "FIXED");
+  const compensationAmount = Number(formData.get("compensationAmount") || 0);
+  const rewardTrigger  = String(formData.get("rewardTrigger") || "VALIDATION");
+  const slots          = Number(formData.get("slots") || 5);
+  const difficulty     = String(formData.get("difficulty") || "MEDIUM");
+  const adminNote      = String(formData.get("adminNote") || "").trim();
+
+  const mission = await (prisma as any).mission.update({
+    where: { id },
+    data: {
+      validationStatus: "VALIDATED",
+      active: true,
+      branch: branch || null,
+      compensationType,
+      compensationAmount,
+      rewardTrigger,
+      slots,
+      difficulty,
+      adminNote: adminNote || null,
+      updatedAt: new Date(),
+    },
+    include: { submittedBy: { select: { id: true, firstName: true, email: true } } },
+  });
+
+  // Notification globale (tous les partenaires voient la nouvelle opportunité)
+  try {
+    const typeLabel = mission.submissionType === "OFFER" ? "Offre" : "Demande";
+    await (prisma as any).notification.create({
+      data: {
+        userId: null,
+        title: `🆕 ${typeLabel} disponible`,
+        body: mission.title,
+        url: "/espace/missions",
+      },
+    });
+  } catch { /* non bloquant */ }
+
+  // Notifier le partenaire qui a soumis
+  if (mission.submittedBy) {
+    try {
+      await (prisma as any).notification.create({
+        data: {
+          userId: mission.submittedBy.id,
+          title: "✅ Votre opportunité est publiée",
+          body: `"${mission.title}" est maintenant visible par tous les partenaires.`,
+          url: "/espace/missions",
+        },
+      });
+    } catch { /* non bloquant */ }
+  }
+
+  revalidatePath("/admin/missions");
+  revalidatePath("/espace/missions");
+}
+
+export async function rejectMissionSubmission(formData: FormData) {
+  await requireAdmin();
+  const id   = String(formData.get("id"));
+  const note = String(formData.get("rejectionNote") || "").trim();
+
+  const mission = await (prisma as any).mission.update({
+    where: { id },
+    data: { validationStatus: "REJECTED", active: false, rejectionNote: note || null, updatedAt: new Date() },
+    include: { submittedBy: { select: { id: true } } },
+  });
+
+  if (mission.submittedBy) {
+    try {
+      await (prisma as any).notification.create({
+        data: {
+          userId: mission.submittedBy.id,
+          title: "❌ Soumission non retenue",
+          body: `"${mission.title}"${note ? ` — ${note}` : ""}`,
+          url: "/espace/missions",
+        },
+      });
+    } catch { /* non bloquant */ }
+  }
+
+  revalidatePath("/admin/missions");
+}
+
+export async function connectMissionInterest(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  await (prisma as any).missionInterest.update({
+    where: { id },
+    data: { status: "CONNECTED" },
+  });
+  revalidatePath("/admin/missions");
+}
+
 // ─── IBIG CONNECT ─────────────────────────────────────────────────────────────
 export async function updateConnectStatus(formData: FormData) {
   await requireAdmin();

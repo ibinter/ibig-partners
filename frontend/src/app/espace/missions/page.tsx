@@ -9,26 +9,42 @@ export const dynamic = "force-dynamic";
 export default async function EspaceMissionsPage() {
   const user = await requireUser();
 
-  const missions = await (prisma as any).mission.findMany({
-    where: { status: "OPEN" },
-    orderBy: { createdAt: "desc" },
-    include: {
-      applications: {
-        where: { userId: user.id },
-        select: { id: true, status: true, note: true, result: true, createdAt: true, proofUrl: true, proofNote: true, submittedAt: true, cpEarned: true, commissionEarned: true },
+  const [missions, myApplications, mySubmissions, myInterests] = await Promise.all([
+    (prisma as any).mission.findMany({
+      where: { status: "OPEN", validationStatus: "VALIDATED" },
+      orderBy: { createdAt: "desc" },
+      include: {
+        applications: {
+          where: { userId: user.id },
+          select: { id: true, status: true, note: true, result: true, createdAt: true, proofUrl: true, proofNote: true, submittedAt: true, cpEarned: true, commissionEarned: true },
+        },
+        media: { select: { url: true, mediaType: true, name: true } },
+        interests: {
+          where: { userId: user.id },
+          select: { id: true, status: true },
+        },
+        _count: { select: { applications: true } },
       },
-      _count: { select: { applications: true } },
-    },
-  });
-
-  const myApplications = await (prisma as any).missionApplication.findMany({
-    where: { userId: user.id },
-    include: { mission: { select: { id: true, title: true, status: true } } },
-    orderBy: { createdAt: "desc" },
-  });
+    }),
+    (prisma as any).missionApplication.findMany({
+      where: { userId: user.id },
+      include: { mission: { select: { id: true, title: true, status: true } } },
+      orderBy: { createdAt: "desc" },
+    }),
+    (prisma as any).mission.findMany({
+      where: { submittedByUserId: user.id },
+      orderBy: { createdAt: "desc" },
+      select: { id: true, title: true, submissionType: true, validationStatus: true, createdAt: true, rejectionNote: true },
+    }),
+    (prisma as any).missionInterest.findMany({
+      where: { userId: user.id },
+      select: { missionId: true, id: true, status: true },
+    }),
+  ]);
 
   const rows = missions.map((m: any) => {
-    const myApp = m.applications[0] ?? null;
+    const myApp  = m.applications[0] ?? null;
+    const myInt  = myInterests.find((i: any) => i.missionId === m.id) ?? null;
     return {
       id: m.id,
       code: m.code ?? "",
@@ -49,6 +65,10 @@ export default async function EspaceMissionsPage() {
       deadline: m.deadline ? (m.deadline instanceof Date ? m.deadline.toISOString() : String(m.deadline)) : null,
       status: m.status,
       createdAt: m.createdAt instanceof Date ? m.createdAt.toISOString() : String(m.createdAt),
+      source: m.source ?? "IBIG",
+      submissionType: m.submissionType ?? "MISSION",
+      media: (m.media ?? []).map((med: any) => ({ url: med.url, mediaType: med.mediaType, name: med.name })),
+      myInterest: myInt ? { id: myInt.id, status: myInt.status } : null,
       totalApplications: m._count.applications,
       myApplication: myApp ? {
         id: myApp.id,
@@ -87,7 +107,20 @@ export default async function EspaceMissionsPage() {
         title="Missions Partners"
         subtitle="Sélectionnez des missions concrètes à accomplir et gagnez des primes."
       />
-      <MissionsAffilieClient rows={rows} myApps={myApps} applyAction={applyToMission} withdrawAction={withdrawMissionApplication} submitProofAction={submitMissionProof} />
+      <MissionsAffilieClient
+        rows={rows}
+        myApps={myApps}
+        mySubmissions={mySubmissions.map((s: any) => ({
+          id: s.id, title: s.title,
+          submissionType: s.submissionType ?? "OFFER",
+          validationStatus: s.validationStatus ?? "PENDING_VALIDATION",
+          createdAt: s.createdAt instanceof Date ? s.createdAt.toISOString() : String(s.createdAt),
+          rejectionNote: s.rejectionNote ?? "",
+        }))}
+        applyAction={applyToMission}
+        withdrawAction={withdrawMissionApplication}
+        submitProofAction={submitMissionProof}
+      />
     </div>
   );
 }
