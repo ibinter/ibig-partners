@@ -7205,25 +7205,20 @@ export async function POST() {
       return NextResponse.json({ error: "Branche ibig-eduform introuvable en base" }, { status: 500 });
     }
 
-    let upserted = 0;
-    const BATCH = 50;
-    for (let i = 0; i < EDUFORM_PRODUCTS.length; i += BATCH) {
-      const batch = EDUFORM_PRODUCTS.slice(i, i + BATCH);
-      await Promise.all(
-        batch.map(p =>
-          prisma.product.upsert({
-            where: { slug: p.slug },
-            update: { name: p.name, price: p.price, branchId: mainBranch.id, active: true, siteUrl: p.siteUrl || "" },
-            create: {
-              slug: p.slug, name: p.name, pricingType: p.pricingType, price: p.price,
-              rate: p.rate, siteUrl: p.siteUrl || "", description: p.description || "",
-              branchId: mainBranch.id, active: true,
-            },
-          })
-        )
-      );
-      upserted += batch.length;
-    }
+    await Promise.all(
+      EDUFORM_PRODUCTS.map(p =>
+        prisma.product.upsert({
+          where: { slug: p.slug },
+          update: { name: p.name, price: p.price, branchId: mainBranch.id, active: true, siteUrl: p.siteUrl || "" },
+          create: {
+            slug: p.slug, name: p.name, pricingType: p.pricingType, price: p.price,
+            rate: p.rate, siteUrl: p.siteUrl || "", description: p.description || "",
+            branchId: mainBranch.id, active: true,
+          },
+        })
+      )
+    );
+    const upserted = EDUFORM_PRODUCTS.length;
 
     return NextResponse.json({
       ok: true,
