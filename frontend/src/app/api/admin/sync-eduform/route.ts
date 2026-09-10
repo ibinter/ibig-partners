@@ -1,4 +1,5 @@
 ﻿import { NextResponse } from "next/server";
+import { randomUUID } from "crypto";
 import { isSyncAuthorized } from "@/lib/sync-auth";
 import { prisma } from "@/lib/prisma";
 
@@ -7204,19 +7205,13 @@ export async function POST() {
       return `https://ibig-eduform.com/formation/${slug.replace(/^eduform-/, "")}`;
     };
 
-    await Promise.all(
-      EDUFORM_PRODUCTS.map(p => {
-        const siteUrl = resolveUrl(p.slug, p.siteUrl || "");
-        return prisma.product.upsert({
-          where: { slug: p.slug },
-          update: { name: p.name, price: p.price, branchId: mainBranch.id, active: true, siteUrl },
-          create: {
-            slug: p.slug, name: p.name, pricingType: p.pricingType, price: p.price,
-            rate: p.rate, siteUrl, description: p.description || "",
-            branchId: mainBranch.id, active: true,
-          },
-        });
-      })
+    const esc = (s: string) => "'" + s.replace(/'/g, "''").replace(/\r?\n/g, " ") + "'";
+    const rows = EDUFORM_PRODUCTS.map(p => {
+      const siteUrl = resolveUrl(p.slug, p.siteUrl || "");
+      return `(${esc(randomUUID())},${esc(mainBranch.id)},${esc(p.name)},${esc(p.slug)},${esc(p.description || "")},${p.price},${esc(p.pricingType)},${p.rate},${esc(siteUrl)},true)`;
+    }).join(",");
+    await prisma.$executeRawUnsafe(
+      `INSERT INTO "Product" (id,"branchId",name,slug,description,price,"pricingType",rate,"siteUrl",active) VALUES ${rows} ON CONFLICT (slug) DO UPDATE SET name=EXCLUDED.name,price=EXCLUDED.price,"branchId"=EXCLUDED."branchId",active=true,"siteUrl"=EXCLUDED."siteUrl"`
     );
 
     return NextResponse.json({
