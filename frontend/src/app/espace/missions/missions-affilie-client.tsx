@@ -380,6 +380,9 @@ export default function MissionsAffilieClient({
   const [filterDiff, setFilterDiff] = useState("ALL");
   const [filterZone, setFilterZone] = useState("ALL");
   const [filterBranch, setFilterBranch] = useState("ALL");
+  const [filterSource, setFilterSource] = useState("ALL");
+  const [filterCategory, setFilterCategory] = useState("ALL");
+  const [filterMinAmount, setFilterMinAmount] = useState(0);
   const [sortBy, setSortBy] = useState("newest");
   const [page, setPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
@@ -388,20 +391,28 @@ export default function MissionsAffilieClient({
   const mySubmitted = myApps.filter(a => a.status === "SUBMITTED").length;
   const totalCp = myApps.reduce((s, a) => s + (a.cpEarned ?? 0), 0);
 
-  // Listes dynamiques de zones et branches
+  // Listes dynamiques de zones, branches et catégories
   const zones = useMemo(() => Array.from(new Set(rows.map(r => r.zone).filter(Boolean))).sort(), [rows]);
   const branches = useMemo(() => Array.from(new Set(rows.map(r => r.branch).filter(Boolean))).sort(), [rows]);
+  const categories = useMemo(() => Array.from(new Set(rows.map(r => r.category).filter(Boolean))).sort(), [rows]);
 
   const filtered = useMemo(() => {
     let list = rows;
     if (search.trim()) {
       const q = search.toLowerCase();
-      list = list.filter(m => m.title.toLowerCase().includes(q) || m.description?.toLowerCase().includes(q) || m.branch?.toLowerCase().includes(q));
+      list = list.filter(m => m.title.toLowerCase().includes(q) || m.description?.toLowerCase().includes(q) || m.branch?.toLowerCase().includes(q) || m.category?.toLowerCase().includes(q) || m.zone?.toLowerCase().includes(q));
     }
+    if (filterSource !== "ALL") {
+      if (filterSource === "IBIG") list = list.filter(m => m.source === "IBIG");
+      else if (filterSource === "OFFER") list = list.filter(m => m.source === "PARTNER" && m.submissionType === "OFFER");
+      else if (filterSource === "DEMAND") list = list.filter(m => m.source === "PARTNER" && m.submissionType === "DEMAND");
+    }
+    if (filterCategory !== "ALL") list = list.filter(m => m.category === filterCategory);
     if (filterReward !== "ALL") list = list.filter(m => m.rewardType === filterReward);
     if (filterDiff !== "ALL") list = list.filter(m => m.difficulty === filterDiff);
     if (filterZone !== "ALL") list = list.filter(m => m.zone === filterZone);
     if (filterBranch !== "ALL") list = list.filter(m => m.branch === filterBranch);
+    if (filterMinAmount > 0) list = list.filter(m => m.compensationAmount >= filterMinAmount);
 
     list = [...list].sort((a, b) => {
       if (sortBy === "reward_desc") return (b.compensationAmount + b.cpAmount * 100) - (a.compensationAmount + a.cpAmount * 100);
@@ -414,22 +425,27 @@ export default function MissionsAffilieClient({
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
     return list;
-  }, [rows, search, filterReward, filterDiff, filterZone, filterBranch, sortBy]);
+  }, [rows, search, filterSource, filterCategory, filterReward, filterDiff, filterZone, filterBranch, filterMinAmount, sortBy]);
 
   const paginated = filtered.slice(0, page * PAGE_SIZE);
   const hasMore = paginated.length < filtered.length;
 
   const activeFilterCount = [
     search.trim() ? 1 : 0,
+    filterSource !== "ALL" ? 1 : 0,
+    filterCategory !== "ALL" ? 1 : 0,
     filterReward !== "ALL" ? 1 : 0,
     filterDiff !== "ALL" ? 1 : 0,
     filterZone !== "ALL" ? 1 : 0,
     filterBranch !== "ALL" ? 1 : 0,
+    filterMinAmount > 0 ? 1 : 0,
   ].reduce((a, b) => a + b, 0);
 
   function resetFilters() {
-    setSearch(""); setFilterReward("ALL"); setFilterDiff("ALL");
-    setFilterZone("ALL"); setFilterBranch("ALL"); setSortBy("newest"); setPage(1);
+    setSearch(""); setFilterSource("ALL"); setFilterCategory("ALL");
+    setFilterReward("ALL"); setFilterDiff("ALL");
+    setFilterZone("ALL"); setFilterBranch("ALL");
+    setFilterMinAmount(0); setSortBy("newest"); setPage(1);
   }
 
   return (
@@ -524,6 +540,29 @@ export default function MissionsAffilieClient({
               )}
             </div>
 
+            {/* Chips rapides — toujours visibles */}
+            <div className="flex flex-wrap gap-2">
+              {(["ALL","IBIG","OFFER","DEMAND"] as const).map(s => {
+                const labels: Record<string,string> = { ALL: "Tout", IBIG: "🏢 Missions IBIG", OFFER: "📤 Offres partenaires", DEMAND: "🔍 Demandes partenaires" };
+                return (
+                  <button key={s} onClick={() => { setFilterSource(s); setPage(1); }}
+                    className={`rounded-full px-3 py-1 text-xs font-bold border transition ${filterSource === s ? "bg-indigo-600 text-white border-indigo-600" : "bg-white text-slate-600 border-slate-200 hover:bg-indigo-50"}`}>
+                    {labels[s]}
+                  </button>
+                );
+              })}
+              <div className="w-px bg-slate-200 mx-1" />
+              {(["ALL","EASY","MEDIUM","HARD"] as const).map(d => {
+                const labels: Record<string,string> = { ALL: "Toutes difficultés", EASY: "🟢 Facile", MEDIUM: "🟡 Moyenne", HARD: "🔴 Difficile" };
+                return (
+                  <button key={d} onClick={() => { setFilterDiff(d); setPage(1); }}
+                    className={`rounded-full px-3 py-1 text-xs font-bold border transition ${filterDiff === d && d !== "ALL" ? "bg-amber-500 text-white border-amber-500" : d === "ALL" && filterDiff === "ALL" ? "bg-slate-100 text-slate-600 border-slate-200" : "bg-white text-slate-600 border-slate-200 hover:bg-amber-50"}`}>
+                    {labels[d]}
+                  </button>
+                );
+              })}
+            </div>
+
             {/* Panneau filtres avancés */}
             {showFilters && (
               <div className="rounded-2xl border border-slate-200 bg-white p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -540,6 +579,16 @@ export default function MissionsAffilieClient({
                   </select>
                 </div>
 
+                {/* Catégorie / Secteur */}
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5">Secteur d'activité</label>
+                  <select value={filterCategory} onChange={e => { setFilterCategory(e.target.value); setPage(1); }}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white outline-none focus:border-blue-400">
+                    <option value="ALL">Tous les secteurs</option>
+                    {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </div>
+
                 {/* Type de gain */}
                 <div>
                   <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5">Type de gain</label>
@@ -552,30 +601,31 @@ export default function MissionsAffilieClient({
                   </select>
                 </div>
 
-                {/* Difficulté */}
+                {/* Montant minimum */}
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5">Difficulté</label>
-                  <select value={filterDiff} onChange={e => { setFilterDiff(e.target.value); setPage(1); }}
-                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white outline-none focus:border-blue-400">
-                    <option value="ALL">Toutes</option>
-                    <option value="EASY">🟢 Facile</option>
-                    <option value="MEDIUM">🟡 Moyenne</option>
-                    <option value="HARD">🔴 Difficile</option>
-                  </select>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5">
+                    Gain minimum — {filterMinAmount > 0 ? new Intl.NumberFormat("fr-FR").format(filterMinAmount) + " FCFA" : "Aucun"}
+                  </label>
+                  <input type="range" min={0} max={500000} step={5000} value={filterMinAmount}
+                    onChange={e => { setFilterMinAmount(Number(e.target.value)); setPage(1); }}
+                    className="w-full accent-blue-600" />
+                  <div className="flex justify-between text-[10px] text-slate-400 mt-0.5">
+                    <span>0</span><span>250 000</span><span>500 000</span>
+                  </div>
                 </div>
 
-                {/* Zone */}
+                {/* Zone / Pays */}
                 <div>
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5">Zone géographique</label>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5">Pays / Zone géographique</label>
                   <select value={filterZone} onChange={e => { setFilterZone(e.target.value); setPage(1); }}
                     className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white outline-none focus:border-blue-400">
-                    <option value="ALL">Toutes les zones</option>
+                    <option value="ALL">Tous les pays / zones</option>
                     {zones.map(z => <option key={z} value={z}>{ZONE_ICONS[z] ?? "📍"} {z}</option>)}
                   </select>
                 </div>
 
                 {/* Branche */}
-                <div className="md:col-span-4">
+                <div className="md:col-span-3">
                   <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5">Branche IBIG</label>
                   <div className="flex flex-wrap gap-2">
                     <button onClick={() => { setFilterBranch("ALL"); setPage(1); }}
