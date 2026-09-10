@@ -332,7 +332,7 @@ export default async function PartnerLandingPage({
                 {
                   icon: "⚡",
                   title: "Paiement sous 7 jours",
-                  desc: "Vos commissions sont validées sous 7 jours ouvrables et versées via Orange Money, Wave, MTN MoMo ou virement bancaire.",
+                  desc: "Vos gains sont validés sous 7 jours ouvrables et payés via Orange Money, Wave, MTN MoMo ou virement bancaire.",
                   color: "text-amber-600",
                   bg: "bg-amber-50",
                 },

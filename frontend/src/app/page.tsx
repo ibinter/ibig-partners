@@ -58,7 +58,7 @@ export const metadata: Metadata = {
 const POSITIONING: { icon: IconName; title: string; desc: string }[] = [
   { icon: "key",     title: "Un seul compte",        desc: "Accédez à l'ensemble du portefeuille IBIG SARL avec un seul identifiant partenaire." },
   { icon: "network", title: "Réseau 3 niveaux",      desc: "Touchez des commissions sur vos ventes et celles de vos filleuls N2 et N3." },
-  { icon: "wallet",  title: "Paiement rapide",       desc: "Commissions validées en 7 jours, versées via Mobile Money, banque ou international." },
+  { icon: "wallet",  title: "Paiement rapide",       desc: "Gains validés en 7 jours et payés via Mobile Money, virement bancaire ou international." },
   { icon: "sparkles",title: "Kit marketing offert",  desc: "Visuels, argumentaires et liens tracés prêts à l'emploi dès l'inscription." },
 ];
 
@@ -70,7 +70,7 @@ const MISSION: { icon: IconName; title: string; desc: string }[] = [
 ];
 
 const PARTNER_MODULES: { icon: IconName; title: string; desc: string }[] = [
-  { icon: "chart",      title: "Dashboard",          desc: "CA généré, commissions en attente et versées, progression de statut et analytics en temps réel." },
+  { icon: "chart",      title: "Dashboard",          desc: "CA généré, gains en attente, progression de statut et analytics en temps réel." },
   { icon: "puzzle",     title: "Mes Produits & Missions", desc: "1 095+ missions concrètes à accomplir + 14 logiciels, formations et services à promouvoir — tout dans un seul espace." },
   { icon: "link",       title: "Mes Liens",           desc: "Liens d'affiliation uniques, code promo personnel, QR code téléchargeable." },
   { icon: "network",    title: "Mon Réseau",          desc: "Visualisez vos filleuls Niveau 1/2/3 et la performance de chacun en temps réel." },
@@ -120,8 +120,8 @@ const FAQ_JSON_LD = {
   "@type": "FAQPage",
   mainEntity: [
     { "@type": "Question", name: "C'est vraiment gratuit ?", acceptedAnswer: { "@type": "Answer", text: "Oui, l'inscription est 100% gratuite et sans engagement. Vous ne payez absolument rien pour devenir partenaire IBIG." } },
-    { "@type": "Question", name: "Comment je suis payé ?", acceptedAnswer: { "@type": "Answer", text: "Via Orange Money, Wave, MTN Money ou virement bancaire selon votre préférence. Les commissions sont versées chaque semaine." } },
-    { "@type": "Question", name: "Quel délai pour recevoir mes commissions ?", acceptedAnswer: { "@type": "Answer", text: "Vos commissions sont validées sous 7 jours ouvrables. Le versement est effectué chaque semaine pour l'ensemble des commissions validées." } },
+    { "@type": "Question", name: "Comment je suis payé ?", acceptedAnswer: { "@type": "Answer", text: "Via Orange Money, Wave, MTN Money ou virement bancaire selon votre préférence. Les paiements sont effectués chaque semaine." } },
+    { "@type": "Question", name: "Quel délai pour recevoir mes gains ?", acceptedAnswer: { "@type": "Answer", text: "Vos gains sont validés sous 7 jours ouvrables. Le paiement est effectué chaque semaine pour l'ensemble des gains validés." } },
     { "@type": "Question", name: "Qui peut devenir partenaire ?", acceptedAnswer: { "@type": "Answer", text: "IBIG PARTNERS est un programme panafricain et international. Toute personne majeure peut rejoindre le réseau, en Côte d'Ivoire, ailleurs en Afrique, ou depuis la diaspora partout dans le monde." } },
     { "@type": "Question", name: "Est-ce un système pyramidal ou un Ponzi ?", acceptedAnswer: { "@type": "Answer", text: "Non. IBIG PARTNERS est un programme d'affiliation légitime : vous êtes payé uniquement sur des ventes réelles de produits existants (logiciels, formations, services). L'inscription est gratuite et aucun revenu ne vient du recrutement seul." } },
     { "@type": "Question", name: "Y a-t-il un minimum de ventes requis ?", acceptedAnswer: { "@type": "Answer", text: "Aucun minimum. Chaque vente génère des commissions immédiatement. Vous gardez l'accès à la plateforme sans aucune obligation." } },

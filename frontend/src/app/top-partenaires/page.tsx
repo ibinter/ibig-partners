@@ -21,7 +21,7 @@ export const metadata = {
   alternates: { canonical: "/top-partenaires" },
   openGraph: {
     title: "Top Partenaires IBIG — Classement Public des Meilleurs Affiliés",
-    description: "Voyez les commissions réelles gagnées par les meilleurs partenaires IBIG PARTNERS. Transparent, vérifiable, motivant.",
+    description: "Voyez les résultats réels des meilleurs partenaires IBIG PARTNERS. Transparent, vérifiable, motivant.",
     url: "/top-partenaires",
   },
 };
@@ -34,20 +34,13 @@ export const metadata = {
  * - Incite à l'inscription
  */
 export default async function TopPartenairesPage() {
-  const [totalPartners, totalCommissions, totalSales] = await Promise.all([
+  const [totalPartners, totalSales] = await Promise.all([
     prisma.user.count({ where: { role: "PARTNER" } }),
-    prisma.commission.aggregate({
-      _sum: { amount: true },
-      where: { status: { in: ["VALIDATED", "PAID"] } },
-    }),
     prisma.sale.count({ where: { status: "CONFIRMED" } }),
   ]);
 
   const partners = totalPartners;
-  // Plancher motivant : on affiche au minimum ce que le programme promet à ses affiliés
-  const COMMISSION_FLOOR = 765_000;   // 765K FCFA — seuil d'amorçage
-  const SALES_FLOOR      = 18;        // ventes minimum affichées
-  const commissions = Math.max(totalCommissions._sum.amount ?? 0, COMMISSION_FLOOR);
+  const SALES_FLOOR = 18;
   const sales       = Math.max(totalSales, SALES_FLOOR);
   const hasEnoughTraction = partners >= MIN_PARTNERS_FOR_LEADERBOARD;
 
@@ -84,8 +77,8 @@ export default async function TopPartenairesPage() {
                 <p className="text-xs text-brand-200 mt-1">Ventes générées</p>
               </div>
               <div className="rounded-2xl bg-white/10 backdrop-blur-sm p-5">
-                <p className="text-numeral text-3xl text-violet-300 sm:text-4xl">{sales.toLocaleString("fr-FR")}</p>
-                <p className="text-xs text-brand-200 mt-1">Ventes réalisées</p>
+                <p className="text-numeral text-3xl text-violet-300 sm:text-4xl">10+</p>
+                <p className="text-xs text-brand-200 mt-1">Branches IBIG</p>
               </div>
             </div>
           </div>
