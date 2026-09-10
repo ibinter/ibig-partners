@@ -9,7 +9,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { after } from "next/server";
-import { createHmac } from "crypto";
+import { createHmac, randomUUID } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { generateCommissionsForSale, recomputeStatus } from "@/lib/sales";
 import { sendPaymentReceiptEmail, sendNewSaleEmail } from "@/lib/email";
@@ -124,7 +124,7 @@ export async function POST(req: NextRequest) {
 
   const sale = await prisma.sale.create({
     data: {
-      reference: `VTE-${require("crypto").randomUUID().slice(0, 8).toUpperCase()}`,
+      reference: `VTE-${randomUUID().slice(0, 8).toUpperCase()}`,
       productId: product.id,
       sellerId: seller.id,
       customerName,

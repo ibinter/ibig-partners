@@ -5,19 +5,23 @@ Sur Vercel (production), Next.js gère tout nativement (y compris /api/coach via
 Ce fichier forwarde toutes les requêtes /api/* vers Next.js (port 3000)
 car l'ingress Kubernetes d'Emergent redirige /api/* vers le port 8001.
 """
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 import httpx
 
 NEXT_URL = "http://localhost:3000"
 
-app = FastAPI()
 client = httpx.AsyncClient(base_url=NEXT_URL, timeout=httpx.Timeout(60.0, connect=10.0))
 
 
-@app.on_event("shutdown")
-async def shutdown():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    yield
     await client.aclose()
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/healthz")
@@ -35,10 +39,15 @@ async def proxy_api(path: str, request: Request):
     if request.url.query:
         target_path = f"{target_path}?{request.url.query}"
 
+    # Filtrer les headers sensibles forgéables
+    blocked_headers = {
+        "host", "content-length", "transfer-encoding", "connection",
+        "x-forwarded-for", "x-real-ip", "x-forwarded-host", "x-forwarded-proto",
+    }
     headers = {
         k: v
         for k, v in request.headers.items()
-        if k.lower() not in ("host", "content-length", "transfer-encoding", "connection")
+        if k.lower() not in blocked_headers
     }
 
     body = await request.body()
@@ -50,7 +59,7 @@ async def proxy_api(path: str, request: Request):
             headers=headers,
             content=body,
         )
-    except httpx.ConnectError:
+    except (httpx.ConnectError, httpx.TimeoutException, httpx.TransportError):
         return JSONResponse(
             status_code=503,
             content={"error": "Next.js server unreachable"},

@@ -145,8 +145,11 @@ interface ChatMsg {
 }
 
 export async function POST(req: NextRequest) {
-  const { requireUser } = await import("@/lib/auth");
-  await requireUser();
+  const { getCurrentUser } = await import("@/lib/auth");
+  const user = await getCurrentUser();
+  if (!user) {
+    return NextResponse.json({ reply: "Non autorisé." }, { status: 401 });
+  }
 
   const key = process.env.EMERGENT_LLM_KEY;
   if (!key) {

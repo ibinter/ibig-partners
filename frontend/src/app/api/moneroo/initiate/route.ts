@@ -16,15 +16,25 @@ export async function POST(req: NextRequest) {
   } catch {
     return NextResponse.json({ error: "Corps JSON invalide" }, { status: 400 });
   }
-  const {
-    productSlug, partnerCode, amount,
-    customerFirstName, customerLastName, customerEmail, customerPhone,
-    modeFormation, statutProfessionnel, objectif,
-    disponibilite, ville, pays, domaineActivite, niveauEtude, fonction, anneesExperience, message,
-  } = body as Record<string, string | number | undefined>;
+  const b = body as Record<string, unknown>;
+  const productSlug        = String(b.productSlug         ?? "");
+  const partnerCode        = String(b.partnerCode         ?? "");
+  const amount             = Number(b.amount              ?? 0);
+  const customerFirstName  = String(b.customerFirstName   ?? "Client");
+  const customerLastName   = String(b.customerLastName    ?? "IBIG");
+  const customerEmail      = b.customerEmail  ? String(b.customerEmail)  : "client@ibigpartners.com";
+  const customerPhone      = b.customerPhone  ? String(b.customerPhone)  : "";
+  const modeFormation      = String(b.modeFormation       ?? "");
+  const statutProfessionnel= String(b.statutProfessionnel ?? "");
+  const objectif           = String(b.objectif            ?? "");
+  const disponibilite      = String(b.disponibilite       ?? "");
+  const ville              = String(b.ville               ?? "");
+  const pays               = String(b.pays                ?? "");
+  const niveauEtude        = String(b.niveauEtude         ?? "");
+  const fonction           = String(b.fonction            ?? "");
+  const message            = String(b.message             ?? "");
 
   const secretKey = process.env.MONEROO_SECRET_KEY;
-  // Dériver l'URL de base depuis la requête elle-même — toujours correct en prod
   const origin = new URL(req.url).origin;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? origin;
 
@@ -47,10 +57,10 @@ export async function POST(req: NextRequest) {
       currency: "XOF",
       description: `Achat via IBIG PARTNERS — Partenaire ${partnerCode}`,
       customer: {
-        email: customerEmail ?? "client@ibigpartners.com",
-        first_name: customerFirstName ?? "Client",
-        last_name: customerLastName ?? "IBIG",
-        phone: customerPhone ?? "",
+        email: customerEmail,
+        first_name: customerFirstName,
+        last_name: customerLastName,
+        phone: customerPhone,
       },
       return_url: `${siteUrl}/paiement/merci?slug=${encodeURIComponent(productSlug)}&ref=${encodeURIComponent(partnerCode)}`,
       notify_url: `${siteUrl}/api/moneroo/webhook`,
