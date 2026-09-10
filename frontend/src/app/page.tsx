@@ -847,7 +847,7 @@ export default async function HomePage() {
               },
               {
                 icon: "💼",
-                title: "Réseau de +200 partenaires actifs",
+                title: "Réseau de +200 partenaires inscrits",
                 desc: "Commerciaux, consultants, formateurs — présents dans toute l'Afrique francophone, disponibles immédiatement.",
               },
               {
@@ -956,7 +956,7 @@ export default async function HomePage() {
 
           <ScrollReveal animation="fade-up" delay={200}>
             <div className="mt-10 rounded-2xl border border-emerald-200 bg-emerald-50 px-6 py-5 text-sm text-emerald-800 leading-relaxed">
-              <strong>En résumé :</strong> IBIG PARTNERS est un programme d&apos;affiliation classique — le même modèle utilisé par Amazon, Shopify ou Booking.com. La différence est que nous promouvons des produits africains, pour un marché africain, avec des commissions versées en monnaie locale (FCFA). Si vous avez le moindre doute, contactez-nous directement — nous répondons sous 24h.
+              <strong>En résumé :</strong> IBIG PARTNERS est un programme d&apos;affiliation classique — le même modèle utilisé par Amazon, Shopify ou Booking.com. La différence est que nous promouvons des produits africains, pour un marché africain, avec des paiements en monnaie locale (FCFA). Si vous avez le moindre doute, contactez-nous directement — nous répondons sous 24h.
             </div>
           </ScrollReveal>
         </div>

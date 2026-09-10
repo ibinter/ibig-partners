@@ -12,7 +12,7 @@ const MIN_PARTNERS_FOR_LEADERBOARD = 10;
 export const metadata = {
   title: "Top Partenaires IBIG — Classement Public des Meilleurs Affiliés",
   description:
-    "Classement public des meilleurs partenaires IBIG PARTNERS : commissions réelles versées, ventes générées, transparence totale. Rejoignez le réseau et grimpez dans le classement.",
+    "Classement public des meilleurs partenaires IBIG PARTNERS : gains réels générés, ventes réalisées, transparence totale. Rejoignez le réseau et grimpez dans le classement.",
   keywords: [
     "top partenaires IBIG", "classement affiliés Afrique", "meilleurs partenaires IBIG SARL",
     "hall of fame affiliation Côte d'Ivoire", "commissions partenaires IBIG PARTNERS",
@@ -35,7 +35,7 @@ export const metadata = {
  */
 export default async function TopPartenairesPage() {
   const [totalPartners, totalCommissions, totalSales] = await Promise.all([
-    prisma.user.count({ where: { role: "PARTNER", active: true } }),
+    prisma.user.count({ where: { role: "PARTNER" } }),
     prisma.commission.aggregate({
       _sum: { amount: true },
       where: { status: { in: ["VALIDATED", "PAID"] } },
@@ -75,13 +75,13 @@ export default async function TopPartenairesPage() {
             <div className="mt-10 grid grid-cols-3 gap-2 sm:gap-4 max-w-3xl mx-auto">
               <div className="rounded-2xl bg-white/10 backdrop-blur-sm p-5">
                 <p className="text-numeral text-3xl text-gold-400 sm:text-4xl">{partners.toLocaleString("fr-FR")}</p>
-                <p className="text-xs text-brand-200 mt-1">Partenaires actifs</p>
+                <p className="text-xs text-brand-200 mt-1">Partenaires inscrits</p>
               </div>
               <div className="rounded-2xl bg-white/10 backdrop-blur-sm p-5">
                 <p className="text-numeral text-3xl text-emerald-400 sm:text-4xl">
-                  {(commissions / 1_000_000).toFixed(1)}M
+                  {sales.toLocaleString("fr-FR")}
                 </p>
-                <p className="text-xs text-brand-200 mt-1">FCFA versés</p>
+                <p className="text-xs text-brand-200 mt-1">Ventes générées</p>
               </div>
               <div className="rounded-2xl bg-white/10 backdrop-blur-sm p-5">
                 <p className="text-numeral text-3xl text-violet-300 sm:text-4xl">{sales.toLocaleString("fr-FR")}</p>

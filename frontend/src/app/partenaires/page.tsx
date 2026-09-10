@@ -114,7 +114,7 @@ export default async function PartenairesPage() {
             {/* Stats réelles */}
             <div className="mt-8 grid grid-cols-3 gap-3 sm:gap-6 max-w-lg mx-auto">
               {[
-                { val: `${liveStats.total}+`, label: "Partenaires actifs" },
+                { val: `${liveStats.total}+`, label: "Partenaires inscrits" },
                 { val: `${liveStats.pays}+`,  label: "Pays représentés" },
                 { val: `${liveStats.missions.toLocaleString("fr-FR")}`, label: "Missions disponibles" },
               ].map(({ val, label }) => (
@@ -327,7 +327,7 @@ export default async function PartenairesPage() {
             </ScrollReveal>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               {[
-                { val: `${liveStats.total}+`, label: "Partenaires actifs", icon: "👥" },
+                { val: `${liveStats.total}+`, label: "Partenaires inscrits", icon: "👥" },
                 { val: `${liveStats.pays}+`,  label: "Pays représentés",  icon: "🌍" },
                 { val: "10",                   label: "Branches du groupe", icon: "🏢" },
                 { val: `${liveStats.missions.toLocaleString("fr-FR")}`, label: "Missions disponibles", icon: "🎯" },

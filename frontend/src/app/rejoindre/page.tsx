@@ -8,7 +8,7 @@ import { registerAction } from "../auth-actions";
 export const metadata: Metadata = {
   title: "Rejoindre IBIG PARTNERS — Inscription Gratuite",
   description:
-    "Créez votre compte partenaire IBIG gratuitement en 2 minutes. Accédez immédiatement à votre espace, vos liens d'affiliation et votre kit marketing. Commissions versées via Mobile Money.",
+    "Créez votre compte partenaire IBIG gratuitement en 2 minutes. Accédez immédiatement à votre espace, vos liens d'affiliation et votre kit marketing. Paiements via Mobile Money.",
   keywords: [
     "rejoindre IBIG PARTNERS", "inscription affiliation gratuite Afrique", "créer compte partenaire IBIG",
     "affiliation Côte d'Ivoire gratuit", "devenir partenaire IBIG SARL", "inscription programme affiliation Abidjan",
