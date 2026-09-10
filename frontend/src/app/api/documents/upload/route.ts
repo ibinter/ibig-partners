@@ -20,16 +20,20 @@ export async function POST(req: Request) {
   const remoteName = `${user.id}_${ts}.${ext}`;
   const remotePath = `/ibig-docs/${remoteName}`;
 
-  const host     = process.env.FTP_HOST     ?? "ftp.ibigsoft.com";
-  const ftpUser  = process.env.FTP_USER     ?? "ibigs2689720";
-  const password = process.env.FTP_PASS     ?? "";
+  const host     = process.env.FTP_HOST;
+  const ftpUser  = process.env.FTP_USER;
+  const password = process.env.FTP_PASS ?? "";
   const baseUrl  = process.env.FTP_BASE_URL ?? `https://ibigsoft.com/ibig-docs`;
+
+  if (!host || !ftpUser) {
+    return NextResponse.json({ error: "Serveur de documents non configuré (FTP_HOST ou FTP_USER manquant)" }, { status: 503 });
+  }
 
   const client = new ftp.Client();
   client.ftp.verbose = false;
 
   try {
-    await client.access({ host, user: ftpUser, password, secure: false });
+    await client.access({ host, user: ftpUser, password, secure: true });
     await client.ensureDir("/ibig-docs");
 
     const buf   = Buffer.from(await file.arrayBuffer());

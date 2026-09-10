@@ -82,11 +82,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const amount = amountRaw > 0 ? Math.round(amountRaw) : product.price;
   const monthsPaid = monthsRaw > 0 ? Math.min(Math.round(monthsRaw), 4) : 1;
-  const count = await prisma.sale.count();
 
   const sale = await prisma.sale.create({
     data: {
-      reference: `VTE-${String(count + 1).padStart(4, "0")}`,
+      reference: `VTE-${require("crypto").randomUUID().slice(0, 8).toUpperCase()}`,
       productId: product.id,
       sellerId: seller.id,
       customerName,

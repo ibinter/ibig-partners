@@ -8,14 +8,15 @@ export async function GET() {
     return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
   }
 
+  const testTo = process.env.TEST_EMAIL ?? process.env.SUPPORT_EMAIL ?? "admin@ibigpartners.com";
   try {
     await sendWelcomeEmail({
-      to: "patriceky1er@gmail.com",
-      firstName: "Patrice",
+      to: testTo,
+      firstName: "Admin",
       code: "AFF-TEST-001",
       sponsorName: undefined,
     });
-    return NextResponse.json({ ok: true, message: "Email de test envoyé à patriceky1er@gmail.com" });
+    return NextResponse.json({ ok: true, message: `Email de test envoyé à ${testTo}` });
   } catch (err) {
     return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
   }

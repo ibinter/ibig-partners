@@ -31,14 +31,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "body invalide" }, { status: 400 });
   }
 
-  // Vérification de signature si MONEROO_WEBHOOK_SECRET est configuré
+  // Vérification de signature OBLIGATOIRE
   const webhookSecret = process.env.MONEROO_WEBHOOK_SECRET;
-  if (webhookSecret) {
-    const signature = req.headers.get("x-moneroo-signature") ?? "";
-    if (!verifySignature(rawBody, signature, webhookSecret)) {
-      console.warn("[Moneroo Webhook] Signature invalide — requête rejetée");
-      return NextResponse.json({ error: "signature invalide" }, { status: 401 });
-    }
+  if (!webhookSecret) {
+    console.error("[Moneroo Webhook] MONEROO_WEBHOOK_SECRET non configuré — webhook rejeté");
+    return NextResponse.json({ error: "webhook non configuré" }, { status: 500 });
+  }
+  const signature = req.headers.get("x-moneroo-signature") ?? "";
+  if (!verifySignature(rawBody, signature, webhookSecret)) {
+    console.warn("[Moneroo Webhook] Signature invalide — requête rejetée");
+    return NextResponse.json({ error: "signature invalide" }, { status: 401 });
   }
 
   // Log complet pour déboguer
@@ -119,11 +121,10 @@ export async function POST(req: NextRequest) {
   }
 
   const saleAmount = Math.round(amount) || product.price;
-  const count = await prisma.sale.count();
 
   const sale = await prisma.sale.create({
     data: {
-      reference: `VTE-${String(count + 1).padStart(4, "0")}`,
+      reference: `VTE-${require("crypto").randomUUID().slice(0, 8).toUpperCase()}`,
       productId: product.id,
       sellerId: seller.id,
       customerName,

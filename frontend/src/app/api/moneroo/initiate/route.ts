@@ -10,12 +10,18 @@ import { NextRequest, NextResponse } from "next/server";
 const MONEROO_API = "https://api.moneroo.io/v1/payments/initialize";
 
 export async function POST(req: NextRequest) {
+  let body: Record<string, unknown>;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corps JSON invalide" }, { status: 400 });
+  }
   const {
     productSlug, partnerCode, amount,
     customerFirstName, customerLastName, customerEmail, customerPhone,
     modeFormation, statutProfessionnel, objectif,
     disponibilite, ville, pays, domaineActivite, niveauEtude, fonction, anneesExperience, message,
-  } = await req.json();
+  } = body as Record<string, string | number | undefined>;
 
   const secretKey = process.env.MONEROO_SECRET_KEY;
   // Dériver l'URL de base depuis la requête elle-même — toujours correct en prod

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { randomUUID } from "crypto";
 
 export async function POST(req: NextRequest) {
   const fd = await req.formData();
@@ -13,9 +14,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.redirect(new URL("/erreur", req.url));
   }
 
+  // Vérifier que le partenaire existe avant de créer le prospect
+  const partner = await prisma.user.findUnique({ where: { id: partnerId }, select: { id: true } });
+  if (!partner) {
+    return NextResponse.redirect(new URL("/erreur", req.url));
+  }
+
   await prisma.prospect.create({
     data: {
-      id: `pct_${Date.now()}`,
+      id: `pct_${randomUUID()}`,
       userId: partnerId,
       name,
       contact: phone ?? email ?? "",

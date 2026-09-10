@@ -4,7 +4,12 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
   const user = await requireUser();
-  const body = await req.json();
+  let body: { endpoint?: string; keys?: { p256dh?: string; auth?: string } };
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corps JSON invalide" }, { status: 400 });
+  }
   const { endpoint, keys } = body as {
     endpoint: string;
     keys: { p256dh: string; auth: string };

@@ -21,8 +21,7 @@ export async function GET(req: NextRequest) {
     csv = "Nom,Contact,Statut,Date\n";
     csv += prospects.map((p: any) => `"${p.name ?? ""}","${p.contact ?? ""}","${p.status ?? ""}","${new Date(p.createdAt).toLocaleDateString("fr-FR")}"`).join("\n");
   } else if (type === "reseau") {
-    const userCode = (user as any).code ?? (user as any).affiliateCode ?? "";
-    const network = await (prisma as any).user.findMany({ where: { sponsorCode: userCode }, select: { firstName: true, lastName: true, email: true, createdAt: true } });
+    const network = await (prisma as any).user.findMany({ where: { sponsorId: user.id }, select: { firstName: true, lastName: true, email: true, createdAt: true } });
     csv = "Nom,Email,Date d'inscription\n";
     csv += network.map((u: any) => `"${`${u.firstName ?? ""} ${u.lastName ?? ""}`.trim() || ""}","${u.email ?? ""}","${new Date(u.createdAt).toLocaleDateString("fr-FR")}"`).join("\n");
   }

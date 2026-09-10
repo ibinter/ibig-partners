@@ -4,7 +4,13 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
   const user = await requireUser();
-  const { missionId, note } = await req.json();
+  let parsed: { missionId?: string; note?: string };
+  try {
+    parsed = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corps JSON invalide" }, { status: 400 });
+  }
+  const { missionId, note } = parsed;
   if (!missionId) return NextResponse.json({ error: "missionId requis" }, { status: 400 });
 
   const existing = await (prisma as any).missionInterest.findUnique({
@@ -44,7 +50,13 @@ export async function POST(req: Request) {
 
 export async function DELETE(req: Request) {
   const user = await requireUser();
-  const { missionId } = await req.json();
+  let body: { missionId?: string };
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corps JSON invalide" }, { status: 400 });
+  }
+  const { missionId } = body;
   if (!missionId) return NextResponse.json({ error: "missionId requis" }, { status: 400 });
   await (prisma as any).missionInterest.deleteMany({
     where: { missionId, userId: user.id, status: "PENDING" },

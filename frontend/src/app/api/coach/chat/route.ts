@@ -145,6 +145,9 @@ interface ChatMsg {
 }
 
 export async function POST(req: NextRequest) {
+  const { requireUser } = await import("@/lib/auth");
+  await requireUser();
+
   const key = process.env.EMERGENT_LLM_KEY;
   if (!key) {
     return NextResponse.json(

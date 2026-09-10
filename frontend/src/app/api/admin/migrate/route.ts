@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export async function POST() {
   const user = await getCurrentUser();
-  if (!user || (user.role !== "ADMIN" && user.role !== "SUPERADMIN")) {
+  if (!user || user.role !== "SUPERADMIN") {
     return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
   }
 

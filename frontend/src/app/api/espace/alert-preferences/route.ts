@@ -10,7 +10,17 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const user = await requireUser();
-  const data = await req.json();
+  let raw: Record<string, unknown>;
+  try {
+    raw = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Corps JSON invalide" }, { status: 400 });
+  }
+  // Autoriser uniquement les champs booléens connus — évite l'injection de champs arbitraires
+  const allowed = ["newNetworkSale", "rankingChange", "newProspect", "commissionPaid", "weeklyDigest"];
+  const data = Object.fromEntries(
+    Object.entries(raw).filter(([k, v]) => allowed.includes(k) && typeof v === "boolean")
+  );
   await (prisma as any).alertPreference.upsert({
     where: { userId: user.id },
     update: data,
