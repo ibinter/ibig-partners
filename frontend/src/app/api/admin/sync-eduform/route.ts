@@ -6580,61 +6580,39 @@ export async function POST() {
 
     const productsToSync: SyncProduct[] = [...fromApi, ...fromStatic];
 
-    // ── 3. Mise à jour directe des siteUrl pour tous les produits existants ──
-    // Cette étape est INDÉPENDANTE des branches : elle met à jour le siteUrl
-    // de chaque produit EDUFORM déjà en base, quel que soit son branche.
-    // C'est ce qui corrige les liens "Site officiel" dans l'admin.
-    let urlsFixed = 0;
-    const BATCH_URL = 10;
-    for (let i = 0; i < productsToSync.length; i += BATCH_URL) {
-      const batch = productsToSync.slice(i, i + BATCH_URL);
-      const updates = await Promise.all(
-        batch.map(p =>
-          prisma.product.updateMany({
-            where: { slug: p.slug },
-            data: { siteUrl: p.siteUrl, name: p.name, price: p.price },
-          })
-        )
-      );
-      urlsFixed += updates.reduce((s, r) => s + r.count, 0);
-    }
-
-    // ── 5. (SAFE) Upsert direct vers ibig-eduform — PAS de deleteMany ──────────
-    // Cette étape restaure / maintient toutes les formations dans la branche
-    // principale ibig-eduform qui est lue par /api/catalogue.
-    // Elle N'EFFECTUE JAMAIS de deleteMany : aucune formation ne peut être supprimée.
+    // ── 5. Upsert direct vers ibig-eduform — PAS de deleteMany ──────────
     let step5Upserted = 0;
     try {
       const mainBranch = await prisma.branch.findUnique({ where: { slug: "ibig-eduform" } });
       if (mainBranch) {
-        const BATCH5 = 5;
-        for (let i = 0; i < productsToSync.length; i += BATCH5) {
-          const batch = productsToSync.slice(i, i + BATCH5);
-          try {
-            await Promise.all(
-              batch.map(p =>
-                prisma.product.upsert({
-                  where: { slug: p.slug },
-                  update: { name: p.name, price: p.price, branchId: mainBranch.id, active: true, siteUrl: p.siteUrl },
-                  create: {
-                    slug: p.slug, name: p.name, pricingType: p.pricingType, price: p.price,
-                    rate: p.rate, siteUrl: p.siteUrl, description: p.description,
-                    branchId: mainBranch.id, active: true,
-                  },
-                })
-              )
-            );
-            step5Upserted += batch.length;
-          } catch { /* ignore partial timeout, keep going */ }
+        // Diviser en lots de 50 exécutés en parallèle pour rester dans le timeout Vercel
+        const BATCH = 50;
+        for (let i = 0; i < productsToSync.length; i += BATCH) {
+          const batch = productsToSync.slice(i, i + BATCH);
+          await Promise.all(
+            batch.map(p =>
+              prisma.product.upsert({
+                where: { slug: p.slug },
+                update: { name: p.name, price: p.price, branchId: mainBranch.id, active: true, siteUrl: p.siteUrl },
+                create: {
+                  slug: p.slug, name: p.name, pricingType: p.pricingType, price: p.price,
+                  rate: p.rate, siteUrl: p.siteUrl ?? "", description: p.description ?? "",
+                  branchId: mainBranch.id, active: true,
+                },
+              })
+            )
+          );
+          step5Upserted += batch.length;
         }
       }
-    } catch { /* branche introuvable ou erreur réseau */ }
+    } catch (e) {
+      console.error("step5 error:", e);
+    }
 
     return NextResponse.json({
       ok: true,
-      urlsFixed,
       mainBranchUpserted: step5Upserted,
-      message: `${urlsFixed} siteUrl mis à jour. ${step5Upserted} formations upsertées dans ibig-eduform (branche principale).`,
+      message: `${step5Upserted} formations upsertées dans ibig-eduform (branche principale).`,
     });
   } catch (err: any) {
     console.error("sync-eduform error:", err);
