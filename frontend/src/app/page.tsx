@@ -136,7 +136,7 @@ export default async function HomePage() {
   let liveStats = { partners: 0, sales: 0, commissions: 0, products: 0 };
   try {
     const [partnerCount, salesCount, commSum, productCount] = await Promise.all([
-      prisma.user.count({ where: { role: "PARTNER", active: true, approved: true } }),
+      prisma.user.count({ where: { role: "PARTNER" } }),
       prisma.sale.count({ where: { status: "CONFIRMED" } }),
       prisma.commission.aggregate({ where: { status: "PAID" }, _sum: { amount: true } }),
       prisma.product.count({ where: { active: true } }),
@@ -183,7 +183,7 @@ export default async function HomePage() {
       {/* ═══ Bandeau stats live ═══ */}
       <div className="bg-gradient-to-r from-slate-900 to-slate-800 py-2.5 text-center">
         <div className="mx-auto flex flex-wrap items-center justify-center gap-6 px-4 text-xs font-semibold text-slate-300">
-          <span>👥 <span className="text-white">{liveStats.partners.toLocaleString("fr-FR")}</span> partenaires actifs</span>
+          <span>👥 <span className="text-white">{liveStats.partners.toLocaleString("fr-FR")}</span> partenaires inscrits</span>
           <span className="text-slate-600 hidden sm:inline">|</span>
           <span>🛍️ <span className="text-white">{liveStats.products.toLocaleString("fr-FR")}</span> produits disponibles</span>
           <span className="text-slate-600 hidden sm:inline">|</span>
