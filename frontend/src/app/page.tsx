@@ -193,43 +193,8 @@ export default async function HomePage() {
 
       {/* ═══════════ HERO — défilement pleine section ═══════════ */}
       <HeroSlider slides={CATALOG_HERO_SLIDES}>
-        {/* CTAs */}
-        <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
-          <Link
-            href="/rejoindre"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-6 py-3.5 text-sm font-extrabold text-brand-700 shadow-xl shadow-black/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-orange-50 sm:w-auto sm:rounded-2xl sm:px-9 sm:py-4 sm:text-base"
-            style={{ fontFamily: "var(--font-poppins,sans-serif)" }}
-          >
-            <svg className="h-4 w-4 shrink-0 text-orange-500" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"/>
-            </svg>
-            Devenir Partenaire — c&apos;est gratuit
-          </Link>
-          <a
-            href="#simulateur"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-white/40 bg-white/10 px-6 py-3.5 text-sm font-bold text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/20 sm:w-auto sm:rounded-2xl sm:px-9 sm:py-4 sm:text-base"
-          >
-            <svg className="h-4 w-4 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd"/>
-            </svg>
-            Simuler mes gains
-          </a>
-        </div>
-
-        {/* Réassurance */}
-        <ul className="mt-3 flex flex-wrap justify-center gap-x-3 gap-y-1.5 text-xs text-white/60 sm:gap-x-5 sm:text-sm">
-          {["Gratuit", "Inscription en 2 min", "Sans carte bancaire", "Sans engagement"].map((t) => (
-            <li key={t} className="flex items-center gap-1.5">
-              <svg className="h-3 w-3 shrink-0 text-orange-400 sm:h-3.5 sm:w-3.5" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M6.5 12.5 2 8l1.4-1.4 3.1 3.1 6.1-6.1L14 5z"/>
-              </svg>
-              {t}
-            </li>
-          ))}
-        </ul>
-
         {/* Stats bar */}
-        <div className="mx-auto mt-6 grid grid-cols-2 gap-4 border-t border-white/10 pt-6 sm:mt-8 sm:flex sm:flex-wrap sm:justify-center sm:gap-10 sm:pt-8">
+        <div className="mx-auto grid grid-cols-2 gap-4 border-t border-white/10 pt-5 sm:flex sm:flex-wrap sm:justify-center sm:gap-10 sm:pt-6">
           {[
             { val: "1 095+", label: "Missions partenaires" },
             { val: "3",      label: "Niveaux de commission" },
