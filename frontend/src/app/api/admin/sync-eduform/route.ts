@@ -7189,10 +7189,19 @@ const CATEGORY_BRANCHES: Record<string, { slug: string; label: string }> = {
   services:      { slug: "eduform-services",      label: "EDUFORM — Services & Formats Entreprise" },
 };
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
     if (!(await isSyncAuthorized())) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const start = Math.max(0, parseInt(searchParams.get("start") ?? "0") || 0);
+    const count = Math.min(100, Math.max(1, parseInt(searchParams.get("count") ?? "60") || 60));
+    const chunk = EDUFORM_PRODUCTS.slice(start, start + count);
+
+    if (chunk.length === 0) {
+      return NextResponse.json({ ok: true, done: start, total: EDUFORM_PRODUCTS.length, message: "Terminé" });
     }
 
     const mainBranch = await prisma.branch.findUnique({ where: { slug: "ibig-eduform" } });
@@ -7206,19 +7215,21 @@ export async function POST() {
     };
 
     const esc = (s: string) => "'" + s.replace(/'/g, "''").replace(/\r?\n/g, " ") + "'";
-    const rows = EDUFORM_PRODUCTS.map(p => {
+    const rows = chunk.map(p => {
       const siteUrl = resolveUrl(p.slug, p.siteUrl || "");
       return `(${esc(randomUUID())},${esc(mainBranch.id)},${esc(p.name)},${esc(p.slug)},${esc(p.description || "")},${p.price},${esc(p.pricingType)},${p.rate},${esc(siteUrl)},true)`;
     }).join(",");
+
     await prisma.$executeRawUnsafe(
       `INSERT INTO "Product" (id,"branchId",name,slug,description,price,"pricingType",rate,"siteUrl",active) VALUES ${rows} ON CONFLICT (slug) DO UPDATE SET name=EXCLUDED.name,price=EXCLUDED.price,"branchId"=EXCLUDED."branchId",active=true,"siteUrl"=EXCLUDED."siteUrl"`
     );
 
+    const done = start + chunk.length;
     return NextResponse.json({
       ok: true,
-      upserted: EDUFORM_PRODUCTS.length,
+      done,
       total: EDUFORM_PRODUCTS.length,
-      message: `${EDUFORM_PRODUCTS.length} formations upsertées dans ibig-eduform.`,
+      message: `${done}/${EDUFORM_PRODUCTS.length} formations synchronisées.`,
     });
   } catch (err: any) {
     console.error("sync-eduform error:", err);

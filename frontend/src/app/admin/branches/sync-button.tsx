@@ -89,12 +89,52 @@ export function SyncSoftButton() {
 }
 
 export function SyncEduformButton() {
+  const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [msg, setMsg] = useState("");
+  const CHUNK = 60;
+
+  async function handle() {
+    setLoading(true);
+    setMsg("");
+    setDone(0);
+    setTotal(0);
+    try {
+      let start = 0;
+      while (true) {
+        const r = await fetch(`/api/admin/sync-eduform?start=${start}&count=${CHUNK}`, { method: "POST" });
+        const d = await r.json();
+        if (!r.ok) { setMsg(d.error ?? "Erreur"); break; }
+        setDone(d.done);
+        setTotal(d.total);
+        if (d.done >= d.total) {
+          setMsg(`✓ ${d.total} formations synchronisées !`);
+          setTimeout(() => window.location.reload(), 1500);
+          break;
+        }
+        start = d.done;
+      }
+    } catch {
+      setMsg("Erreur réseau");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <SyncButton
-      label="Sync formations EDUFORM"
-      endpoint="/api/admin/sync-eduform"
-      className="rounded-lg border border-emerald-300 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-100 disabled:opacity-50"
-    />
+    <div className="flex flex-col items-end gap-1">
+      <button
+        onClick={handle}
+        disabled={loading}
+        className="rounded-lg border border-emerald-300 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-100 disabled:opacity-50"
+      >
+        {loading
+          ? total > 0 ? `Sync… ${done}/${total}` : "Démarrage…"
+          : "Sync formations EDUFORM"}
+      </button>
+      {msg && <p className="text-xs text-slate-500 max-w-[220px] text-right">{msg}</p>}
+    </div>
   );
 }
 
