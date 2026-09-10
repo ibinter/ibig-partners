@@ -26,6 +26,7 @@ model User {
   status       String  @default("STARTER") // STARTER | SILVER | GOLD | MASTER | ELITE
   active       Boolean @default(true)
   approved     Boolean @default(false) // validation manuelle des inscriptions
+  emailVerified Boolean @default(false) // vérification adresse email
 
   // Sécurité — protection brute-force
   loginAttempts Int      @default(0)
@@ -79,6 +80,7 @@ model User {
   auditLogs        AuditLog[]
   otpCode          OtpCode?
   passwordResetTokens PasswordResetToken[]
+  emailVerificationTokens EmailVerificationToken[]
   pushSubscriptions PushSubscription[]
   verification     VerificationRequest?
   trainingProgress TrainingProgress[]
@@ -493,6 +495,19 @@ model PasswordResetToken {
 
   @@index([userId])
   @@index([token])
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([userId])
 }
 
 // ─── Académie IBIG — modules de formation ───────────────────────────────────

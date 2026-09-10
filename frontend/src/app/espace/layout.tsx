@@ -92,9 +92,30 @@ export default async function EspaceLayout({
     user.role === "PARTNER" && user.verificationStatus !== "VERIFIED";
   const verifRejected = user.verificationStatus === "REJECTED";
   const verifPending = user.verificationStatus === "SUBMITTED";
+  const emailNotVerified = user.role === "PARTNER" && !(user as any).emailVerified;
 
   return (
     <DashboardShell nav={NAV} user={user} variant="partner">
+      {emailNotVerified && (
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">📧</span>
+            <div>
+              <p className="text-sm font-semibold text-blue-900">
+                Confirmez votre adresse email
+              </p>
+              <p className="text-xs text-blue-800">
+                Un email de vérification vous a été envoyé. Cliquez sur le lien pour sécuriser votre compte.
+              </p>
+            </div>
+          </div>
+          <form action="/api/auth/resend-verification" method="POST">
+            <button type="submit" className="shrink-0 rounded-xl bg-blue-600 px-4 py-2 text-sm font-bold text-white hover:bg-blue-700">
+              Renvoyer l&apos;email →
+            </button>
+          </form>
+        </div>
+      )}
       {needsVerification && (
         <Link
           href="/espace/verification"

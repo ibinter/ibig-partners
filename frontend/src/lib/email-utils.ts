@@ -7,14 +7,15 @@ import { Resend } from "resend";
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const FROM = process.env.EMAIL_FROM ?? "IBIG PARTNERS <noreply@mail.ibigpartners.com>";
 
-export async function sendEmail(opts: { to: string; subject: string; html: string }) {
+export async function sendEmail(opts: { to: string; subject: string; html: string }): Promise<{ emailId?: string }> {
   if (!resend) {
     console.log(`[EMAIL DEV] To: ${opts.to} | Subject: ${opts.subject}`);
-    return;
+    return {};
   }
   const result = await resend.emails.send({ from: FROM, ...opts });
   if (result.error) {
     console.error("[EMAIL ERROR]", result.error);
     throw new Error(`Email send failed: ${result.error.message}`);
   }
+  return { emailId: result.data?.id };
 }

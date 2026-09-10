@@ -5,6 +5,7 @@
  */
 
 import { Resend } from "resend";
+import { prisma } from "@/lib/prisma";
 
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
@@ -40,6 +41,16 @@ async function sendEmail(opts: {
     const msg = err instanceof Error ? err.message : String(err);
     console.error("[EMAIL EXCEPTION]", msg);
     return { ok: false, error: msg };
+  }
+}
+
+// ─── Lecture template DB (avec fallback silencieux) ──────────────────────
+async function getDbTemplate(slug: string): Promise<{ subject: string; body: string } | null> {
+  try {
+    const t = await (prisma as any).emailTemplate.findUnique({ where: { slug } });
+    return t ? { subject: t.subject, body: t.body } : null;
+  } catch {
+    return null;
   }
 }
 
@@ -117,6 +128,18 @@ export async function sendRegistrationReceivedEmail(opts: {
   code: string;
   sponsorName?: string;
 }): Promise<EmailResult> {
+  const tpl = await getDbTemplate("bienvenue");
+  if (tpl) {
+    const subject = tpl.subject
+      .replace(/\{\{firstName\}\}/g, opts.firstName)
+      .replace(/\{\{code\}\}/g, opts.code);
+    const bodyHtml = tpl.body
+      .replace(/\{\{firstName\}\}/g, opts.firstName)
+      .replace(/\{\{code\}\}/g, opts.code)
+      .replace(/\{\{sponsorName\}\}/g, opts.sponsorName ?? "");
+    return sendEmail({ to: opts.to, subject, html: layout(bodyHtml) });
+  }
+
   const html = layout(`
     <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
       ${opts.firstName}, votre inscription est bien reçue ✅
@@ -243,6 +266,18 @@ export async function sendAccountApprovedEmail(opts: {
   firstName: string;
   code: string;
 }) {
+  const tpl = await getDbTemplate("approbation");
+  if (tpl) {
+    const subject = tpl.subject
+      .replace(/\{\{firstName\}\}/g, opts.firstName)
+      .replace(/\{\{code\}\}/g, opts.code);
+    const bodyHtml = tpl.body
+      .replace(/\{\{firstName\}\}/g, opts.firstName)
+      .replace(/\{\{code\}\}/g, opts.code);
+    await sendEmail({ to: opts.to, subject, html: layout(bodyHtml) });
+    return;
+  }
+
   const html = layout(`
     <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
       Votre compte est activé ✅
@@ -1307,12 +1342,56 @@ export async function sendStatusUpEmail(opts: {
 
 // ─── E-mail 5 : Annonce de l'équipe ───────────────────────────────────────
 
+// ─── E-mail : Vérification adresse email ─────────────────────────────────
+export async function sendEmailVerificationEmail(opts: {
+  to: string;
+  firstName: string;
+  verifyUrl: string;
+}): Promise<EmailResult> {
+  const html = layout(`
+    <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
+      ${opts.firstName}, confirmez votre adresse email 📧
+    </h2>
+    <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
+      Pour sécuriser votre compte <strong>IBIG PARTNERS</strong> et vous garantir
+      la réception de toutes nos communications, cliquez sur le bouton ci-dessous
+      pour confirmer votre adresse email.
+    </p>
+    <p style="margin:0 0 24px;color:#5b6577;font-size:14px;">
+      Ce lien est valable <strong>24 heures</strong>. Si vous n'êtes pas à l'origine
+      de cette inscription, ignorez simplement cet email.
+    </p>
+    ${btn("Confirmer mon adresse email ✓", opts.verifyUrl)}
+    <hr style="margin:28px 0;border:none;border-top:1px solid #e2e8f0;" />
+    <p style="margin:0;font-size:12px;color:#94a3b8;">
+      Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br/>
+      <a href="${opts.verifyUrl}" style="color:#0b5fff;font-size:11px;word-break:break-all;">${opts.verifyUrl}</a>
+    </p>
+  `);
+
+  return sendEmail({
+    to: opts.to,
+    subject: "📧 Confirmez votre adresse email — IBIG PARTNERS",
+    html,
+  });
+}
+
+// ─── E-mail : Annonce admin → affilié ────────────────────────────────────
 export async function sendAnnouncementEmail(opts: {
   to: string;
   firstName: string;
   title: string;
   body: string;
 }) {
+  // Tente de charger un template personnalisé depuis la base
+  const tpl = await getDbTemplate("annonce");
+  const subject = tpl?.subject?.replace("{{title}}", opts.title) ?? `[IBIG PARTNERS] ${opts.title}`;
+  const bodyContent = tpl?.body
+    ?.replace("{{firstName}}", opts.firstName)
+    .replace("{{title}}", opts.title)
+    .replace("{{body}}", opts.body)
+    ?? opts.body;
+
   const html = layout(`
     <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
       ${opts.title}
@@ -1322,16 +1401,12 @@ export async function sendAnnouncementEmail(opts: {
     </p>
     <hr style="margin:16px 0;border:none;border-top:1px solid #e2e8f0;" />
     <div style="font-size:15px;color:#374151;line-height:1.7;white-space:pre-line;">
-      ${opts.body}
+      ${bodyContent}
     </div>
     ${btn("Accéder à mon espace", `${SITE}/espace`)}
   `);
 
-  await sendEmail({
-    to: opts.to,
-    subject: `[IBIG PARTNERS] ${opts.title}`,
-    html,
-  });
+  await sendEmail({ to: opts.to, subject, html });
 }
 
 // ─── E-mail : Message sur une opportunité ────────────────────────────────────

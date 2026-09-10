@@ -31,10 +31,18 @@ export async function GET(req: Request) {
         });
         if (!already) {
           try {
-            await sendEmail({ to: p.email, subject: seq.subject, html: seq.bodyFn(p.firstName) });
+            const { emailId } = await sendEmail({ to: p.email, subject: seq.subject, html: seq.bodyFn(p.firstName) });
             await (prisma as any).emailSequenceSend.create({
               data: { id: `seq_${p.id}_${seq.day}`, userId: p.id, day: seq.day },
             });
+            // Tracker le Resend emailId pour suivi de délivrabilité
+            if (emailId) {
+              await (prisma as any).emailSequenceLog.upsert({
+                where: { userId_sequence_step: { userId: p.id, sequence: "CRON_ONBOARDING", step: `D${seq.day}` } },
+                create: { userId: p.id, sequence: "CRON_ONBOARDING", step: `D${seq.day}`, emailId },
+                update: { emailId },
+              });
+            }
             sent++;
           } catch { /* continue */ }
           await new Promise((r) => setTimeout(r, 120));

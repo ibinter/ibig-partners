@@ -10,8 +10,9 @@ import {
   hashPassword,
   verifyPassword,
 } from "@/lib/auth";
-import { sendRegistrationReceivedEmail } from "@/lib/email";
+import { sendRegistrationReceivedEmail, sendEmailVerificationEmail } from "@/lib/email";
 import { logActivity } from "@/lib/activity";
+import { addToBroadcast } from "@/app/admin/messages/actions";
 
 function slugifyName(s: string): string {
   return s
@@ -189,6 +190,20 @@ export async function registerAction(_prev: unknown, formData: FormData) {
     if (sponsor) sponsorName = `${sponsor.firstName} ${sponsor.lastName}`;
   }
 
+  // Créer un token de vérification email (valide 24h)
+  const crypto = await import("crypto");
+  const verifyToken = crypto.randomBytes(32).toString("hex");
+  await (prisma as any).emailVerificationToken.create({
+    data: {
+      userId: user.id,
+      token: verifyToken,
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    },
+  });
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const verifyUrl = `${siteUrl}/api/auth/verify-email?token=${verifyToken}`;
+
   after(async () => {
     await sendRegistrationReceivedEmail({
       to: user.email,
@@ -196,7 +211,15 @@ export async function registerAction(_prev: unknown, formData: FormData) {
       code: user.code,
       sponsorName,
     });
+    await sendEmailVerificationEmail({
+      to: user.email,
+      firstName: user.firstName,
+      verifyUrl,
+    });
   });
+
+  // Ajouter au canal broadcast (silencieux si le canal n'existe pas encore)
+  await addToBroadcast(user.id).catch(() => {});
 
   await logActivity({ userId: user.id, action: "REGISTER", detail: `Code: ${user.code}` });
   await createSession({ userId: user.id, role: user.role });

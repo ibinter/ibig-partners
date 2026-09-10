@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PageHeader, Card } from "@/components/ui";
 import { formatDate } from "@/lib/format";
+import { openBroadcast } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -31,9 +32,16 @@ export default async function AdminMessagesPage() {
           title="Messagerie"
           subtitle="Échangez en direct avec les affiliés — bienvenue, conseils, instructions."
         />
-        <Link href="/admin/partenaires" className="shrink-0 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors">
-          + Nouveau message
-        </Link>
+        <div className="flex items-center gap-2">
+          <form action={openBroadcast}>
+            <button type="submit" className="shrink-0 rounded-xl bg-violet-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-700 transition-colors">
+              📣 Annonce générale
+            </button>
+          </form>
+          <Link href="/admin/partenaires" className="shrink-0 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors">
+            + Nouveau message
+          </Link>
+        </div>
       </div>
 
       <Card className="p-0">
