@@ -7205,18 +7205,24 @@ export async function POST() {
       return NextResponse.json({ error: "Branche ibig-eduform introuvable en base" }, { status: 500 });
     }
 
+    const resolveUrl = (slug: string, raw: string) => {
+      if (raw && raw !== "https://ibig-eduform.com" && raw !== "https://ibig-eduform.com/") return raw;
+      return `https://ibig-eduform.com/formation/${slug.replace(/^eduform-/, "")}`;
+    };
+
     await Promise.all(
-      EDUFORM_PRODUCTS.map(p =>
-        prisma.product.upsert({
+      EDUFORM_PRODUCTS.map(p => {
+        const siteUrl = resolveUrl(p.slug, p.siteUrl || "");
+        return prisma.product.upsert({
           where: { slug: p.slug },
-          update: { name: p.name, price: p.price, branchId: mainBranch.id, active: true, siteUrl: p.siteUrl || "" },
+          update: { name: p.name, price: p.price, branchId: mainBranch.id, active: true, siteUrl },
           create: {
             slug: p.slug, name: p.name, pricingType: p.pricingType, price: p.price,
-            rate: p.rate, siteUrl: p.siteUrl || "", description: p.description || "",
+            rate: p.rate, siteUrl, description: p.description || "",
             branchId: mainBranch.id, active: true,
           },
-        })
-      )
+        });
+      })
     );
     const upserted = EDUFORM_PRODUCTS.length;
 
