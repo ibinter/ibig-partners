@@ -87,7 +87,7 @@ type MissionRow = {
   cpAmount: number; rewardTrigger: string; zone: string;
   difficulty: string; minLevel: string; slots: number;
   proofInstructions: string; adminNote: string;
-  deadline: string | null; status: string; active: boolean; createdAt: string;
+  deadline: string | null; status: string; active: boolean; viewCount: number; createdAt: string;
   // soumission partenaire
   source: string; submissionType: string; validationStatus: string;
   rejectionNote: string; contactName: string; contactPhone: string; contactEmail: string;
@@ -806,6 +806,7 @@ export default function MissionsAdminClient({
                     </span>
                   )}
                   <span className="text-xs text-slate-400">{m.applications.length} candid.</span>
+                  <span className="text-xs text-slate-400">👁️ {(m.viewCount ?? 0).toLocaleString("fr-FR")} vues</span>
                   <span className={`text-slate-400 transition-transform ${isOpen ? "rotate-180" : ""}`}>▼</span>
                 </div>
               </button>

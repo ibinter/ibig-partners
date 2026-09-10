@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 
 const DIFFICULTY_CONFIG: Record<string, { label: string; badge: string; icon: string }> = {
@@ -109,6 +109,14 @@ function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
   const [interestLoading, setInterestLoading] = useState(false);
 
   const isPartnerMission = m.source === "PARTNER";
+
+  useEffect(() => {
+    fetch("/api/missions/view", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ missionId: m.id }),
+    }).catch(() => {});
+  }, [m.id]);
 
   async function handleInterest() {
     setInterestLoading(true);

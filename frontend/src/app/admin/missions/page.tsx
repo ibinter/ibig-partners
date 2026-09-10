@@ -47,6 +47,7 @@ export default async function AdminMissionsPage() {
     deadline: m.deadline ? (m.deadline instanceof Date ? m.deadline.toISOString() : String(m.deadline)) : null,
     status: m.status,
     active: m.active ?? true,
+    viewCount: m.viewCount ?? 0,
     createdAt: m.createdAt instanceof Date ? m.createdAt.toISOString() : String(m.createdAt),
     source: m.source ?? "IBIG",
     submissionType: m.submissionType ?? "MISSION",
