@@ -27,7 +27,7 @@ export async function resetPasswordAction(_prev: unknown, formData: FormData) {
   await prisma.$transaction([
     prisma.user.update({
       where: { id: row.userId },
-      data: { passwordHash },
+      data: { passwordHash, loginAttempts: 0, lockedUntil: null },
     }),
     prisma.$executeRaw`UPDATE "PasswordResetToken" SET used = true WHERE id = ${row.id}`,
   ]);
