@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
+import { createSession } from "@/lib/auth";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -24,6 +24,11 @@ export async function GET(req: Request) {
     return NextResponse.redirect(new URL("/espace?email-error=expire", req.url));
   }
 
+  const user = await prisma.user.findUnique({
+    where: { id: record.userId },
+    select: { id: true, role: true },
+  });
+
   await prisma.$transaction([
     (prisma as any).emailVerificationToken.update({
       where: { id: record.id },
@@ -34,6 +39,11 @@ export async function GET(req: Request) {
       data: { emailVerified: true },
     }),
   ]);
+
+  // Connecter automatiquement l'affilié après vérification
+  if (user) {
+    await createSession({ userId: user.id, role: user.role });
+  }
 
   return NextResponse.redirect(new URL("/espace?email-verifie=1", req.url));
 }
