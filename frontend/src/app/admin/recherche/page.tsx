@@ -8,11 +8,12 @@ export const dynamic = "force-dynamic";
 export default async function RecherchePage({
   searchParams,
 }: {
-  searchParams: { q?: string };
+  searchParams: Promise<{ q?: string }>;
 }) {
   await requireAdmin();
 
-  const q = (searchParams.q ?? "").trim();
+  const { q: rawQ = "" } = await searchParams;
+  const q = rawQ.trim();
 
   if (!q || q.length < 2) {
     return (
@@ -55,8 +56,8 @@ export default async function RecherchePage({
       where: {
         OR: [
           { reference: like },
-          { clientName: like } as any,
-          { clientPhone: like } as any,
+          { customerName: like } as any,
+          { customerPhone: like } as any,
         ],
       },
       include: {

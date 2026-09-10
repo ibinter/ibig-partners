@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 interface Message {
   role: "user" | "assistant";
@@ -16,12 +17,9 @@ const SUGGESTIONS = [
   "Quelles formations dois-je suivre en priorité ?",
 ];
 
-export default function AssistantPage({
-  searchParams,
-}: {
-  searchParams: { topic?: string };
-}) {
-  const topic = searchParams?.topic;
+export default function AssistantPage() {
+  const searchParams = useSearchParams();
+  const topic = searchParams.get("topic") ?? undefined;
 
   const [messages, setMessages] = useState<Message[]>([
     {

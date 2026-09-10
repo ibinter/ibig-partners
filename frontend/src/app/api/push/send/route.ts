@@ -5,10 +5,15 @@ import webpush from "web-push";
 
 export async function POST(req: Request) {
   await requireAdmin();
+  const vapidPublic = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+  const vapidPrivate = process.env.VAPID_PRIVATE_KEY;
+  if (!vapidPublic || !vapidPrivate) {
+    return NextResponse.json({ error: "Push notifications non configurées (VAPID manquant)" }, { status: 500 });
+  }
   webpush.setVapidDetails(
     "mailto:noreply@ibigpartners.com",
-    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-    process.env.VAPID_PRIVATE_KEY!
+    vapidPublic,
+    vapidPrivate
   );
   const body = await req.json();
   const { title, body: msgBody, url, userId } = body as {

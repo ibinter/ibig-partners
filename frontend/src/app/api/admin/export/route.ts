@@ -107,8 +107,8 @@ export async function GET(req: NextRequest) {
         montant: s.amount,
         statut: s.status,
         date: s.createdAt.toISOString().slice(0, 10),
-        client_nom: (s as any).clientName ?? "",
-        client_telephone: (s as any).clientPhone ?? "",
+        client_nom: (s as any).customerName ?? "",
+        client_telephone: (s as any).customerPhone ?? "",
       }))
     );
   } else if (type === "commissions") {
