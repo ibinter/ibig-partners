@@ -5,10 +5,10 @@ import { Button, LinkButton } from "@/components/ui";
 
 export default function RejoindreError({
   error,
-  unstable_retry,
+  reset,
 }: {
   error: Error & { digest?: string };
-  unstable_retry: () => void;
+  reset: () => void;
 }) {
   useEffect(() => {
     console.error("Erreur sur la page d'inscription :", error);
@@ -22,7 +22,7 @@ export default function RejoindreError({
           Un incident temporaire est survenu. Vous pouvez réessayer dans quelques instants.
         </p>
         <div className="mt-6 flex justify-center gap-3">
-          <Button type="button" onClick={() => unstable_retry()}>
+          <Button type="button" onClick={() => reset()}>
             Réessayer
           </Button>
           <LinkButton href="/" variant="secondary">Accueil</LinkButton>
