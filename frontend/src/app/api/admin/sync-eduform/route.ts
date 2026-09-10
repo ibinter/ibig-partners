@@ -6615,11 +6615,6 @@ export async function POST() {
       results.push(result);
     }
 
-    // ── 5. Sync complet vers la branche principale ibig-eduform ──
-    // C'est la branche que lit l'API /api/catalogue — elle doit contenir TOUTES les formations.
-    const mainResult = await syncBranchCatalog("ibig-eduform", "EDUFORM — Catalogue Complet", productsToSync, { notify: false });
-    results.push(mainResult);
-
     const okResults    = results.filter(r => r.ok);
     const errorCount   = results.length - okResults.length;
     const totalAdded   = okResults.reduce((s, r) => s + (r as any).diff.added.length, 0);
