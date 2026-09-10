@@ -76,6 +76,7 @@ type MissionRow = {
 
 function rewardLabel(m: MissionRow) {
   if (m.rewardType === "CP") return `${m.cpAmount} CP`;
+  if (m.compensationAmount === 0 && m.compensationType !== "PERCENT") return "Variable";
   const cash = m.compensationType === "PERCENT"
     ? (m.compensationAmount / 100).toFixed(1) + "%"
     : new Intl.NumberFormat("fr-FR").format(m.compensationAmount) + " FCFA";
