@@ -33,7 +33,7 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
   return (
     <a
       href={href}
-      className="ibig-nav-link relative rounded-lg px-3 py-2 text-slate-600 transition-colors after:absolute after:bottom-1 after:left-1/2 after:h-0.5 after:w-0 after:-translate-x-1/2 after:rounded-full after:bg-[#FF6A00] after:transition-all hover:text-[#FF6A00] hover:after:w-4"
+      className="ibig-nav-link relative whitespace-nowrap rounded-lg px-2.5 py-2 text-slate-600 transition-colors after:absolute after:bottom-1 after:left-1/2 after:h-0.5 after:w-0 after:-translate-x-1/2 after:rounded-full after:bg-[#FF6A00] after:transition-all hover:text-[#FF6A00] hover:after:w-4"
     >
       {children}
     </a>
@@ -102,23 +102,26 @@ export function SiteHeader({ lang = "fr" }: { lang?: Lang }) {
     <>
     <MarqueeBanner lang={lang} />
     <header className="sticky top-0 z-[100] border-b border-slate-200/70 bg-white/85 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70 shadow-[0_1px_0_rgba(11,79,224,0.04),0_8px_24px_-12px_rgba(11,79,224,0.08)]">
-      <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 pr-4 py-2.5 sm:px-6">
+      <div className="relative mx-auto flex max-w-screen-2xl items-center justify-between gap-2 px-4 py-3 sm:px-6 lg:gap-4 lg:px-8">
         <Logo lang={lang} />
 
         {/* Navigation desktop */}
-        <nav className="hidden items-center gap-1 text-sm font-medium text-slate-600 lg:flex">
+        <nav className="hidden items-center gap-0.5 text-[13px] font-medium text-slate-600 lg:flex xl:gap-1 xl:text-sm">
           {HEADER_NAV[lang].map((item) => (
             <NavLink key={item.href} href={item.href}>{item.label}</NavLink>
           ))}
           <Link
             href={t.topHref}
-            className="ml-1 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-400/15 to-orange-500/15 px-3 py-1.5 text-amber-700 font-semibold ring-1 ring-amber-300/40 hover:from-amber-400/25 hover:to-orange-500/25 transition-all"
+            className="ml-1 inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-gradient-to-r from-amber-400/15 to-orange-500/15 px-3 py-1.5 text-amber-700 font-semibold ring-1 ring-amber-300/40 hover:from-amber-400/25 hover:to-orange-500/25 transition-all"
           >
             <span>🏆</span>
             <span className="hidden xl:inline">{t.top}</span>
             <span className="xl:hidden">Top</span>
           </Link>
-          <NavLink href={t.partnersHref}>{t.partners}</NavLink>
+          <a href={t.partnersHref} className="ibig-nav-link relative whitespace-nowrap rounded-lg px-2.5 py-2 text-slate-600 transition-colors after:absolute after:bottom-1 after:left-1/2 after:h-0.5 after:w-0 after:-translate-x-1/2 after:rounded-full after:bg-[#FF6A00] after:transition-all hover:text-[#FF6A00] hover:after:w-4">
+            <span className="xl:hidden">Partenaires</span>
+            <span className="hidden xl:inline">{t.partners}</span>
+          </a>
         </nav>
 
         <div className="flex items-center gap-2">
