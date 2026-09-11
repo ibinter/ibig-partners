@@ -41,7 +41,7 @@ const SECURITY_HEADERS: Record<string, string> = {
     "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
-    "img-src 'self' data: https://res.cloudinary.com https://lh3.googleusercontent.com",
+    "img-src 'self' data: https://res.cloudinary.com https://lh3.googleusercontent.com https://*.supabase.co",
     "connect-src 'self' https://api.resend.com https://*.supabase.co",
     "frame-ancestors 'none'",
   ].join("; "),
