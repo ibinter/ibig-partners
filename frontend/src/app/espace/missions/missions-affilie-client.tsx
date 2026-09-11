@@ -216,7 +216,7 @@ function MissionModal({ m, onClose, applyAction, withdrawAction, submitProofActi
           )}
 
           {/* Médias */}
-          {isPartnerMission && m.media.length > 0 && (
+          {m.media.length > 0 && (
             <div>
               <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wide mb-2">📎 Pièces jointes</p>
               <div className="flex flex-wrap gap-2">
@@ -396,8 +396,7 @@ function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
         {firstImage && firstImage.url && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={firstImage.url} alt={m.title}
-            className="w-full h-36 object-cover rounded-t-2xl"
-            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
+            className="w-full h-36 object-cover rounded-t-2xl" />
         )}
 
         <div className="p-4 flex-1 space-y-3">
@@ -438,7 +437,7 @@ function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
               : <span className="text-rose-500 font-semibold">Complet</span>}
           </div>
 
-          {isPartnerMission && m.media.length > 1 && (
+          {m.media.length > 1 && (
             <p className="text-[10px] text-slate-400">📎 {m.media.length} pièces jointes</p>
           )}
         </div>
