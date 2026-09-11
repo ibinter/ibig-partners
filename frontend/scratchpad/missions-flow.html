@@ -1,0 +1,571 @@
+<title>Flux Missions & Opportunités — IBIG PARTNERS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500&display=swap">
+
+<style>
+  :root {
+    --navy:   #0F1A2E;
+    --navy2:  #162035;
+    --blue:   #2563EB;
+    --blue-l: #3B82F6;
+    --blue-xl:#EFF6FF;
+    --amber:  #D97706;
+    --amber-l:#FEF3C7;
+    --green:  #059669;
+    --green-l:#D1FAE5;
+    --red:    #DC2626;
+    --red-l:  #FEE2E2;
+    --purple: #7C3AED;
+    --purple-l:#EDE9FE;
+    --slate:  #64748B;
+    --slate-l:#F1F5F9;
+    --ink:    #0F172A;
+    --body-bg:#F8FAFC;
+    --card-bg:#FFFFFF;
+    --border: #E2E8F0;
+    --text:   #334155;
+    --muted:  #94A3B8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --navy:   #0A1020;
+      --navy2:  #111827;
+      --blue-xl:#1E3A5F;
+      --amber-l:#451A00;
+      --green-l:#064E3B;
+      --red-l:  #450A0A;
+      --purple-l:#2E1065;
+      --slate-l:#1E293B;
+      --body-bg:#0F172A;
+      --card-bg:#1E293B;
+      --border: #334155;
+      --ink:    #F1F5F9;
+      --text:   #CBD5E1;
+      --muted:  #64748B;
+    }
+  }
+  :root[data-theme="dark"] {
+    --navy:   #0A1020;
+    --navy2:  #111827;
+    --blue-xl:#1E3A5F;
+    --amber-l:#451A00;
+    --green-l:#064E3B;
+    --red-l:  #450A0A;
+    --purple-l:#2E1065;
+    --slate-l:#1E293B;
+    --body-bg:#0F172A;
+    --card-bg:#1E293B;
+    --border: #334155;
+    --ink:    #F1F5F9;
+    --text:   #CBD5E1;
+    --muted:  #64748B;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--body-bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 32px 16px 64px;
+  }
+
+  .page { max-width: 900px; margin: 0 auto; }
+
+  /* Header */
+  .page-header {
+    background: linear-gradient(135deg, #0F1A2E 0%, #162035 60%, #1E3A5F 100%);
+    border-radius: 16px;
+    padding: 32px 36px;
+    margin-bottom: 32px;
+    color: #fff;
+  }
+  .page-header .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #93C5FD;
+    margin-bottom: 8px;
+  }
+  .page-header h1 {
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1.2;
+    text-wrap: balance;
+    margin-bottom: 10px;
+  }
+  .page-header p {
+    color: #CBD5E1;
+    font-size: 14px;
+    max-width: 600px;
+  }
+
+  /* Section titles */
+  .section-title {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* Cards */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  /* Flow diagram */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 32px;
+  }
+  .flow-step {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 16px;
+    position: relative;
+  }
+  .flow-step + .flow-step { margin-top: 0; }
+
+  .step-spine {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .step-num {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 900;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .step-line {
+    width: 2px;
+    flex: 1;
+    min-height: 24px;
+    background: var(--border);
+    margin: 4px 0;
+  }
+  .flow-step:last-child .step-line { display: none; }
+
+  .step-body {
+    padding-bottom: 24px;
+  }
+  .step-actor {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .step-label {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 6px;
+    text-wrap: balance;
+  }
+  .step-desc {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 10px;
+  }
+
+  /* Pills / tags */
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .tag-blue   { background: var(--blue-xl);   color: var(--blue); }
+  .tag-amber  { background: var(--amber-l);  color: var(--amber); }
+  .tag-green  { background: var(--green-l);  color: var(--green); }
+  .tag-red    { background: var(--red-l);    color: var(--red); }
+  .tag-purple { background: var(--purple-l); color: var(--purple); }
+  .tag-slate  { background: var(--slate-l);  color: var(--slate); }
+
+  /* Warn box */
+  .warn-box {
+    background: var(--amber-l);
+    border: 1.5px solid #FCD34D;
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: #78350F;
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .warn-box { color: #FDE68A; border-color: #92400E; }
+  }
+  :root[data-theme="dark"] .warn-box { color: #FDE68A; border-color: #92400E; }
+
+  .info-box {
+    background: var(--blue-xl);
+    border: 1.5px solid #BFDBFE;
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: #1E40AF;
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .info-box { color: #93C5FD; border-color: #1E3A5F; }
+  }
+  :root[data-theme="dark"] .info-box { color: #93C5FD; border-color: #1E3A5F; }
+
+  /* 2 types table */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 32px; }
+  @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+  .type-card {
+    border-radius: 12px;
+    padding: 20px;
+    border: 2px solid;
+  }
+  .type-card.offer  { border-color: #3B82F6; background: var(--blue-xl); }
+  .type-card.demand { border-color: #7C3AED; background: var(--purple-l); }
+  .type-card h3 { font-size: 15px; font-weight: 800; color: var(--ink); margin-bottom: 6px; }
+  .type-card .sub { font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 12px; }
+  .type-card.offer .sub { color: var(--blue); }
+  .type-card.demand .sub { color: var(--purple); }
+  .type-card ul { padding-left: 16px; }
+  .type-card li { font-size: 13px; color: var(--text); margin-bottom: 4px; line-height: 1.5; }
+
+  /* Where display */
+  .where-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 32px; }
+  .where-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .where-card .icon { font-size: 24px; margin-bottom: 8px; }
+  .where-card h4 { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .where-card p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .where-card .badge {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  /* Rules */
+  .rules { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+  .rule {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .rule-icon { font-size: 20px; flex-shrink: 0; line-height: 1; margin-top: 1px; }
+  .rule-text strong { display: block; font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+  .rule-text span { font-size: 13px; color: var(--text); line-height: 1.6; }
+
+  /* Step colors */
+  .s-partner .step-num  { background: #EFF6FF; color: #2563EB; }
+  .s-partner .step-actor { color: var(--blue); }
+  .s-ibig .step-num    { background: #FEF3C7; color: #D97706; }
+  .s-ibig .step-actor  { color: var(--amber); }
+  .s-platform .step-num { background: #D1FAE5; color: #059669; }
+  .s-platform .step-actor { color: var(--green); }
+  .s-result .step-num   { background: #EDE9FE; color: #7C3AED; }
+  .s-result .step-actor { color: var(--purple); }
+
+  hr.divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  .mono { font-family: 'JetBrains Mono', monospace; }
+</style>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="eyebrow">IBIG PARTNERS · Architecture des missions</div>
+    <h1>Comment traiter les missions<br>et opportunités des partenaires ?</h1>
+    <p>Flux complet : de la soumission par le partenaire jusqu'à l'affichage sur la plateforme, avec IBIG comme coordinateur central.</p>
+  </div>
+
+  <!-- Les 2 types -->
+  <p class="section-title">Les 2 types de soumissions</p>
+  <div class="two-col">
+    <div class="type-card offer">
+      <div class="sub">Type A — Offre</div>
+      <h3>Le partenaire PROPOSE quelque chose</h3>
+      <ul>
+        <li>Un terrain à vendre</li>
+        <li>Un service à proposer à des clients</li>
+        <li>Un contact intéressant à mettre en relation</li>
+        <li>Un bien immobilier disponible</li>
+        <li>Une expertise spécifique</li>
+      </ul>
+    </div>
+    <div class="type-card demand">
+      <div class="sub">Type B — Demande / Recherche</div>
+      <h3>Le partenaire CHERCHE quelque chose</h3>
+      <ul>
+        <li>Une étude de marché pour un client</li>
+        <li>Un développeur web pour un projet</li>
+        <li>Un terrain pour un investisseur</li>
+        <li>Un fournisseur pour une entreprise cliente</li>
+        <li>Un financeur pour un projet</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Flow -->
+  <p class="section-title">Le flux de traitement complet</p>
+  <div class="flow">
+
+    <div class="flow-step s-partner">
+      <div class="step-spine">
+        <div class="step-num">1</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-body">
+        <div class="step-actor">👤 Partenaire</div>
+        <div class="step-label">Soumet son offre ou sa demande</div>
+        <div class="step-desc">
+          Le partenaire remplit un formulaire depuis son espace <span class="mono">/espace/missions</span>. Il décrit précisément ce qu'il propose ou recherche, joint des preuves, et attend la validation IBIG.
+        </div>
+        <div class="tags">
+          <span class="tag tag-blue">📝 Titre + description</span>
+          <span class="tag tag-blue">🖼 Photos / vidéos</span>
+          <span class="tag tag-blue">📄 Documents PDF</span>
+          <span class="tag tag-blue">📍 Localisation / zone</span>
+          <span class="tag tag-blue">💰 Prix indicatif (optionnel)</span>
+          <span class="tag tag-blue">📞 Ses coordonnées (cachées)</span>
+        </div>
+        <div class="warn-box">
+          ⚠️ Les coordonnées du partenaire soumettant ne sont <strong>jamais visibles</strong> des autres partenaires. Elles n'apparaissent que dans le backoffice IBIG.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-step s-ibig">
+      <div class="step-spine">
+        <div class="step-num">2</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-body">
+        <div class="step-actor">🏢 IBIG — Backoffice Admin</div>
+        <div class="step-label">Revue, enrichissement et validation</div>
+        <div class="step-desc">
+          L'admin IBIG reçoit une notification. Il examine la soumission, peut la corriger, fixer la récompense, et décider si elle mérite d'être publiée sur la plateforme.
+        </div>
+        <div class="tags">
+          <span class="tag tag-amber">✅ Valider / Refuser</span>
+          <span class="tag tag-amber">✏️ Modifier le titre/desc</span>
+          <span class="tag tag-amber">💵 Fixer la commission (FCFA ou %)</span>
+          <span class="tag tag-amber">🏷 Catégorie / Branche IBIG</span>
+          <span class="tag tag-amber">📢 Choisir : visible tous ou sélection</span>
+          <span class="tag tag-red">🚫 Cacher les infos de contact</span>
+        </div>
+        <div class="info-box">
+          💡 IBIG peut aussi créer ses propres missions directement (missions "descendantes") — ex : "Trouver 5 clients pour IBIG SOFT ce mois-ci".
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-step s-platform">
+      <div class="step-spine">
+        <div class="step-num">3</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-body">
+        <div class="step-actor">🌐 Plateforme — Vue tous partenaires</div>
+        <div class="step-label">Publication dans la "Bourse d'Opportunités"</div>
+        <div class="step-desc">
+          Une fois validée par IBIG, la mission/opportunité s'affiche dans une section dédiée visible par tous les partenaires connectés. Les infos de contact restent masquées.
+        </div>
+        <div class="tags">
+          <span class="tag tag-green">👁 Visible dans /espace/missions</span>
+          <span class="tag tag-green">🔒 Contact caché</span>
+          <span class="tag tag-green">📸 Photos/docs visibles</span>
+          <span class="tag tag-green">🏷 Branche + récompense affichés</span>
+          <span class="tag tag-green">🙋 Bouton "Je suis intéressé(e)"</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-step s-ibig">
+      <div class="step-spine">
+        <div class="step-num">4</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-body">
+        <div class="step-actor">🏢 IBIG — Mise en relation</div>
+        <div class="step-label">Un autre partenaire manifeste son intérêt</div>
+        <div class="step-desc">
+          Quand un second partenaire clique "Je suis intéressé(e)", IBIG reçoit une notification. C'est IBIG qui décide de mettre les deux partenaires en contact — jamais automatiquement.
+        </div>
+        <div class="tags">
+          <span class="tag tag-amber">🔔 Notification admin IBIG</span>
+          <span class="tag tag-amber">🤝 IBIG valide la mise en relation</span>
+          <span class="tag tag-amber">📞 IBIG donne les contacts aux deux</span>
+          <span class="tag tag-amber">📋 IBIG fixe les conditions</span>
+        </div>
+        <div class="warn-box">
+          ⚠️ <strong>Règle absolue :</strong> aucun partenaire ne voit le contact de l'autre sans accord IBIG. Toute discussion passe d'abord par IBIG. Le chat interne peut être utilisé avec IBIG en copie.
+        </div>
+      </div>
+    </div>
+
+    <div class="flow-step s-result">
+      <div class="step-spine">
+        <div class="step-num">5</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-body">
+        <div class="step-actor">💰 Résultat & Commission</div>
+        <div class="step-label">Affaire conclue → récompense déclenchée</div>
+        <div class="step-desc">
+          Si l'affaire aboutit (vente, contrat signé, mise en relation réussie), IBIG valide le résultat. Le partenaire qui a soumis l'opportunité reçoit sa commission selon les règles fixées à l'étape 2.
+        </div>
+        <div class="tags">
+          <span class="tag tag-purple">✅ Preuve soumise par le partenaire</span>
+          <span class="tag tag-purple">🏆 IBIG valide le résultat</span>
+          <span class="tag tag-purple">💵 Commission créditée</span>
+          <span class="tag tag-purple">📊 Historique dans /espace/ventes</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Où ça s'affiche -->
+  <p class="section-title">Où s'affichent les opportunités sur la plateforme ?</p>
+  <div class="where-grid">
+    <div class="where-card">
+      <div class="icon">🌐</div>
+      <h4>/espace/missions</h4>
+      <p>Section principale pour tous les partenaires. Affiche les missions créées par IBIG ET les offres/demandes validées des partenaires.</p>
+      <span class="badge" style="background:var(--green-l);color:var(--green);">Tout partenaire connecté</span>
+    </div>
+    <div class="where-card">
+      <div class="icon">🔒</div>
+      <h4>Filtre "Mes soumissions"</h4>
+      <p>Chaque partenaire voit l'état de ses propres soumissions : En attente de validation, Publiée, Refusée, Clôturée.</p>
+      <span class="badge" style="background:var(--blue-xl);color:var(--blue);">Partenaire concerné uniquement</span>
+    </div>
+    <div class="where-card">
+      <div class="icon">🏢</div>
+      <h4>/admin/missions</h4>
+      <p>Vue admin IBIG complète : toutes les soumissions (même non validées), les contacts, les mises en relation en cours.</p>
+      <span class="badge" style="background:var(--amber-l);color:var(--amber);">Admin IBIG uniquement</span>
+    </div>
+    <div class="where-card">
+      <div class="icon">📣</div>
+      <h4>Notification push</h4>
+      <p>Quand une nouvelle opportunité est validée, tous les partenaires reçoivent une notification email ou in-app selon leur profil.</p>
+      <span class="badge" style="background:var(--purple-l);color:var(--purple);">Opt-in possible</span>
+    </div>
+  </div>
+
+  <!-- Règles clés -->
+  <p class="section-title">Les règles à coder dans le système</p>
+  <div class="rules">
+    <div class="rule">
+      <div class="rule-icon">🔒</div>
+      <div class="rule-text">
+        <strong>Contact masqué jusqu'à mise en relation validée</strong>
+        <span>Email, téléphone et identité du soumettant sont masqués dans la fiche publique. Seul IBIG les voit dans le backoffice. Quand IBIG valide une mise en relation, les deux partenaires reçoivent les coordonnées par email privé.</span>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-icon">✅</div>
+      <div class="rule-text">
+        <strong>Double validation obligatoire</strong>
+        <span>Une soumission ne s'affiche jamais automatiquement. Elle passe toujours par l'étape "En attente de validation IBIG" avant toute publication. L'admin peut modifier, refuser, ou enrichir avant de publier.</span>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-icon">📸</div>
+      <div class="rule-text">
+        <strong>Médias acceptés : images, vidéos, PDF</strong>
+        <span>Le formulaire de soumission accepte photos (JPG/PNG), vidéos (MP4, lien YouTube/WhatsApp), et documents PDF. Stockage sur Supabase Storage. L'admin voit tout, le public voit seulement ce qu'IBIG a validé.</span>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-icon">💰</div>
+      <div class="rule-text">
+        <strong>Commission fixée par IBIG, pas par le partenaire</strong>
+        <span>Le partenaire peut indiquer un prix indicatif, mais c'est IBIG qui fixe la commission réelle et les conditions de déclenchement (à la mise en relation, à la signature, au paiement).</span>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-icon">🏷</div>
+      <div class="rule-text">
+        <strong>Catégorisation par branche IBIG</strong>
+        <span>Chaque opportunité est rattachée à une branche (IMMO TRUST, SOFT, EDUFORM, DIGITAL, etc.) pour que les partenaires puissent filtrer par domaine et que les commissions soient bien calculées.</span>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-icon">⏱</div>
+      <div class="rule-text">
+        <strong>Durée de vie et slots</strong>
+        <span>Une opportunité peut avoir une date d'expiration et un nombre de slots (ex: "1 seul prestataire recherché" ou "offre ouverte à tous"). Quand tous les slots sont pris ou la date dépassée, IBIG clôture automatiquement.</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Résumé -->
+  <div class="card" style="border-left: 4px solid var(--blue);">
+    <div style="font-size:15px;font-weight:800;color:var(--ink);margin-bottom:10px;">📋 En résumé — Ce qu'il faut développer</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Côté partenaire (/espace)</div>
+        <ul style="padding-left:16px;font-size:13px;color:var(--text);line-height:1.9;">
+          <li>Formulaire "Soumettre une opportunité" avec upload médias</li>
+          <li>Onglet "Mes soumissions" avec statuts</li>
+          <li>Bourse d'opportunités (vue toutes missions validées)</li>
+          <li>Bouton "Je suis intéressé(e)" → notification IBIG</li>
+          <li>Historique de commission si l'affaire aboutit</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Côté admin IBIG (/admin)</div>
+        <ul style="padding-left:16px;font-size:13px;color:var(--text);line-height:1.9;">
+          <li>Queue de validation avec contacts visibles</li>
+          <li>Éditeur de fiche (titre, desc, branche, commission)</li>
+          <li>Gestion des mises en relation en attente</li>
+          <li>Validation du résultat et déclenchement commission</li>
+          <li>Vue des "intéressés" par opportunité</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
