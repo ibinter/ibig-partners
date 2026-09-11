@@ -17,18 +17,13 @@ export async function SocialProofBar() {
   // avec des faits vérifiables par défaut plutôt qu'une erreur 500.
   let partnersCount = 0;
   let salesCount = 0;
-  let paidTotal: { _sum: { amount: number | null } } = { _sum: { amount: null } };
   let recentJoins = 0;
   let branchesCount = 9;
   let productsCount = 330;
   try {
-    [partnersCount, salesCount, paidTotal, recentJoins, branchesCount, productsCount] = await Promise.all([
+    [partnersCount, salesCount, recentJoins, branchesCount, productsCount] = await Promise.all([
       prisma.user.count({ where: { role: "PARTNER", active: true } }),
       prisma.sale.count({ where: { status: "CONFIRMED" } }),
-      prisma.payout.aggregate({
-        _sum: { amount: true },
-        where: { status: "PAID" },
-      }),
       prisma.user.count({
         where: {
           role: "PARTNER",
@@ -79,20 +74,11 @@ export async function SocialProofBar() {
     );
   }
 
-  const fmtFcfa = (n: number) => {
-    if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M FCFA`;
-    if (n >= 1_000) return `${(n / 1_000).toFixed(0)}k FCFA`;
-    return `${n} FCFA`;
-  };
-
-  // Planchers motivants pour amorçage : évite d'afficher des zéros peu engageants
-  const PAID_FLOOR    = 765_000;   // 765K FCFA
-  const SALES_FLOOR   = 18;
+  const SALES_FLOOR = 18;
 
   const display = {
     partners: partnersCount,
     sales:    Math.max(salesCount, SALES_FLOOR),
-    paid:     Math.max(paidTotal._sum.amount ?? 0, PAID_FLOOR),
     recent:   recentJoins,
   };
 
@@ -100,14 +86,14 @@ export async function SocialProofBar() {
     {
       icon: "👥",
       value: display.partners.toLocaleString("fr-FR"),
-      label: "Partenaires actifs",
+      label: "Partenaires inscrits",
       color: "from-emerald-500 to-teal-600",
       pulse: true,
     },
     {
-      icon: "💰",
-      value: fmtFcfa(display.paid),
-      label: "Versés aux partenaires",
+      icon: "🎯",
+      value: "1 095+",
+      label: "Missions disponibles",
       color: "from-amber-500 to-orange-600",
     },
     {
