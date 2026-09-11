@@ -8,18 +8,18 @@ type Lang = "fr" | "en";
 export function Logo({ light = false, lang = "fr" }: { light?: boolean; lang?: Lang }) {
   return (
     <Link href={lang === "en" ? "/en" : "/"} className="group flex min-w-0 items-center gap-2 transition-transform hover:scale-[1.02]">
-      <span className="relative inline-flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl sm:h-12 sm:w-12 sm:rounded-2xl">
-        <Image src="/logo.png" alt="IBIG PARTNERS" width={48} height={48} priority className="object-contain" />
+      <span className="relative inline-flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl sm:h-[58px] sm:w-[58px] sm:rounded-2xl shadow-md">
+        <Image src="/logo.png" alt="IBIG PARTNERS" width={58} height={58} priority className="object-contain" />
       </span>
       <span className="flex min-w-0 flex-col leading-none">
         <span
-          className={`font-extrabold tracking-tight text-[13px] sm:text-[17px] ${light ? "text-white" : "text-[#041B4D]"}`}
+          className={`font-extrabold tracking-tight text-[15px] sm:text-[21px] ${light ? "text-white" : "text-[#041B4D]"}`}
           style={{ fontFamily: "var(--font-poppins, 'Poppins', sans-serif)" }}
         >
           IBIG <span style={{ color: "#FF6A00" }}>PARTNERS</span>
         </span>
         <span
-          className={`hidden sm:block text-[9px] font-semibold tracking-[0.18em] uppercase ${light ? "text-white/60" : "text-[#041B4D]/50"}`}
+          className={`hidden sm:block text-[9.5px] font-semibold tracking-[0.16em] uppercase ${light ? "text-white/60" : "text-[#041B4D]/45"}`}
           style={{ fontFamily: "var(--font-poppins, 'Poppins', sans-serif)" }}
         >
           ENSEMBLE, PLUS DE POSSIBILITÉS
@@ -102,7 +102,7 @@ export function SiteHeader({ lang = "fr" }: { lang?: Lang }) {
     <>
     <MarqueeBanner lang={lang} />
     <header className="sticky top-0 z-[100] border-b border-slate-200/70 bg-white/85 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70 shadow-[0_1px_0_rgba(11,79,224,0.04),0_8px_24px_-12px_rgba(11,79,224,0.08)]">
-      <div className="relative mx-auto flex max-w-screen-2xl items-center justify-between gap-2 px-4 py-3 sm:px-6 lg:gap-4 lg:px-8">
+      <div className="relative mx-auto flex max-w-screen-2xl items-center justify-between gap-2 px-4 py-3.5 sm:px-6 lg:gap-4 lg:px-8">
         <Logo lang={lang} />
 
         {/* Navigation desktop */}
