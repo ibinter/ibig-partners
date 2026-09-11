@@ -21,7 +21,7 @@ export const CATALOG_HERO_SLIDES: HeroSlide[] = [
     eyebrow: "Réseau commercial panafricain",
     titleLead: "Un seul réseau,",
     titleHighlight: "1 000+ opportunités commerciales",
-    desc: "Logiciels, formations, immobilier, digital, market, services : avec IBIG PARTNERS vous accédez à tout l'écosystème IBIG SARL — des missions concrètes, des produits à vendre, des clients à accompagner.",
+    desc: "Missions commerciales, catalogue de produits, formation, affiliation multi-niveaux — avec IBIG PARTNERS, accédez à tout l'écosystème IBIG SARL et générez des revenus sur 10 branches d'activité.",
     tag: "Nouveau", stat: "10", statLabel: "branches actives",
     bg: "linear-gradient(135deg,#041B4D 0%,#0b3a8a 100%)",
     accent: "orange",
