@@ -67,7 +67,12 @@ export default async function EspaceMissionsPage() {
       createdAt: m.createdAt instanceof Date ? m.createdAt.toISOString() : String(m.createdAt),
       source: m.source ?? "IBIG",
       submissionType: m.submissionType ?? "MISSION",
-      media: (m.media ?? []).map((med: any) => ({ url: med.url, mediaType: med.mediaType, name: med.name })),
+      media: (m.media ?? []).map((med: any) => {
+        // Répare les URLs relatives stockées quand SUPABASE_URL n'était pas défini
+        const SUPA_BASE = "https://zuqjuqpldnnfaoycwkcr.supabase.co";
+        const url = med.url?.startsWith("http") ? med.url : med.url?.startsWith("/") ? `${SUPA_BASE}${med.url}` : med.url;
+        return { url, mediaType: med.mediaType, name: med.name };
+      }),
       myInterest: myInt ? { id: myInt.id, status: myInt.status } : null,
       totalApplications: m._count.applications,
       myApplication: myApp ? {

@@ -221,7 +221,7 @@ function MissionModal({ m, onClose, applyAction, withdrawAction, submitProofActi
               <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wide mb-2">📎 Pièces jointes</p>
               <div className="flex flex-wrap gap-2">
                 {m.media.map((med, i) => (
-                  med.mediaType === "IMAGE" && med.url?.startsWith("http") ? (
+                  med.mediaType === "IMAGE" && med.url ? (
                     <a key={i} href={med.url} target="_blank" rel="noopener noreferrer" className="block">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={med.url} alt={med.name || "Image"} className="w-24 h-24 object-cover rounded-xl border border-slate-200 hover:opacity-80 transition"
@@ -393,7 +393,7 @@ function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
       }`} onClick={() => setOpen(true)}>
 
         {/* Photo de couverture si disponible */}
-        {firstImage && firstImage.url?.startsWith("http") && (
+        {firstImage && firstImage.url && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={firstImage.url} alt={m.title}
             className="w-full h-36 object-cover rounded-t-2xl"
