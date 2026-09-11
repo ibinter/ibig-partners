@@ -68,9 +68,15 @@ export default async function EspaceMissionsPage() {
       source: m.source ?? "IBIG",
       submissionType: m.submissionType ?? "MISSION",
       media: (m.media ?? []).map((med: any) => {
-        // Répare les URLs relatives stockées quand SUPABASE_URL n'était pas défini
         const SUPA_BASE = "https://zuqjuqpldnnfaoycwkcr.supabase.co";
-        const url = med.url?.startsWith("http") ? med.url : med.url?.startsWith("/") ? `${SUPA_BASE}${med.url}` : med.url;
+        const BUCKET    = "mission-media";
+        let url: string = med.url ?? "";
+        if (!url.startsWith("http")) {
+          // URL relative genre /storage/v1/... ou nom de fichier brut
+          if (url.startsWith("/storage/")) url = `${SUPA_BASE}${url}`;
+          else if (url.startsWith("/")) url = `${SUPA_BASE}${url}`;
+          else if (url) url = `${SUPA_BASE}/storage/v1/object/public/${BUCKET}/${url}`;
+        }
         return { url, mediaType: med.mediaType, name: med.name };
       }),
       myInterest: myInt ? { id: myInt.id, status: myInt.status } : null,
