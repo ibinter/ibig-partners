@@ -6,12 +6,12 @@ import { STATUS_LABELS, STATUS_COLORS } from "@/lib/constants";
 import { ScrollReveal } from "@/components/scroll-reveal";
 
 export const metadata: Metadata = {
-  title: "Nos Partenaires — Réseau d'Affiliation IBIG PARTNERS",
+  title: "Nos Partenaires — Réseau Commercial IBIG PARTNERS",
   description:
-    "Découvrez les partenaires actifs du réseau IBIG PARTNERS en Côte d'Ivoire et en Afrique. Un réseau en pleine croissance de professionnels qui gagnent des commissions sur 10 branches IBIG SARL.",
+    "Découvrez les partenaires inscrits du réseau commercial IBIG PARTNERS en Côte d'Ivoire et en Afrique. Des professionnels actifs sur 10 branches — logiciels, formations, immobilier, digital et bien plus.",
   keywords: [
-    "partenaires IBIG PARTNERS", "réseau affiliation Côte d'Ivoire", "partenaires commerciaux IBIG SARL",
-    "liste partenaires affiliation Afrique", "réseau distributeurs IBIG",
+    "partenaires IBIG PARTNERS", "réseau commercial Côte d'Ivoire", "partenaires commerciaux IBIG SARL",
+    "réseau d'affaires Afrique", "réseau distributeurs IBIG", "opportunités commerciales Abidjan",
   ],
   alternates: { canonical: "/partenaires" },
   openGraph: {

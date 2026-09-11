@@ -31,13 +31,13 @@ const SITE_URL =
 
 // hreflang : signale la version anglaise /en aux moteurs de recherche.
 export const metadata: Metadata = {
-  title: "IBIG PARTNERS — Programme d'Affiliation Panafricain | Gagnez des commissions en Afrique",
+  title: "IBIG PARTNERS — Réseau Commercial Panafricain | Missions, Opportunités & Commissions en Afrique",
   description:
-    "Rejoignez IBIG PARTNERS et gagnez des commissions en promouvant 14 logiciels SaaS, formations certifiantes, immobilier et services IBIG SARL. Inscription gratuite — paiement via Mobile Money, banque ou virement international.",
+    "Rejoignez IBIG PARTNERS, le réseau commercial panafricain : 1 095+ missions disponibles, 10 branches d'activité (logiciels, formations, immobilier, digital, market…), commissions jusqu'à 50%. Inscription gratuite — paiement sous 7 jours.",
   keywords: [
-    "programme affiliation Afrique", "gagner argent en ligne Côte d'Ivoire", "IBIG PARTNERS inscription",
-    "commission Mobile Money Abidjan", "affiliation SaaS Afrique", "réseau partenaires IBIG SARL",
-    "revenus passifs Afrique", "marketing de réseau légal Côte d'Ivoire",
+    "réseau commercial Afrique", "opportunités d'affaires Côte d'Ivoire", "IBIG PARTNERS inscription",
+    "missions commerciales Abidjan", "gagner argent en ligne Afrique", "réseau partenaires IBIG SARL",
+    "revenus Afrique", "commission Mobile Money", "affiliation SaaS Afrique", "marketing de réseau légal Côte d'Ivoire",
   ],
   alternates: {
     canonical: `${SITE_URL}/`,
@@ -48,10 +48,10 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "IBIG PARTNERS — Gagnez des commissions en promouvant les services IBIG SARL",
-    description: "Programme d'affiliation panafricain : inscription gratuite, commissions transparentes sur 14 logiciels, formations et services. Paiement Mobile Money sous 7 jours.",
+    title: "IBIG PARTNERS — Réseau commercial panafricain | Missions & Opportunités en Afrique",
+    description: "Réseau commercial panafricain : 1 095+ missions, 10 branches d'activité, inscription gratuite, commissions jusqu'à 50% sur logiciels, formations, immobilier et services IBIG SARL.",
     url: `${SITE_URL}/`,
-    images: [{ url: `${SITE_URL}/og-home.png`, width: 1200, height: 630, alt: "IBIG PARTNERS — Programme d'affiliation panafricain" }],
+    images: [{ url: `${SITE_URL}/og-home.png`, width: 1200, height: 630, alt: "IBIG PARTNERS — Réseau commercial panafricain" }],
   },
 };
 

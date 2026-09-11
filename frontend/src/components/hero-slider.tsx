@@ -18,10 +18,10 @@ export interface HeroSlide {
 
 export const CATALOG_HERO_SLIDES: HeroSlide[] = [
   {
-    eyebrow: "Programme d'affiliation panafricain",
-    titleLead: "Un seul compte,",
-    titleHighlight: "10 branches à promouvoir",
-    desc: "Logiciels, formations, immobilier, digital, services : avec IBIG PARTNERS vous accédez à tout l'écosystème IBIG SARL et gagnez des commissions sur chaque vente.",
+    eyebrow: "Réseau commercial panafricain",
+    titleLead: "Un seul réseau,",
+    titleHighlight: "1 000+ opportunités commerciales",
+    desc: "Logiciels, formations, immobilier, digital, market, services : avec IBIG PARTNERS vous accédez à tout l'écosystème IBIG SARL — des missions concrètes, des produits à vendre, des clients à accompagner.",
     tag: "Nouveau", stat: "10", statLabel: "branches actives",
     bg: "linear-gradient(135deg,#041B4D 0%,#0b3a8a 100%)",
     accent: "orange",
