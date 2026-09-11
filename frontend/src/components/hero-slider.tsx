@@ -727,7 +727,7 @@ export function HeroSlider({ slides = CATALOG_HERO_SLIDES, children }: Props) {
 
                 {/* H1 */}
                 <h1
-                  className="hero-s2 text-[3.2rem] font-extrabold leading-[1.05] text-white sm:text-7xl lg:text-8xl xl:text-[7rem]"
+                  className="hero-s2 text-[3.8rem] font-black leading-[1.0] tracking-tight text-white sm:text-8xl lg:text-9xl xl:text-[9rem]"
                   style={{ textWrap: "balance" } as React.CSSProperties}
                 >
                   {s.titleLead}{" "}
