@@ -1,27 +1,54 @@
 /**
- * Proxy sécurisé pour les fichiers Cloudinary en mode "authenticated".
- * Récupère le fichier côté serveur (avec les credentials API) et le renvoie
- * au client — sans exposer les credentials ni demander de configuration Cloudinary.
+ * Proxy sécurisé pour les fichiers Cloudinary en mode "authenticated" ou protégés.
+ * Utilise l'API Admin Cloudinary pour récupérer l'URL sécurisée, puis renvoie
+ * le fichier au client — sans exposer les credentials.
  *
  * Usage : GET /api/cloudinary/signed-url?url=<cloudinary_url_encodée>
  *
  * Variables d'env requises :
+ *   CLOUDINARY_CLOUD_NAME
  *   CLOUDINARY_API_KEY
  *   CLOUDINARY_API_SECRET
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { createHash } from "crypto";
 import { getCurrentUser } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 30;
+
+/** Extrait le public_id depuis une URL Cloudinary standard */
+function extractPublicId(url: string): string | null {
+  try {
+    const u = new URL(url);
+    // Format : /cloudname/image/upload/v123456/folder/filename.ext
+    //       ou /cloudname/image/authenticated/s--sig--/folder/filename.ext
+    const parts = u.pathname.split("/");
+    // Trouver l'index après "upload" ou "authenticated"
+    const uploadIdx = parts.findIndex((p) => p === "upload" || p === "authenticated");
+    if (uploadIdx === -1) return null;
+    let rest = parts.slice(uploadIdx + 1).join("/");
+    // Ignorer la version (v123456) et les transformations (s--...-- ou fl_...)
+    rest = rest.replace(/^v\d+\//, "");
+    rest = rest.replace(/^s--[^/]+--\//, "");
+    // Retirer l'extension pour les images (Cloudinary stocke sans extension)
+    // Garder l'extension pour les PDFs
+    return rest;
+  } catch {
+    return null;
+  }
+}
 
 export async function GET(req: NextRequest) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
   const apiKey    = process.env.CLOUDINARY_API_KEY;
   const apiSecret = process.env.CLOUDINARY_API_SECRET;
-  if (!apiKey || !apiSecret) {
+
+  if (!cloudName || !apiKey || !apiSecret) {
     return NextResponse.json({ error: "Cloudinary non configuré" }, { status: 500 });
   }
 
@@ -40,29 +67,79 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Hôte non autorisé" }, { status: 403 });
   }
 
-  // Récupérer le fichier avec authentification Basic (API key:secret)
-  const upstream = await fetch(fileUrl, {
+  const publicId = extractPublicId(fileUrl);
+  if (!publicId) {
+    return NextResponse.json({ error: "public_id introuvable dans l'URL" }, { status: 400 });
+  }
+
+  // Déterminer le resource_type depuis l'URL (image, video, raw)
+  const resourceType = parsed.pathname.includes("/video/") ? "video"
+    : parsed.pathname.includes("/raw/") ? "raw"
+    : "image";
+
+  // Générer une URL signée Cloudinary (valable 2h)
+  const timestamp = Math.floor(Date.now() / 1000) + 7200;
+
+  // Signature : SHA-1 de "public_id=<id>&timestamp=<ts><secret>"
+  const toSign = `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
+  const signature = createHash("sha1").update(toSign).digest("hex");
+
+  // Télécharger via l'API Admin Cloudinary
+  const downloadUrl =
+    `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload/${publicId}` +
+    `?timestamp=${timestamp}&api_key=${apiKey}&signature=${signature}`;
+
+  // Récupérer les métadonnées pour obtenir l'URL de livraison
+  const metaRes = await fetch(
+    `https://api.cloudinary.com/v1_1/${cloudName}/resources/${resourceType}/upload/${encodeURIComponent(publicId)}`,
+    {
+      headers: {
+        Authorization: `Basic ${Buffer.from(`${apiKey}:${apiSecret}`).toString("base64")}`,
+      },
+    }
+  );
+
+  if (metaRes.ok) {
+    const meta = await metaRes.json();
+    const secureUrl: string = meta.secure_url ?? fileUrl;
+
+    // Proxy le fichier depuis l'URL sécurisée
+    const fileRes = await fetch(secureUrl);
+    if (fileRes.ok) {
+      const contentType = fileRes.headers.get("content-type") ?? "application/octet-stream";
+      const buffer = await fileRes.arrayBuffer();
+      return new NextResponse(buffer, {
+        headers: {
+          "Content-Type": contentType,
+          "Cache-Control": "private, max-age=3600",
+          "Content-Disposition": "inline",
+        },
+      });
+    }
+  }
+
+  // Fallback : essayer directement avec Basic auth sur l'URL originale
+  const directRes = await fetch(fileUrl, {
     headers: {
       Authorization: `Basic ${Buffer.from(`${apiKey}:${apiSecret}`).toString("base64")}`,
     },
   });
 
-  if (!upstream.ok) {
+  if (!directRes.ok) {
     return NextResponse.json(
-      { error: `Fichier inaccessible (${upstream.status})` },
-      { status: upstream.status }
+      { error: `Fichier inaccessible (${directRes.status}). Vérifiez les paramètres Cloudinary.` },
+      { status: directRes.status }
     );
   }
 
-  const contentType = upstream.headers.get("content-type") ?? "application/octet-stream";
-  const buffer = await upstream.arrayBuffer();
+  const contentType = directRes.headers.get("content-type") ?? "application/octet-stream";
+  const buffer = await directRes.arrayBuffer();
 
   return new NextResponse(buffer, {
-    status: 200,
     headers: {
       "Content-Type": contentType,
       "Cache-Control": "private, max-age=3600",
-      "Content-Disposition": contentType.includes("pdf") ? "inline" : "inline",
+      "Content-Disposition": "inline",
     },
   });
 }
