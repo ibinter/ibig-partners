@@ -123,12 +123,12 @@ export default async function VentesPage() {
                     {s.proofUrl && (
                       <>
                         {/\.(jpe?g|png|webp|gif)(\?.*)?$/i.test(s.proofUrl) ? (
-                          <a href={s.proofUrl} target="_blank" rel="noreferrer">
+                          <a href={`/api/cloudinary/signed-url?url=${encodeURIComponent(s.proofUrl)}`} target="_blank" rel="noreferrer">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={s.proofUrl} alt="preuve" className="mt-1 h-14 w-20 rounded object-cover border border-slate-200 hover:opacity-80 transition" />
+                            <img src={`/api/cloudinary/signed-url?url=${encodeURIComponent(s.proofUrl)}`} alt="preuve" className="mt-1 h-14 w-20 rounded object-cover border border-slate-200 hover:opacity-80 transition" />
                           </a>
                         ) : (
-                          <a href={s.proofUrl} target="_blank" rel="noreferrer" className="text-xs font-semibold text-brand-600 hover:underline">
+                          <a href={`/api/cloudinary/signed-url?url=${encodeURIComponent(s.proofUrl)}`} target="_blank" rel="noreferrer" className="text-xs font-semibold text-brand-600 hover:underline">
                             Voir la preuve ↗
                           </a>
                         )}

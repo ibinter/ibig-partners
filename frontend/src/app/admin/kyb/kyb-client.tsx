@@ -145,7 +145,9 @@ export default function KybAdminClient({
                             {doc.adminNote && <p className="text-xs text-rose-600 font-medium">Refusé : {doc.adminNote}</p>}
                           </div>
                           <div className="shrink-0 flex items-center gap-2">
-                            <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer"
+                            <a
+                              href={`/api/cloudinary/signed-url?url=${encodeURIComponent(doc.fileUrl)}`}
+                              target="_blank" rel="noopener noreferrer"
                               className="text-xs text-blue-600 hover:underline font-semibold">Voir →</a>
                             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${DOC_STATUS_STYLES[doc.status] ?? "bg-slate-100 text-slate-500"}`}>
                               {DOC_STATUS_LABELS[doc.status] ?? doc.status}
