@@ -88,16 +88,23 @@ export default async function ClassementPage({
       .map((u: any) => ({ ...u, _count: { sales: countMap.get(u.id) ?? 0 } }))
       .sort((a: any, b: any) => b._count.sales - a._count.sales);
   } else {
-    topBySales = await (prisma as any).user.findMany({
-      where: { active: true, approved: true, publicListing: true },
-      select: {
-        id: true, firstName: true, lastName: true, status: true,
-        photoUrl: true, city: true, country: true, partnerType: true,
-        _count: { select: { sales: true } },
-      },
-      orderBy: { sales: { _count: "desc" } },
+    // Alltime : compter uniquement les ventes CONFIRMED
+    const alltimeSales = await prisma.sale.groupBy({
+      by: ["sellerId"],
+      where: { status: "CONFIRMED" },
+      _count: { id: true },
+      orderBy: { _count: { id: "desc" } },
       take: 20,
     });
+    const alltimeIds = alltimeSales.map((s) => s.sellerId);
+    const alltimeUsers = await (prisma as any).user.findMany({
+      where: { id: { in: alltimeIds }, active: true, approved: true, publicListing: true },
+      select: { id: true, firstName: true, lastName: true, status: true, photoUrl: true, city: true, country: true, partnerType: true },
+    });
+    const alltimeMap = new Map(alltimeSales.map((s) => [s.sellerId, s._count.id]));
+    topBySales = (alltimeUsers as any[])
+      .map((u: any) => ({ ...u, _count: { sales: alltimeMap.get(u.id) ?? 0 } }))
+      .sort((a: any, b: any) => b._count.sales - a._count.sales);
   }
 
   const currentUserRank = topBySales.findIndex((p) => p.id === currentUser.id);

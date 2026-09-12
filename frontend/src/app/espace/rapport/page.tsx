@@ -33,7 +33,7 @@ export default async function RapportPage() {
     myOppsThisMonth,
   ] = await Promise.all([
     prisma.sale.findMany({
-      where: { sellerId: user.id, createdAt: { gte: startOfMonth } },
+      where: { sellerId: user.id, status: "CONFIRMED", createdAt: { gte: startOfMonth } },
       include: { product: { select: { name: true } } },
       orderBy: { createdAt: "desc" },
     }),
@@ -45,7 +45,7 @@ export default async function RapportPage() {
       where: { sponsorId: user.id, createdAt: { gte: startOfMonth } },
     }),
     prisma.sale.count({
-      where: { sellerId: user.id, createdAt: { gte: startOfPrevMonth, lte: endOfPrevMonth } },
+      where: { sellerId: user.id, status: "CONFIRMED", createdAt: { gte: startOfPrevMonth, lte: endOfPrevMonth } },
     }),
     prisma.commission.aggregate({
       where: { userId: user.id, createdAt: { gte: startOfPrevMonth, lte: endOfPrevMonth } },
@@ -81,7 +81,7 @@ export default async function RapportPage() {
 
   // Score perf (même algo que admin)
   const [totalSales, totalReferrals, totalWonLeads, kybStatusRow, totalCallsAccepted, totalOpps] = await Promise.all([
-    prisma.sale.count({ where: { sellerId: user.id } }),
+    prisma.sale.count({ where: { sellerId: user.id, status: "CONFIRMED" } }),
     prisma.user.count({ where: { sponsorId: user.id } }),
     (prisma as any).opportunityLead.count({ where: { userId: user.id, status: "WON" } }),
     prisma.user.findUnique({ where: { id: user.id }, select: { kybStatus: true } as any }),
