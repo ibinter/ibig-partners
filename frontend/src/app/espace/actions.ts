@@ -245,6 +245,15 @@ export async function declareSale(formData: FormData) {
 
   if (!productId || !customerName) return;
 
+  // La preuve (texte ou image) est obligatoire pour éviter les fausses déclarations.
+  if (!proofNote && !proofUrl) return;
+
+  // Max 3 déclarations PENDING simultanées par partenaire.
+  const pendingCount = await prisma.sale.count({
+    where: { sellerId: user.id, status: "PENDING" },
+  });
+  if (pendingCount >= 3) return;
+
   const product = await prisma.product.findUnique({ where: { id: productId } });
   if (!product) return;
 

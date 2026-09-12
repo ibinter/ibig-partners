@@ -51,6 +51,8 @@ export default async function EspaceVentesPage() {
     const channelMatch = rawName.match(/\[(.+)\]$/);
     const channel = channelMatch ? channelMatch[1] : null;
     const name    = rawName.replace(/\s*\[.+\]$/, "");
+    const proofNote = s.proofNote ?? null;
+    const rejectReason = proofNote?.startsWith("[REJET]") ? proofNote.replace(/^\[REJET\]\s*/, "") : null;
     return {
       id: s.id,
       reference: s.reference,
@@ -62,6 +64,7 @@ export default async function EspaceVentesPage() {
       statusLabel: SALE_STATUS_LABELS[s.status] ?? s.status,
       channel,
       proofUrl: s.proofUrl ?? null,
+      rejectReason,
       date: formatDate(s.createdAt),
     };
   });
@@ -150,6 +153,20 @@ export default async function EspaceVentesPage() {
         </div>
       </div>
 
+      {/* ── Avertissement si 3 PENDING ── */}
+      {pending >= 3 && (
+        <div className="rounded-2xl border border-orange-200 bg-orange-50 px-5 py-4 flex items-start gap-3">
+          <span className="text-xl shrink-0">🚫</span>
+          <div>
+            <p className="font-semibold text-orange-800 text-sm">Limite atteinte : 3 déclarations en attente</p>
+            <p className="text-xs text-orange-700 mt-0.5">
+              Vous ne pouvez pas soumettre de nouvelle déclaration tant que vos déclarations en cours n&apos;ont pas été traitées.
+              Attendez la validation ou le rejet de vos déclarations actuelles.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* ── Formulaire déclaration ── */}
       <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
         <div className="bg-gradient-to-r from-blue-600 to-violet-700 px-5 py-4">
@@ -236,8 +253,8 @@ export default async function EspaceVentesPage() {
           </div>
 
           <div className="flex items-center justify-between gap-4 pt-1">
-            <p className="text-xs text-slate-400">
-              Une preuve de paiement accélère la validation. Sans preuve, le délai peut dépasser 48h.
+            <p className="text-xs text-rose-600 font-semibold">
+              ⚠️ Une preuve de paiement est obligatoire. Toute déclaration sans preuve valide sera rejetée.
             </p>
             <button
               type="submit"

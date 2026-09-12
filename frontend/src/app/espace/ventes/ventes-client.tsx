@@ -13,6 +13,7 @@ type SaleRow = {
   statusLabel: string;
   channel: string | null;
   proofUrl: string | null;
+  rejectReason: string | null;
   date: string;
 };
 
@@ -107,6 +108,9 @@ export default function VentesTable({ rows }: { rows: SaleRow[] }) {
                   <td className="px-3 py-3">
                     <p className="text-slate-700 font-medium">{s.customerName}</p>
                     {s.channel && <p className="text-[11px] text-slate-400 mt-0.5">{s.channel}</p>}
+                    {s.status === "REJECTED" && s.rejectReason && (
+                      <p className="text-[11px] text-rose-600 mt-0.5 font-semibold">Motif : {s.rejectReason}</p>
+                    )}
                   </td>
                   <td className="px-3 py-3 text-right font-bold text-slate-800">{s.amountDisplay}</td>
                   <td className="px-3 py-3">

@@ -262,9 +262,44 @@ export async function confirmSale(formData: FormData) {
 export async function cancelSale(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("id"));
-  // annule la vente et supprime les commissions non encore versees
+  const reason = String(formData.get("reason") || "").trim();
+
+  const sale = await prisma.sale.findUnique({
+    where: { id },
+    include: {
+      seller: { select: { id: true, firstName: true } },
+      product: { select: { name: true } },
+    },
+  });
+  if (!sale) return;
+
+  // Supprimer les commissions non encore versées
   await prisma.commission.deleteMany({ where: { saleId: id, status: { not: "PAID" } } });
-  await prisma.sale.update({ where: { id }, data: { status: "CANCELLED" } });
+
+  // Ventes PENDING déclarées par l'affilié → REJECTED ; autres → CANCELLED
+  const newStatus = sale.status === "PENDING" ? "REJECTED" : "CANCELLED";
+  await prisma.sale.update({
+    where: { id },
+    data: {
+      status: newStatus,
+      ...(newStatus === "REJECTED" && reason ? { proofNote: `[REJET] ${reason}` } : {}),
+    },
+  });
+
+  // Notifier le partenaire avec le motif de refus
+  if (newStatus === "REJECTED") {
+    await prisma.notification.create({
+      data: {
+        userId: sale.sellerId,
+        title: "❌ Déclaration de vente rejetée",
+        body: reason
+          ? `Votre déclaration « ${sale.product.name} » a été rejetée. Motif : ${reason}`
+          : `Votre déclaration « ${sale.product.name} » a été rejetée car la preuve fournie n'est pas valide. Contactez le support si besoin.`,
+        url: "/espace/ventes",
+      },
+    });
+  }
+
   revalidatePath("/admin/ventes");
   revalidatePath("/admin/commissions");
 }

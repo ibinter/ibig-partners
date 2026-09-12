@@ -121,9 +121,18 @@ export default async function VentesPage() {
                       <p className="text-xs text-slate-500 mt-0.5">🧾 {s.proofNote}</p>
                     )}
                     {s.proofUrl && (
-                      <a href={s.proofUrl} target="_blank" rel="noreferrer" className="text-xs font-semibold text-brand-600 hover:underline">
-                        Voir la preuve ↗
-                      </a>
+                      <>
+                        {/\.(jpe?g|png|webp|gif)(\?.*)?$/i.test(s.proofUrl) ? (
+                          <a href={s.proofUrl} target="_blank" rel="noreferrer">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={s.proofUrl} alt="preuve" className="mt-1 h-14 w-20 rounded object-cover border border-slate-200 hover:opacity-80 transition" />
+                          </a>
+                        ) : (
+                          <a href={s.proofUrl} target="_blank" rel="noreferrer" className="text-xs font-semibold text-brand-600 hover:underline">
+                            Voir la preuve ↗
+                          </a>
+                        )}
+                      </>
                     )}
                   </td>
                   <td className="font-semibold text-ink">{fcfa(s.amount)}</td>
@@ -149,7 +158,29 @@ export default async function VentesPage() {
                           <Button type="submit" variant="secondary" size="sm">+1 mois</Button>
                         </form>
                       )}
-                      {s.status !== "CANCELLED" && (
+                      {s.status === "PENDING" && (
+                        <details className="relative">
+                          <summary className="cursor-pointer list-none">
+                            <span className="inline-flex items-center rounded-md border border-rose-200 bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-700 hover:bg-rose-100 transition">
+                              Rejeter
+                            </span>
+                          </summary>
+                          <form action={cancelSale} className="absolute right-0 z-10 mt-1 w-64 rounded-xl border border-slate-200 bg-white p-3 shadow-xl">
+                            <input type="hidden" name="id" value={s.id} />
+                            <p className="text-xs font-bold text-slate-700 mb-1.5">Motif de rejet (envoyé au partenaire)</p>
+                            <textarea
+                              name="reason"
+                              rows={3}
+                              placeholder="Ex : Image envoyée ne correspond pas à un reçu de paiement valide."
+                              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-300 resize-none"
+                            />
+                            <Button type="submit" variant="ghost" size="sm" className="mt-2 w-full bg-rose-600 text-white hover:bg-rose-700">
+                              Confirmer le rejet
+                            </Button>
+                          </form>
+                        </details>
+                      )}
+                      {s.status !== "CANCELLED" && s.status !== "PENDING" && s.status !== "REJECTED" && (
                         <form action={cancelSale}>
                           <input type="hidden" name="id" value={s.id} />
                           <Button type="submit" variant="ghost" size="sm">Annuler</Button>
