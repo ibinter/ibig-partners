@@ -44,12 +44,11 @@ export async function GET(req: NextRequest) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
   const apiKey    = process.env.CLOUDINARY_API_KEY;
   const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
-  if (!cloudName || !apiKey || !apiSecret) {
-    return NextResponse.json({ error: "Cloudinary non configuré" }, { status: 500 });
+  if (!apiKey || !apiSecret) {
+    return NextResponse.json({ error: "Cloudinary non configuré (API_KEY / API_SECRET manquants)" }, { status: 500 });
   }
 
   const { searchParams } = new URL(req.url);
@@ -66,6 +65,10 @@ export async function GET(req: NextRequest) {
   if (!parsed.hostname.endsWith("cloudinary.com")) {
     return NextResponse.json({ error: "Hôte non autorisé" }, { status: 403 });
   }
+
+  // Extraire le cloud_name depuis l'URL (ex: res.cloudinary.com/<cloud_name>/...)
+  const pathParts = parsed.pathname.split("/").filter(Boolean);
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME ?? pathParts[0];
 
   const publicId = extractPublicId(fileUrl);
   if (!publicId) {
