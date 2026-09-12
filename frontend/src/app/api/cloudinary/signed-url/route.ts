@@ -48,7 +48,14 @@ export async function GET(req: NextRequest) {
   const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
   if (!apiKey || !apiSecret) {
-    return NextResponse.json({ error: "Cloudinary non configuré (API_KEY / API_SECRET manquants)" }, { status: 500 });
+    return NextResponse.json({
+      error: "Cloudinary non configuré",
+      missing: [
+        !apiKey && "CLOUDINARY_API_KEY",
+        !apiSecret && "CLOUDINARY_API_SECRET",
+      ].filter(Boolean),
+      available: Object.keys(process.env).filter(k => k.startsWith("CLOUDINARY")),
+    }, { status: 500 });
   }
 
   const { searchParams } = new URL(req.url);
