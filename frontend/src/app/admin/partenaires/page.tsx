@@ -48,10 +48,10 @@ function scoreBadge(score: number): { label: string; cls: string } {
 export default async function PartenairesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; etat?: string; verif?: string; badge?: string }>;
+  searchParams: Promise<{ q?: string; etat?: string; verif?: string; badge?: string; rappel?: string }>;
 }) {
   const admin = await requireAdmin();
-  const { q = "", etat = "", verif = "", badge: badgeFilter = "" } = await searchParams;
+  const { q = "", etat = "", verif = "", badge: badgeFilter = "", rappel = "" } = await searchParams;
   const [partners, paidByUser, wonLeadsByUser, callsAcceptedByUser, oppsByUser] = await Promise.all([
     prisma.user.findMany({
       orderBy: [{ approved: "asc" }, { createdAt: "desc" }],
@@ -124,6 +124,16 @@ export default async function PartenairesPage({
 
   return (
     <div>
+      {rappel && (
+        <div className="mb-4 rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm text-emerald-800 flex items-center gap-2">
+          <span>✅</span>
+          <span>
+            {rappel === "bulk"
+              ? `Rappels envoyés à ${unverified.length} affilié${unverified.length > 1 ? "s" : ""} non vérifiés — notification in-espace + e-mail.`
+              : "Rappel envoyé — notification in-espace + e-mail."}
+          </span>
+        </div>
+      )}
       <PageHeader
         title="Gestion des partenaires"
         subtitle={`${partners.length} comptes · ${pending.length} en attente de validation · ${unverified.length} non vérifiés`}

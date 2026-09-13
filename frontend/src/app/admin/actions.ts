@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { after } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -12,6 +13,7 @@ import {
   sendPayoutPaidEmail,
   sendAnnouncementEmail,
   sendVerificationReminderEmail,
+  sendVerificationReminderEmailBatch,
   sendNewSaleEmail,
   sendOpportunityMessageEmail,
   sendOpportunityStatusEmail,
@@ -80,13 +82,12 @@ export async function sendVerificationReminder(formData: FormData) {
     where: { id },
     select: { email: true, firstName: true },
   });
+  // Notification in-espace immédiate
   await prisma.notification.create({ data: { userId: id, ...VERIF_REMINDER } });
+  // E-mail en after() pour ne pas bloquer la réponse
   if (target?.email) {
     const to = target.email;
     const firstName = target.firstName;
-    // after() : l'e-mail part APRÈS la réponse et n'est pas coupé par le
-    // serverless Vercel (contrairement à un `void` fire-and-forget).
-    // On journalise le résultat exact de Resend pour diagnostic.
     after(async () => {
       const res = await sendVerificationReminderEmail({ to, firstName });
       await logAction({
@@ -98,10 +99,10 @@ export async function sendVerificationReminder(formData: FormData) {
     });
   }
   void logAction({ userId: admin.id, action: "VERIF_REMINDER", target: id });
-  revalidatePath("/admin/partenaires");
+  redirect("/admin/partenaires?rappel=1");
 }
 
-/** Envoie le rappel à TOUS les affiliés non encore vérifiés (cloche + e-mail). */
+/** Envoie le rappel à TOUS les affiliés non encore vérifiés (cloche + e-mail batch). */
 export async function sendVerificationReminderToAll() {
   const admin = await requireAdmin();
   const targets = await prisma.user.findMany({
@@ -109,23 +110,32 @@ export async function sendVerificationReminderToAll() {
     select: { id: true, email: true, firstName: true },
   });
   if (targets.length > 0) {
+    // Notifications in-espace en une seule requête DB
     await prisma.notification.createMany({
       data: targets.map((u) => ({ userId: u.id, ...VERIF_REMINDER })),
     });
-    const recipients = targets.filter((u) => u.email);
-    after(async () => {
-      for (const u of recipients) {
-        await sendVerificationReminderEmail({ to: u.email, firstName: u.firstName }).catch(() => {});
-        await new Promise((r) => setTimeout(r, 120));
-      }
-    });
+    // Emails via batch Resend (1 appel API pour 100 emails, pas de boucle)
+    const recipients = targets.filter((u) => u.email).map((u) => ({
+      to: u.email,
+      firstName: u.firstName,
+    }));
+    if (recipients.length > 0) {
+      after(async () => {
+        const result = await sendVerificationReminderEmailBatch(recipients);
+        await logAction({
+          userId: admin.id,
+          action: "EMAIL_REMINDER_BULK",
+          detail: `sent=${result.sent} errors=${result.errors}`,
+        });
+      });
+    }
   }
   void logAction({
     userId: admin.id,
     action: "VERIF_REMINDER_BULK",
     detail: `${targets.length} affiliés`,
   });
-  revalidatePath("/admin/partenaires");
+  redirect("/admin/partenaires?rappel=bulk");
 }
 
 /** Approuver tous les partenaires en attente d'un coup. */

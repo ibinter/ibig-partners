@@ -18,6 +18,34 @@ const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export type EmailResult = { ok: boolean; id?: string; error?: string };
 
+/** Envoie plusieurs emails en une seule requête via l'API batch Resend.
+ *  Retourne le nombre d'emails envoyés avec succès. */
+export async function sendEmailBatch(
+  emails: { to: string; subject: string; html: string }[]
+): Promise<{ sent: number; errors: number }> {
+  if (!resend || emails.length === 0) return { sent: 0, errors: emails.length };
+  // Resend batch accepte jusqu'à 100 emails par appel
+  let sent = 0;
+  let errors = 0;
+  const CHUNK = 100;
+  for (let i = 0; i < emails.length; i += CHUNK) {
+    const chunk = emails.slice(i, i + CHUNK).map((e) => ({ from: FROM, ...e }));
+    try {
+      const { data, error } = await resend.batch.send(chunk);
+      if (error) {
+        errors += chunk.length;
+        console.error("[EMAIL BATCH ERROR]", error);
+      } else {
+        sent += (data as unknown as { data?: unknown[] })?.data?.length ?? chunk.length;
+      }
+    } catch (err) {
+      errors += chunk.length;
+      console.error("[EMAIL BATCH EXCEPTION]", err);
+    }
+  }
+  return { sent, errors };
+}
+
 async function sendEmail(opts: {
   to: string;
   subject: string;
@@ -484,11 +512,8 @@ export async function sendPayoutRequestedEmail(opts: {
 
 // ─── E-mail : Rappel de vérification du compte (KYC) ─────────────────────
 
-export async function sendVerificationReminderEmail(opts: {
-  to: string;
-  firstName: string;
-}): Promise<EmailResult> {
-  const html = layout(`
+function verificationReminderHtml(firstName: string): string {
+  return layout(`
     <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
       Vérifiez votre compte pour l'activer 🔐
     </h2>
@@ -520,12 +545,27 @@ export async function sendVerificationReminderEmail(opts: {
       <a href="mailto:support@ibigpartners.com" style="color:#0b5fff;">support@ibigpartners.com</a>
     </p>
   `);
+}
 
+export async function sendVerificationReminderEmail(opts: {
+  to: string;
+  firstName: string;
+}): Promise<EmailResult> {
   return sendEmail({
     to: opts.to,
     subject: "Action requise : vérifiez votre compte IBIG PARTNERS",
-    html,
+    html: verificationReminderHtml(opts.firstName),
   });
+}
+
+/** Envoie le rappel de vérification à plusieurs affiliés en une seule passe batch. */
+export async function sendVerificationReminderEmailBatch(
+  users: { to: string; firstName: string }[]
+): Promise<{ sent: number; errors: number }> {
+  const subject = "Action requise : vérifiez votre compte IBIG PARTNERS";
+  return sendEmailBatch(
+    users.map((u) => ({ to: u.to, subject, html: verificationReminderHtml(u.firstName) }))
+  );
 }
 
 // ─── E-mail : Reçu de paiement au CLIENT ─────────────────────────────────
