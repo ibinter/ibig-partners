@@ -117,11 +117,3 @@ export async function POST() {
   }
   return runMigrations();
 }
-
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  if (searchParams.get("key") !== "ibig-migrate-2026") {
-    return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
-  }
-  return runMigrations();
-}
