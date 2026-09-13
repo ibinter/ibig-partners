@@ -38,11 +38,12 @@ const SECURITY_HEADERS: Record<string, string> = {
   "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
   "Content-Security-Policy": [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "font-src 'self' https://fonts.gstatic.com",
-    "img-src 'self' data: https://res.cloudinary.com https://lh3.googleusercontent.com https://*.supabase.co",
-    "connect-src 'self' https://api.resend.com https://*.supabase.co",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://embed.tawk.to https://*.tawk.to",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.tawk.to",
+    "font-src 'self' https://fonts.gstatic.com https://*.tawk.to",
+    "img-src 'self' data: https://res.cloudinary.com https://lh3.googleusercontent.com https://*.supabase.co https://*.tawk.to",
+    "connect-src 'self' https://api.resend.com https://*.supabase.co https://intermark-business.com https://*.tawk.to wss://*.tawk.to",
+    "frame-src 'self' https://*.tawk.to",
     "frame-ancestors 'none'",
   ].join("; "),
 };
