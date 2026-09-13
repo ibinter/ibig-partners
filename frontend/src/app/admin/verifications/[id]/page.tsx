@@ -115,7 +115,7 @@ function DocCard({ label, url }: { label: string; url: string }) {
       ) : (
         <div className="px-3 py-4 text-center space-y-2">
           <p className="text-2xl">📄</p>
-          <a href={url} target="_blank" rel="noopener noreferrer"
+          <a href={`/api/cloudinary/signed-url?url=${encodeURIComponent(url)}`} target="_blank" rel="noopener noreferrer"
             className="inline-block rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-700 transition-colors">
             Ouvrir le document →
           </a>
