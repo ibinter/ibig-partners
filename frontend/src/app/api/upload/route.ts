@@ -43,13 +43,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Fichier trop volumineux (max 10 Mo)" }, { status: 400 });
     }
 
+    // PDFs et documents → resource_type "raw" pour URL publique directe
+    const isPdf = file.type === "application/pdf";
+    const resourceType = isPdf ? "raw" : "auto";
+
     const cloudForm = new FormData();
     cloudForm.append("file", file);
     cloudForm.append("upload_preset", uploadPreset);
     cloudForm.append("folder", folder);
 
     const res = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
+      `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`,
       { method: "POST", body: cloudForm }
     );
 
