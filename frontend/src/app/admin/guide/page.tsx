@@ -37,7 +37,7 @@ export default function GuidePage() {
         doc.rect(0,0,W,12,"F");
         doc.setFontSize(8);
         doc.setTextColor(...WHITE);
-        doc.text(t("IBIG PARTNERS - Guide Utilisateur Officiel"),14,8);
+        doc.text(t("IBIG PARTNERS - Guide Administrateur Officiel"),14,8);
         doc.text(`Page ${pageNum} / ${total}`,W - 14,8,{ align: "right"});
       }
 
@@ -134,17 +134,17 @@ export default function GuidePage() {
       doc.setFontSize(13);
       doc.setFont("helvetica","normal");
       doc.setTextColor(...WHITE);
-      doc.text("GUIDE UTILISATEUR OFFICIEL",W / 2,143,{ align: "center"});
+      doc.text("GUIDE ADMINISTRATEUR OFFICIEL",W / 2,143,{ align: "center"});
 
       doc.setFontSize(9);
       doc.setTextColor(200,215,255);
-      doc.text(t("Programme d'Affiliation Multi-Niveaux"),W / 2,153,{ align: "center"});
+      doc.text(t("Espace Administration & Gestion"),W / 2,153,{ align: "center"});
       doc.text(t("INTERMARK BUSINESS INTERNATIONAL GROUP SARL"),W / 2,160,{ align: "center"});
 
       // Version & date
       doc.setFontSize(8);
       doc.setTextColor(...GOLD);
-      doc.text(t("Version 2.0 - Septembre 2026"),W / 2,175,{ align: "center"});
+      doc.text(t("Version 1.0 - Septembre 2026"),W / 2,175,{ align: "center"});
 
       // Bas de page couverture
       doc.setFontSize(8);
@@ -1261,7 +1261,7 @@ export default function GuidePage() {
       doc.setTextColor(80,100,140);
       doc.text(t("Document confidentiel - Usage réservé aux administrateurs IBIG PARTNERS agréés"),W / 2,220,{ align: "center"});
 
-      doc.save("IBIG_PARTNERS_Guide_Utilisateur_Officiel_2026.pdf");
+      doc.save("IBIG_PARTNERS_Guide_Administrateur_Officiel_2026.pdf");
     } catch (err) {
       console.error(err);
       alert("Erreur lors de la génération du PDF. Consultez la console.");
@@ -1297,12 +1297,12 @@ export default function GuidePage() {
               <span className="inline-block rounded-full bg-blue-500/20 border border-blue-400/30 px-3 py-1 text-xs font-bold text-blue-200 uppercase tracking-widest mb-3">
                 Document Officiel · IBIG SARL
               </span>
-              <h1 className="text-2xl font-extrabold text-white tracking-tight">Guide Utilisateur Officiel</h1>
-              <p className="text-yellow-400 font-bold text-base mt-1">IBIG PARTNERS — Programme d&apos;Affiliation Panafricain</p>
+              <h1 className="text-2xl font-extrabold text-white tracking-tight">Guide Administrateur Officiel</h1>
+              <p className="text-yellow-400 font-bold text-base mt-1">IBIG PARTNERS — Espace Administration &amp; Gestion</p>
               <div className="flex flex-wrap gap-3 mt-3 text-xs text-blue-200">
                 <span>📄 14 pages A4</span>
-                <span>📅 Version 2.0 · Septembre 2026</span>
-                <span>🔒 Document confidentiel</span>
+                <span>📅 Version 1.0 · Septembre 2026</span>
+                <span>🔒 Réservé aux administrateurs</span>
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 shrink-0">

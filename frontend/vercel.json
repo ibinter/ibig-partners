@@ -2,6 +2,15 @@
   "buildCommand": "npm run build",
   "installCommand": "npm install",
   "framework": "nextjs",
+  "headers": [
+    {
+      "source": "/docs/(.*\\.docx)",
+      "headers": [
+        { "key": "Content-Disposition", "value": "attachment" },
+        { "key": "Content-Type", "value": "application/vnd.openxmlformats-officedocument.wordprocessingml.document" }
+      ]
+    }
+  ],
   "crons": [
     {
       "path": "/api/cron/sync-catalog",
