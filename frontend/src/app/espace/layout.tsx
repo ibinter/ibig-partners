@@ -51,7 +51,7 @@ export default async function EspaceLayout({
     // Missions & Opportunités
     { href: "/espace/missions",         label: "Missions Partners",     icon: "🚀", group: "Missions", highlight: "orange" },
     { href: "/espace/recommandations",  label: "Missions recommandées", icon: "✨", group: "Missions" },
-    { href: "/espace/opportunites",     label: "Mes Opportunités B2B",  icon: "💼", group: "Missions" },
+    { href: "/espace/opportunites",     label: "Opportunités & Annonces", icon: "💼", group: "Missions" },
     { href: "/espace/besoins",          label: "Mes Besoins",           icon: "🔍", group: "Missions" },
     { href: "/espace/appels",           label: "Appels à partenaires",  icon: "📣", group: "Missions" },
 
