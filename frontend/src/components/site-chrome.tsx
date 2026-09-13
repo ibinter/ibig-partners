@@ -116,12 +116,10 @@ export function SiteHeader({ lang = "fr" }: { lang?: Lang }) {
             className="ml-1 inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-gradient-to-r from-amber-400/15 to-orange-500/15 px-3 py-1.5 text-amber-700 font-semibold ring-1 ring-amber-300/40 hover:from-amber-400/25 hover:to-orange-500/25 transition-all"
           >
             <span>🏆</span>
-            <span className="hidden xl:inline">{t.top}</span>
-            <span className="xl:hidden">Top</span>
+            <span>{t.top}</span>
           </Link>
           <a href={t.partnersHref} className="ibig-nav-link relative whitespace-nowrap rounded-lg px-2.5 py-2 text-slate-600 transition-colors after:absolute after:bottom-1 after:left-1/2 after:h-0.5 after:w-0 after:-translate-x-1/2 after:rounded-full after:bg-[#FF6A00] after:transition-all hover:text-[#FF6A00] hover:after:w-4">
-            <span className="xl:hidden">Partenaires</span>
-            <span className="hidden xl:inline">{t.partners}</span>
+            <span>{t.partners}</span>
           </a>
         </nav>
 
