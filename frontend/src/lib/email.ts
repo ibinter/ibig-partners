@@ -513,6 +513,7 @@ export async function sendPayoutRequestedEmail(opts: {
 // ─── E-mail : Rappel de vérification du compte (KYC) ─────────────────────
 
 function verificationReminderHtml(firstName: string): string {
+  const opts = { firstName };
   return layout(`
     <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
       Vérifiez votre compte pour l'activer 🔐
