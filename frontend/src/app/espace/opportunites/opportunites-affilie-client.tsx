@@ -60,6 +60,103 @@ function CategoryPill({ label, active, onClick }: { label: string; active: boole
   );
 }
 
+type PublicCardProps = {
+  row: PublicRow;
+  alreadyIn: boolean;
+  note: string;
+  onNoteChange: (id: string, val: string) => void;
+  onInterest: (row: PublicRow) => void;
+};
+
+function PublicCard({ row, alreadyIn, note, onNoteChange, onInterest }: PublicCardProps) {
+  return (
+    <div className={`rounded-2xl border bg-white p-5 shadow-sm space-y-3 transition-all ${
+      row.isRecommended ? "border-violet-200 ring-1 ring-violet-100" : "border-slate-100"
+    }`}>
+      <div className="flex items-start justify-between gap-3 flex-wrap">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap mb-1">
+            {row.code && <span className="text-[10px] font-mono font-bold text-amber-600">{row.code}</span>}
+            {row.isRecommended && (
+              <span className="text-[10px] font-bold bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full border border-violet-200">
+                🎯 Recommandé pour vous
+              </span>
+            )}
+          </div>
+          <p className="font-bold text-slate-900 text-base leading-snug">{row.title}</p>
+          <div className="flex flex-wrap items-center gap-2 mt-1.5">
+            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-500">
+              {CATEGORY_LABELS[row.category] ?? row.category}
+            </span>
+            <PublisherBadge type={row.publisherType} name={row.publisherName} verified={row.publisherVerified} />
+          </div>
+        </div>
+        <div className="text-right shrink-0">
+          {row.partnerCommission > 0 ? (
+            <>
+              <p className="text-[10px] text-slate-400 uppercase tracking-wide">Votre gain</p>
+              <p className="font-extrabold text-emerald-600 text-lg">
+                {row.partnerCommissionType === "PERCENT"
+                  ? `${row.partnerCommission}%`
+                  : fcfa(row.partnerCommission)}
+              </p>
+              <p className="text-[10px] text-emerald-500">sur résultat ✓</p>
+            </>
+          ) : (
+            <p className="font-semibold text-emerald-600 text-sm">Sur résultat ✓</p>
+          )}
+        </div>
+      </div>
+
+      <p className="text-sm text-slate-600 leading-relaxed">{row.description}</p>
+
+      <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-slate-400">
+        {row.estimatedValue > 0 && (
+          <span>🏷️ Valeur : <strong className="text-slate-700">{fcfa(row.estimatedValue)}</strong></span>
+        )}
+        {row.partnerCommission > 0 && row.partnerCommissionType === "PERCENT" && row.estimatedValue > 0 && (
+          <span className="text-emerald-600 font-semibold">
+            💸 Gain estimé : {fcfa(Math.round(row.estimatedValue * row.partnerCommission / 100))}
+          </span>
+        )}
+        {row.deadline && (
+          <span>⏳ Deadline : <strong className="text-slate-600">{formatDate(row.deadline)}</strong></span>
+        )}
+        <span>👥 {row.leadCount} candidat{row.leadCount !== 1 ? "s" : ""}</span>
+        <span className="text-slate-300">Publié le {formatDate(row.createdAt)}</span>
+      </div>
+
+      {row.adminNote && (
+        <div className="rounded-xl bg-brand-50 border border-brand-100 px-4 py-2 text-sm text-brand-700">
+          <span className="font-semibold">Note IBIG :</span> {row.adminNote}
+        </div>
+      )}
+
+      {alreadyIn ? (
+        <div className="rounded-xl bg-emerald-50 border border-emerald-100 px-4 py-2.5 text-sm text-emerald-700 font-semibold flex items-center gap-2">
+          ✅ Candidature envoyée — l&apos;équipe IBIG vous contactera.
+        </div>
+      ) : (
+        <div className="space-y-2 pt-1">
+          <textarea
+            value={note}
+            onChange={e => onNoteChange(row.id, e.target.value)}
+            rows={2}
+            placeholder="Message optionnel : votre approche, votre réseau, pourquoi cette opportunité vous correspond…"
+            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100 resize-none"
+          />
+          <button
+            onClick={() => onInterest(row)}
+            className="rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-brand-700 transition-colors"
+          >
+            🤝 Je suis intéressé(e)
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function OpportunitesAffilieClient({
   myRows, publicRows, userRole, replyAction, interestAction,
 }: {
@@ -85,13 +182,29 @@ export default function OpportunitesAffilieClient({
     return ["ALL", ...Array.from(cats)];
   }, [publicRows]);
 
-  const recommended = useMemo(() => publicRows.filter(r => r.isRecommended && !interested.has(r.id)), [publicRows, interested]);
+  const recommended = useMemo(
+    () => publicRows.filter(r => r.isRecommended && !interested.has(r.id)),
+    [publicRows, interested]
+  );
 
   const filtered = useMemo(() => publicRows.filter(r => {
     if (categoryFilter !== "ALL" && r.category !== categoryFilter) return false;
     if (publisherFilter !== "ALL" && r.publisherType !== publisherFilter) return false;
     return true;
   }), [publicRows, categoryFilter, publisherFilter]);
+
+  function handleNoteChange(id: string, val: string) {
+    setNoteMap(prev => ({ ...prev, [id]: val }));
+  }
+
+  async function handleInterest(row: PublicRow) {
+    const fd = new FormData();
+    fd.append("opportunityId", row.id);
+    fd.append("note", noteMap[row.id] ?? "");
+    await interestAction(fd);
+    setInterested(prev => new Set([...prev, row.id]));
+    setNoteMap(prev => { const n = { ...prev }; delete n[row.id]; return n; });
+  }
 
   async function handleReply(opp: MyRow) {
     if (!reply.trim()) return;
@@ -105,110 +218,8 @@ export default function OpportunitesAffilieClient({
     } finally { setSending(false); }
   }
 
-  async function handleInterest(row: PublicRow) {
-    const fd = new FormData();
-    fd.append("opportunityId", row.id);
-    fd.append("note", noteMap[row.id] ?? "");
-    await interestAction(fd);
-    setInterested(prev => new Set([...prev, row.id]));
-    setNoteMap(prev => { const n = { ...prev }; delete n[row.id]; return n; });
-  }
-
   const inputCls = "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100";
-
-  function PublicCard({ row }: { row: PublicRow }) {
-    const alreadyIn = interested.has(row.id);
-    const note = noteMap[row.id] ?? "";
-    return (
-      <div className={`rounded-2xl border bg-white p-5 shadow-sm space-y-3 transition-all ${row.isRecommended ? "border-violet-200 ring-1 ring-violet-100" : "border-slate-100"}`}>
-        {/* Header */}
-        <div className="flex items-start justify-between gap-3 flex-wrap">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap mb-1">
-              {row.code && <span className="text-[10px] font-mono font-bold text-amber-600">{row.code}</span>}
-              {row.isRecommended && (
-                <span className="text-[10px] font-bold bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full border border-violet-200">
-                  🎯 Recommandé pour vous
-                </span>
-              )}
-            </div>
-            <p className="font-bold text-slate-900 text-base leading-snug">{row.title}</p>
-            <div className="flex flex-wrap items-center gap-2 mt-1.5">
-              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-500">
-                {CATEGORY_LABELS[row.category] ?? row.category}
-              </span>
-              <PublisherBadge type={row.publisherType} name={row.publisherName} verified={row.publisherVerified} />
-            </div>
-          </div>
-          <div className="text-right shrink-0">
-            {row.partnerCommission > 0 ? (
-              <>
-                <p className="text-[10px] text-slate-400 uppercase tracking-wide">Votre gain</p>
-                <p className="font-extrabold text-emerald-600 text-lg">
-                  {row.partnerCommissionType === "PERCENT"
-                    ? `${row.partnerCommission}%`
-                    : fcfa(row.partnerCommission)}
-                </p>
-                <p className="text-[10px] text-emerald-500">sur résultat ✓</p>
-              </>
-            ) : (
-              <p className="font-semibold text-emerald-600 text-sm">Sur résultat ✓</p>
-            )}
-          </div>
-        </div>
-
-        {/* Description */}
-        <p className="text-sm text-slate-600 leading-relaxed">{row.description}</p>
-
-        {/* Meta */}
-        <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-slate-400">
-          {row.estimatedValue > 0 && (
-            <span>🏷️ Valeur : <strong className="text-slate-700">{fcfa(row.estimatedValue)}</strong></span>
-          )}
-          {row.partnerCommission > 0 && row.partnerCommissionType === "PERCENT" && row.estimatedValue > 0 && (
-            <span className="text-emerald-600 font-semibold">
-              💸 Gain estimé : {fcfa(Math.round(row.estimatedValue * row.partnerCommission / 100))}
-            </span>
-          )}
-          {row.deadline && (
-            <span>⏳ Deadline : <strong className="text-slate-600">{formatDate(row.deadline)}</strong></span>
-          )}
-          <span>👥 {row.leadCount} candidat{row.leadCount !== 1 ? "s" : ""}</span>
-          <span className="text-slate-300">Publié le {formatDate(row.createdAt)}</span>
-        </div>
-
-        {/* Note IBIG */}
-        {row.adminNote && (
-          <div className="rounded-xl bg-brand-50 border border-brand-100 px-4 py-2 text-sm text-brand-700">
-            <span className="font-semibold">Note IBIG :</span> {row.adminNote}
-          </div>
-        )}
-
-        {/* CTA */}
-        {alreadyIn ? (
-          <div className="rounded-xl bg-emerald-50 border border-emerald-100 px-4 py-2.5 text-sm text-emerald-700 font-semibold flex items-center gap-2">
-            ✅ Candidature envoyée — l'équipe IBIG vous contactera.
-          </div>
-        ) : (
-          <div className="space-y-2 pt-1">
-            <textarea
-              value={note}
-              onChange={e => setNoteMap(prev => ({ ...prev, [row.id]: e.target.value }))}
-              rows={2}
-              placeholder="Message optionnel : votre approche, votre réseau, pourquoi cette opportunité vous correspond…"
-              className={inputCls + " resize-none"}
-            />
-            <button
-              onClick={() => handleInterest(row)}
-              className="rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-brand-700 transition-colors"
-            >
-              🤝 Je suis intéressé(e)
-            </button>
-          </div>
-        )}
-      </div>
-    );
-  }
+  const showFilters = categoryFilter === "ALL" && publisherFilter === "ALL";
 
   return (
     <div className="space-y-4">
@@ -264,10 +275,19 @@ export default function OpportunitesAffilieClient({
           )}
 
           {/* Recommandations */}
-          {recommended.length > 0 && categoryFilter === "ALL" && publisherFilter === "ALL" && (
+          {recommended.length > 0 && showFilters && (
             <div className="space-y-2">
               <p className="text-xs font-bold uppercase tracking-wider text-violet-500">🎯 Recommandé pour vous</p>
-              {recommended.map(row => <PublicCard key={row.id} row={row} />)}
+              {recommended.map(row => (
+                <PublicCard
+                  key={row.id}
+                  row={row}
+                  alreadyIn={interested.has(row.id)}
+                  note={noteMap[row.id] ?? ""}
+                  onNoteChange={handleNoteChange}
+                  onInterest={handleInterest}
+                />
+              ))}
               <div className="border-t border-slate-100 pt-2">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Toutes les annonces</p>
               </div>
@@ -291,8 +311,17 @@ export default function OpportunitesAffilieClient({
             </div>
           ) : (
             filtered
-              .filter(r => !(r.isRecommended && categoryFilter === "ALL" && publisherFilter === "ALL" && !interested.has(r.id)))
-              .map(row => <PublicCard key={row.id} row={row} />)
+              .filter(r => !(r.isRecommended && showFilters && !interested.has(r.id)))
+              .map(row => (
+                <PublicCard
+                  key={row.id}
+                  row={row}
+                  alreadyIn={interested.has(row.id)}
+                  note={noteMap[row.id] ?? ""}
+                  onNoteChange={handleNoteChange}
+                  onInterest={handleInterest}
+                />
+              ))
           )}
         </div>
       )}
@@ -373,7 +402,7 @@ export default function OpportunitesAffilieClient({
           </div>
 
           <div className="space-y-2">
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Messages avec l'équipe IBIG</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Messages avec l&apos;équipe IBIG</p>
             {selected.messages.length === 0 ? (
               <p className="text-sm text-slate-400 italic">Aucun échange pour le moment.</p>
             ) : (
@@ -419,17 +448,20 @@ export default function OpportunitesAffilieClient({
           </div>
 
           <div className="grid sm:grid-cols-2 gap-3">
-            {userRole === "ENTERPRISE" ? [
-              { icon: "🤝", label: "Partenariat commercial", desc: "Chercher un apporteur d'affaires" },
-              { icon: "🏪", label: "Franchise ou distribution", desc: "Réseau revendeurs / distributeurs" },
-              { icon: "👔", label: "Recrutement & RH", desc: "Trouver un profil ou une compétence" },
-              { icon: "💼", label: "Prestataire B2B", desc: "Sous-traitance, consulting, service" },
-            ] : [
-              { icon: "🏠", label: "Bien immobilier", desc: "Vente ou location" },
-              { icon: "🛒", label: "Bien ou service", desc: "Produit, équipement, prestation" },
-              { icon: "🤝", label: "Mise en relation", desc: "Un contact que vous monétisez" },
-              { icon: "💡", label: "Opportunité commerciale", desc: "Piste client, partenaire, deal" },
-            ].map(item => (
+            {(userRole === "ENTERPRISE"
+              ? [
+                  { icon: "🤝", label: "Partenariat commercial", desc: "Chercher un apporteur d'affaires" },
+                  { icon: "🏪", label: "Franchise ou distribution", desc: "Réseau revendeurs / distributeurs" },
+                  { icon: "👔", label: "Recrutement & RH", desc: "Trouver un profil ou une compétence" },
+                  { icon: "💼", label: "Prestataire B2B", desc: "Sous-traitance, consulting, service" },
+                ]
+              : [
+                  { icon: "🏠", label: "Bien immobilier", desc: "Vente ou location" },
+                  { icon: "🛒", label: "Bien ou service", desc: "Produit, équipement, prestation" },
+                  { icon: "🤝", label: "Mise en relation", desc: "Un contact que vous monétisez" },
+                  { icon: "💡", label: "Opportunité commerciale", desc: "Piste client, partenaire, deal" },
+                ]
+            ).map((item: { icon: string; label: string; desc: string }) => (
               <div key={item.label} className="flex items-start gap-3 rounded-xl bg-slate-50 border border-slate-100 px-4 py-3">
                 <span className="text-2xl mt-0.5">{item.icon}</span>
                 <div>
