@@ -1,7 +1,5 @@
 /**
- * Proxy Cloudinary : rend le fichier public via l'API Admin, puis redirige.
- * La 1ère ouverture migre le fichier de "restricted" à "public".
- * Les ouvertures suivantes fonctionnent directement.
+ * Proxy Cloudinary : rend le fichier public (PUT access_mode=public) puis redirige.
  *
  * GET /api/cloudinary/signed-url?url=<cloudinary_url_encodée>
  * Env : CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, CLOUDINARY_CLOUD_NAME
@@ -14,15 +12,36 @@ export const dynamic = "force-dynamic";
 
 function extractInfo(pathname: string): { resourceType: string; publicId: string } {
   const parts = pathname.split("/").filter(Boolean);
-  // parts: [cloudname, resource_type, delivery_type, vXXX?, folder, file]
-  const resourceType = parts[1] ?? "image"; // image | raw | video
+  const resourceType = parts[1] ?? "image";
   const idx = parts.findIndex((p) => p === "upload" || p === "authenticated" || p === "raw");
   let rest = idx !== -1 ? parts.slice(idx + 1) : parts.slice(2);
-  // Supprimer version (v123456)
   if (rest[0] && /^v\d+$/.test(rest[0])) rest = rest.slice(1);
-  // Supprimer transformations Cloudinary
   rest = rest.filter((p) => !p.startsWith("s--"));
   return { resourceType, publicId: rest.join("/") };
+}
+
+async function makePublic(
+  cloudName: string,
+  auth: string,
+  resourceType: string,
+  publicId: string
+): Promise<boolean> {
+  // PUT /v1_1/{cloud}/resources/{type}/upload/{public_id}
+  const encodedId = publicId.split("/").map(encodeURIComponent).join("/");
+  const url = `https://api.cloudinary.com/v1_1/${cloudName}/resources/${resourceType}/upload/${encodedId}`;
+  try {
+    const res = await fetch(url, {
+      method: "PUT",
+      headers: {
+        Authorization: `Basic ${auth}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ access_mode: "public" }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
 
 export async function GET(req: NextRequest) {
@@ -58,37 +77,16 @@ export async function GET(req: NextRequest) {
   const { resourceType, publicId } = extractInfo(parsed.pathname);
   const auth = Buffer.from(`${apiKey}:${apiSecret}`).toString("base64");
 
-  // Rendre le fichier public via l'API Admin Cloudinary
-  // Essayer resource_type "image" d'abord (pour les PDFs uploadés en auto), puis "raw"
-  const typesToTry = publicId.toLowerCase().endsWith(".pdf")
-    ? ["image", "raw"]
-    : [resourceType, "image", "raw"];
+  const isPdf = publicId.toLowerCase().endsWith(".pdf");
+  const typesToTry = isPdf ? ["image", "raw"] : [resourceType];
 
   for (const resType of typesToTry) {
-    const apiUrl = `https://api.cloudinary.com/v1_1/${cloudName}/resources/${resType}/upload`;
-    try {
-      const res = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          Authorization: `Basic ${auth}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          public_ids: [publicId],
-          access_mode: "public",
-        }),
-      });
-
-      if (res.ok) {
-        // Reconstruire l'URL publique avec le bon resource_type
-        const publicUrl = `https://res.cloudinary.com/${cloudName}/${resType}/upload/${publicId}`;
-        return NextResponse.redirect(publicUrl);
-      }
-    } catch {
-      // Continuer avec le prochain type
+    const ok = await makePublic(cloudName, auth, resType, publicId);
+    if (ok) {
+      const publicUrl = `https://res.cloudinary.com/${cloudName}/${resType}/upload/${publicId}`;
+      return NextResponse.redirect(publicUrl);
     }
   }
 
-  // Dernier recours : rediriger vers l'URL originale
   return NextResponse.redirect(fileUrl);
 }
