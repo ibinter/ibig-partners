@@ -2,6 +2,8 @@ import { NextResponse, NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 // Route GET temporaire — accessible sans connexion via ?key=ibig-migrate-2026
 export async function GET(req: NextRequest) {
   const key = req.nextUrl.searchParams.get("key");
@@ -10,8 +12,6 @@ export async function GET(req: NextRequest) {
   }
   return runMigrations();
 }
-
-export const dynamic = "force-dynamic";
 
 async function runMigrations() {
   const results: string[] = [];
