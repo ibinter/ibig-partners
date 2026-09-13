@@ -6,7 +6,13 @@ import OpportunitesAffilieClient from "./opportunites-affilie-client";
 
 export const dynamic = "force-dynamic";
 
-export default async function EspaceOpportunitesPage() {
+export default async function EspaceOpportunitesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ publiee?: string }>;
+}) {
+  const params = await searchParams;
+  const justPublished = params.publiee === "1";
   const user = await requireUser();
 
   const [myOpportunities, publicOpportunities, myLeads] = await Promise.all([
@@ -83,6 +89,18 @@ export default async function EspaceOpportunitesPage() {
         title="Opportunités B2B"
         subtitle="Soumettez vos pistes commerciales et exploitez les opportunités IBIG."
       />
+      {justPublished && (
+        <div className="rounded-2xl bg-emerald-50 border border-emerald-200 px-6 py-4 flex items-start gap-3">
+          <span className="text-2xl">✅</span>
+          <div>
+            <p className="font-bold text-emerald-800">Annonce soumise avec succès !</p>
+            <p className="text-sm text-emerald-700 mt-0.5">
+              L&apos;équipe IBIG va examiner votre demande sous 24–48h. Une fois validée, elle sera diffusée au réseau de partenaires.
+              Vous recevrez une notification dès qu&apos;elle est en ligne.
+            </p>
+          </div>
+        </div>
+      )}
       <OpportunitesAffilieClient
         myRows={myRows}
         publicRows={publicRows}

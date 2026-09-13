@@ -4,7 +4,13 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-export default async function EntrepriseDashboardPage() {
+export default async function EntrepriseDashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ publiee?: string }>;
+}) {
+  const params = await searchParams;
+  const justPublished = params.publiee === "1";
   const user = await requireEnterprise();
 
   const [opportunities, totalLeads] = await Promise.all([
@@ -41,6 +47,18 @@ export default async function EntrepriseDashboardPage() {
 
   return (
     <div className="space-y-8">
+      {justPublished && (
+        <div className="rounded-2xl bg-emerald-50 border border-emerald-200 px-6 py-4 flex items-start gap-3">
+          <span className="text-2xl">✅</span>
+          <div>
+            <p className="font-bold text-emerald-800">Opportunité soumise avec succès !</p>
+            <p className="text-sm text-emerald-700 mt-0.5">
+              L&apos;équipe IBIG va examiner votre dossier sous 24–48h. Une fois validé, il sera diffusé au réseau de partenaires.
+              Vous serez notifié(e) dès qu&apos;un partenaire se manifeste.
+            </p>
+          </div>
+        </div>
+      )}
       {/* En-tête */}
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
