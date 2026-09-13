@@ -207,6 +207,114 @@ export default async function DashboardPage({
         </div>
       </div>
 
+      {/* ── Action du jour ── */}
+      {(() => {
+        // Priorité décroissante : première condition vraie = action affichée
+        const action: { icon: string; title: string; desc: string; cta: string; href: string; color: string } =
+          !user.approved
+            ? {
+                icon: "⏳",
+                title: "En attente de validation",
+                desc: "Votre compte est en cours d'examen par l'équipe IBIG. Profitez-en pour compléter votre profil et préparer vos arguments de vente.",
+                cta: "Compléter mon profil",
+                href: "/espace/profil",
+                color: "from-slate-600 to-slate-700",
+              }
+            : needsVerification && !verifPending
+            ? {
+                icon: "🔐",
+                title: "Soumettez votre KYC",
+                desc: "Vos commissions sont bloquées tant que votre identité n'est pas vérifiée. Cela prend 2 minutes : une pièce d'identité suffit.",
+                cta: "Soumettre mes documents →",
+                href: "/espace/verification",
+                color: "from-rose-500 to-rose-600",
+              }
+            : verifPending
+            ? {
+                icon: "⏳",
+                title: "KYC en cours d'examen",
+                desc: "Votre dossier est entre nos mains. En attendant, activez vos produits et préparez votre premier script de prospection.",
+                cta: "Activer des produits →",
+                href: "/espace/produits",
+                color: "from-amber-500 to-amber-600",
+              }
+            : myLinksCount === 0
+            ? {
+                icon: "🧩",
+                title: "Activez votre premier produit",
+                desc: "Sans produit activé, vous n'avez pas de lien d'affiliation. Choisissez Scolaby ou IBIG FactPro — les plus faciles à vendre pour débuter.",
+                cta: "Activer un produit →",
+                href: "/espace/produits",
+                color: "from-blue-600 to-blue-700",
+              }
+            : summary.confirmedSales === 0
+            ? {
+                icon: "💸",
+                title: "Faites votre première vente",
+                desc: "Vous avez votre lien. Envoyez-le à 5 contacts WhatsApp aujourd'hui avec ce message : « J'ai trouvé un logiciel qui peut t'aider — regarde ce lien et dis-moi ce que tu en penses. »",
+                cta: "Copier mon lien →",
+                href: "/espace/liens",
+                color: "from-emerald-600 to-teal-600",
+              }
+            : prospectsUrgent.length > 0
+            ? {
+                icon: "⏰",
+                title: `Relancez ${prospectsUrgent.length} prospect${prospectsUrgent.length > 1 ? "s" : ""} maintenant`,
+                desc: `${prospectsUrgent[0].name}${prospectsUrgent.length > 1 ? ` et ${prospectsUrgent.length - 1} autre${prospectsUrgent.length > 2 ? "s" : ""}` : ""} attend${prospectsUrgent.length === 1 ? "" : "ent"} votre relance. Un simple message WhatsApp suffit pour ne pas perdre cette opportunité.`,
+                cta: "Voir mes prospects →",
+                href: "/espace/prospects",
+                color: "from-amber-500 to-orange-600",
+              }
+            : counts[0] === 0
+            ? {
+                icon: "👥",
+                title: "Recrutez votre premier filleul",
+                desc: "Un filleul actif = revenus passifs sur toutes ses ventes. Partagez votre lien de parrainage à quelqu'un autour de vous qui cherche un revenu complémentaire.",
+                cta: "Mon lien de parrainage →",
+                href: "/espace/liens",
+                color: "from-violet-600 to-purple-700",
+              }
+            : salesThisMonth < monthlyTarget
+            ? {
+                icon: "🎯",
+                title: `${monthlyTarget - salesThisMonth} vente${monthlyTarget - salesThisMonth > 1 ? "s" : ""} pour atteindre votre objectif du mois`,
+                desc: `Vous avez ${salesThisMonth} vente${salesThisMonth > 1 ? "s" : ""} sur ${monthlyTarget} ce mois. Concentrez-vous sur un seul produit aujourd'hui et contactez 3 prospects.`,
+                cta: "Déclarer une vente →",
+                href: "/espace/ventes",
+                color: "from-blue-600 to-violet-700",
+              }
+            : {
+                icon: "🚀",
+                title: "Développez votre réseau",
+                desc: `Bravo — objectif du mois atteint ! Recrutez un nouveau filleul aujourd'hui : chaque vente de votre réseau vous rapporte une commission N2 sans effort supplémentaire. Vous avez ${counts[0]} filleul${counts[0] > 1 ? "s" : ""} directs.`,
+                cta: "Mon lien de parrainage →",
+                href: "/espace/liens",
+                color: "from-emerald-600 to-teal-600",
+              };
+
+        return (
+          <div className={`rounded-2xl bg-gradient-to-br ${action.color} p-5 text-white shadow-md relative overflow-hidden`}>
+            <div className="absolute -top-6 -right-6 h-28 w-28 rounded-full bg-white/10 blur-md pointer-events-none" />
+            <div className="relative flex items-start gap-4">
+              <div className="shrink-0 h-12 w-12 flex items-center justify-center rounded-2xl bg-white/20 text-2xl">
+                {action.icon}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-white/60 mb-0.5">Action du jour</p>
+                <p className="font-extrabold text-base leading-snug">{action.title}</p>
+                <p className="mt-1 text-sm text-white/80 leading-relaxed">{action.desc}</p>
+                <a
+                  href={action.href}
+                  className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-white/20 hover:bg-white/30 px-4 py-2 text-xs font-bold text-white transition"
+                >
+                  {action.cta}
+                </a>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
       {/* ── KPIs live ── */}
       <LiveKpisBar initial={{ salesToday, salesMonth: salesThisMonth, commPending: 0, prospectsUrgent: prospectsUrgent.length, unreadNotif: 0, updatedAt: new Date().toISOString() }} />
 
