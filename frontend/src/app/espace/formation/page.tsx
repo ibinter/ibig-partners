@@ -320,6 +320,8 @@ export default async function FormationPage() {
     { id: "exemples",   label: "Exemples" },
     { id: "statuts",    label: "Statuts" },
     { id: "strategies", label: "Stratégies" },
+    { id: "scripts",    label: "Scripts" },
+    { id: "objections", label: "Objections" },
     { id: "faq",        label: "FAQ" },
   ];
 
@@ -656,6 +658,145 @@ export default async function FormationPage() {
               <p className="text-xs text-slate-500 leading-relaxed">{tip.desc}</p>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* ── Scripts de vente ── */}
+      <div id="scripts" className="space-y-4">
+        <div className="flex items-center gap-3">
+          <h2 className="text-base font-bold text-slate-800">💬 Scripts de vente prêts à l&apos;emploi</h2>
+          <span className="rounded-full bg-emerald-100 text-emerald-700 px-2.5 py-0.5 text-xs font-bold">À copier-coller</span>
+        </div>
+        <p className="text-sm text-slate-500">Adaptez ces scripts à votre style. L&apos;essentiel : personnaliser le prénom et le contexte.</p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {[
+            {
+              title: "1️⃣ Accroche WhatsApp — Premier contact",
+              color: "border-blue-200 bg-blue-50",
+              tag: "WhatsApp / SMS",
+              tagColor: "bg-blue-100 text-blue-700",
+              script: `Bonjour [Prénom] ! 👋
+
+Je suis [Votre prénom], partenaire IBIG Partners.
+
+J'ai pensé à vous parce que je sais que vous gérez [votre activité / votre entreprise].
+
+Je vous contacte car IBIG propose des logiciels de gestion qui permettent à des entreprises comme la vôtre de gagner du temps et de réduire leurs erreurs. Et les retours sont vraiment excellents.
+
+Est-ce que vous avez 5 min pour que je vous montre concrètement ce que ça pourrait vous apporter ? 🙏`,
+            },
+            {
+              title: "2️⃣ Relance après silence (J+3)",
+              color: "border-violet-200 bg-violet-50",
+              tag: "Relance",
+              tagColor: "bg-violet-100 text-violet-700",
+              script: `Bonjour [Prénom],
+
+Je reviens vers vous car je n'ai pas eu de retour de votre part.
+
+Je comprends que vous avez beaucoup à gérer. C'est justement pour ça qu'IBIG peut vous aider — moins de tâches manuelles, plus de clarté sur votre activité.
+
+Si vous avez 10 minutes cette semaine, je peux vous faire une démo gratuite et sans engagement. Ça vous convient ? 😊`,
+            },
+            {
+              title: "3️⃣ Présentation d'une formation IBIG EDUFORM",
+              color: "border-emerald-200 bg-emerald-50",
+              tag: "Formation",
+              tagColor: "bg-emerald-100 text-emerald-700",
+              script: `Bonjour [Prénom],
+
+J'ai une information qui pourrait vous intéresser : IBIG propose des formations professionnelles certifiées — DAF Dirigeant, Management RH, Comptabilité...
+
+Ces formations sont 100% pratiques, avec des formateurs expérimentés. Beaucoup de nos clients les ont utilisées pour faire monter en compétence leurs équipes ou se former eux-mêmes.
+
+Souhaitez-vous recevoir le catalogue avec les tarifs ? Je vous l'envoie tout de suite. 📚`,
+            },
+            {
+              title: "4️⃣ Introduction réseau / parrainage",
+              color: "border-amber-200 bg-amber-50",
+              tag: "Réseau",
+              tagColor: "bg-amber-100 text-amber-700",
+              script: `Bonjour [Prénom],
+
+Je voulais partager quelque chose avec vous : je travaille en partenariat avec IBIG Partners, et ça me permet de recommander leurs solutions à des chefs d'entreprise tout en touchant des commissions.
+
+Si ça vous intéresse, je peux vous expliquer comment ça marche — vous pourriez aussi en bénéficier ! C'est gratuit, sans contrainte, et vous commencez à votre rythme.
+
+On en parle ? 🤝`,
+            },
+          ].map((s, i) => (
+            <div key={i} className={`rounded-2xl border p-5 ${s.color}`}>
+              <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+                <p className="font-bold text-slate-800 text-sm">{s.title}</p>
+                <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${s.tagColor}`}>{s.tag}</span>
+              </div>
+              <pre className="whitespace-pre-wrap text-xs text-slate-700 font-sans leading-relaxed bg-white/60 rounded-xl p-3 border border-white/80 select-all">
+                {s.script.trim()}
+              </pre>
+              <p className="text-[10px] text-slate-400 mt-2">Cliquez sur le texte pour le sélectionner et le copier.</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Réponses aux objections ── */}
+      <div id="objections" className="space-y-4">
+        <h2 className="text-base font-bold text-slate-800">🛡️ Réponses aux objections fréquentes</h2>
+        <p className="text-sm text-slate-500">Ces réponses vous permettent de transformer un refus en opportunité.</p>
+        <div className="space-y-3">
+          {[
+            {
+              q: "« C'est trop cher. »",
+              a: "Je comprends. Mais regardons ça autrement : combien vous coûte aujourd'hui la gestion manuelle ? Erreurs, temps perdu, retard de facturation… Scolaby par exemple, à 10 000 FCFA/mois, se rembourse souvent en quelques heures gagnées. Vous voulez qu'on fasse le calcul ensemble ?",
+              color: "border-rose-200 bg-rose-50",
+              badge: "Tarif", badgeColor: "bg-rose-100 text-rose-700",
+            },
+            {
+              q: "« Je n'ai pas le temps maintenant. »",
+              a: "Justement, c'est pour ça qu'IBIG peut vous aider ! Mais je comprends. Quand est-ce que vous aurez 10 minutes ? Je m'adapte à votre agenda — même tôt le matin ou le soir.",
+              color: "border-amber-200 bg-amber-50",
+              badge: "Timing", badgeColor: "bg-amber-100 text-amber-700",
+            },
+            {
+              q: "« On a déjà un logiciel. »",
+              a: "Super ! C'est une bonne habitude. Est-ce qu'il répond à tous vos besoins ? Beaucoup de nos clients avaient aussi des outils, mais cherchaient quelque chose de plus adapté à l'Afrique, avec un support local et des fonctionnalités spécifiques. Ça vaut la peine de comparer, non ?",
+              color: "border-blue-200 bg-blue-50",
+              badge: "Concurrent", badgeColor: "bg-blue-100 text-blue-700",
+            },
+            {
+              q: "« Je ne connais pas IBIG. »",
+              a: "C'est normal, IBIG est en pleine expansion ! Nous accompagnons des entreprises en Côte d'Ivoire et dans toute l'Afrique de l'Ouest. Je peux vous montrer des témoignages clients et vous mettre en contact avec des références si vous le souhaitez.",
+              color: "border-violet-200 bg-violet-50",
+              badge: "Confiance", badgeColor: "bg-violet-100 text-violet-700",
+            },
+            {
+              q: "« Envoyez-moi une plaquette, je verrai. »",
+              a: "Bien sûr, je vous envoie ça tout de suite ! Et pour vous faire gagner du temps, est-ce que je peux aussi vous poser 2-3 questions rapides pour vous envoyer uniquement ce qui correspond à votre activité ?",
+              color: "border-emerald-200 bg-emerald-50",
+              badge: "Stratégie", badgeColor: "bg-emerald-100 text-emerald-700",
+            },
+            {
+              q: "« Je dois en parler à mon associé / patron. »",
+              a: "Tout à fait logique pour une décision importante. Souhaitez-vous que je fasse une présentation à vous deux ensemble ? Ça évite les malentendus et vous pouvez décider plus rapidement. Quelle date conviendrait ?",
+              color: "border-teal-200 bg-teal-50",
+              badge: "Décideur", badgeColor: "bg-teal-100 text-teal-700",
+            },
+          ].map((o, i) => (
+            <div key={i} className={`rounded-2xl border p-5 ${o.color}`}>
+              <div className="flex items-start gap-3">
+                <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-bold mt-0.5 ${o.badgeColor}`}>{o.badge}</span>
+                <div className="flex-1">
+                  <p className="font-bold text-slate-800 text-sm mb-2">{o.q}</p>
+                  <p className="text-sm text-slate-700 leading-relaxed"><span className="font-semibold text-emerald-700">→ </span>{o.a}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 p-5 text-white text-sm">
+          <p className="font-bold mb-1">💡 Conseil du Coach IA</p>
+          <p className="text-violet-100 text-xs leading-relaxed">Pour des objections spécifiques à votre secteur ou vos prospects, parlez directement au Coach IA IBIG — il connaît tous les produits et s&apos;adapte à votre contexte.</p>
+          <a href="/espace/academie/assistant" className="inline-block mt-3 rounded-xl bg-white px-4 py-2 text-xs font-bold text-violet-700 hover:bg-violet-50 transition">Parler au Coach IA →</a>
         </div>
       </div>
 
