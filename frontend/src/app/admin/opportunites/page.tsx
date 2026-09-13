@@ -20,8 +20,12 @@ export const dynamic = "force-dynamic";
 export default async function OpportunitesPage() {
   await requireAdmin();
 
+  const safeQuery = async <T,>(fn: () => Promise<T>, fallback: T): Promise<T> => {
+    try { return await fn(); } catch { return fallback; }
+  };
+
   const [opportunities, allMatches, allLeads, allActivities] = await Promise.all([
-    (prisma as any).opportunity.findMany({
+    safeQuery<any[]>(() => (prisma as any).opportunity.findMany({
       orderBy: [{ createdAt: "desc" }],
       include: {
         user: { select: { firstName: true, lastName: true, code: true, phone: true } },
@@ -32,16 +36,16 @@ export default async function OpportunitesPage() {
           orderBy: { createdAt: "asc" },
         },
       },
-    }),
-    (prisma as any).opportunityMatch.findMany({
+    }), []),
+    safeQuery<any[]>(() => (prisma as any).opportunityMatch.findMany({
       orderBy: { score: "desc" },
       include: { user: { select: { firstName: true, lastName: true, code: true, status: true } } },
-    }),
-    (prisma as any).opportunityLead.findMany({
+    }), []),
+    safeQuery<any[]>(() => (prisma as any).opportunityLead.findMany({
       orderBy: { createdAt: "desc" },
       include: { user: { select: { firstName: true, lastName: true, code: true, status: true, phone: true } } },
-    }),
-    (async () => { try { return await (prisma as any).opportunityActivity.findMany({ orderBy: { createdAt: "asc" } }); } catch { return []; } })(),
+    }), []),
+    safeQuery<any[]>(() => (prisma as any).opportunityActivity.findMany({ orderBy: { createdAt: "asc" } }), []),
   ]);
 
   const matchesByOpp = new Map<string, any[]>();
@@ -81,9 +85,9 @@ export default async function OpportunitesPage() {
     adminNote: o.adminNote ?? "",
     leadCount: o._count?.leads ?? 0,
     createdAt: o.createdAt instanceof Date ? o.createdAt.toISOString() : String(o.createdAt),
-    partnerName: `${o.user.firstName} ${o.user.lastName}`,
-    partnerCode: o.user.code,
-    partnerPhone: o.user.phone ?? "",
+    partnerName: o.user ? `${o.user.firstName ?? ""} ${o.user.lastName ?? ""}`.trim() : "—",
+    partnerCode: o.user?.code ?? "",
+    partnerPhone: o.user?.phone ?? "",
     messages: (o.messages ?? []).map((m: any) => ({
       id: m.id,
       fromAdmin: m.fromAdmin,
@@ -94,8 +98,8 @@ export default async function OpportunitesPage() {
     shares: (o.shares ?? []).map((s: any) => ({
       id: s.id,
       userId: s.userId,
-      partnerName: `${s.user.firstName} ${s.user.lastName}`,
-      partnerCode: s.user.code,
+      partnerName: s.user ? `${s.user.firstName ?? ""} ${s.user.lastName ?? ""}`.trim() : "—",
+      partnerCode: s.user?.code ?? "",
       role: s.role,
       shareAmount: s.shareAmount,
       shareType: s.shareType,
@@ -106,19 +110,19 @@ export default async function OpportunitesPage() {
     matches: (matchesByOpp.get(o.id) ?? []).map((m: any) => ({
       id: m.id,
       userId: m.userId,
-      partnerName: `${m.user.firstName} ${m.user.lastName}`,
-      partnerCode: m.user.code,
-      partnerStatus: m.user.status,
+      partnerName: m.user ? `${m.user.firstName ?? ""} ${m.user.lastName ?? ""}`.trim() : "—",
+      partnerCode: m.user?.code ?? "",
+      partnerStatus: m.user?.status ?? "",
       score: m.score,
       status: m.status,
     })),
     leads: (leadsByOpp.get(o.id) ?? []).map((l: any) => ({
       id: l.id,
       userId: l.userId,
-      partnerName: `${l.user.firstName} ${l.user.lastName}`,
-      partnerCode: l.user.code,
-      partnerStatus: l.user.status,
-      partnerPhone: l.user.phone ?? "",
+      partnerName: l.user ? `${l.user.firstName ?? ""} ${l.user.lastName ?? ""}`.trim() : "—",
+      partnerCode: l.user?.code ?? "",
+      partnerStatus: l.user?.status ?? "",
+      partnerPhone: l.user?.phone ?? "",
       status: l.status,
       note: l.note ?? "",
       result: l.result ?? "",
