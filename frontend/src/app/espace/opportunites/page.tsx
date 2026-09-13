@@ -91,7 +91,7 @@ export default async function EspaceOpportunitesPage({
       adminNote: o.adminNote ?? "",
       deadline: o.deadline ? (o.deadline instanceof Date ? o.deadline.toISOString() : String(o.deadline)) : null,
       leadCount: o._count?.leads ?? 0,
-      publisherType: isEnterprise ? "ENTERPRISE" : "PARTNER",
+      publisherType: (isEnterprise ? "ENTERPRISE" : "PARTNER") as "ENTERPRISE" | "PARTNER",
       publisherName,
       publisherVerified: (o.user?.verificationStatus ?? "NONE") === "VERIFIED",
       isRecommended: userSectors.length > 0 && userSectors.includes((o.category ?? "AUTRE").toUpperCase()),
