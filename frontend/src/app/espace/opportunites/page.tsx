@@ -1,7 +1,7 @@
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/ui";
-import { replyToOpportunity, submitOpportunity, expressInterest } from "../actions";
+import { replyToOpportunity, expressInterest } from "../actions";
 import OpportunitesAffilieClient from "./opportunites-affilie-client";
 
 export const dynamic = "force-dynamic";
@@ -66,8 +66,8 @@ export default async function EspaceOpportunitesPage() {
     category: o.category ?? "AUTRE",
     description: o.description,
     estimatedValue: o.estimatedValue,
-    commission: o.commission ?? 0,
-    commissionType: o.commissionType ?? "FIXED",
+    partnerCommission: o.partnerCommission ?? 0,
+    partnerCommissionType: o.partnerCommissionType ?? "FIXED",
     adminNote: o.adminNote ?? "",
     deadline: o.deadline ? (o.deadline instanceof Date ? o.deadline.toISOString() : String(o.deadline)) : null,
     leadCount: o._count?.leads ?? 0,
@@ -87,7 +87,6 @@ export default async function EspaceOpportunitesPage() {
         myRows={myRows}
         publicRows={publicRows}
         replyAction={replyToOpportunity}
-        submitAction={submitOpportunity}
         interestAction={expressInterest}
       />
     </div>

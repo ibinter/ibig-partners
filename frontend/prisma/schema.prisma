@@ -346,10 +346,12 @@ model Opportunity {
 
   // Champs supplémentaires (ajoutés sans migration Prisma)
   adminNote              String?
-  commission             Int      @default(0)   // commission finale négociée par IBIG
+  commission             Int      @default(0)   // commission que le client paye à IBIG (privé)
   commissionType         String   @default("FIXED")
-  proposedCommission     Int      @default(0)   // commission proposée par le client à la soumission
+  proposedCommission     Int      @default(0)   // commission proposée par le client à la soumission (privé)
   proposedCommissionType String   @default("FIXED")
+  partnerCommission      Int      @default(0)   // commission qu'IBIG verse au partenaire apporteur (PUBLIC)
+  partnerCommissionType  String   @default("FIXED") // FIXED | PERCENT
   visibility             String   @default("PRIVATE")
   deadline               DateTime?
   code                   String?

@@ -62,5 +62,23 @@ export async function POST() {
     results.push(`Product.active : ${e}`);
   }
 
+  try {
+    await prisma.$executeRawUnsafe(`
+      ALTER TABLE "Opportunity" ADD COLUMN IF NOT EXISTS "partnerCommission" INTEGER NOT NULL DEFAULT 0
+    `);
+    results.push("Opportunity.partnerCommission : OK");
+  } catch (e) {
+    results.push(`Opportunity.partnerCommission : ${e}`);
+  }
+
+  try {
+    await prisma.$executeRawUnsafe(`
+      ALTER TABLE "Opportunity" ADD COLUMN IF NOT EXISTS "partnerCommissionType" TEXT NOT NULL DEFAULT 'FIXED'
+    `);
+    results.push("Opportunity.partnerCommissionType : OK");
+  } catch (e) {
+    results.push(`Opportunity.partnerCommissionType : ${e}`);
+  }
+
   return NextResponse.json({ ok: true, results });
 }

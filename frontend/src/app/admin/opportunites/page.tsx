@@ -76,6 +76,8 @@ export default async function OpportunitesPage() {
     commissionType: o.commissionType ?? "FIXED",
     proposedCommission: o.proposedCommission ?? 0,
     proposedCommissionType: o.proposedCommissionType ?? "FIXED",
+    partnerCommission: o.partnerCommission ?? 0,
+    partnerCommissionType: o.partnerCommissionType ?? "FIXED",
     adminNote: o.adminNote ?? "",
     leadCount: o._count?.leads ?? 0,
     createdAt: o.createdAt instanceof Date ? o.createdAt.toISOString() : String(o.createdAt),

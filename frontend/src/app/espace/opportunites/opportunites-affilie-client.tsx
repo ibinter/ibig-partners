@@ -16,7 +16,6 @@ const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   WON:      { label: "Gagné 🎉",  color: "bg-emerald-100 text-emerald-700" },
   LOST:     { label: "Perdu",     color: "bg-slate-100 text-slate-500" },
 };
-const CATEGORIES = ["FORMATION","DIGITAL","IMMOBILIER","PARTENARIAT","COMMERCIAL","CONSEIL","FINANCEMENT","EMPLOI_RH","AUTRE"];
 
 type Message = { id: string; fromAdmin: boolean; senderName: string; body: string; createdAt: string };
 type MyRow = {
@@ -27,7 +26,7 @@ type MyRow = {
 };
 type PublicRow = {
   id: string; code: string; title: string; category: string; description: string;
-  estimatedValue: number; commission: number; commissionType: string;
+  estimatedValue: number; partnerCommission: number; partnerCommissionType: string;
   adminNote: string; deadline: string | null; leadCount: number;
   partnerVerified: boolean;
   isRecommended: boolean;
@@ -35,19 +34,17 @@ type PublicRow = {
 };
 
 export default function OpportunitesAffilieClient({
-  myRows, publicRows, replyAction, submitAction, interestAction,
+  myRows, publicRows, replyAction, interestAction,
 }: {
   myRows: MyRow[];
   publicRows: PublicRow[];
   replyAction: (fd: FormData) => Promise<void>;
-  submitAction: (fd: FormData) => Promise<void>;
   interestAction: (fd: FormData) => Promise<void>;
 }) {
   const [tab, setTab]           = useState<"public" | "mine" | "submit">("public");
   const [selected, setSelected] = useState<MyRow | null>(null);
   const [reply, setReply]       = useState("");
   const [note, setNote]         = useState("");
-  const [submitting, setSubmitting] = useState(false);
   const [interested, setInterested] = useState<Set<string>>(
     new Set(publicRows.filter(r => r.myLead).map(r => r.id))
   );
@@ -59,16 +56,6 @@ export default function OpportunitesAffilieClient({
     fd.append("body", reply.trim());
     await replyAction(fd);
     setReply("");
-  }
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setSubmitting(true);
-    const fd = new FormData(e.currentTarget);
-    await submitAction(fd);
-    (e.target as HTMLFormElement).reset();
-    setSubmitting(false);
-    setTab("mine");
   }
 
   async function handleInterest(row: PublicRow) {
@@ -89,7 +76,7 @@ export default function OpportunitesAffilieClient({
         {([
           { key: "public", label: `🌐 Opportunités disponibles (${publicRows.length})` },
           { key: "mine",   label: `📤 Mes soumissions (${myRows.length})` },
-          { key: "submit", label: "➕ Soumettre une opportunité" },
+          { key: "submit", label: "➕ Publier mon bien / besoin" },
         ] as const).map(t => (
           <button key={t.key} onClick={() => { setTab(t.key); setSelected(null); }}
             className={`rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${tab === t.key ? "bg-brand-600 text-white shadow" : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"}`}>
@@ -133,15 +120,37 @@ export default function OpportunitesAffilieClient({
                       </span>
                     </div>
                     <div className="text-right shrink-0">
-                      <p className="text-xs text-slate-400">Rémunération</p>
-                      <p className="font-extrabold text-emerald-600 text-sm">Sur résultat ✓</p>
+                      {row.partnerCommission > 0 ? (
+                        <>
+                          <p className="text-xs text-slate-400">Votre commission</p>
+                          <p className="font-extrabold text-emerald-600 text-base">
+                            {row.partnerCommissionType === "PERCENT"
+                              ? `${row.partnerCommission}%`
+                              : fcfa(row.partnerCommission)}
+                          </p>
+                          <p className="text-[10px] text-emerald-500">sur résultat ✓</p>
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-xs text-slate-400">Rémunération</p>
+                          <p className="font-extrabold text-emerald-600 text-sm">Sur résultat ✓</p>
+                        </>
+                      )}
                     </div>
                   </div>
 
                   <p className="text-sm text-slate-600 leading-relaxed">{row.description}</p>
 
                   <div className="flex flex-wrap gap-4 text-xs text-slate-400">
-                    {row.estimatedValue > 0 && <span>💰 Valeur estimée : <strong className="text-slate-600">{fcfa(row.estimatedValue)}</strong></span>}
+                    {row.estimatedValue > 0 && <span>🏷️ Prix : <strong className="text-slate-700">{fcfa(row.estimatedValue)}</strong></span>}
+                    {row.partnerCommission > 0 && (
+                      <span className="text-emerald-600 font-semibold">
+                        💸 Votre gain :{" "}
+                        {row.partnerCommissionType === "PERCENT"
+                          ? `${row.partnerCommission}% ${row.estimatedValue > 0 ? `= ${fcfa(Math.round(row.estimatedValue * row.partnerCommission / 100))}` : ""}`
+                          : fcfa(row.partnerCommission)}
+                      </span>
+                    )}
                     {row.deadline && <span>⏳ Deadline : <strong className="text-slate-600">{formatDate(row.deadline)}</strong></span>}
                     <span>👥 {row.leadCount} partenaire{row.leadCount !== 1 ? "s" : ""} intéressé{row.leadCount !== 1 ? "s" : ""}</span>
                   </div>
@@ -263,56 +272,35 @@ export default function OpportunitesAffilieClient({
         </div>
       )}
 
-      {/* ── Onglet : Soumettre ── */}
+      {/* ── Onglet : Publier ── */}
       {tab === "submit" && (
-        <div className="rounded-2xl border border-slate-100 bg-white p-6 max-w-2xl">
-          <p className="font-bold text-slate-900 text-base mb-1">Soumettre une opportunité B2B</p>
-          <p className="text-sm text-slate-500 mb-5">Vous avez une piste commerciale ? Transmettez-la à l'équipe IBIG. Si elle est validée, elle sera partagée à tout le réseau avec une commission.</p>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Titre de l'opportunité <span className="text-rose-500">*</span></label>
-              <input name="title" required placeholder="Ex : PME cherche logiciel de gestion RH" className={inputCls} />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Catégorie</label>
-              <select name="category" className={inputCls}>
-                {CATEGORIES.map(c => <option key={c} value={c}>{CATEGORY_LABELS[c] ?? c}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Description complète <span className="text-rose-500">*</span></label>
-              <textarea name="description" required rows={4} placeholder="Décrivez l'opportunité : qui, quoi, où, budget estimé, contacts disponibles…" className={inputCls + " resize-none"} />
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Valeur estimée du deal (FCFA)</label>
-              <input name="estimatedValue" type="number" min="0" placeholder="Ex : 500000" className={inputCls} />
-            </div>
-            <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 space-y-3">
-              <p className="text-sm font-semibold text-amber-800">💰 Rémunération de la mise en relation</p>
-              <p className="text-xs text-amber-700">Indiquez ce que vous êtes prêt(e) à verser à IBIG pour organiser et formaliser la mise en relation avec un partenaire qualifié.</p>
-              <div className="flex gap-3">
-                <div className="flex-1">
-                  <label className="mb-1 block text-xs font-semibold text-slate-600 uppercase tracking-wide">Montant proposé</label>
-                  <input name="proposedCommission" type="number" min="0" placeholder="Ex : 25000"
-                    className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
-                </div>
-                <div>
-                  <label className="mb-1 block text-xs font-semibold text-slate-600 uppercase tracking-wide">Type</label>
-                  <select name="proposedCommissionType"
-                    className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100">
-                    <option value="FIXED">FCFA fixe</option>
-                    <option value="PERCENT">% de la valeur</option>
-                  </select>
-                </div>
+        <div className="rounded-2xl border border-slate-100 bg-white p-8 max-w-2xl text-center space-y-5">
+          <p className="text-4xl">📤</p>
+          <p className="font-bold text-slate-900 text-lg">Publier votre bien ou votre besoin</p>
+          <p className="text-sm text-slate-500 max-w-md mx-auto">
+            Vous avez un bien immobilier à vendre ou louer, du mobilier, un service à proposer, ou un besoin commercial ?
+            Publiez votre annonce — IBIG Partners la diffuse à tout le réseau de partenaires.
+          </p>
+          <div className="grid sm:grid-cols-2 gap-3 text-left max-w-lg mx-auto">
+            {[
+              { icon: "🏠", label: "Bien immobilier à vendre / louer" },
+              { icon: "🛋️", label: "Mobilier ou équipement" },
+              { icon: "🛒", label: "Bien ou service à vendre" },
+              { icon: "🤝", label: "Partenaire ou client recherché" },
+            ].map(item => (
+              <div key={item.label} className="flex items-center gap-2 rounded-xl bg-slate-50 border border-slate-100 px-3 py-2 text-sm text-slate-600">
+                <span className="text-lg">{item.icon}</span>
+                {item.label}
               </div>
-              <p className="text-xs text-amber-600">Ce montant sera confirmé ou ajusté par l'équipe IBIG avant publication.</p>
-            </div>
-            <button type="submit" disabled={submitting}
-              className="w-full rounded-xl bg-brand-600 py-3 text-sm font-bold text-white hover:bg-brand-700 disabled:opacity-60 transition-colors">
-              {submitting ? "Envoi en cours…" : "📤 Soumettre à l'équipe IBIG"}
-            </button>
-            <p className="text-xs text-slate-400 text-center">L'équipe IBIG examinera votre soumission et vous répondra dans les 48h.</p>
-          </form>
+            ))}
+          </div>
+          <a
+            href="/entreprise/publier"
+            className="inline-block rounded-2xl bg-brand-600 px-8 py-3 text-sm font-extrabold text-white hover:bg-brand-700 transition-colors shadow"
+          >
+            Publier mon annonce →
+          </a>
+          <p className="text-xs text-slate-400">Gratuit · Réponse IBIG sous 24–48h · Vous ne payez que sur résultat</p>
         </div>
       )}
     </div>

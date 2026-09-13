@@ -117,6 +117,8 @@ type Row = {
   commissionType: string;
   proposedCommission: number;
   proposedCommissionType: string;
+  partnerCommission: number;
+  partnerCommissionType: string;
   adminNote: string;
   leadCount: number;
   createdAt: string;
@@ -575,75 +577,110 @@ export default function OpportunitesClient({
                     )}
                   </div>
 
-                  {/* Commission proposée vs finale */}
-                  {(o.proposedCommission > 0 || o.commission > 0) && (
-                    <div className="pt-3 border-t border-slate-100">
-                      <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-3">💰 Commissions</p>
-                      <div className="grid sm:grid-cols-2 gap-3">
-                        <div className="rounded-xl bg-slate-50 border border-slate-200 px-4 py-3">
-                          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Proposée par le client</p>
-                          <p className="text-base font-extrabold text-slate-700">
-                            {o.proposedCommission > 0
-                              ? `${fcfaFmt(o.proposedCommission)}${o.proposedCommissionType === "PERCENT" ? " (taux %)" : " fixe"}`
-                              : <span className="italic text-slate-400 text-sm">Non renseignée</span>}
-                          </p>
-                        </div>
-                        <div className={`rounded-xl border px-4 py-3 ${o.commission !== o.proposedCommission && o.commission > 0 ? "bg-amber-50 border-amber-200" : "bg-emerald-50 border-emerald-200"}`}>
-                          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Commission finale IBIG</p>
-                          <p className="text-base font-extrabold text-emerald-700">
-                            {o.commission > 0 ? fcfaFmt(o.commission) : <span className="italic text-slate-400 text-sm">Non fixée</span>}
-                          </p>
-                          {o.commission !== o.proposedCommission && o.commission > 0 && o.proposedCommission > 0 && (
-                            <p className="text-[10px] text-amber-600 mt-0.5">⚠️ Modifiée par IBIG</p>
-                          )}
-                        </div>
+                  {/* Commissions — 3 cases */}
+                  <div className="pt-3 border-t border-slate-100">
+                    <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-3">💰 Commissions</p>
+                    <div className="grid sm:grid-cols-3 gap-3">
+                      {/* Proposée par le client */}
+                      <div className="rounded-xl bg-slate-50 border border-slate-200 px-3 py-3">
+                        <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Client → IBIG (proposée)</p>
+                        <p className="text-sm font-extrabold text-slate-700">
+                          {o.proposedCommission > 0
+                            ? `${fcfaFmt(o.proposedCommission)}${o.proposedCommissionType === "PERCENT" ? " %" : ""}`
+                            : <span className="italic text-slate-400 text-xs">Non renseignée</span>}
+                        </p>
+                        <p className="text-[10px] text-slate-400 mt-0.5">Privé — visible IBIG seulement</p>
+                      </div>
+                      {/* Commission IBIG finale (IBIG←client) */}
+                      <div className={`rounded-xl border px-3 py-3 ${o.commission !== o.proposedCommission && o.commission > 0 ? "bg-amber-50 border-amber-200" : "bg-slate-50 border-slate-200"}`}>
+                        <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Client → IBIG (finale)</p>
+                        <p className="text-sm font-extrabold text-slate-700">
+                          {o.commission > 0 ? fcfaFmt(o.commission) : <span className="italic text-slate-400 text-xs">Non fixée</span>}
+                        </p>
+                        <p className="text-[10px] text-slate-400 mt-0.5">Privé — marge IBIG</p>
+                        {o.commission !== o.proposedCommission && o.commission > 0 && o.proposedCommission > 0 && (
+                          <p className="text-[10px] text-amber-600 mt-0.5">⚠️ Modifiée par IBIG</p>
+                        )}
+                      </div>
+                      {/* Commission partenaire (IBIG→partenaire) — PUBLIQUE */}
+                      <div className={`rounded-xl border px-3 py-3 ${o.partnerCommission > 0 ? "bg-emerald-50 border-emerald-200" : "bg-slate-50 border-slate-200"}`}>
+                        <p className="text-[10px] font-bold uppercase tracking-wide text-emerald-600 mb-1">IBIG → Partenaire 🌐</p>
+                        <p className="text-sm font-extrabold text-emerald-700">
+                          {o.partnerCommission > 0
+                            ? `${fcfaFmt(o.partnerCommission)}${o.partnerCommissionType === "PERCENT" ? " %" : ""}`
+                            : <span className="italic text-slate-400 text-xs">Non fixée</span>}
+                        </p>
+                        <p className="text-[10px] text-emerald-600 mt-0.5">PUBLIC — visible des partenaires</p>
                       </div>
                     </div>
-                  )}
+                  </div>
 
-                  {/* Renégocier la commission (toujours disponible sauf LOST) */}
+                  {/* Fixer / renégocier les commissions */}
                   {o.status !== "LOST" && o.status !== "WON" && (
                     <div className="pt-3 border-t border-slate-100">
-                      <p className="text-[10px] font-bold uppercase tracking-wide text-amber-600 mb-3">🔄 Renégocier la commission</p>
+                      <p className="text-[10px] font-bold uppercase tracking-wide text-amber-600 mb-3">🔄 Fixer les commissions</p>
                       <form
                         action={async (fd) => { await negotiateCommissionAction(fd); }}
-                        className="rounded-xl border border-amber-200 bg-amber-50 p-3 space-y-2"
+                        className="rounded-xl border border-amber-200 bg-amber-50 p-3 space-y-3"
                       >
                         <input type="hidden" name="id" value={o.id} />
-                        <div className="flex gap-2">
-                          <div className="flex flex-col gap-1 flex-1">
-                            <label className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Nouveau montant (FCFA)</label>
+
+                        {/* Commission client→IBIG (privée) */}
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500 mb-1.5">🔒 Client → IBIG (privée)</p>
+                          <div className="flex gap-2">
                             <input
                               name="commission"
                               type="number"
                               min="0"
                               defaultValue={o.commission || ""}
-                              placeholder="Ex : 150000"
-                              className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm outline-none focus:border-amber-400"
+                              placeholder="Montant FCFA"
+                              className="flex-1 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm outline-none focus:border-amber-400"
                             />
-                          </div>
-                          <div className="flex flex-col gap-1 w-28">
-                            <label className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Type</label>
                             <select
                               name="commissionType"
-                              defaultValue="FIXED"
-                              className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm outline-none focus:border-amber-400"
+                              defaultValue={o.commissionType || "FIXED"}
+                              className="w-28 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm outline-none focus:border-amber-400"
                             >
                               <option value="FIXED">FCFA fixe</option>
                               <option value="PERCENT">% valeur</option>
                             </select>
                           </div>
                         </div>
+
+                        {/* Commission IBIG→partenaire (publique) */}
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-wide text-emerald-600 mb-1.5">🌐 IBIG → Partenaire (publique)</p>
+                          <div className="flex gap-2">
+                            <input
+                              name="partnerCommission"
+                              type="number"
+                              min="0"
+                              defaultValue={o.partnerCommission || ""}
+                              placeholder="Montant FCFA ou %"
+                              className="flex-1 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm outline-none focus:border-emerald-400"
+                            />
+                            <select
+                              name="partnerCommissionType"
+                              defaultValue={o.partnerCommissionType || "FIXED"}
+                              className="w-28 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm outline-none focus:border-emerald-400"
+                            >
+                              <option value="FIXED">FCFA fixe</option>
+                              <option value="PERCENT">% valeur</option>
+                            </select>
+                          </div>
+                        </div>
+
                         <input
                           name="note"
-                          placeholder="Note de négociation (transmise au client)"
+                          placeholder="Note (transmise au client si applicable)"
                           className="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm outline-none focus:border-amber-400"
                         />
                         <button
                           type="submit"
                           className="w-full rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold py-2 transition"
                         >
-                          Valider la commission négociée →
+                          Enregistrer les commissions →
                         </button>
                       </form>
                     </div>

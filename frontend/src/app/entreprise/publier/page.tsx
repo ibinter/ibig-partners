@@ -1,4 +1,4 @@
-import { requireEnterprise } from "@/lib/auth";
+import { requireUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -22,7 +22,7 @@ const CATEGORIES = [
 
 async function publishOpportunity(formData: FormData) {
   "use server";
-  const { requireEnterprise: req } = await import("@/lib/auth");
+  const { requireUser: req } = await import("@/lib/auth");
   const user = await req();
 
   const title                  = String(formData.get("title") || "").trim();
@@ -64,11 +64,12 @@ async function publishOpportunity(formData: FormData) {
 }
 
 export default async function PublierPage() {
-  await requireEnterprise();
+  const user = await requireUser();
+  const backLink = user.role === "ENTERPRISE" ? "/entreprise" : "/espace";
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-6">
-        <a href="/entreprise" className="text-sm text-blue-600 hover:underline">← Tableau de bord</a>
+        <a href={backLink} className="text-sm text-blue-600 hover:underline">← Tableau de bord</a>
         <h1 className="text-2xl font-extrabold text-slate-900 mt-2">Publier une opportunité</h1>
         <p className="text-slate-500 text-sm mt-1">
           Décrivez votre besoin — IBIG diffuse votre annonce au réseau et coordonne les mises en relation.
