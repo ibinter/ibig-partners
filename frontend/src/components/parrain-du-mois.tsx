@@ -53,8 +53,8 @@ export async function ParrainDuMois() {
     return null;
   }
 
-  // Pas de vrai parrain ce mois : on n'invente pas de fausses données.
-  if (!parrain) return null;
+  // Pas de vrai parrain ce mois, ou performance insuffisante pour du social proof positif.
+  if (!parrain || parrain.referrals < 5) return null;
 
   const monthName = new Date().toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
 

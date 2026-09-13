@@ -21,6 +21,8 @@ import { MarketingKitPacks } from "@/components/marketing-kit-packs";
 import { AffiliateTraining } from "@/components/affiliate-training";
 import { CommissionDetails } from "@/components/commission-details";
 import { BranchEcosystem } from "@/components/branch-ecosystem";
+import { PartnerTestimonials } from "@/components/partner-testimonials";
+import { WhatsAppFloatingButton } from "@/components/whatsapp-cta";
 export const dynamic = "force-dynamic";
 
 
@@ -219,6 +221,64 @@ export default async function HomePage() {
               {text}
             </span>
           ))}
+        </div>
+      </section>
+
+      {/* ═══════════ 3 ÉTAPES — comment ça marche ═══════════ */}
+      <section className="bg-white py-10 border-b border-slate-100">
+        <div className="mx-auto max-w-5xl px-4">
+          <div className="text-center mb-8">
+            <span className="label-caps inline-block rounded-full bg-brand-50 px-4 py-1.5 text-brand-600">
+              Simple comme bonjour
+            </span>
+            <h2 className="mt-3 text-2xl font-extrabold text-ink sm:text-3xl">
+              3 étapes pour vos premières commissions
+            </h2>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-3">
+            {[
+              {
+                step: "01",
+                icon: "⚡",
+                title: "Inscrivez-vous — 2 min",
+                desc: "Créez votre compte gratuitement. Aucune carte bancaire, aucun investissement, aucun stock.",
+                color: "from-brand-500 to-brand-700",
+              },
+              {
+                step: "02",
+                icon: "🔗",
+                title: "Choisissez & partagez",
+                desc: "Activez les produits qui vous correspondent et partagez votre lien unique sur WhatsApp, Facebook, ou en personne.",
+                color: "from-amber-500 to-orange-600",
+              },
+              {
+                step: "03",
+                icon: "💰",
+                title: "Soyez payé en 7 jours",
+                desc: "Dès qu'une vente est confirmée, votre commission est versée par Orange Money, Wave ou virement bancaire.",
+                color: "from-emerald-500 to-teal-600",
+              },
+            ].map((step) => (
+              <div key={step.step} className="relative flex flex-col items-start gap-4 rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
+                <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${step.color} text-2xl shadow`}>
+                  {step.icon}
+                </div>
+                <div className="absolute top-4 right-4 text-5xl font-extrabold text-slate-50 select-none">{step.step}</div>
+                <div>
+                  <h3 className="font-extrabold text-ink">{step.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted">{step.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <a
+              href="/rejoindre"
+              className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-8 py-4 font-bold text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-brand-700"
+            >
+              Commencer maintenant — c&apos;est gratuit →
+            </a>
+          </div>
         </div>
       </section>
 
@@ -943,43 +1003,70 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════ HALL OF FAME & TESTIMONIALS ═══════════ */}
+      {/* ═══════════ TÉMOIGNAGES PARTENAIRES ═══════════ */}
+      <PartnerTestimonials />
+
+      {/* ═══════════ HALL OF FAME & PARRAIN DU MOIS ═══════════ */}
       <HallOfFame />
       <ParrainDuMois />
       <Testimonials />
 
       {/* ═══════════ CTA FINAL ═══════════ */}
-      <section className="bg-slate-50 py-14 sm:py-20 lg:py-24">
+      <section className="bg-gradient-to-br from-brand-700 via-brand-600 to-brand-800 py-14 sm:py-20 lg:py-24 text-white">
         <div className="mx-auto max-w-4xl px-4 text-center">
           <ScrollReveal animation="fade-up">
-            <h2 className="text-3xl font-extrabold text-ink sm:text-5xl">
-              Prêt à bâtir votre <br className="hidden sm:block" /> succès avec nous ?
+            {/* Urgence */}
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-brand-100 mb-6">
+              <span className="flex h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
+              Inscription gratuite · Paiement garanti sous 7 jours
+            </div>
+
+            <h2 className="text-3xl font-extrabold sm:text-5xl">
+              Rejoignez IBIG PARTNERS<br className="hidden sm:block" /> maintenant — c&apos;est gratuit
             </h2>
-            <p className="mt-6 text-lg text-muted sm:text-xl">
-              Rejoignez des centaines de partenaires qui génèrent déjà des revenus
-              avec l&apos;écosystème IBIG — plus de <strong>1 095 missions</strong> disponibles
-              dans 10 branches, partout en Afrique et à l&apos;international.
+            <p className="mt-6 text-lg text-brand-100 sm:text-xl">
+              Des centaines de partenaires en Afrique francophone génèrent déjà des revenus avec nos produits.
+              Plus de <strong className="text-white">1 095 missions</strong> vous attendent dans 10 branches.
             </p>
+
+            {/* Mini-preuves sociales */}
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-sm">
+              {[
+                "✅ Inscription en 2 min",
+                "💸 Payé par Orange Money ou Wave",
+                "🔓 Aucun investissement requis",
+                "🌍 Ouvert diaspora",
+              ].map((t) => (
+                <span key={t} className="rounded-full bg-white/10 px-3 py-1.5 font-medium text-brand-100">{t}</span>
+              ))}
+            </div>
+
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/rejoindre"
-                className="w-full rounded-xl bg-brand-600 px-8 py-4 font-bold text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-brand-700 hover:shadow-xl sm:w-auto"
+                className="w-full rounded-xl bg-white px-8 py-4 font-extrabold text-brand-700 shadow-xl transition-all hover:-translate-y-1 hover:bg-brand-50 hover:shadow-2xl sm:w-auto"
               >
-                Créer mon compte maintenant
+                Créer mon compte maintenant →
               </Link>
-              <Link
-                href="/contact"
-                className="w-full rounded-xl border border-slate-200 bg-white px-8 py-4 font-bold text-ink shadow-sm transition-all hover:-translate-y-1 hover:bg-slate-50 sm:w-auto"
+              <a
+                href={`https://wa.me/2250778882592?text=${encodeURIComponent("Bonjour IBIG PARTNERS 👋 Je veux des informations sur le programme d'affiliation.")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full rounded-xl border border-white/30 bg-white/10 px-8 py-4 font-bold text-white shadow-sm transition-all hover:-translate-y-1 hover:bg-white/20 sm:w-auto flex items-center justify-center gap-2"
               >
-                Parler à un conseiller
-              </Link>
+                <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 shrink-0">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                </svg>
+                Parler sur WhatsApp
+              </a>
             </div>
-            <p className="mt-6 text-sm text-muted">Aucun frais caché · Sans engagement · Support 7j/7</p>
+            <p className="mt-6 text-sm text-brand-200">Aucun frais caché · Sans engagement · Support 7j/7</p>
           </ScrollReveal>
         </div>
       </section>
 
       <StickyMobileCta />
+      <WhatsAppFloatingButton />
       <SiteFooter />
     </>
   );

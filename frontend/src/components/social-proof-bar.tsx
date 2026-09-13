@@ -74,11 +74,8 @@ export async function SocialProofBar() {
     );
   }
 
-  const SALES_FLOOR = 18;
-
   const display = {
     partners: partnersCount,
-    sales:    Math.max(salesCount, SALES_FLOOR),
     recent:   recentJoins,
   };
 
@@ -97,9 +94,9 @@ export async function SocialProofBar() {
       color: "from-amber-500 to-orange-600",
     },
     {
-      icon: "🚀",
-      value: display.sales.toLocaleString("fr-FR"),
-      label: "Ventes générées",
+      icon: "🧩",
+      value: `${productsCount}+`,
+      label: "Produits au catalogue",
       color: "from-brand-500 to-brand-700",
     },
     {
