@@ -1,8 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
+
+export async function GET(req: NextRequest) {
+  const key = req.nextUrl.searchParams.get("key");
+  if (key !== "ibig-migrate-2026") return NextResponse.json({ error: "Clé invalide" }, { status: 403 });
+  return runMigrations();
+}
 
 async function runMigrations() {
   const results: string[] = [];
