@@ -25,6 +25,7 @@ import { PartnerTestimonials } from "@/components/partner-testimonials";
 import { WhatsAppFloatingButton } from "@/components/whatsapp-cta";
 import { FlagshipProducts } from "@/components/flagship-products";
 import { OpportunitySubmitCta } from "@/components/opportunity-submit-cta";
+import { PlatformUsecases } from "@/components/platform-usecases";
 export const dynamic = "force-dynamic";
 
 
@@ -286,6 +287,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ═══════════ CAS D'USAGE — que faire sur IBIG PARTNERS ═══════════ */}
+      <PlatformUsecases />
 
       {/* ═══════════ SOCIAL PROOF (NEW) ═══════════ */}
       <SocialProofBar />
