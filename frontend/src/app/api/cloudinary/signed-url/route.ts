@@ -70,10 +70,10 @@ export async function GET(req: NextRequest) {
   const { resourceType, publicId, format } = extractInfo(parsed.pathname);
   const timestamp = String(Math.floor(Date.now() / 1000));
 
-  // Paramètres à signer (ordre alphabétique)
+  // Paramètres à signer pour /download (SDK Cloudinary officiel)
+  // Endpoint : /v1_1/{cloud}/{resource_type}/download
   const toSign: Record<string, string> = {
     public_id: publicId,
-    resource_type: resourceType,
     timestamp,
     type: "upload",
   };
@@ -94,8 +94,8 @@ export async function GET(req: NextRequest) {
     signature,
   });
 
-  // URL private_download → Cloudinary redirige vers le fichier réel
-  const privateUrl = `https://api.cloudinary.com/v1_1/${cloudName}/private_download?${qs}`;
+  // URL correcte : /{resource_type}/download (pas /private_download)
+  const downloadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/download?${qs}`;
 
-  return NextResponse.redirect(privateUrl);
+  return NextResponse.redirect(downloadUrl);
 }
