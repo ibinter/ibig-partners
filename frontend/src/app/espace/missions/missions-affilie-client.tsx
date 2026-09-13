@@ -142,7 +142,7 @@ function MissionModal({ m, onClose, applyAction, withdrawAction, submitProofActi
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
+    <div className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4"
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
@@ -170,7 +170,7 @@ function MissionModal({ m, onClose, applyAction, withdrawAction, submitProofActi
         </div>
 
         {/* Scrollable body */}
-        <div className="overflow-y-auto flex-1 px-5 py-4 space-y-4">
+        <div className="overflow-y-auto flex-1 px-5 pt-4 pb-24 sm:pb-6 space-y-4">
 
           {/* Badges */}
           <div className="flex flex-wrap gap-1.5">

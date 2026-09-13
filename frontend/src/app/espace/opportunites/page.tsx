@@ -20,22 +20,27 @@ export default async function EspaceOpportunitesPage({
   };
 
   const [myOpportunities, publicOpportunities, myLeads] = await Promise.all([
-    // Mes soumissions
     safeQuery<any[]>(() => (prisma as any).opportunity.findMany({
       where: { userId: user.id },
       orderBy: { createdAt: "desc" },
       include: { messages: { orderBy: { createdAt: "asc" } } },
     }), []),
-    // Opportunités publiques approuvées (toutes)
     safeQuery<any[]>(() => (prisma as any).opportunity.findMany({
       where: { visibility: "PUBLIC", status: "APPROVED" },
       orderBy: { createdAt: "desc" },
       include: {
         _count: { select: { leads: true } },
-        user: { select: { verificationStatus: true } },
+        user: {
+          select: {
+            role: true,
+            verificationStatus: true,
+            firstName: true,
+            lastName: true,
+            orgName: true,
+          },
+        },
       },
     }), []),
-    // Mes candidatures
     safeQuery<any[]>(() => (prisma as any).opportunityLead.findMany({
       where: { userId: user.id },
       select: { opportunityId: true, status: true, createdAt: true },
@@ -43,6 +48,7 @@ export default async function EspaceOpportunitesPage({
   ]);
 
   const myLeadMap = new Map(myLeads.map((l: any) => [l.opportunityId, l]));
+  const userSectors = ((user as any).marketSectors ?? "").split(",").map((s: string) => s.trim().toUpperCase()).filter(Boolean);
 
   const myRows = myOpportunities.map((o: any) => ({
     id: o.id,
@@ -50,48 +56,59 @@ export default async function EspaceOpportunitesPage({
     title: o.title,
     category: o.category ?? "AUTRE",
     description: o.description,
-    estimatedValue: o.estimatedValue,
+    estimatedValue: o.estimatedValue ?? 0,
     status: o.status,
-    handler: o.handler ?? "",
     adminNote: o.adminNote ?? "",
     commission: o.commission ?? 0,
     commissionType: o.commissionType ?? "FIXED",
     createdAt: o.createdAt instanceof Date ? o.createdAt.toISOString() : String(o.createdAt),
-    messages: o.messages.map((m: any) => ({
+    messages: (o.messages ?? []).map((m: any) => ({
       id: m.id,
       fromAdmin: m.fromAdmin,
       senderName: m.senderName,
       body: m.body,
       createdAt: m.createdAt instanceof Date ? m.createdAt.toISOString() : String(m.createdAt),
     })),
-    unreadCount: o.messages.filter((m: any) => m.fromAdmin).length,
+    unreadCount: (o.messages ?? []).filter((m: any) => m.fromAdmin).length,
   }));
 
-  const userSectors = ((user as any).marketSectors ?? "").split(",").map((s: string) => s.trim().toUpperCase()).filter(Boolean);
+  const publicRows = publicOpportunities.map((o: any) => {
+    const publisherRole: string = o.user?.role ?? "PARTNER";
+    const isEnterprise = publisherRole === "ENTERPRISE";
+    const publisherName = isEnterprise
+      ? (o.user?.orgName ?? "Entreprise")
+      : `${o.user?.firstName ?? ""} ${o.user?.lastName ?? ""}`.trim() || "Partenaire";
 
-  const publicRows = publicOpportunities.map((o: any) => ({
-    id: o.id,
-    code: o.code ?? "",
-    title: o.title,
-    category: o.category ?? "AUTRE",
-    description: o.description,
-    estimatedValue: o.estimatedValue,
-    partnerCommission: o.partnerCommission ?? 0,
-    partnerCommissionType: o.partnerCommissionType ?? "FIXED",
-    adminNote: o.adminNote ?? "",
-    deadline: o.deadline ? (o.deadline instanceof Date ? o.deadline.toISOString() : String(o.deadline)) : null,
-    leadCount: o._count?.leads ?? 0,
-    partnerVerified: (o.user?.verificationStatus ?? "NONE") === "VERIFIED",
-    isRecommended: userSectors.length > 0 && userSectors.includes((o.category ?? "AUTRE").toUpperCase()),
-    createdAt: o.createdAt instanceof Date ? o.createdAt.toISOString() : String(o.createdAt),
-    myLead: (() => { const l = myLeadMap.get(o.id) as any; if (!l) return null; return { status: l.status, createdAt: l.createdAt instanceof Date ? l.createdAt.toISOString() : String(l.createdAt) }; })(),
-  }));
+    return {
+      id: o.id,
+      code: o.code ?? "",
+      title: o.title,
+      category: o.category ?? "AUTRE",
+      description: o.description,
+      estimatedValue: o.estimatedValue ?? 0,
+      partnerCommission: o.partnerCommission ?? 0,
+      partnerCommissionType: o.partnerCommissionType ?? "FIXED",
+      adminNote: o.adminNote ?? "",
+      deadline: o.deadline ? (o.deadline instanceof Date ? o.deadline.toISOString() : String(o.deadline)) : null,
+      leadCount: o._count?.leads ?? 0,
+      publisherType: isEnterprise ? "ENTERPRISE" : "PARTNER",
+      publisherName,
+      publisherVerified: (o.user?.verificationStatus ?? "NONE") === "VERIFIED",
+      isRecommended: userSectors.length > 0 && userSectors.includes((o.category ?? "AUTRE").toUpperCase()),
+      createdAt: o.createdAt instanceof Date ? o.createdAt.toISOString() : String(o.createdAt),
+      myLead: (() => {
+        const l = myLeadMap.get(o.id) as any;
+        if (!l) return null;
+        return { status: l.status, createdAt: l.createdAt instanceof Date ? l.createdAt.toISOString() : String(l.createdAt) };
+      })(),
+    };
+  });
 
   return (
     <div className="space-y-6 pb-10">
       <PageHeader
-        title="Opportunités B2B"
-        subtitle="Soumettez vos pistes commerciales et exploitez les opportunités IBIG."
+        title="Opportunités & Annonces"
+        subtitle="Toutes les opportunités du réseau IBIG — entreprises, partenaires et particuliers."
       />
       {justPublished && (
         <div className="rounded-2xl bg-emerald-50 border border-emerald-200 px-6 py-4 flex items-start gap-3">
@@ -99,7 +116,7 @@ export default async function EspaceOpportunitesPage({
           <div>
             <p className="font-bold text-emerald-800">Annonce soumise avec succès !</p>
             <p className="text-sm text-emerald-700 mt-0.5">
-              L&apos;équipe IBIG va examiner votre demande sous 24–48h. Une fois validée, elle sera diffusée au réseau de partenaires.
+              L&apos;équipe IBIG va examiner votre demande sous 24–48h. Une fois validée, elle sera diffusée au réseau.
               Vous recevrez une notification dès qu&apos;elle est en ligne.
             </p>
           </div>
@@ -108,6 +125,7 @@ export default async function EspaceOpportunitesPage({
       <OpportunitesAffilieClient
         myRows={myRows}
         publicRows={publicRows}
+        userRole={(user as any).role ?? "PARTNER"}
         replyAction={replyToOpportunity}
         interestAction={expressInterest}
       />
