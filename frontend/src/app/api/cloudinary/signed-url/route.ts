@@ -26,8 +26,9 @@ async function makePublic(
   resourceType: string,
   publicId: string
 ): Promise<boolean> {
-  // POST bulk avec public_ids (endpoint correct Cloudinary)
-  const url = `https://api.cloudinary.com/v1_1/${cloudName}/resources/${resourceType}/upload`;
+  // POST /resources/{type}/upload/{public_id}
+  const encodedId = publicId.split("/").map(encodeURIComponent).join("/");
+  const url = `https://api.cloudinary.com/v1_1/${cloudName}/resources/${resourceType}/upload/${encodedId}`;
   try {
     const res = await fetch(url, {
       method: "POST",
@@ -35,7 +36,7 @@ async function makePublic(
         Authorization: `Basic ${auth}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ public_ids: [publicId], access_mode: "public", type: "upload" }),
+      body: JSON.stringify({ access_mode: "public" }),
     });
     return res.ok;
   } catch {

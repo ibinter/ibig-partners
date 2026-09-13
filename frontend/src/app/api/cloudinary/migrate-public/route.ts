@@ -37,28 +37,28 @@ async function listAndPublish(
     const resources: { public_id: string }[] = data.resources ?? [];
     nextCursor = data.next_cursor;
 
-    // Bulk update access_mode via POST avec public_ids
-    const publicIds = resources.map((r) => r.public_id);
-    if (publicIds.length === 0) continue;
-
-    const postUrl = `https://api.cloudinary.com/v1_1/${cloudName}/resources/${resourceType}/upload`;
-    try {
-      const postRes = await fetch(postUrl, {
-        method: "POST",
-        headers: {
-          Authorization: `Basic ${auth}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ public_ids: publicIds, access_mode: "public", type: "upload" }),
-      });
-      if (postRes.ok) {
-        done.push(...publicIds);
-      } else {
-        const body = await postRes.text();
-        errors.push(`bulk (${postRes.status}): ${body.slice(0, 200)}`);
+    // POST individuel par fichier : /resources/{type}/upload/{public_id}
+    for (const r of resources) {
+      const encodedId = r.public_id.split("/").map(encodeURIComponent).join("/");
+      const postUrl = `https://api.cloudinary.com/v1_1/${cloudName}/resources/${resourceType}/upload/${encodedId}`;
+      try {
+        const postRes = await fetch(postUrl, {
+          method: "POST",
+          headers: {
+            Authorization: `Basic ${auth}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ access_mode: "public" }),
+        });
+        if (postRes.ok) {
+          done.push(r.public_id);
+        } else {
+          const body = await postRes.text();
+          errors.push(`${r.public_id} (${postRes.status}): ${body.slice(0, 100)}`);
+        }
+      } catch (e) {
+        errors.push(`${r.public_id}: ${String(e)}`);
       }
-    } catch (e) {
-      errors.push(`bulk exception: ${String(e)}`);
     }
   } while (nextCursor);
 
