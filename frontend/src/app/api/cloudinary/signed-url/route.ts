@@ -1,6 +1,6 @@
 /**
- * Génère une URL de téléchargement privée Cloudinary (private_download).
- * Bypass toutes les restrictions d'accès du compte.
+ * Redirige vers une URL private_download Cloudinary signée.
+ * Le navigateur suit la redirection → Cloudinary sert le fichier directement.
  *
  * GET /api/cloudinary/signed-url?url=<cloudinary_url_encodée>
  * Env : CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, CLOUDINARY_CLOUD_NAME
@@ -18,7 +18,6 @@ function extractInfo(pathname: string): {
   format: string;
 } {
   const parts = pathname.split("/").filter(Boolean);
-  // parts: [cloudname, resource_type, delivery_type, vXXX?, ...publicId.format]
   const resourceType = parts[1] ?? "image";
   const idx = parts.findIndex(
     (p) => p === "upload" || p === "authenticated" || p === "raw"
@@ -36,17 +35,6 @@ function extractInfo(pathname: string): {
   }
 
   return { resourceType, publicId: rest.join("/"), format };
-}
-
-function signParams(params: Record<string, string>, apiSecret: string): string {
-  // Trier les paramètres alphabétiquement et créer la chaîne à signer
-  const sorted = Object.keys(params)
-    .sort()
-    .map((k) => `${k}=${params[k]}`)
-    .join("&");
-  return createHash("sha1")
-    .update(sorted + apiSecret)
-    .digest("hex");
 }
 
 export async function GET(req: NextRequest) {
@@ -82,46 +70,32 @@ export async function GET(req: NextRequest) {
   const { resourceType, publicId, format } = extractInfo(parsed.pathname);
   const timestamp = String(Math.floor(Date.now() / 1000));
 
-  const params: Record<string, string> = {
+  // Paramètres à signer (ordre alphabétique)
+  const toSign: Record<string, string> = {
     public_id: publicId,
     resource_type: resourceType,
     timestamp,
     type: "upload",
   };
-  if (format) params.format = format;
+  if (format) toSign.format = format;
 
-  const signature = signParams(params, apiSecret);
+  const sorted = Object.keys(toSign)
+    .sort()
+    .map((k) => `${k}=${toSign[k]}`)
+    .join("&");
 
-  // Construire l'URL private_download
+  const signature = createHash("sha1")
+    .update(sorted + apiSecret)
+    .digest("hex");
+
   const qs = new URLSearchParams({
-    ...params,
+    ...toSign,
     api_key: apiKey,
     signature,
   });
 
+  // URL private_download → Cloudinary redirige vers le fichier réel
   const privateUrl = `https://api.cloudinary.com/v1_1/${cloudName}/private_download?${qs}`;
 
-  // Récupérer côté serveur et streamer au navigateur
-  try {
-    const fileRes = await fetch(privateUrl);
-    if (!fileRes.ok) {
-      // Fallback redirection directe
-      return NextResponse.redirect(fileUrl);
-    }
-    const buffer = await fileRes.arrayBuffer();
-    const contentType =
-      fileRes.headers.get("content-type") ??
-      (format === "pdf" ? "application/pdf" : "application/octet-stream");
-
-    return new NextResponse(buffer, {
-      status: 200,
-      headers: {
-        "Content-Type": contentType,
-        "Content-Disposition": `inline; filename="${publicId.split("/").pop()}.${format}"`,
-        "Cache-Control": "private, max-age=3600",
-      },
-    });
-  } catch {
-    return NextResponse.redirect(fileUrl);
-  }
+  return NextResponse.redirect(privateUrl);
 }
