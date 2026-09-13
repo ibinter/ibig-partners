@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { MobileMenu } from "./mobile-menu";
 import { LangSwitcher } from "./lang-switcher";
+import { VisitCounter } from "./visit-counter";
 
 type Lang = "fr" | "en";
 
@@ -365,6 +366,7 @@ export function SiteFooter({ lang = "fr" }: { lang?: Lang }) {
           </div>
         </div>
       </footer>
+      <VisitCounter />
       <WhatsAppBubble />
     </>
   );

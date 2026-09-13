@@ -14,12 +14,23 @@ interface StatsData {
     openMissions: number;
     totalViews: number;
     cpStats: { credited: number; debited: number; net: number; count: number };
+    totalVisits: number;
+    todayVisits: number;
+    monthVisits: number;
+    totalOpportunities: number;
+    newOpportunities: number;
+    approvedOpportunities: number;
+    totalPaid: number;
+    pendingPayout: number;
   };
   partnerGrowth: { label: string; count: number }[];
   salesGrowth: { label: string; count: number; revenue: number }[];
   missionsByStatus: { status: string; count: number }[];
   topMissions: { title: string; viewCount: number; status: string }[];
   topPartners: { name: string; code: string; count: number }[];
+  visitsByDay: { label: string; count: number }[];
+  partnersByStatus: { label: string; count: number }[];
+  topPages: { path: string; count: number }[];
   updatedAt: string;
 }
 
@@ -167,7 +178,7 @@ export default function StatistiquesClient({ initial }: { initial: StatsData }) 
     return () => clearInterval(id);
   }, [refresh]);
 
-  const { kpis, partnerGrowth, salesGrowth, missionsByStatus, topMissions, topPartners } = data;
+  const { kpis, partnerGrowth, salesGrowth, missionsByStatus, topMissions, topPartners, visitsByDay, partnersByStatus, topPages } = data;
 
   const statusLabels: Record<string, string> = {
     OPEN: "Ouvertes", CLOSED: "Fermées", DRAFT: "Brouillon", ARCHIVED: "Archivées",
@@ -199,6 +210,12 @@ export default function StatistiquesClient({ initial }: { initial: StatsData }) 
         <KpiTile label="CP crédités" value={kpis.cpStats.credited} sub={`${kpis.cpStats.debited.toLocaleString("fr-FR")} utilisés`} color="text-amber-600" icon="⭐" />
         <KpiTile label="Solde CP net" value={kpis.cpStats.net} sub={`${kpis.cpStats.count} transactions`} color="text-orange-600" icon="🔄" />
         <KpiTile label="Partenaires actifs" value={kpis.activePartners} sub={`${kpis.totalPartners > 0 ? Math.round((kpis.activePartners / kpis.totalPartners) * 100) : 0}% du total`} color="text-teal-600" icon="✅" />
+        <KpiTile label="Visites totales" value={kpis.totalVisits} sub={`${kpis.todayVisits} aujourd'hui`} color="text-violet-600" icon="👁️" />
+        <KpiTile label="Visites ce mois" value={kpis.monthVisits} sub="Mois en cours" color="text-indigo-600" icon="📊" />
+        <KpiTile label="Opportunités" value={kpis.totalOpportunities} sub={`${kpis.newOpportunities} en attente`} color="text-rose-600" icon="📤" />
+        <KpiTile label="Opport. approuvées" value={kpis.approvedOpportunities} sub={`sur ${kpis.totalOpportunities} total`} color="text-pink-600" icon="✔️" />
+        <KpiTile label="Total payé (FCFA)" value={kpis.totalPaid.toLocaleString("fr-FR")} sub="Payouts PAID" color="text-green-700" icon="💸" />
+        <KpiTile label="En attente paiement" value={kpis.pendingPayout.toLocaleString("fr-FR")} sub="PENDING + PROCESSING" color="text-yellow-600" icon="⏳" />
       </div>
 
       {/* Charts row 1 */}
@@ -284,6 +301,44 @@ export default function StatistiquesClient({ initial }: { initial: StatsData }) 
           height={140}
         />
         <p className="text-xs text-gray-400 mt-1 text-right">Valeurs en milliers de FCFA</p>
+      </div>
+
+      {/* Visites 7 jours + Partenaires par statut */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+          <h2 className="text-base font-semibold mb-4">📈 Visites des 7 derniers jours</h2>
+          <BarChart data={visitsByDay} color="#6366f1" height={130} />
+        </div>
+        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+          <h2 className="text-base font-semibold mb-4">👥 Partenaires par statut</h2>
+          <DonutChart data={partnersByStatus} size={140} />
+        </div>
+      </div>
+
+      {/* Top pages */}
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+        <h2 className="text-base font-semibold mb-4">🔍 Pages les plus visitées (top 5)</h2>
+        {topPages.length === 0 ? (
+          <p className="text-sm text-gray-400 py-6 text-center">Aucune donnée</p>
+        ) : (
+          <div className="space-y-3">
+            {topPages.map((p, i) => {
+              const maxV = Math.max(...topPages.map((x) => x.count), 1);
+              return (
+                <div key={i} className="flex items-center gap-3">
+                  <span className="w-5 h-5 rounded-full bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300 text-xs font-bold flex items-center justify-center flex-shrink-0">{i + 1}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-mono font-medium truncate">{p.path}</div>
+                    <div className="h-1.5 mt-1 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                      <div className="h-full bg-violet-500 rounded-full" style={{ width: `${(p.count / maxV) * 100}%` }} />
+                    </div>
+                  </div>
+                  <span className="text-sm font-bold text-violet-600 tabular-nums flex-shrink-0">{p.count.toLocaleString("fr-FR")}</span>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -90,13 +90,66 @@ export default async function StatistiquesPage() {
     } catch { return []; }
   })();
 
+  // Visites du site
+  const [totalVisits, todayVisits, monthVisits] = await Promise.all([
+    (async () => { try { return await (prisma as any).pageView.count(); } catch { return 0; } })(),
+    (async () => { try { const t = new Date(); t.setHours(0,0,0,0); return await (prisma as any).pageView.count({ where: { createdAt: { gte: t } } }); } catch { return 0; } })(),
+    (async () => { try { return await (prisma as any).pageView.count({ where: { createdAt: { gte: startOfMonth } } }); } catch { return 0; } })(),
+  ]);
+
+  // Visites par jour (7 derniers jours)
+  const visitsByDay: { label: string; count: number }[] = [];
+  for (let i = 6; i >= 0; i--) {
+    const start = new Date(); start.setDate(start.getDate() - i); start.setHours(0,0,0,0);
+    const end = new Date(start); end.setDate(end.getDate() + 1);
+    const count = await (async () => { try { return await (prisma as any).pageView.count({ where: { createdAt: { gte: start, lt: end } } }); } catch { return 0; } })();
+    visitsByDay.push({ label: start.toLocaleDateString("fr-FR", { weekday: "short" }), count });
+  }
+
+  // Opportunités
+  const [totalOpportunities, newOpportunities, approvedOpportunities] = await Promise.all([
+    (async () => { try { return await (prisma as any).opportunity.count(); } catch { return 0; } })(),
+    (async () => { try { return await (prisma as any).opportunity.count({ where: { status: "NEW" } }); } catch { return 0; } })(),
+    (async () => { try { return await (prisma as any).opportunity.count({ where: { status: "APPROVED" } }); } catch { return 0; } })(),
+  ]);
+
+  // Partenaires par statut
+  const partnersByStatus = await (async () => {
+    try {
+      const stats = await prisma.user.groupBy({ by: ["status"], where: { role: "PARTNER" }, _count: { id: true } });
+      return stats.map((s: any) => ({ label: s.status, count: s._count.id }));
+    } catch { return []; }
+  })();
+
+  // Payouts
+  const [totalPaid, pendingPayout] = await Promise.all([
+    (async () => { try { const r = await prisma.payout.aggregate({ _sum: { amount: true }, where: { status: "PAID" } }); return Number(r._sum.amount ?? 0); } catch { return 0; } })(),
+    (async () => { try { const r = await prisma.payout.aggregate({ _sum: { amount: true }, where: { status: { in: ["PENDING", "PROCESSING"] } } }); return Number(r._sum.amount ?? 0); } catch { return 0; } })(),
+  ]);
+
+  // Pages les plus visitées (top 5)
+  const topPages = await (async () => {
+    try {
+      const rows = await (prisma as any).pageView.groupBy({
+        by: ["path"],
+        _count: { id: true },
+        orderBy: { _count: { id: "desc" } },
+        take: 5,
+      });
+      return rows.map((r: any) => ({ path: r.path, count: r._count.id }));
+    } catch { return []; }
+  })();
+
   const initial = {
-    kpis: { totalPartners, activePartners, totalSales, monthlySales, totalRevenue, monthlyRevenue, totalMissions, openMissions, totalViews, cpStats },
+    kpis: { totalPartners, activePartners, totalSales, monthlySales, totalRevenue, monthlyRevenue, totalMissions, openMissions, totalViews, cpStats, totalVisits, todayVisits, monthVisits, totalOpportunities, newOpportunities, approvedOpportunities, totalPaid, pendingPayout },
     partnerGrowth,
     salesGrowth,
     missionsByStatus,
     topMissions,
     topPartners,
+    visitsByDay,
+    partnersByStatus,
+    topPages,
     updatedAt: now.toISOString(),
   };
 

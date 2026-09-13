@@ -5,6 +5,7 @@ import "./globals.css";
 import { PWARegister, PWAInstallBanner } from "@/components/pwa-register";
 import { TawkVisibility } from "@/components/tawk-visibility";
 import { TawkChat } from "@/components/tawk-chat";
+import { PageTracker } from "@/components/page-tracker";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -146,6 +147,7 @@ export default function RootLayout({
             }),
           }}
         />
+        <PageTracker />
         {children}
         <TawkVisibility />
         <PWARegister />

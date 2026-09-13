@@ -1316,3 +1316,12 @@ model MissionDuplicate {
   @@index([missionId])
   @@index([applicationId])
 }
+
+model PageView {
+  id        String   @id @default(cuid())
+  path      String   @default("/")
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([path])
+}

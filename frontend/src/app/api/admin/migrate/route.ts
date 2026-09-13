@@ -75,6 +75,22 @@ async function runMigrations() {
     results.push(`Opportunity.partnerCommissionType : ${e}`);
   }
 
+  try {
+    await prisma.$executeRawUnsafe(`
+      CREATE TABLE IF NOT EXISTS "PageView" (
+        "id" TEXT NOT NULL,
+        "path" TEXT NOT NULL DEFAULT '/',
+        "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT "PageView_pkey" PRIMARY KEY ("id")
+      )
+    `);
+    await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "PageView_createdAt_idx" ON "PageView"("createdAt")`);
+    await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "PageView_path_idx" ON "PageView"("path")`);
+    results.push("PageView table : OK");
+  } catch (e) {
+    results.push(`PageView table : ${e}`);
+  }
+
   return NextResponse.json({ ok: true, results });
 }
 
