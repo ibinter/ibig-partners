@@ -24,6 +24,7 @@ async function publishOpportunity(formData: FormData) {
   "use server";
   const { requireUser: req } = await import("@/lib/auth");
   const user = await req();
+  const dashboardUrl = user.role === "ENTERPRISE" ? "/entreprise" : "/espace/opportunites";
 
   const title                  = String(formData.get("title") || "").trim();
   const category               = String(formData.get("category") || "AUTRE");
@@ -60,7 +61,8 @@ async function publishOpportunity(formData: FormData) {
   });
 
   revalidatePath("/entreprise");
-  redirect("/entreprise?publiee=1");
+  revalidatePath("/espace/opportunites");
+  redirect(`${dashboardUrl}?publiee=1`);
 }
 
 export default async function PublierPage() {
