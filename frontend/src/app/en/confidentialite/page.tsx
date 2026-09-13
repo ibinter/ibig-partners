@@ -138,7 +138,7 @@ export default function PrivacyPolicyPage() {
 
         <div className="mt-12 border-t border-slate-200 pt-8 text-center">
           <Link
-            href="/rejoindre"
+            href="/en/rejoindre"
             className="inline-block rounded-xl bg-brand-600 px-8 py-3 font-semibold text-white hover:bg-brand-700"
           >
             Become a Partner — it&apos;s free

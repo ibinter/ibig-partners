@@ -23,7 +23,7 @@ export function Logo({ light = false, lang = "fr" }: { light?: boolean; lang?: L
           className={`hidden sm:block text-[9.5px] font-semibold tracking-[0.16em] uppercase ${light ? "text-white/60" : "text-[#041B4D]/45"}`}
           style={{ fontFamily: "var(--font-poppins, 'Poppins', sans-serif)" }}
         >
-          ENSEMBLE, PLUS DE POSSIBILITÉS
+          {lang === "en" ? "TOGETHER, MORE POSSIBILITIES" : "ENSEMBLE, PLUS DE POSSIBILITÉS"}
         </span>
       </span>
     </Link>
@@ -93,8 +93,8 @@ const HEADER_NAV: Record<Lang, { href: string; label: string }[]> = {
 };
 
 const HEADER_T = {
-  fr: { top: "Top Partenaires", topHref: "/top-partenaires", partners: "Nos partenaires", partnersHref: "/partenaires", signIn: "Connexion", join: "Devenir Partenaire", joinHref: "/rejoindre" },
-  en: { top: "Top Partners", topHref: "/en/top-partenaires", partners: "Our partners", partnersHref: "/en/partenaires", signIn: "Sign in", join: "Become a Partner", joinHref: "/en/rejoindre" },
+  fr: { top: "Top Partenaires", topHref: "/top-partenaires", partners: "Nos partenaires", partnersHref: "/partenaires", signIn: "Connexion", signInHref: "/connexion", join: "Devenir Partenaire", joinHref: "/rejoindre" },
+  en: { top: "Top Partners", topHref: "/en/top-partenaires", partners: "Our partners", partnersHref: "/en/partenaires", signIn: "Sign in", signInHref: "/connexion", join: "Become a Partner", joinHref: "/en/rejoindre" },
 } as const;
 
 export function SiteHeader({ lang = "fr" }: { lang?: Lang }) {
@@ -126,7 +126,7 @@ export function SiteHeader({ lang = "fr" }: { lang?: Lang }) {
         <div className="flex items-center gap-2">
           <LangSwitcher />
           <Link
-            href="/connexion"
+            href={t.signInHref}
             className="hidden rounded-lg px-3.5 py-2 text-sm font-semibold transition-colors lg:inline-flex hover:bg-[#041B4D]/5"
             style={{ color: "#041B4D" }}
           >
@@ -189,6 +189,7 @@ const FOOTER_T = {
     join: "Rejoindre",
     joinHref: "/rejoindre",
     signIn: "Connexion",
+    signInHref: "/connexion",
     legal: "Légal",
     cgu: "CGU",
     cgv: "CGV",
@@ -222,6 +223,7 @@ const FOOTER_T = {
     join: "Join",
     joinHref: "/en/rejoindre",
     signIn: "Sign in",
+    signInHref: "/connexion",
     legal: "Legal",
     cgu: "Terms of Use",
     cgv: "Terms of Sale",
@@ -300,7 +302,7 @@ export function SiteFooter({ lang = "fr" }: { lang?: Lang }) {
                 <li><Link href={f.topHref} className="text-amber-400 hover:text-amber-300 transition-colors font-semibold">{f.top}</Link></li>
                 <li><Link href={f.partnersHref} className="text-slate-400 hover:text-brand-400 transition-colors">{f.partners}</Link></li>
                 <li><Link href={f.joinHref} className="text-slate-400 hover:text-brand-400 transition-colors">{f.join}</Link></li>
-                <li><Link href="/connexion" className="text-slate-400 hover:text-brand-400 transition-colors">{f.signIn}</Link></li>
+                <li><Link href={f.signInHref} className="text-slate-400 hover:text-brand-400 transition-colors">{f.signIn}</Link></li>
               </ul>
             </div>
 
