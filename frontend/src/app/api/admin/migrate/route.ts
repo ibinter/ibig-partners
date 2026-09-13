@@ -1,15 +1,19 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+// Route GET temporaire — accessible sans connexion via ?key=ibig-migrate-2026
+export async function GET(req: NextRequest) {
+  const key = req.nextUrl.searchParams.get("key");
+  if (key !== "ibig-migrate-2026") {
+    return NextResponse.json({ error: "Clé invalide" }, { status: 403 });
+  }
+  return runMigrations();
+}
+
 export const dynamic = "force-dynamic";
 
-export async function POST() {
-  const user = await getCurrentUser();
-  if (!user || user.role !== "SUPERADMIN") {
-    return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
-  }
-
+async function runMigrations() {
   const results: string[] = [];
 
   try {
@@ -81,4 +85,12 @@ export async function POST() {
   }
 
   return NextResponse.json({ ok: true, results });
+}
+
+export async function POST() {
+  const user = await getCurrentUser();
+  if (!user || user.role !== "SUPERADMIN") {
+    return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+  }
+  return runMigrations();
 }
