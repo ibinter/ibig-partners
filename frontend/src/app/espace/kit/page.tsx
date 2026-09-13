@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/ui";
 import { STATUSES, STATUS_LABELS } from "@/lib/constants";
 import KitFilter from "./kit-filter";
+import WhatsappScripts from "./whatsapp-scripts";
 
 export const dynamic = "force-dynamic";
 
@@ -158,6 +159,9 @@ export default async function KitPage() {
           </div>
         </div>
       )}
+
+      {/* ── Scripts WhatsApp ── */}
+      <WhatsappScripts affiliate={{ name: `${user.firstName} ${user.lastName}`, code: user.code, phone: user.phone ?? "" }} />
 
       {/* ── Conseil usage ── */}
       <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
