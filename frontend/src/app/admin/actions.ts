@@ -831,6 +831,34 @@ export async function updateOpportunity(formData: FormData) {
   revalidatePath("/espace/opportunites");
 }
 
+export async function negotiateOpportunityCommission(formData: FormData) {
+  await requireAdmin();
+  const id             = String(formData.get("id"));
+  const commission     = Number(formData.get("commission") || 0);
+  const commissionType = String(formData.get("commissionType") || "FIXED");
+  const note           = String(formData.get("note") || "").trim();
+
+  const opp = await (prisma as any).opportunity.update({
+    where: { id },
+    data: { commission, commissionType },
+    include: { user: { select: { id: true, email: true, firstName: true } } },
+  });
+
+  after(async () => {
+    await prisma.notification.create({
+      data: {
+        userId: opp.user.id,
+        title: "Commission mise à jour par IBIG 💬",
+        body: `IBIG a ajusté la commission pour votre opportunité "${opp.title}" : ${commission.toLocaleString("fr-FR")} FCFA${note ? ` — ${note}` : ""}. Connectez-vous pour voir les détails.`,
+        url: "/espace/opportunites",
+      },
+    });
+  });
+
+  revalidatePath("/admin/opportunites");
+  revalidatePath("/espace/opportunites");
+}
+
 export async function sendOpportunityMessage(formData: FormData) {
   const admin = await requireAdmin();
   const opportunityId = String(formData.get("opportunityId"));

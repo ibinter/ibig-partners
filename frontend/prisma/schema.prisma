@@ -345,12 +345,14 @@ model Opportunity {
   activities     OpportunityActivity[]
 
   // Champs supplémentaires (ajoutés sans migration Prisma)
-  adminNote      String?
-  commission     Int      @default(0)
-  commissionType String   @default("FIXED")
-  visibility     String   @default("PRIVATE")
-  deadline       DateTime?
-  code           String?
+  adminNote              String?
+  commission             Int      @default(0)   // commission finale négociée par IBIG
+  commissionType         String   @default("FIXED")
+  proposedCommission     Int      @default(0)   // commission proposée par le client à la soumission
+  proposedCommissionType String   @default("FIXED")
+  visibility             String   @default("PRIVATE")
+  deadline               DateTime?
+  code                   String?
 }
 
 model OpportunityMessage {

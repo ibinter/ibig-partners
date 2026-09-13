@@ -115,6 +115,8 @@ type Row = {
   visibility: string;
   commission: number;
   commissionType: string;
+  proposedCommission: number;
+  proposedCommissionType: string;
   adminNote: string;
   leadCount: number;
   createdAt: string;
@@ -241,6 +243,7 @@ export default function OpportunitesClient({
   addLeadNoteAction,
   broadcastAction,
   quickSplitAction,
+  negotiateCommissionAction,
 }: {
   rows: Row[];
   updateAction: (fd: FormData) => Promise<void>;
@@ -258,6 +261,7 @@ export default function OpportunitesClient({
   addLeadNoteAction: (fd: FormData) => Promise<void>;
   broadcastAction: (fd: FormData) => Promise<void>;
   quickSplitAction: (fd: FormData) => Promise<void>;
+  negotiateCommissionAction: (fd: FormData) => Promise<void>;
 }) {
   const [filter, setFilter] = useState<string>("ALL");
   const [search, setSearch] = useState("");
@@ -570,6 +574,80 @@ export default function OpportunitesClient({
                       </div>
                     )}
                   </div>
+
+                  {/* Commission proposée vs finale */}
+                  {(o.proposedCommission > 0 || o.commission > 0) && (
+                    <div className="pt-3 border-t border-slate-100">
+                      <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-3">💰 Commissions</p>
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        <div className="rounded-xl bg-slate-50 border border-slate-200 px-4 py-3">
+                          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Proposée par le client</p>
+                          <p className="text-base font-extrabold text-slate-700">
+                            {o.proposedCommission > 0
+                              ? `${fcfaFmt(o.proposedCommission)}${o.proposedCommissionType === "PERCENT" ? " (taux %)" : " fixe"}`
+                              : <span className="italic text-slate-400 text-sm">Non renseignée</span>}
+                          </p>
+                        </div>
+                        <div className={`rounded-xl border px-4 py-3 ${o.commission !== o.proposedCommission && o.commission > 0 ? "bg-amber-50 border-amber-200" : "bg-emerald-50 border-emerald-200"}`}>
+                          <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Commission finale IBIG</p>
+                          <p className="text-base font-extrabold text-emerald-700">
+                            {o.commission > 0 ? fcfaFmt(o.commission) : <span className="italic text-slate-400 text-sm">Non fixée</span>}
+                          </p>
+                          {o.commission !== o.proposedCommission && o.commission > 0 && o.proposedCommission > 0 && (
+                            <p className="text-[10px] text-amber-600 mt-0.5">⚠️ Modifiée par IBIG</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Renégocier la commission (toujours disponible sauf LOST) */}
+                  {o.status !== "LOST" && o.status !== "WON" && (
+                    <div className="pt-3 border-t border-slate-100">
+                      <p className="text-[10px] font-bold uppercase tracking-wide text-amber-600 mb-3">🔄 Renégocier la commission</p>
+                      <form
+                        action={async (fd) => { await negotiateCommissionAction(fd); }}
+                        className="rounded-xl border border-amber-200 bg-amber-50 p-3 space-y-2"
+                      >
+                        <input type="hidden" name="id" value={o.id} />
+                        <div className="flex gap-2">
+                          <div className="flex flex-col gap-1 flex-1">
+                            <label className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Nouveau montant (FCFA)</label>
+                            <input
+                              name="commission"
+                              type="number"
+                              min="0"
+                              defaultValue={o.commission || ""}
+                              placeholder="Ex : 150000"
+                              className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm outline-none focus:border-amber-400"
+                            />
+                          </div>
+                          <div className="flex flex-col gap-1 w-28">
+                            <label className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Type</label>
+                            <select
+                              name="commissionType"
+                              defaultValue="FIXED"
+                              className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm outline-none focus:border-amber-400"
+                            >
+                              <option value="FIXED">FCFA fixe</option>
+                              <option value="PERCENT">% valeur</option>
+                            </select>
+                          </div>
+                        </div>
+                        <input
+                          name="note"
+                          placeholder="Note de négociation (transmise au client)"
+                          className="w-full rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm outline-none focus:border-amber-400"
+                        />
+                        <button
+                          type="submit"
+                          className="w-full rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold py-2 transition"
+                        >
+                          Valider la commission négociée →
+                        </button>
+                      </form>
+                    </div>
+                  )}
 
                   {/* Panneau Approbation (NEW uniquement) */}
                   {o.status === "NEW" && (

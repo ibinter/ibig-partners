@@ -9,6 +9,7 @@ import {
   addOpportunityShare, removeOpportunityShare,
   confirmOpportunityShares, markSharePaid,
   updateLeadStatus, addLeadNote,
+  negotiateOpportunityCommission,
 } from "../actions";
 import OpportunitesClient from "./opportunites-client";
 import { ExportButton } from "@/components/export-button";
@@ -73,6 +74,8 @@ export default async function OpportunitesPage() {
     visibility: o.visibility ?? "PRIVATE",
     commission: o.commission ?? 0,
     commissionType: o.commissionType ?? "FIXED",
+    proposedCommission: o.proposedCommission ?? 0,
+    proposedCommissionType: o.proposedCommissionType ?? "FIXED",
     adminNote: o.adminNote ?? "",
     leadCount: o._count?.leads ?? 0,
     createdAt: o.createdAt instanceof Date ? o.createdAt.toISOString() : String(o.createdAt),
@@ -152,6 +155,7 @@ export default async function OpportunitesPage() {
         addLeadNoteAction={addLeadNote}
         broadcastAction={broadcastOpportunity}
         quickSplitAction={quickSplitOpportunity}
+        negotiateCommissionAction={negotiateOpportunityCommission}
       />
     </div>
   );
