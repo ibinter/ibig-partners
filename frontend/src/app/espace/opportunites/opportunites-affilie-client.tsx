@@ -295,7 +295,7 @@ export default function OpportunitesAffilieClient({
             ))}
           </div>
           <a
-            href="/entreprise/publier"
+            href="/espace/publier"
             className="inline-block rounded-2xl bg-brand-600 px-8 py-3 text-sm font-extrabold text-white hover:bg-brand-700 transition-colors shadow"
           >
             Publier mon annonce →
