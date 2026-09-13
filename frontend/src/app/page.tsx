@@ -23,6 +23,8 @@ import { CommissionDetails } from "@/components/commission-details";
 import { BranchEcosystem } from "@/components/branch-ecosystem";
 import { PartnerTestimonials } from "@/components/partner-testimonials";
 import { WhatsAppFloatingButton } from "@/components/whatsapp-cta";
+import { FlagshipProducts } from "@/components/flagship-products";
+import { OpportunitySubmitCta } from "@/components/opportunity-submit-cta";
 export const dynamic = "force-dynamic";
 
 
@@ -223,6 +225,9 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* ═══════════ OPPORTUNITÉ — CTA entreprises ═══════════ */}
+      <OpportunitySubmitCta />
 
       {/* ═══════════ 3 ÉTAPES — comment ça marche ═══════════ */}
       <section className="bg-white py-10 border-b border-slate-100">
@@ -458,6 +463,9 @@ export default async function HomePage() {
 
       {/* ═══════════ ÉCOSYSTÈME COMPLET — 10 BRANCHES ═══════════ */}
       <BranchEcosystem />
+
+      {/* ═══════════ PRODUITS PHARES — concrets et rémunérateurs ═══════════ */}
+      <FlagshipProducts />
 
       {/* ═══════════ COMMISSIONS PAR PRODUIT (NEW) ═══════════ */}
       <CommissionDetails />
