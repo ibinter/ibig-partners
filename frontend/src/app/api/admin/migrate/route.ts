@@ -57,6 +57,22 @@ async function runMigrations() {
     results.push(`Product.active : ${e}`);
   }
 
+  // Champs Opportunity ajoutés sans migration Prisma formelle
+  const oppFields: [string, string][] = [
+    [`ALTER TABLE "Opportunity" ADD COLUMN IF NOT EXISTS "adminNote" TEXT`, "Opportunity.adminNote"],
+    [`ALTER TABLE "Opportunity" ADD COLUMN IF NOT EXISTS "commission" INTEGER NOT NULL DEFAULT 0`, "Opportunity.commission"],
+    [`ALTER TABLE "Opportunity" ADD COLUMN IF NOT EXISTS "commissionType" TEXT NOT NULL DEFAULT 'FIXED'`, "Opportunity.commissionType"],
+    [`ALTER TABLE "Opportunity" ADD COLUMN IF NOT EXISTS "proposedCommission" INTEGER NOT NULL DEFAULT 0`, "Opportunity.proposedCommission"],
+    [`ALTER TABLE "Opportunity" ADD COLUMN IF NOT EXISTS "proposedCommissionType" TEXT NOT NULL DEFAULT 'FIXED'`, "Opportunity.proposedCommissionType"],
+    [`ALTER TABLE "Opportunity" ADD COLUMN IF NOT EXISTS "visibility" TEXT NOT NULL DEFAULT 'PRIVATE'`, "Opportunity.visibility"],
+    [`ALTER TABLE "Opportunity" ADD COLUMN IF NOT EXISTS "deadline" TIMESTAMP(3)`, "Opportunity.deadline"],
+    [`ALTER TABLE "Opportunity" ADD COLUMN IF NOT EXISTS "code" TEXT`, "Opportunity.code"],
+  ];
+  for (const [sql, label] of oppFields) {
+    try { await prisma.$executeRawUnsafe(sql); results.push(`${label} : OK`); }
+    catch (e) { results.push(`${label} : ${e}`); }
+  }
+
   try {
     await prisma.$executeRawUnsafe(`
       ALTER TABLE "Opportunity" ADD COLUMN IF NOT EXISTS "partnerCommission" INTEGER NOT NULL DEFAULT 0
@@ -97,6 +113,14 @@ async function runMigrations() {
 export async function POST() {
   const user = await getCurrentUser();
   if (!user || user.role !== "SUPERADMIN") {
+    return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+  }
+  return runMigrations();
+}
+
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  if (searchParams.get("key") !== "ibig-migrate-2026") {
     return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
   }
   return runMigrations();

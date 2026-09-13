@@ -15,27 +15,31 @@ export default async function EspaceOpportunitesPage({
   const justPublished = params.publiee === "1";
   const user = await requireUser();
 
+  const safeQuery = async <T,>(fn: () => Promise<T>, fallback: T): Promise<T> => {
+    try { return await fn(); } catch { return fallback; }
+  };
+
   const [myOpportunities, publicOpportunities, myLeads] = await Promise.all([
     // Mes soumissions
-    (prisma as any).opportunity.findMany({
+    safeQuery<any[]>(() => (prisma as any).opportunity.findMany({
       where: { userId: user.id },
       orderBy: { createdAt: "desc" },
       include: { messages: { orderBy: { createdAt: "asc" } } },
-    }),
+    }), []),
     // Opportunités publiques approuvées (toutes)
-    (prisma as any).opportunity.findMany({
+    safeQuery<any[]>(() => (prisma as any).opportunity.findMany({
       where: { visibility: "PUBLIC", status: "APPROVED" },
       orderBy: { createdAt: "desc" },
       include: {
         _count: { select: { leads: true } },
         user: { select: { verificationStatus: true } },
       },
-    }),
+    }), []),
     // Mes candidatures
-    (prisma as any).opportunityLead.findMany({
+    safeQuery<any[]>(() => (prisma as any).opportunityLead.findMany({
       where: { userId: user.id },
       select: { opportunityId: true, status: true, createdAt: true },
-    }),
+    }), []),
   ]);
 
   const myLeadMap = new Map(myLeads.map((l: any) => [l.opportunityId, l]));
