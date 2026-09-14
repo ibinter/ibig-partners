@@ -557,6 +557,44 @@ function normalizeSiteUrl(raw: FormDataEntryValue | null): string | null {
   }
 }
 
+async function saveCommissionRates(productId: string, rateN1: number, rateN2Raw: string, rateN3Raw: string) {
+  const rateN2 = rateN2Raw !== "" ? Number(rateN2Raw) : null;
+  const rateN3 = rateN3Raw !== "" ? Number(rateN3Raw) : null;
+
+  const upserts: Promise<unknown>[] = [];
+
+  // N1 is stored on product.rate directly; also upsert in ProductCommissionRate for consistency
+  upserts.push(
+    (prisma as any).productCommissionRate.upsert({
+      where: { productId_level_monthIndex: { productId, level: 1, monthIndex: 1 } },
+      update: { rate: rateN1 },
+      create: { productId, level: 1, monthIndex: 1, rate: rateN1, description: "Niveau 1 — Vendeur direct" },
+    })
+  );
+
+  if (rateN2 !== null && rateN2 >= 0) {
+    upserts.push(
+      (prisma as any).productCommissionRate.upsert({
+        where: { productId_level_monthIndex: { productId, level: 2, monthIndex: 1 } },
+        update: { rate: rateN2 },
+        create: { productId, level: 2, monthIndex: 1, rate: rateN2, description: "Niveau 2 — Parrain" },
+      })
+    );
+  }
+
+  if (rateN3 !== null && rateN3 >= 0) {
+    upserts.push(
+      (prisma as any).productCommissionRate.upsert({
+        where: { productId_level_monthIndex: { productId, level: 3, monthIndex: 1 } },
+        update: { rate: rateN3 },
+        create: { productId, level: 3, monthIndex: 1, rate: rateN3, description: "Niveau 3 — Grand-parrain" },
+      })
+    );
+  }
+
+  await Promise.all(upserts);
+}
+
 export async function createProduct(formData: FormData) {
   await requireAdmin();
   const branchId = String(formData.get("branchId") || "").trim();
@@ -565,12 +603,21 @@ export async function createProduct(formData: FormData) {
   const price = Number(formData.get("price") || 0);
   const pricingType = String(formData.get("pricingType") || "SERVICE");
   const rate = Number(formData.get("rate") || 8);
+  const rateN2Raw = String(formData.get("rateN2") || "").trim();
+  const rateN3Raw = String(formData.get("rateN3") || "").trim();
+  const commissionType = String(formData.get("commissionType") || "PERCENT");
   const siteUrl = normalizeSiteUrl(formData.get("siteUrl"));
   if (!name || !branchId) return;
   const slug = toSlug(name) + "-" + Date.now().toString(36);
-  await prisma.product.create({
-    data: { branchId, name, slug, description: description || null, price, pricingType, rate, siteUrl },
+
+  // Store commissionType in marketingData JSON
+  const mdBase = { commissionType };
+
+  const product = await prisma.product.create({
+    data: { branchId, name, slug, description: description || null, price, pricingType, rate, siteUrl, marketingData: JSON.stringify(mdBase) },
   });
+
+  await saveCommissionRates(product.id, rate, rateN2Raw, rateN3Raw);
   revalidatePath("/admin/branches");
   revalidatePath("/espace/produits");
   revalidatePath("/");
@@ -614,13 +661,25 @@ export async function updateProduct(formData: FormData) {
   const price = Number(formData.get("price") || 0);
   const pricingType = String(formData.get("pricingType") || "SERVICE");
   const rate = Number(formData.get("rate") || 8);
+  const rateN2Raw = String(formData.get("rateN2") || "").trim();
+  const rateN3Raw = String(formData.get("rateN3") || "").trim();
+  const commissionType = String(formData.get("commissionType") || "PERCENT");
   const siteUrl = normalizeSiteUrl(formData.get("siteUrl"));
   if (!name || !id) return;
+
+  // Preserve existing marketingData fields while updating commissionType
+  const existing = await (prisma as any).product.findUnique({ where: { id }, select: { marketingData: true } });
+  let mdObj: Record<string, unknown> = {};
+  try { mdObj = existing?.marketingData ? JSON.parse(existing.marketingData) : {}; } catch { /**/ }
+  mdObj.commissionType = commissionType;
+
   const updated = await prisma.product.update({
     where: { id },
-    data: { name, description: description || null, price, pricingType, rate, siteUrl },
+    data: { name, description: description || null, price, pricingType, rate, siteUrl, marketingData: JSON.stringify(mdObj) },
     include: { branch: { select: { name: true } } },
   });
+
+  await saveCommissionRates(id, rate, rateN2Raw, rateN3Raw);
   revalidatePath("/admin/branches");
   revalidatePath("/espace/produits");
 
@@ -916,33 +975,39 @@ export async function replyOpportunityMessage(formData: FormData) {
 // --- Communication ---
 export async function sendAnnouncement(formData: FormData) {
   await requireAdmin();
-  const title = String(formData.get("title") || "").trim();
-  const body = String(formData.get("body") || "").trim();
-  const audience = String(formData.get("audience") || "ALL");
-  const targetId = String(formData.get("targetId") || "").trim();
-  if (!title || !body) return;
+  const title     = String(formData.get("title") || "").trim();
+  const rawBody   = String(formData.get("body") || "").trim();
+  const imageUrl  = String(formData.get("imageUrl") || "").trim();
+  const actionUrl = String(formData.get("actionUrl") || "").trim();
+  const audience  = String(formData.get("audience") || "ALL");
+  const targetId  = String(formData.get("targetId") || "").trim();
+  if (!title || !rawBody) return;
+
+  // Si une image est fournie, on encode le body en JSON pour que le client puisse l'afficher
+  const body = imageUrl
+    ? JSON.stringify({ t: rawBody, i: imageUrl })
+    : rawBody;
+  const url = actionUrl || null;
 
   if (audience === "ONE" && targetId) {
-    // Notification ciblée vers un partenaire spécifique
     const partner = await prisma.user.findUnique({
       where: { id: targetId },
       select: { id: true, email: true, firstName: true },
     });
     if (partner) {
-      await prisma.notification.create({ data: { userId: partner.id, title, body } });
+      await prisma.notification.create({ data: { userId: partner.id, title, body, url } });
       const to = partner.email, firstName = partner.firstName;
-      after(() => sendAnnouncementEmail({ to, firstName, title, body }));
+      after(() => sendAnnouncementEmail({ to, firstName, title, body: rawBody }));
     }
   } else {
-    // Annonce globale vers tous les partenaires actifs
     const targets = await prisma.user.findMany({
       where: { role: "PARTNER", approved: true, active: true },
       select: { id: true, email: true, firstName: true },
     });
-    await prisma.notification.create({ data: { userId: null, title, body } });
+    await prisma.notification.create({ data: { userId: null, title, body, url } });
     after(async () => {
       for (const t of targets) {
-        await sendAnnouncementEmail({ to: t.email, firstName: t.firstName, title, body });
+        await sendAnnouncementEmail({ to: t.email, firstName: t.firstName, title, body: rawBody });
       }
     });
   }

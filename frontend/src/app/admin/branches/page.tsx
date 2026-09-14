@@ -49,7 +49,10 @@ export default async function BranchesPage({
       include: {
         products: {
           orderBy: { name: "asc" },
-          include: { _count: { select: { sales: true, links: true } } },
+          include: {
+            _count: { select: { sales: true, links: true } },
+            commissionRates: { select: { level: true, rate: true }, orderBy: { level: "asc" } },
+          },
         },
         _count: { select: { products: true } },
       },
@@ -205,11 +208,19 @@ export default async function BranchesPage({
         </Card>
       )}
 
-      {editProduct && (
+      {editProduct && (() => {
+        const epRates: any[] = editProduct.commissionRates ?? [];
+        const epN2 = epRates.find((r: any) => r.level === 2);
+        const epN3 = epRates.find((r: any) => r.level === 3);
+        let epCommType = "PERCENT";
+        try { const md = JSON.parse(editProduct.marketingData ?? "{}"); epCommType = md.commissionType ?? "PERCENT"; } catch { /**/ }
+        return (
         <Card className="border-amber-200 bg-amber-50/30">
           <h2 className="mb-4 font-semibold text-ink">Modifier — {editProduct.name}</h2>
-          <form action={updateProduct} className="space-y-4">
+          <form action={updateProduct} className="space-y-5">
             <input type="hidden" name="id" value={editProduct.id} />
+
+            {/* Infos de base */}
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Nom *" name="name" required defaultValue={editProduct.name} />
               <div>
@@ -220,11 +231,91 @@ export default async function BranchesPage({
                 </select>
               </div>
             </div>
-            <div className="grid gap-4 sm:grid-cols-3">
-              <Field label="Prix (FCFA)" name="price" type="number" defaultValue={String(editProduct.price)} />
-              <Field label="Taux commission N1 (%)" name="rate" type="number" defaultValue={String(editProduct.rate)} />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Prix de référence (FCFA)" name="price" type="number" defaultValue={String(editProduct.price)} />
               <Field label="Lien public de destination" name="siteUrl" defaultValue={editProduct.siteUrl ?? ""} placeholder="https://site.com/offre" />
             </div>
+
+            {/* Commissions multi-niveaux */}
+            <div className="rounded-xl border border-brand-200 bg-brand-50/40 p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-brand-800">Grille de commissions</h3>
+                <span className="text-xs text-brand-600">N1 = vendeur direct · N2 = parrain direct · N3 = grand-parrain</span>
+              </div>
+
+              {/* Type de commission */}
+              <div>
+                <label className="mb-1 block text-xs font-semibold text-slate-600">Type de commission</label>
+                <div className="flex gap-3">
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
+                    <input type="radio" name="commissionType" value="PERCENT" defaultChecked={epCommType !== "FIXED"} className="accent-brand-600" />
+                    <span>Pourcentage (%)</span>
+                  </label>
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
+                    <input type="radio" name="commissionType" value="FIXED" defaultChecked={epCommType === "FIXED"} className="accent-brand-600" />
+                    <span>Montant fixe (FCFA)</span>
+                  </label>
+                </div>
+                <p className="mt-1 text-xs text-muted">
+                  Choisissez "Pourcentage" pour des taux variables selon le prix, ou "Montant fixe" pour un montant FCFA identique quelle que soit la vente.
+                </p>
+              </div>
+
+              {/* N1 / N2 / N3 */}
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div>
+                  <label className="mb-1 block text-xs font-semibold text-brand-700">Niveau 1 — Vendeur direct</label>
+                  <div className="flex items-center gap-1">
+                    <input
+                      name="rate"
+                      type="number"
+                      min={0}
+                      step="0.5"
+                      defaultValue={editProduct.rate}
+                      className="flex-1 rounded-lg border border-brand-300 bg-white px-3 py-2 text-sm font-semibold focus:border-brand-500 focus:outline-none"
+                      placeholder="20"
+                    />
+                    <span className="text-xs font-semibold text-muted commission-unit">% ou FCFA</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-semibold text-slate-600">Niveau 2 — Parrain</label>
+                  <div className="flex items-center gap-1">
+                    <input
+                      name="rateN2"
+                      type="number"
+                      min={0}
+                      step="0.5"
+                      defaultValue={epN2 ? String(epN2.rate) : ""}
+                      className="flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+                      placeholder="10"
+                    />
+                    <span className="text-xs font-semibold text-muted">% ou FCFA</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-semibold text-slate-600">Niveau 3 — Grand-parrain</label>
+                  <div className="flex items-center gap-1">
+                    <input
+                      name="rateN3"
+                      type="number"
+                      min={0}
+                      step="0.5"
+                      defaultValue={epN3 ? String(epN3.rate) : ""}
+                      className="flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+                      placeholder="5"
+                    />
+                    <span className="text-xs font-semibold text-muted">% ou FCFA</span>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-xs text-muted bg-white/70 rounded-lg px-3 py-2 border border-brand-100">
+                💡 Laissez N2 et N3 vides si le produit ne génère des commissions que sur le niveau 1.
+                Les taux sont calculés sur le montant de la vente (si %) ou versés tels quels (si FCFA fixe).
+              </p>
+            </div>
+
             <div>
               <label className="mb-1 block text-sm font-medium text-ink">Présentation commerciale</label>
               <textarea name="description" rows={4} defaultValue={editProduct.description ?? ""}
@@ -237,12 +328,13 @@ export default async function BranchesPage({
             </div>
           </form>
         </Card>
-      )}
+        );
+      })()}
 
       {addProductBranch && (
         <Card className="border-emerald-200 bg-emerald-50/30">
           <h2 className="mb-4 font-semibold text-ink">Ajouter un produit à {addProductBranch.name}</h2>
-          <form action={createProduct} className="space-y-4">
+          <form action={createProduct} className="space-y-5">
             <input type="hidden" name="branchId" value={addProductBranch.id} />
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Nom du produit *" name="name" required placeholder="Ex: Scolaby" />
@@ -253,11 +345,51 @@ export default async function BranchesPage({
                 </select>
               </div>
             </div>
-            <div className="grid gap-4 sm:grid-cols-3">
-              <Field label="Prix (FCFA)" name="price" type="number" defaultValue="0" />
-              <Field label="Taux commission N1 (%)" name="rate" type="number" defaultValue="8" />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Prix de référence (FCFA)" name="price" type="number" defaultValue="0" />
               <Field label="Lien public de destination" name="siteUrl" placeholder="https://site-produit.com/offre" />
             </div>
+
+            {/* Grille de commissions */}
+            <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-4 space-y-3">
+              <h3 className="text-sm font-semibold text-emerald-800">Grille de commissions</h3>
+
+              <div>
+                <label className="mb-1 block text-xs font-semibold text-slate-600">Type de commission</label>
+                <div className="flex gap-3">
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
+                    <input type="radio" name="commissionType" value="PERCENT" defaultChecked className="accent-emerald-600" />
+                    <span>Pourcentage (%)</span>
+                  </label>
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
+                    <input type="radio" name="commissionType" value="FIXED" className="accent-emerald-600" />
+                    <span>Montant fixe (FCFA)</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div>
+                  <label className="mb-1 block text-xs font-semibold text-emerald-700">N1 — Vendeur direct *</label>
+                  <input name="rate" type="number" min={0} step="0.5" defaultValue="8" required
+                    placeholder="Ex: 20"
+                    className="w-full rounded-lg border border-emerald-300 bg-white px-3 py-2 text-sm font-semibold focus:border-brand-500 focus:outline-none" />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-semibold text-slate-600">N2 — Parrain <span className="text-muted font-normal">(optionnel)</span></label>
+                  <input name="rateN2" type="number" min={0} step="0.5"
+                    placeholder="Ex: 10"
+                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-semibold text-slate-600">N3 — Grand-parrain <span className="text-muted font-normal">(optionnel)</span></label>
+                  <input name="rateN3" type="number" min={0} step="0.5"
+                    placeholder="Ex: 5"
+                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:outline-none" />
+                </div>
+              </div>
+            </div>
+
             <div>
               <label className="mb-1 block text-sm font-medium text-ink">Présentation commerciale</label>
               <textarea name="description" rows={4} placeholder="Expliquez le besoin résolu, le public cible, les bénéfices..."

@@ -10,6 +10,8 @@ import {
   deleteProduct,
 } from "../actions";
 
+type CommissionRate = { level: number; rate: number };
+
 type Product = {
   id: string;
   name: string;
@@ -19,13 +21,25 @@ type Product = {
   price: number;
   pricingType: string;
   rate: number;
+  marketingData: string | null;
   active: boolean;
   category?: string | null;
   _count: { sales: number; links: number };
   branchId: string;
   branchName: string;
   branchSlug: string;
+  commissionRates?: CommissionRate[];
 };
+
+function getCommissionType(marketingData: string | null): "PERCENT" | "FIXED" {
+  try {
+    if (marketingData) {
+      const d = JSON.parse(marketingData);
+      if (d.commissionType === "FIXED") return "FIXED";
+    }
+  } catch { /**/ }
+  return "PERCENT";
+}
 
 type Branch = {
   id: string;
@@ -161,7 +175,7 @@ export default function CatalogClient({
                 <th className="px-3 py-3 font-semibold tracking-wide">Branche</th>
                 <th className="px-3 py-3 font-semibold tracking-wide">Type</th>
                 <th className="px-3 py-3 font-semibold tracking-wide">Prix</th>
-                <th className="px-3 py-3 font-semibold tracking-wide">Taux N1</th>
+                <th className="px-3 py-3 font-semibold tracking-wide">Commissions N1/N2/N3</th>
                 <th className="px-3 py-3 font-semibold tracking-wide text-center">Liens</th>
                 <th className="px-3 py-3 font-semibold tracking-wide text-center">Ventes</th>
                 <th className="px-3 py-3 font-semibold tracking-wide">État</th>
@@ -193,17 +207,45 @@ export default function CatalogClient({
                   <td className="px-3 py-3 text-xs font-semibold text-ink whitespace-nowrap">
                     {fcfa(p.price)}
                   </td>
-                  <td className="px-3 py-3">
-                    <form action={updateProductRate} className="flex items-center gap-1">
-                      <input type="hidden" name="id" value={p.id} />
-                      <input name="rate" type="number" defaultValue={p.rate} min={0} max={100}
-                        className="w-12 rounded-md border border-slate-200 px-1.5 py-1 text-xs text-center focus:border-brand-400 focus:outline-none" />
-                      <span className="text-xs text-muted">%</span>
-                      <button type="submit"
-                        className="rounded-md bg-brand-50 px-2 py-1 text-[11px] font-semibold text-brand-700 hover:bg-brand-100 transition-colors">
-                        OK
-                      </button>
-                    </form>
+                  <td className="px-3 py-3 min-w-[160px]">
+                    {(() => {
+                      const cType = getCommissionType(p.marketingData);
+                      const unit = cType === "FIXED" ? "FCFA" : "%";
+                      const n2 = p.commissionRates?.find(r => r.level === 2);
+                      const n3 = p.commissionRates?.find(r => r.level === 3);
+                      return (
+                        <div className="space-y-1">
+                          {/* N1 éditable inline */}
+                          <form action={updateProductRate} className="flex items-center gap-1">
+                            <input type="hidden" name="id" value={p.id} />
+                            <span className="text-[10px] font-bold text-brand-700 w-5 shrink-0">N1</span>
+                            <input name="rate" type="number" defaultValue={p.rate} min={0}
+                              className="w-16 rounded-md border border-brand-200 px-1.5 py-0.5 text-xs text-center font-semibold focus:border-brand-400 focus:outline-none" />
+                            <span className="text-[10px] text-muted">{unit}</span>
+                            <button type="submit"
+                              className="rounded-md bg-brand-50 px-1.5 py-0.5 text-[10px] font-semibold text-brand-700 hover:bg-brand-100 transition-colors border border-brand-200">
+                              ✓
+                            </button>
+                          </form>
+                          {/* N2 et N3 affichés (non éditables inline — utiliser le formulaire édition) */}
+                          {n2 && (
+                            <div className="flex items-center gap-1 text-[10px] text-slate-500">
+                              <span className="font-bold w-5">N2</span>
+                              <span className="font-semibold text-slate-700">{n2.rate} {unit}</span>
+                            </div>
+                          )}
+                          {n3 && (
+                            <div className="flex items-center gap-1 text-[10px] text-slate-500">
+                              <span className="font-bold w-5">N3</span>
+                              <span className="font-semibold text-slate-700">{n3.rate} {unit}</span>
+                            </div>
+                          )}
+                          {cType === "FIXED" && (
+                            <span className="inline-block rounded bg-amber-100 px-1 py-0.5 text-[9px] font-bold text-amber-700 uppercase">Fixe FCFA</span>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </td>
                   <td className="px-3 py-3 text-center text-xs text-muted">{p._count.links}</td>
                   <td className="px-3 py-3 text-center">

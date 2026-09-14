@@ -20,6 +20,14 @@ const FILTERS = [
   { key: "personal",  label: "Personnelles" },
 ];
 
+function parseBody(body: string): { text: string; imageUrl?: string } {
+  try {
+    const p = JSON.parse(body);
+    if (p && typeof p.t === "string") return { text: p.t, imageUrl: p.i ?? undefined };
+  } catch { /* plain text */ }
+  return { text: body };
+}
+
 function autoIcon(title: string): string {
   const t = title.toLowerCase();
   if (t.includes("commission") || t.includes("commissi"))  return "💰";
@@ -134,10 +142,11 @@ export default function NotifListClient({
 
               {group.items.map((n) => {
                 const isUnread = !n.isGlobal && !n.read;
+                const parsed = parseBody(n.body);
                 return (
                   <div
                     key={n.id}
-                    className={`rounded-2xl border p-4 flex items-start gap-4 transition-colors shadow-sm ${
+                    className={`rounded-2xl border transition-colors shadow-sm overflow-hidden ${
                       isUnread
                         ? "border-blue-200 bg-blue-50/50"
                         : n.isGlobal
@@ -145,52 +154,63 @@ export default function NotifListClient({
                         : "border-slate-100 bg-white"
                     }`}
                   >
-                    {/* Icône */}
-                    <span className="text-2xl shrink-0 mt-0.5">
-                      {n.isGlobal ? "📢" : autoIcon(n.title)}
-                    </span>
-
-                    {/* Contenu */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                        <p className={`text-sm leading-tight ${isUnread ? "font-bold text-slate-900" : "font-semibold text-slate-700"}`}>
-                          {n.title}
-                        </p>
-                        {n.isGlobal && (
-                          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-700 border border-amber-200">
-                            Annonce
-                          </span>
-                        )}
-                        {isUnread && (
-                          <span className="h-2 w-2 rounded-full bg-blue-500 shrink-0" />
-                        )}
-                      </div>
-                      <p className="text-sm text-slate-500 leading-relaxed">{n.body}</p>
-                      <div className="mt-2 flex items-center gap-3 flex-wrap">
-                        {n.url && (
-                          <a
-                            href={n.url}
-                            className="text-xs font-semibold text-blue-600 hover:underline"
-                          >
-                            Ouvrir →
-                          </a>
-                        )}
-                        <span className="text-xs text-slate-300">{formatTime(n.createdAt)}</span>
-                      </div>
-                    </div>
-
-                    {/* Bouton "Lu" */}
-                    {isUnread && (
-                      <form action={markOneRead} className="shrink-0">
-                        <input type="hidden" name="id" value={n.id} />
-                        <button
-                          type="submit"
-                          className="rounded-xl border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-500 hover:border-blue-300 hover:text-blue-600 transition"
-                        >
-                          Lu
-                        </button>
-                      </form>
+                    {/* Image bannière (si présente) */}
+                    {parsed.imageUrl && (
+                      <img
+                        src={parsed.imageUrl}
+                        alt=""
+                        className="w-full h-40 object-cover"
+                      />
                     )}
+
+                    <div className="p-4 flex items-start gap-4">
+                      {/* Icône */}
+                      <span className="text-2xl shrink-0 mt-0.5">
+                        {n.isGlobal ? "📢" : autoIcon(n.title)}
+                      </span>
+
+                      {/* Contenu */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                          <p className={`text-sm leading-tight ${isUnread ? "font-bold text-slate-900" : "font-semibold text-slate-700"}`}>
+                            {n.title}
+                          </p>
+                          {n.isGlobal && (
+                            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-700 border border-amber-200">
+                              Annonce
+                            </span>
+                          )}
+                          {isUnread && (
+                            <span className="h-2 w-2 rounded-full bg-blue-500 shrink-0" />
+                          )}
+                        </div>
+                        <p className="text-sm text-slate-500 leading-relaxed">{parsed.text}</p>
+                        <div className="mt-2 flex items-center gap-3 flex-wrap">
+                          {n.url && (
+                            <a
+                              href={n.url}
+                              className="text-xs font-semibold text-blue-600 hover:underline"
+                            >
+                              Voir →
+                            </a>
+                          )}
+                          <span className="text-xs text-slate-300">{formatTime(n.createdAt)}</span>
+                        </div>
+                      </div>
+
+                      {/* Bouton "Lu" */}
+                      {isUnread && (
+                        <form action={markOneRead} className="shrink-0">
+                          <input type="hidden" name="id" value={n.id} />
+                          <button
+                            type="submit"
+                            className="rounded-xl border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-500 hover:border-blue-300 hover:text-blue-600 transition"
+                          >
+                            Lu
+                          </button>
+                        </form>
+                      )}
+                    </div>
                   </div>
                 );
               })}

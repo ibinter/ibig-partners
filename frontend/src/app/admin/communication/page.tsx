@@ -6,6 +6,16 @@ import { sendAnnouncement } from "../actions";
 
 export const revalidate = 30;
 
+function parseBody(body: string): { text: string; imageUrl?: string } {
+  try {
+    const parsed = JSON.parse(body);
+    if (parsed && typeof parsed.t === "string") {
+      return { text: parsed.t, imageUrl: parsed.i ?? undefined };
+    }
+  } catch { /* plain text */ }
+  return { text: body };
+}
+
 export default async function CommunicationPage() {
   await requireAdmin();
 
@@ -43,6 +53,34 @@ export default async function CommunicationPage() {
               required
               rows={4}
               placeholder="Rédigez votre message ici..."
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            />
+          </div>
+
+          {/* Image facultative */}
+          <div>
+            <label className="mb-1 block text-sm font-medium text-ink">
+              Image illustrative <span className="text-xs font-normal text-muted">(optionnel — URL publique)</span>
+            </label>
+            <input
+              name="imageUrl"
+              type="url"
+              placeholder="https://res.cloudinary.com/... ou https://ibigpartners.com/images/..."
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
+            />
+            <p className="mt-1 text-xs text-muted">
+              Collez l'URL d'une image hébergée (Cloudinary, site IBIG, etc.). Elle s'affichera dans l'annonce côté affilié.
+            </p>
+          </div>
+
+          {/* Lien cliquable */}
+          <div>
+            <label className="mb-1 block text-sm font-medium text-ink">
+              Lien associé <span className="text-xs font-normal text-muted">(optionnel)</span>
+            </label>
+            <input
+              name="actionUrl"
+              placeholder="/espace/produits  ou  https://..."
               className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
             />
           </div>
@@ -90,13 +128,23 @@ export default async function CommunicationPage() {
             <p className="px-5 pb-5 text-sm text-muted">Aucune annonce globale.</p>
           ) : (
             <ul className="divide-y divide-slate-100">
-              {globals.map((n) => (
-                <li key={n.id} className="px-5 py-3">
-                  <p className="font-medium text-ink">{n.title}</p>
-                  <p className="mt-0.5 text-sm text-muted line-clamp-2">{n.body}</p>
-                  <p className="mt-1 text-xs text-muted">{formatDate(n.createdAt)}</p>
-                </li>
-              ))}
+              {globals.map((n) => {
+                const parsed = parseBody(n.body);
+                return (
+                  <li key={n.id} className="px-5 py-3">
+                    <p className="font-medium text-ink">{n.title}</p>
+                    {parsed.imageUrl && (
+                      <img
+                        src={parsed.imageUrl}
+                        alt=""
+                        className="mt-1.5 h-24 w-full rounded-lg object-cover border border-slate-100"
+                      />
+                    )}
+                    <p className="mt-0.5 text-sm text-muted line-clamp-2">{parsed.text}</p>
+                    <p className="mt-1 text-xs text-muted">{formatDate(n.createdAt)}</p>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </Card>
@@ -110,18 +158,28 @@ export default async function CommunicationPage() {
             <p className="px-5 pb-5 text-sm text-muted">Aucun message ciblé.</p>
           ) : (
             <ul className="divide-y divide-slate-100">
-              {targeted.map((n) => (
-                <li key={n.id} className="px-5 py-3">
-                  <p className="font-medium text-ink">{n.title}</p>
-                  {n.user && (
-                    <p className="text-xs font-medium text-brand-600">
-                      → {n.user.firstName} {n.user.lastName}
-                    </p>
-                  )}
-                  <p className="mt-0.5 text-sm text-muted line-clamp-2">{n.body}</p>
-                  <p className="mt-1 text-xs text-muted">{formatDate(n.createdAt)}</p>
-                </li>
-              ))}
+              {targeted.map((n) => {
+                const parsed = parseBody(n.body);
+                return (
+                  <li key={n.id} className="px-5 py-3">
+                    <p className="font-medium text-ink">{n.title}</p>
+                    {n.user && (
+                      <p className="text-xs font-medium text-brand-600">
+                        → {n.user.firstName} {n.user.lastName}
+                      </p>
+                    )}
+                    {parsed.imageUrl && (
+                      <img
+                        src={parsed.imageUrl}
+                        alt=""
+                        className="mt-1.5 h-20 w-full rounded-lg object-cover border border-slate-100"
+                      />
+                    )}
+                    <p className="mt-0.5 text-sm text-muted line-clamp-2">{parsed.text}</p>
+                    <p className="mt-1 text-xs text-muted">{formatDate(n.createdAt)}</p>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </Card>
