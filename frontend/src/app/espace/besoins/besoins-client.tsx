@@ -25,12 +25,14 @@ const STATUS_INFO: Record<string, { label: string; color: string }> = {
 
 type MyRow = {
   id: string; code: string; title: string; category: string; description: string;
+  imageUrl: string | null;
   budget: number; location: string; status: string; visibility: string;
   adminNote: string; commission: number; commissionType: string;
   responseCount: number; createdAt: string;
 };
 type PublicRow = {
   id: string; code: string; title: string; category: string; description: string;
+  imageUrl: string | null;
   budget: number; location: string; adminNote: string;
   commission: number; commissionType: string;
   responseCount: number; createdAt: string; hasResponded: boolean;
@@ -104,7 +106,12 @@ export default function BesoinsAffilieClient({
             const alreadyIn = responded.has(row.id);
             const isOpen = responding === row.id;
             return (
-              <div key={row.id} className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm space-y-3">
+              <div key={row.id} className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
+                {row.imageUrl && (
+                  <img src={row.imageUrl} alt={row.title}
+                    className="w-full h-44 object-cover" />
+                )}
+                <div className="p-5 space-y-3">
                 <div className="flex items-start justify-between gap-3 flex-wrap">
                   <div>
                     {row.code && <p className="text-[10px] font-mono font-bold text-blue-600 mb-0.5">{row.code}</p>}
@@ -179,6 +186,7 @@ export default function BesoinsAffilieClient({
                     🤝 Je peux répondre à ce besoin
                   </button>
                 )}
+                </div>{/* end p-5 content */}
               </div>
             );
           })}
@@ -202,7 +210,11 @@ export default function BesoinsAffilieClient({
           ) : myRows.map(row => {
             const s = STATUS_INFO[row.status] ?? { label: row.status, color: "bg-slate-100 text-slate-600" };
             return (
-              <div key={row.id} className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
+              <div key={row.id} className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
+                {row.imageUrl && (
+                  <img src={row.imageUrl} alt={row.title} className="w-full h-32 object-cover" />
+                )}
+                <div className="p-4">
                 <div className="flex items-start justify-between gap-3 flex-wrap">
                   <div className="min-w-0 flex-1">
                     {row.code && <p className="text-[10px] font-mono font-bold text-blue-600">{row.code}</p>}
@@ -229,6 +241,7 @@ export default function BesoinsAffilieClient({
                   </div>
                 </div>
                 <p className="text-sm text-slate-600 mt-2 line-clamp-2">{row.description}</p>
+                </div>{/* end p-4 */}
               </div>
             );
           })}
@@ -273,6 +286,23 @@ export default function BesoinsAffilieClient({
               <label className="mb-1 block text-sm font-medium text-slate-700">Budget disponible (FCFA)</label>
               <input name="budget" type="number" min="0" placeholder="Ex : 50000000" className={inputCls} />
             </div>
+
+            {/* Image illustrative */}
+            <div>
+              <label className="mb-1 block text-sm font-medium text-slate-700">
+                Image illustrative <span className="text-xs font-normal text-slate-400">(optionnel — URL publique)</span>
+              </label>
+              <input
+                name="imageUrl"
+                type="url"
+                placeholder="https://res.cloudinary.com/... ou lien direct vers votre image"
+                className={inputCls}
+              />
+              <p className="mt-1 text-xs text-slate-400">
+                Ajoutez une photo du projet, du bien, du produit ou du document. Collez un lien d'image hébergée (Cloudinary, Google Drive public, etc.).
+              </p>
+            </div>
+
             <button type="submit" disabled={submitting}
               className="w-full rounded-xl bg-brand-600 py-3 text-sm font-bold text-white hover:bg-brand-700 disabled:opacity-60 transition-colors">
               {submitting ? "Envoi en cours…" : "📋 Soumettre mon besoin à IBIG"}

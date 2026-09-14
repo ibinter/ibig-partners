@@ -840,6 +840,7 @@ model Need {
   title          String
   category       String    @default("AUTRE")
   description    String
+  imageUrl       String?
   budget         Int       @default(0)
   location       String    @default("")
   deadline       DateTime?
