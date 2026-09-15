@@ -12,6 +12,7 @@ export const PRICING_TYPES = [
   "COURSE",
   "SERVICE",
   "PRODUCT",
+  "ONE_TIME",
 ] as const;
 export type PricingType = (typeof PRICING_TYPES)[number];
 
@@ -31,6 +32,7 @@ export const PRICING_TYPE_LABELS: Record<string, string> = {
   COURSE: "Formation",
   SERVICE: "Prestation / service",
   PRODUCT: "Produit",
+  ONE_TIME: "Achat unique",
 };
 
 export const STATUS_LABELS: Record<string, string> = {
@@ -65,7 +67,7 @@ export const PROSPECT_STATUS_LABELS: Record<string, string> = {
   CONTACTED:  "Contacté",
   INTERESTED: "Intéressé",
   QUOTE:      "Devis",
-  DEMO:       "Intéressé",   // legacy — mapped to Intéressé column
+  DEMO:       "Intéressé",
   CONVERTED:  "Converti",
   LOST:       "Perdu",
 };

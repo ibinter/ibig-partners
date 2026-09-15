@@ -38,7 +38,7 @@ const SITE_URL =
 export const metadata: Metadata = {
   title: "IBIG PARTNERS — Réseau Commercial Panafricain | Missions, Opportunités & Commissions en Afrique",
   description:
-    "Rejoignez IBIG PARTNERS, le réseau commercial panafricain : 1 095+ missions disponibles, 10 branches d'activité (logiciels, formations, immobilier, digital, market…), commissions jusqu'à 50%. Inscription gratuite — paiement sous 7 jours.",
+    "Rejoignez IBIG PARTNERS, le réseau commercial panafricain : 10 branches d'activité (logiciels, formations, immobilier, digital, market…), commissions jusqu'à 50%, classement mensuel, attestation fiscale intégrée. Inscription gratuite — paiement sous 7 jours.",
   keywords: [
     "réseau commercial Afrique", "opportunités d'affaires Côte d'Ivoire", "IBIG PARTNERS inscription",
     "missions commerciales Abidjan", "gagner argent en ligne Afrique", "réseau partenaires IBIG SARL",
@@ -139,15 +139,16 @@ export default async function HomePage() {
   // ligne en mode dégradé (repli vide) plutôt que de renvoyer une erreur 500.
   let branches: Awaited<ReturnType<typeof prisma.branch.findMany>> = [];
   let tickerPartners: { id: string; firstName: string; lastName: string; city: string | null; status: string }[] = [];
-  let liveStats = { partners: 0, sales: 0, commissions: 0, products: 0 };
+  let liveStats = { partners: 0, sales: 0, commissions: 0, products: 0, missions: 0 };
   try {
-    const [partnerCount, salesCount, commSum, productCount] = await Promise.all([
+    const [partnerCount, salesCount, commSum, productCount, missionCount] = await Promise.all([
       prisma.user.count({ where: { role: "PARTNER" } }),
       prisma.sale.count({ where: { status: "CONFIRMED" } }),
       prisma.commission.aggregate({ where: { status: "PAID" }, _sum: { amount: true } }),
       prisma.product.count({ where: { active: true } }),
+      prisma.mission.count({ where: { status: "ACTIVE" } }).catch(() => 0),
     ]);
-    liveStats = { partners: partnerCount, sales: salesCount, commissions: commSum._sum.amount ?? 0, products: productCount };
+    liveStats = { partners: partnerCount, sales: salesCount, commissions: commSum._sum.amount ?? 0, products: productCount, missions: missionCount };
     branches = await prisma.branch.findMany({ where: { active: true }, orderBy: { order: "asc" } });
     tickerPartners = await prisma.user.findMany({
       where: { role: "PARTNER", active: true, status: { in: ["SILVER", "GOLD", "MASTER", "ELITE"] } },
@@ -193,7 +194,7 @@ export default async function HomePage() {
           <span className="text-slate-600 hidden sm:inline">|</span>
           <span>🛍️ <span className="text-white">{liveStats.products.toLocaleString("fr-FR")}</span> produits disponibles</span>
           <span className="text-slate-600 hidden sm:inline">|</span>
-          <span>🎯 <span className="text-white">1 095+</span> missions disponibles</span>
+          <span>🎯 <span className="text-white">{liveStats.missions > 0 ? liveStats.missions.toLocaleString("fr-FR") + "+" : "1 095+"}</span> missions disponibles</span>
         </div>
       </div>
 
@@ -202,7 +203,7 @@ export default async function HomePage() {
         {/* Stats bar */}
         <div className="mx-auto grid grid-cols-2 gap-4 border-t border-white/10 pt-5 sm:flex sm:flex-wrap sm:justify-center sm:gap-10 sm:pt-6">
           {[
-            { val: "1 095+", label: "Missions partenaires" },
+            { val: liveStats.missions > 0 ? liveStats.missions.toLocaleString("fr-FR") + "+" : "1 095+", label: "Missions partenaires" },
             { val: "3",      label: "Niveaux de commission" },
             { val: "50%",    label: "Commission max N1" },
             { val: "7j",     label: "Délai de paiement" },
