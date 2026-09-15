@@ -65,19 +65,10 @@ html {
   scrollbar-width: thin;
 }
 
-/* Tables responsive : sur mobile, toute table trop large devient scrollable
-   horizontalement au lieu de déborder ou d'être écrasée. Desktop (≥768px)
-   inchangé. La mise en page interne des cellules est préservée (seul l'élément
-   <table> devient un bloc scrollable). */
-@media (max-width: 767px) {
-  table {
-    display: block;
-    max-width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    white-space: nowrap;
-  }
-}
+/* Tables responsive : wrappez la table dans un div.overflow-x-auto
+   pour obtenir le scroll horizontal — la règle globale a été retirée car
+   white-space:nowrap hérité forçait le texte de toute la page à ne pas wrapper
+   sur mobile, élargissant la mise en page au-delà de la largeur de l'écran. */
 
 /* Accessibilité : respecte le choix « réduire les animations » du système. */
 @media (prefers-reduced-motion: reduce) {
