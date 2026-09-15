@@ -166,35 +166,33 @@ export default function LiensClient({ cards, branches }: Props) {
               <div className="p-4 space-y-3">
                 {/* Lien de tracking direct */}
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">
-                    🔗 Lien de tracking direct
-                  </p>
-                  <div className="flex items-start gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="rounded-xl bg-slate-50 border border-slate-100 px-3 py-2.5 font-mono text-xs text-slate-500 break-all leading-relaxed">
-                        {card.url}
-                      </div>
-                      <div className="mt-2 flex items-center gap-3">
-                        <CopyButton text={card.url} />
-                        {card.clicks > 0 && (
-                          <span className="text-[11px] text-slate-400">
-                            {card.sales > 0
-                              ? `Conv. : ${((card.sales / card.clicks) * 100).toFixed(1)} %`
-                              : "Aucune vente"}
-                          </span>
-                        )}
-                      </div>
-                    </div>
+                  <div className="flex items-center justify-between mb-1.5 gap-2">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                      🔗 Lien de tracking direct
+                    </p>
                     <QrCard url={card.url} slug={card.productSlug} />
+                  </div>
+                  <div className="rounded-xl bg-slate-50 border border-slate-100 px-3 py-2 font-mono text-xs text-slate-500 truncate" title={card.url}>
+                    {card.url}
+                  </div>
+                  <div className="mt-2 flex items-center gap-3">
+                    <CopyButton text={card.url} />
+                    {card.clicks > 0 && (
+                      <span className="text-[11px] text-slate-400">
+                        {card.sales > 0
+                          ? `Conv. : ${((card.sales / card.clicks) * 100).toFixed(1)} %`
+                          : "Aucune vente"}
+                      </span>
+                    )}
                   </div>
                 </div>
 
                 {/* Page de présentation partageable */}
                 <div className="rounded-xl border border-blue-100 bg-blue-50 px-3 py-2.5">
                   <p className="text-[10px] font-bold uppercase tracking-widest text-blue-500 mb-1">
-                    📄 Page de présentation (à envoyer à vos prospects)
+                    📄 Page de présentation
                   </p>
-                  <div className="font-mono text-xs text-blue-700 break-all leading-relaxed mb-2">
+                  <div className="font-mono text-xs text-blue-700 truncate mb-2" title={card.offreUrl}>
                     {card.offreUrl}
                   </div>
                   <div className="flex items-center gap-3 flex-wrap">
