@@ -7,11 +7,11 @@ import { AnnonceForm } from "./annonce-form";
 
 export const revalidate = 30;
 
-function parseBody(body: string): { text: string; imageUrl?: string } {
+function parseBody(body: string): { text: string; imageUrl?: string; extraImages?: string[] } {
   try {
     const parsed = JSON.parse(body);
     if (parsed && typeof parsed.t === "string") {
-      return { text: parsed.t, imageUrl: parsed.i ?? undefined };
+      return { text: parsed.t, imageUrl: parsed.i ?? undefined, extraImages: Array.isArray(parsed.imgs) ? parsed.imgs : undefined };
     }
   } catch { /* plain text */ }
   return { text: body };

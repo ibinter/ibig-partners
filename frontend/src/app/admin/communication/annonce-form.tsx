@@ -1,6 +1,6 @@
 "use client";
 
-import { ImageUpload } from "@/components/image-upload";
+import { MultiImageUpload } from "@/components/multi-image-upload";
 import { Button } from "@/components/ui";
 
 export function AnnonceForm({
@@ -35,8 +35,8 @@ export function AnnonceForm({
         />
       </div>
 
-      {/* Image upload */}
-      <ImageUpload name="imageUrl" label="Image illustrative" />
+      {/* Images */}
+      <MultiImageUpload name="imagesJson" mainName="imageUrl" label="Images illustratives" />
 
       {/* Lien cliquable */}
       <div>

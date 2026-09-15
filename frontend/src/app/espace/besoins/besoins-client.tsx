@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { fcfa, formatDate } from "@/lib/format";
-import { ImageUpload } from "@/components/image-upload";
+import { MultiImageUpload } from "@/components/multi-image-upload";
 
 const CATEGORY_LABELS: Record<string, string> = {
   FORMATION: "Formation", DIGITAL: "Digital / IT", IMMOBILIER: "Immobilier",
@@ -288,7 +288,7 @@ export default function BesoinsAffilieClient({
               <input name="budget" type="number" min="0" placeholder="Ex : 50000000" className={inputCls} />
             </div>
 
-            <ImageUpload name="imageUrl" label="Image illustrative" />
+            <MultiImageUpload name="imagesJson" mainName="imageUrl" label="Images illustratives" />
 
             <button type="submit" disabled={submitting}
               className="w-full rounded-xl bg-brand-600 py-3 text-sm font-bold text-white hover:bg-brand-700 disabled:opacity-60 transition-colors">

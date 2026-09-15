@@ -20,10 +20,14 @@ const FILTERS = [
   { key: "personal",  label: "Personnelles" },
 ];
 
-function parseBody(body: string): { text: string; imageUrl?: string } {
+function parseBody(body: string): { text: string; imageUrl?: string; extraImages?: string[] } {
   try {
     const p = JSON.parse(body);
-    if (p && typeof p.t === "string") return { text: p.t, imageUrl: p.i ?? undefined };
+    if (p && typeof p.t === "string") return {
+      text: p.t,
+      imageUrl: p.i ?? undefined,
+      extraImages: Array.isArray(p.imgs) ? p.imgs : undefined,
+    };
   } catch { /* plain text */ }
   return { text: body };
 }
@@ -154,13 +158,16 @@ export default function NotifListClient({
                         : "border-slate-100 bg-white"
                     }`}
                   >
-                    {/* Image bannière (si présente) */}
+                    {/* Image(s) */}
                     {parsed.imageUrl && (
-                      <img
-                        src={parsed.imageUrl}
-                        alt=""
-                        className="w-full h-40 object-cover"
-                      />
+                      <img src={parsed.imageUrl} alt="" className="w-full h-40 object-cover" />
+                    )}
+                    {parsed.extraImages && parsed.extraImages.length > 0 && (
+                      <div className={`grid gap-1 ${parsed.extraImages.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}>
+                        {parsed.extraImages.map((url, i) => (
+                          <img key={i} src={url} alt="" className="w-full h-24 object-cover" />
+                        ))}
+                      </div>
                     )}
 
                     <div className="p-4 flex items-start gap-4">

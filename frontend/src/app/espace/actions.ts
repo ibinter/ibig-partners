@@ -649,6 +649,7 @@ export async function submitNeed(formData: FormData) {
   const category    = String(formData.get("category") || "AUTRE");
   const description = String(formData.get("description") || "").trim();
   const imageUrl    = String(formData.get("imageUrl") || "").trim() || null;
+  const imagesJson  = String(formData.get("imagesJson") || "").trim() || null;
   const budget      = Number(formData.get("budget") || 0);
   const location    = String(formData.get("location") || "").trim();
 
@@ -661,6 +662,7 @@ export async function submitNeed(formData: FormData) {
       category,
       description,
       imageUrl,
+      imagesJson,
       budget,
       location,
       status: "NEW",

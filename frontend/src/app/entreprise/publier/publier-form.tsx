@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { ImageUpload } from "@/components/image-upload";
+import { MultiImageUpload } from "@/components/multi-image-upload";
 
 const fcfa = (n: number) =>
   n > 0 ? new Intl.NumberFormat("fr-FR").format(Math.round(n)) + " FCFA" : "—";
@@ -166,8 +166,8 @@ export function PublierForm({
         )}
       </div>
 
-      {/* Image */}
-      <ImageUpload name="imageUrl" label="Photo / image illustrative" />
+      {/* Images */}
+      <MultiImageUpload name="imagesJson" mainName="imageUrl" label="Photos / images illustratives" />
 
       {/* Info process */}
       <div className="rounded-xl bg-blue-50 border border-blue-100 px-4 py-3 text-sm text-blue-700">

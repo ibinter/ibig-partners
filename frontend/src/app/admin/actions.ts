@@ -977,15 +977,20 @@ export async function sendAnnouncement(formData: FormData) {
   await requireAdmin();
   const title     = String(formData.get("title") || "").trim();
   const rawBody   = String(formData.get("body") || "").trim();
-  const imageUrl  = String(formData.get("imageUrl") || "").trim();
-  const actionUrl = String(formData.get("actionUrl") || "").trim();
-  const audience  = String(formData.get("audience") || "ALL");
-  const targetId  = String(formData.get("targetId") || "").trim();
+  const imageUrl    = String(formData.get("imageUrl") || "").trim();
+  const imagesJson  = String(formData.get("imagesJson") || "").trim();
+  const actionUrl   = String(formData.get("actionUrl") || "").trim();
+  const audience    = String(formData.get("audience") || "ALL");
+  const targetId    = String(formData.get("targetId") || "").trim();
   if (!title || !rawBody) return;
 
-  // Si une image est fournie, on encode le body en JSON pour que le client puisse l'afficher
-  const body = imageUrl
-    ? JSON.stringify({ t: rawBody, i: imageUrl })
+  // Encoder image(s) et texte dans le body JSON
+  const extraImages: string[] = (() => {
+    try { const arr = JSON.parse(imagesJson); return Array.isArray(arr) ? arr.filter((u: string) => u && u !== imageUrl) : []; }
+    catch { return []; }
+  })();
+  const body = (imageUrl || extraImages.length)
+    ? JSON.stringify({ t: rawBody, i: imageUrl || undefined, imgs: extraImages.length ? extraImages : undefined })
     : rawBody;
   const url = actionUrl || null;
 

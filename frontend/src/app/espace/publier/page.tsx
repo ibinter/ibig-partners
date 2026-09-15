@@ -34,6 +34,7 @@ async function publishOpportunity(formData: FormData) {
   const proposedCommission     = Number(formData.get("proposedCommission") || 0) || 0;
   const proposedCommissionType = String(formData.get("proposedCommissionType") || "FIXED");
   const imageUrl               = String(formData.get("imageUrl") || "").trim() || null;
+  const imagesJson             = String(formData.get("imagesJson") || "").trim() || null;
 
   if (!title || !description) return;
 
@@ -56,6 +57,7 @@ async function publishOpportunity(formData: FormData) {
       status: "NEW",
       visibility: "PRIVATE",
       ...(imageUrl ? { imageUrl } : {}),
+      ...(imagesJson ? { imagesJson } : {}),
     },
   });
 

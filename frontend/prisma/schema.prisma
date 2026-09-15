@@ -355,6 +355,8 @@ model Opportunity {
   visibility             String   @default("PRIVATE")
   deadline               DateTime?
   code                   String?
+  imageUrl               String?
+  imagesJson             String?
 }
 
 model OpportunityMessage {
@@ -841,6 +843,7 @@ model Need {
   category       String    @default("AUTRE")
   description    String
   imageUrl       String?
+  imagesJson     String?
   budget         Int       @default(0)
   location       String    @default("")
   deadline       DateTime?
