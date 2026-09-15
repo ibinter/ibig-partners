@@ -216,10 +216,10 @@ export default async function ReseauPage() {
           <div className="rounded-xl bg-white border border-emerald-200 p-4">
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs font-bold text-emerald-700">📲 Message WhatsApp court</p>
-              <CopyButton text={`Bonjour ! Je suis partenaire officiel IBIG PARTNERS — un groupe ivoirien de 11 branches (assurance, immobilier, finance, formation…). Tu peux gagner des commissions en présentant leurs services à tes contacts. C'est gratuit pour rejoindre. Regarde ma page : ${baseUrl}/p/${user.code.toLowerCase()}`} />
+              <CopyButton text={`Bonjour ! Je suis partenaire officiel IBIG PARTNERS — un groupe ivoirien de 10 branches (immobilier, digital, formation, emploi, multiservices…). Tu peux gagner des commissions en présentant leurs services à tes contacts. C'est gratuit pour rejoindre. Regarde ma page : ${baseUrl}/p/${user.code.toLowerCase()}`} />
             </div>
             <p className="text-xs text-slate-600 leading-relaxed italic">
-              «&nbsp;Bonjour ! Je suis partenaire officiel IBIG PARTNERS — un groupe ivoirien de 11 branches (assurance, immobilier, finance, formation…). Tu peux gagner des commissions en présentant leurs services à tes contacts. C&apos;est gratuit pour rejoindre. Regarde ma page : {baseUrl}/p/{user.code.toLowerCase()}&nbsp;»
+              «&nbsp;Bonjour ! Je suis partenaire officiel IBIG PARTNERS — un groupe ivoirien de 10 branches (immobilier, digital, formation, emploi, multiservices…). Tu peux gagner des commissions en présentant leurs services à tes contacts. C&apos;est gratuit pour rejoindre. Regarde ma page : {baseUrl}/p/{user.code.toLowerCase()}&nbsp;»
             </p>
           </div>
 
@@ -227,10 +227,10 @@ export default async function ReseauPage() {
           <div className="rounded-xl bg-white border border-emerald-200 p-4">
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs font-bold text-emerald-700">📲 Message WhatsApp détaillé</p>
-              <CopyButton text={`Bonjour ${"{prénom}"} !\n\nJe voulais te parler d'une opportunité sérieuse qui m'a permis de générer des revenus complémentaires.\n\nJe suis partenaire IBIG PARTNERS, le réseau d'affiliation du Groupe IBIG (11 branches : assurance, immobilier, financement, formation, emploi…). Je touche des commissions à chaque fois qu'un client souscrit à un service IBIG via mon lien.\n\nLe programme est :\n✅ Gratuit pour rejoindre\n✅ Commissions sur 3 niveaux (tu gagnes aussi quand TES filleuls vendent)\n✅ Paiement rapide sur Orange Money / Wave\n\nTu veux qu'on en discute ? Voici ma page : ${baseUrl}/p/${user.code.toLowerCase()}\n\nCode parrain : ${user.code}`} />
+              <CopyButton text={`Bonjour ${"{prénom}"} !\n\nJe voulais te parler d'une opportunité sérieuse qui m'a permis de générer des revenus complémentaires.\n\nJe suis partenaire IBIG PARTNERS, le réseau d'affiliation du Groupe IBIG (10 branches : digital, immobilier, formation, emploi, multiservices…). Je touche des commissions à chaque fois qu'un client souscrit à un service IBIG via mon lien.\n\nLe programme est :\n✅ Gratuit pour rejoindre\n✅ Commissions sur 3 niveaux (tu gagnes aussi quand TES filleuls vendent)\n✅ Paiement rapide sur Orange Money / Wave\n\nTu veux qu'on en discute ? Voici ma page : ${baseUrl}/p/${user.code.toLowerCase()}\n\nCode parrain : ${user.code}`} />
             </div>
             <p className="text-xs text-slate-600 leading-relaxed italic whitespace-pre-line">
-              {`« Bonjour [prénom] !\n\nJe voulais te parler d'une opportunité sérieuse…\nIBIG PARTNERS : 11 branches, commissions sur 3 niveaux,\ngratuit pour rejoindre, paiement Orange Money / Wave.\n\nMa page : ${baseUrl}/p/${user.code.toLowerCase()} · Code : ${user.code} »`}
+              {`« Bonjour [prénom] !\n\nJe voulais te parler d'une opportunité sérieuse…\nIBIG PARTNERS : 10 branches, commissions sur 3 niveaux,\ngratuit pour rejoindre, paiement Orange Money / Wave.\n\nMa page : ${baseUrl}/p/${user.code.toLowerCase()} · Code : ${user.code} »`}
             </p>
           </div>
 

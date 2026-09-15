@@ -62,7 +62,7 @@ export default async function EspaceLayout({
     { href: "/espace/ventes",      label: "Déclarer une vente",  icon: "📝", group: "Ventes" },
     { href: "/espace/prospects",   label: "Mes Prospects",        icon: "📇", group: "Ventes" },
     { href: "/espace/clients",     label: "Mes Clients",          icon: "🤝", group: "Ventes" },
-    { href: "/espace/rendez-vous", label: "Mes Rendez-vous",      icon: "📅", group: "Ventes" },
+    { href: "/espace/rendez-vous", label: "Mes Rendez-vous",      icon: "🗓", group: "Ventes" },
     { href: "/espace/rapport",     label: "Mon Rapport mensuel",  icon: "📋", group: "Ventes" },
 
     // Missions & Opportunités

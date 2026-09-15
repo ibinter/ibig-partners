@@ -157,16 +157,15 @@ export default function GuideAffilie() {
       y = infoBox(t("EXEMPLE CONCRET : Si vous vendez Scolaby a partir de 10 000 FCFA/mois, vous gagnez 2 000 FCFA (20%). Votre filleul vend aussi Scolaby : vous gagnez automatiquement 1 000 FCFA supplémentaires (10% N2) sans rien faire de plus."),y,[240,253,244]);
       y += 3;
 
-      y = sub(t("Les 11 Branches du Groupe IBIG SARL"),y);
+      y = sub(t("Les 10 Branches du Groupe IBIG SARL"),y);
       const branches = [
         [t("IBIG SOFT"),t("14 logiciels/ERP SaaS : Scolaby, Fleet 360, GESCOMXEL, Zelivry, Lokativo, StockFlow, CONSTRUIRO, SANTAREX, AGRIFRIK, GESTMONEY, ANOUANZÊ, FactPro, SECRETIS, DocPro — ibigsoft.com"),t("20%/10%/5%")],
         [t("IBIG EDUFORM"),t("800+ formations certifiantes : Comptabilité & Finance, Management, QHSE, RH, Sage, SAP, IA, Achats, Logistique, Marketing, Droit... — ibig-eduform.com"),t("10%/5%/2%")],
-        [t("IBIG IMMO TRUST"),t("Immobilier sécurisé, BTP, gestion locative, transactions, diaspora — ibigimmotrust.com"),t("5%/2,5%/1%")],
+        [t("IBIG IMMO TRUST"),t("Immobilier sécurisé, BTP, gestion locative, transactions, diaspora — ibigimmotrust.com"),t("10%/5%/2,5%")],
         [t("IBIG MARKET"),t("Vente physique et e-commerce : IT, mobilier, fournitures, livraison — ibig-market.com"),t("8%/4%/2%")],
         [t("IBIG DIGITAL"),t("Création digitale, communication visuelle, site vitrine, identité visuelle, community management — intermark-business.com/digital"),t("10%/5%/2%")],
         [t("IBIG DIGITAL KITS"),t("Transformation numérique : ERP, app mobile, IA, chatbots, kits prêts à l'emploi — kits.intermark-business.com"),t("10%/5%/2%")],
         [t("IBIG CONSEIL+"),t("Structuration, comptabilité, juridique, conseil stratégique, création d'entreprise — intermark-business.com/conseil"),t("10%/5%/2%")],
-        [t("IBIG FINANCEMENT"),t("Crédit PME, assurances (auto, santé, vie, RC pro, transport), épargne retraite, leasing, financement agricole, gestion de patrimoine — 20 offres"),t("5%/2,5%/1%")],
         [t("IBIG EMPLOI & TALENTS"),t("Recrutement CDI/CDD, placement cadres, audit RH, coaching dirigeants, outplacement, externalisation RH, GPEC, marque employeur — 20 offres"),t("10%/5%/2%")],
         [t("IBIG PARTNERS"),t("Programme d'affiliation multi-niveaux, représentation commerciale, packs affiliés, formations vente, challenges & récompenses — ibigpartners.com"),t("Variable")],
         [t("IBIG MULTISERVICES"),t("55 services : événementiel, déménagement, nettoyage, gardiennage, accueil VIP, conciergerie, car wash, logistique, santé à domicile, BTP, tourisme — intermark-business.com/multiservices"),t("10%/5%/2%")],
@@ -297,7 +296,6 @@ export default function GuideAffilie() {
           [t("IBIG DIGITAL"),"10%","5%","2%"],
           [t("IBIG DIGITAL KITS"),"10%","5%","2%"],
           [t("IBIG CONSEIL+"),"10%","5%","2%"],
-          [t("IBIG FINANCEMENT"),"5%","2,5%","1%"],
           [t("IBIG EMPLOI & TALENTS"),"10%","5%","2%"],
           [t("IBIG MULTISERVICES"),"10%","5%","2%"],
         ],
@@ -559,24 +557,6 @@ export default function GuideAffilie() {
             t("Accompagnement Création d'Entreprise"),
             t("Étude de Marché & Analyse Sectorielle"),
             t("Structuration organisationnelle et mise en conformité juridique"),
-          ],
-        },
-        {
-          branch: t("IBIG FINANCEMENT - Commissions : N1=5%, N2=2,5%, N3=1%"),
-          items: [
-            t("Crédit de Trésorerie & Fonds de Roulement PME - Sur devis | N1=5% du montant du dossier"),
-            t("Microcrédit PME (500 000 a 5 000 000 FCFA) - Sur devis | N1=5%"),
-            t("Financement Immobilier (crédit hypothécaire) - Sur devis | N1=5%"),
-            t("Financement Équipement / Leasing - Sur devis | N1=5%"),
-            t("Financement Agricole & Rural - Sur devis | N1=5%"),
-            t("Assurance Santé Collective - 50 000 FCFA/mois | N1=2 500, N2=1 250, N3=500 FCFA/mois"),
-            t("Assurance Vie & Prévoyance - 25 000 FCFA/mois | N1=1 250, N2=625, N3=250 FCFA/mois"),
-            t("Assurance Entreprise Multirisques - 300 000 FCFA/an | N1=15 000, N2=7 500, N3=3 000 FCFA/an"),
-            t("Assurance Auto Flotte Professionnelle - 150 000 FCFA/an par véhicule | N1=7 500 FCFA/an"),
-            t("Assurance RC Professionnelle & Décennale - Sur devis | N1=5%"),
-            t("Épargne Retraite Individuelle - 25 000 FCFA/mois | N1=1 250 FCFA/mois"),
-            t("Aide à la Levée de Fonds - 400 000 FCFA | N1=20 000, N2=10 000, N3=4 000 FCFA"),
-            t("Conseil en Investissement & Gestion de Patrimoine - Sur devis | N1=5%"),
           ],
         },
         {

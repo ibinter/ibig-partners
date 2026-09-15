@@ -69,7 +69,7 @@ const POSITIONING: { icon: IconName; title: string; desc: string }[] = [
 
 const MISSION: { icon: IconName; title: string; desc: string }[] = [
   { icon: "globe",     title: "Démocratiser le revenu",   desc: "Offrir à chaque Africain, urbain ou rural, salarié ou indépendant, une source de revenu accessible sans capital de départ." },
-  { icon: "store",     title: "Valoriser le local",       desc: "Promouvoir des solutions conçues en Afrique pour l'Afrique : 14 logiciels SaaS couvrant 17+ secteurs, 800+ formations certifiantes, des services de financement, d'emploi et 55 multiservices — le tout adapté à nos réalités économiques." },
+  { icon: "store",     title: "Valoriser le local",       desc: "Promouvoir des solutions conçues en Afrique pour l'Afrique : 14 logiciels SaaS couvrant 17+ secteurs, 800+ formations certifiantes, des services d'emploi, d'immobilier, de digital et 55 multiservices — le tout adapté à nos réalités économiques." },
   { icon: "users",     title: "Créer des entrepreneurs",  desc: "Transformer chaque partenaire en chef d'entreprise de son réseau, avec les outils et la formation pour réussir." },
   { icon: "handshake", title: "Inclure la diaspora",      desc: "Connecter la diaspora aux opportunités du continent et permettre à chacun d'investir son énergie dans l'économie africaine." },
 ];
@@ -81,8 +81,9 @@ const PARTNER_MODULES: { icon: IconName; title: string; desc: string }[] = [
   { icon: "network",    title: "Mon Réseau",          desc: "Visualisez vos filleuls Niveau 1/2/3 et la performance de chacun en temps réel." },
   { icon: "coins",      title: "Mes Commissions",     desc: "Historique complet, relevé mensuel téléchargeable, alerte de seuil de paiement, export PDF." },
   { icon: "target",     title: "CRM Prospects",       desc: "Pipeline Kanban (Contacté → Intéressé → Devis → Converti), historique des échanges, relances intelligentes, export CSV." },
-  { icon: "sparkles",   title: "Challenges & Statut", desc: "Challenges mensuels adaptatifs, promotion de statut automatique (Starter → Elite) dès les critères atteints." },
+  { icon: "sparkles",   title: "Challenges & Statut", desc: "Challenges mensuels adaptatifs, classement mensuel, promotion de statut automatique (Starter → Elite) dès les critères atteints." },
   { icon: "graduation", title: "Académie IBIG",       desc: "Vidéos, guides, assistant Coach IA et formations pour développer vos compétences commerciales." },
+  { icon: "wallet",     title: "Attestation fiscale", desc: "Relevé annuel de commissions téléchargeable, historique de virements, compatible déclaration fiscale." },
 ];
 
 const TRUST: { icon: IconName; text: string }[] = [
@@ -162,7 +163,7 @@ export default async function HomePage() {
     "@type": "Organization",
     name: "IBIG PARTNERS",
     description:
-      "Programme d'affiliation panafricain du Groupe IBIG SARL : accès à 14 logiciels et ERP SaaS, formations certifiantes, financement & assurances, emploi & RH, immobilier et multiservices, avec commissions sur 3 niveaux.",
+      "Programme d'affiliation panafricain du Groupe IBIG SARL : accès à 14 logiciels et ERP SaaS, formations certifiantes, emploi & RH, immobilier, digital et multiservices, avec commissions sur 3 niveaux.",
     url: SITE_URL,
     logo: `${SITE_URL}/icon-512.png`,
     parentOrganization: {
