@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { fcfa, formatDate } from "@/lib/format";
+import { ImageUpload } from "@/components/image-upload";
 
 const CATEGORY_LABELS: Record<string, string> = {
   FORMATION: "Formation", DIGITAL: "Digital / IT", IMMOBILIER: "Immobilier",
@@ -287,21 +288,7 @@ export default function BesoinsAffilieClient({
               <input name="budget" type="number" min="0" placeholder="Ex : 50000000" className={inputCls} />
             </div>
 
-            {/* Image illustrative */}
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">
-                Image illustrative <span className="text-xs font-normal text-slate-400">(optionnel — URL publique)</span>
-              </label>
-              <input
-                name="imageUrl"
-                type="url"
-                placeholder="https://res.cloudinary.com/... ou lien direct vers votre image"
-                className={inputCls}
-              />
-              <p className="mt-1 text-xs text-slate-400">
-                Ajoutez une photo du projet, du bien, du produit ou du document. Collez un lien d'image hébergée (Cloudinary, Google Drive public, etc.).
-              </p>
-            </div>
+            <ImageUpload name="imageUrl" label="Image illustrative" />
 
             <button type="submit" disabled={submitting}
               className="w-full rounded-xl bg-brand-600 py-3 text-sm font-bold text-white hover:bg-brand-700 disabled:opacity-60 transition-colors">

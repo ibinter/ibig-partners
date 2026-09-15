@@ -1,8 +1,9 @@
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/format";
-import { Button, Card, Field, PageHeader } from "@/components/ui";
+import { Card, PageHeader } from "@/components/ui";
 import { sendAnnouncement } from "../actions";
+import { AnnonceForm } from "./annonce-form";
 
 export const revalidate = 30;
 
@@ -44,78 +45,7 @@ export default async function CommunicationPage() {
 
       <Card className="mb-6">
         <h2 className="font-semibold text-ink">Nouvelle annonce</h2>
-        <form action={sendAnnouncement} className="mt-4 space-y-4">
-          <Field label="Titre" name="title" required placeholder="Ex : Nouveaux produits disponibles !" />
-          <div>
-            <label className="mb-1 block text-sm font-medium text-ink">Message</label>
-            <textarea
-              name="body"
-              required
-              rows={4}
-              placeholder="Rédigez votre message ici..."
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
-            />
-          </div>
-
-          {/* Image facultative */}
-          <div>
-            <label className="mb-1 block text-sm font-medium text-ink">
-              Image illustrative <span className="text-xs font-normal text-muted">(optionnel — URL publique)</span>
-            </label>
-            <input
-              name="imageUrl"
-              type="url"
-              placeholder="https://res.cloudinary.com/... ou https://ibigpartners.com/images/..."
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
-            />
-            <p className="mt-1 text-xs text-muted">
-              Collez l'URL d'une image hébergée (Cloudinary, site IBIG, etc.). Elle s'affichera dans l'annonce côté affilié.
-            </p>
-          </div>
-
-          {/* Lien cliquable */}
-          <div>
-            <label className="mb-1 block text-sm font-medium text-ink">
-              Lien associé <span className="text-xs font-normal text-muted">(optionnel)</span>
-            </label>
-            <input
-              name="actionUrl"
-              placeholder="/espace/produits  ou  https://..."
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"
-            />
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-sm font-medium text-ink">Audience</label>
-              <select
-                name="audience"
-                id="audience-select"
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              >
-                <option value="ALL">📢 Tous les partenaires actifs ({partners.length})</option>
-                <option value="ONE">👤 Un partenaire spécifique</option>
-              </select>
-            </div>
-            <div>
-              <label className="mb-1 block text-sm font-medium text-ink">Partenaire ciblé</label>
-              <select
-                name="targetId"
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              >
-                <option value="">— Sélectionner un partenaire —</option>
-                {partners.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.firstName} {p.lastName} ({p.code})
-                  </option>
-                ))}
-              </select>
-              <p className="mt-1 text-xs text-muted">Requis si audience = &quot;Un partenaire spécifique&quot;</p>
-            </div>
-          </div>
-
-          <Button type="submit">Envoyer</Button>
-        </form>
+        <AnnonceForm action={sendAnnouncement} partners={partners} />
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">

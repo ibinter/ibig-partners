@@ -33,6 +33,7 @@ async function publishOpportunity(formData: FormData) {
   const deadline               = String(formData.get("deadline") || "").trim();
   const proposedCommission     = Number(formData.get("proposedCommission") || 0) || 0;
   const proposedCommissionType = String(formData.get("proposedCommissionType") || "FIXED");
+  const imageUrl               = String(formData.get("imageUrl") || "").trim() || null;
 
   if (!title || !description) return;
 
@@ -54,6 +55,7 @@ async function publishOpportunity(formData: FormData) {
       commissionType: "FIXED",
       status: "NEW",
       visibility: "PRIVATE",
+      ...(imageUrl ? { imageUrl } : {}),
     },
   });
 
