@@ -132,40 +132,38 @@ export default async function EspaceLayout({
       {needsVerification && (
         <Link
           href="/espace/verification"
-          className={`mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border px-4 py-3 transition-colors ${
+          className={`mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border-2 px-4 py-3.5 transition-colors ${
             verifRejected
-              ? "border-rose-200 bg-rose-50 hover:bg-rose-100"
-              : "border-amber-200 bg-amber-50 hover:bg-amber-100"
+              ? "border-rose-400 bg-rose-600 hover:bg-rose-700"
+              : verifPending
+                ? "border-amber-300 bg-amber-50 hover:bg-amber-100"
+                : "border-red-500 bg-red-600 hover:bg-red-700"
           }`}
         >
           <div className="flex items-center gap-3">
-            <span className="text-2xl">{verifRejected ? "❌" : "🔐"}</span>
+            <span className="text-2xl">{verifRejected ? "❌" : verifPending ? "⏳" : "⛔"}</span>
             <div>
-              <p
-                className={`text-sm font-semibold ${
-                  verifRejected ? "text-rose-900" : "text-amber-900"
-                }`}
-              >
+              <p className={`text-sm font-bold ${(verifRejected || !verifPending) ? "text-white" : "text-amber-900"}`}>
                 {verifRejected
-                  ? "Votre dossier a été refusé — corrigez et renvoyez vos documents."
+                  ? "Dossier refusé — corrigez et renvoyez vos documents."
                   : verifPending
                     ? "Dossier en cours d'examen — suivez son avancement."
-                    : "Votre compte n'est pas encore vérifié."}
+                    : "⚠️ Compte non vérifié — Vos commissions sont bloquées !"}
               </p>
-              <p
-                className={`text-xs ${
-                  verifRejected ? "text-rose-800" : "text-amber-800"
-                }`}
-              >
-                Activez les paiements de commissions en envoyant vos documents (rapide et sécurisé).
+              <p className={`text-xs mt-0.5 ${(verifRejected || !verifPending) ? "text-red-100" : "text-amber-700"}`}>
+                {verifPending
+                  ? "Notre équipe examine votre dossier. Vous serez notifié(e) sous 24–48h."
+                  : "Complétez la vérification KYC pour débloquer vos paiements — 5 min suffiront."}
               </p>
             </div>
           </div>
-          <span
-            className={`shrink-0 rounded-xl px-4 py-2 text-sm font-bold text-white ${
-              verifRejected ? "bg-rose-500" : "bg-amber-500"
-            }`}
-          >
+          <span className={`shrink-0 rounded-xl px-4 py-2 text-sm font-bold transition-colors ${
+            verifRejected
+              ? "bg-white text-rose-700 hover:bg-rose-50"
+              : verifPending
+                ? "bg-amber-500 text-white hover:bg-amber-600"
+                : "bg-white text-red-700 hover:bg-red-50 shadow-sm"
+          }`}>
             {verifPending ? "Voir mon dossier →" : "Vérifier mon compte →"}
           </span>
         </Link>

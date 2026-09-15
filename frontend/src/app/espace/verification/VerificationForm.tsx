@@ -28,58 +28,224 @@ type Existing = {
 
 const inputCls = "w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-ink placeholder:text-slate-400 focus:border-blue-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100";
 
-function F({ label, name, defaultValue, required, type = "text", placeholder }: {
-  label: string; name: string; defaultValue?: string | null; required?: boolean; type?: string; placeholder?: string;
+// ─── Country codes ────────────────────────────────────────────────────────────
+const COUNTRY_CODES = [
+  { code: "+225", label: "🇨🇮 +225 Côte d'Ivoire" },
+  { code: "+237", label: "🇨🇲 +237 Cameroun" },
+  { code: "+221", label: "🇸🇳 +221 Sénégal" },
+  { code: "+223", label: "🇲🇱 +223 Mali" },
+  { code: "+226", label: "🇧🇫 +226 Burkina Faso" },
+  { code: "+228", label: "🇹🇬 +228 Togo" },
+  { code: "+229", label: "🇧🇯 +229 Bénin" },
+  { code: "+227", label: "🇳🇪 +227 Niger" },
+  { code: "+224", label: "🇬🇳 +224 Guinée" },
+  { code: "+245", label: "🇬🇼 +245 Guinée-Bissau" },
+  { code: "+238", label: "🇨🇻 +238 Cap-Vert" },
+  { code: "+232", label: "🇸🇱 +232 Sierra Leone" },
+  { code: "+231", label: "🇱🇷 +231 Liberia" },
+  { code: "+233", label: "🇬🇭 +233 Ghana" },
+  { code: "+234", label: "🇳🇬 +234 Nigeria" },
+  { code: "+241", label: "🇬🇦 +241 Gabon" },
+  { code: "+242", label: "🇨🇬 +242 Congo-Brazzaville" },
+  { code: "+243", label: "🇨🇩 +243 RD Congo" },
+  { code: "+236", label: "🇨🇫 +236 Centrafrique" },
+  { code: "+235", label: "🇹🇩 +235 Tchad" },
+  { code: "+240", label: "🇬🇶 +240 Guinée équatoriale" },
+  { code: "+239", label: "🇸🇹 +239 São Tomé" },
+  { code: "+212", label: "🇲🇦 +212 Maroc" },
+  { code: "+213", label: "🇩🇿 +213 Algérie" },
+  { code: "+216", label: "🇹🇳 +216 Tunisie" },
+  { code: "+218", label: "🇱🇾 +218 Libye" },
+  { code: "+20",  label: "🇪🇬 +20 Égypte" },
+  { code: "+27",  label: "🇿🇦 +27 Afrique du Sud" },
+  { code: "+33",  label: "🇫🇷 +33 France" },
+  { code: "+32",  label: "🇧🇪 +32 Belgique" },
+  { code: "+41",  label: "🇨🇭 +41 Suisse" },
+  { code: "+352", label: "🇱🇺 +352 Luxembourg" },
+  { code: "+1",   label: "🇺🇸 +1 USA / Canada" },
+  { code: "+44",  label: "🇬🇧 +44 Royaume-Uni" },
+  { code: "+49",  label: "🇩🇪 +49 Allemagne" },
+];
+
+function parsePhoneCode(phone: string | null | undefined): { code: string; num: string } {
+  if (!phone) return { code: "+225", num: "" };
+  for (const c of COUNTRY_CODES) {
+    if (phone.startsWith(c.code)) return { code: c.code, num: phone.slice(c.code.length).trim() };
+  }
+  return { code: "+225", num: phone };
+}
+
+function WhatsAppField({ name, defaultValue, required, label }: {
+  name: string; defaultValue?: string | null; required?: boolean; label: string;
+}) {
+  const init = parsePhoneCode(defaultValue);
+  const [code, setCode] = useState(init.code);
+  const [num, setNum] = useState(init.num);
+  const combined = num ? `${code} ${num}` : "";
+  return (
+    <div>
+      <label className="block text-xs font-semibold text-slate-600 mb-1">
+        {label}{required && <span className="text-rose-500 ml-0.5">*</span>}
+        <span className="ml-1 font-normal text-slate-400">(avec indicatif pays)</span>
+      </label>
+      <input type="hidden" name={name} value={combined} />
+      <div className="flex gap-2">
+        <select
+          value={code}
+          onChange={e => setCode(e.target.value)}
+          className="rounded-xl border border-slate-200 bg-slate-50 px-2 py-2.5 text-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 shrink-0"
+          style={{ minWidth: "180px" }}
+        >
+          {COUNTRY_CODES.map(c => (
+            <option key={c.code} value={c.code}>{c.label}</option>
+          ))}
+        </select>
+        <input
+          type="tel"
+          value={num}
+          onChange={e => setNum(e.target.value)}
+          required={required}
+          placeholder="07 00 00 00 00"
+          className={inputCls}
+        />
+      </div>
+      <p className="mt-1 text-[11px] text-slate-400">Ex : {code} 07 00 00 00 00 — ce numéro doit recevoir des messages WhatsApp</p>
+    </div>
+  );
+}
+
+// ─── Checklist de progression ─────────────────────────────────────────────────
+function ProgressChecklist({ type, fields }: {
+  type: string;
+  fields: {
+    fullName: string; idType: string; idNumber: string; country: string; city: string; whatsapp: string;
+    idDocUrl: string; payoutMethod: string; contact1Name: string; contact1Phone: string;
+    contact2Name: string; contact2Phone: string;
+    companyName: string; rccm: string; nif: string; companyCountry: string; companyCity: string;
+    companyAddress: string; companyWhatsapp: string; legalRep: string; legalRepTitle: string;
+  };
+}) {
+  const isIndividual = type === "INDIVIDUAL";
+  const checks = isIndividual ? [
+    { label: "Nom complet",          done: !!fields.fullName },
+    { label: "Type de pièce d'identité", done: !!fields.idType },
+    { label: "Numéro de pièce",      done: !!fields.idNumber },
+    { label: "Pays de résidence",    done: !!fields.country },
+    { label: "Ville",                done: !!fields.city },
+    { label: "WhatsApp",             done: !!fields.whatsapp },
+    { label: "Photo de la pièce d'identité ✱", done: !!fields.idDocUrl },
+    { label: "Méthode de paiement",  done: !!fields.payoutMethod },
+    { label: "Contact 1",            done: !!(fields.contact1Name && fields.contact1Phone) },
+    { label: "Contact 2",            done: !!(fields.contact2Name && fields.contact2Phone) },
+  ] : [
+    { label: "Dénomination sociale", done: !!fields.companyName },
+    { label: "RCCM",                 done: !!fields.rccm },
+    { label: "NIF",                  done: !!fields.nif },
+    { label: "Pays du siège",        done: !!fields.companyCountry },
+    { label: "Ville",                done: !!fields.companyCity },
+    { label: "Adresse",              done: !!fields.companyAddress },
+    { label: "WhatsApp entreprise",  done: !!fields.companyWhatsapp },
+    { label: "Représentant légal",   done: !!fields.legalRep },
+    { label: "Titre",                done: !!fields.legalRepTitle },
+    { label: "Méthode de paiement",  done: !!fields.payoutMethod },
+  ];
+
+  const done = checks.filter(c => c.done).length;
+  const total = checks.length;
+  const pct = Math.round((done / total) * 100);
+  const allDone = done === total;
+
+  return (
+    <div className={`rounded-2xl border-2 p-5 ${allDone ? "border-emerald-300 bg-emerald-50" : "border-blue-200 bg-blue-50"}`}>
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-sm font-bold text-slate-800">
+          {allDone ? "✅ Dossier complet — prêt à soumettre !" : `📋 Avancement du dossier — ${done}/${total} champs remplis`}
+        </p>
+        <span className={`text-sm font-extrabold ${allDone ? "text-emerald-600" : "text-blue-600"}`}>{pct}%</span>
+      </div>
+      <div className="w-full bg-white rounded-full h-2 mb-4 overflow-hidden border border-slate-100">
+        <div
+          className={`h-2 rounded-full transition-all duration-500 ${allDone ? "bg-emerald-500" : "bg-blue-500"}`}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-1.5">
+        {checks.map(c => (
+          <div key={c.label} className="flex items-center gap-1.5">
+            <span className={`text-xs ${c.done ? "text-emerald-500" : "text-slate-300"}`}>
+              {c.done ? "✓" : "○"}
+            </span>
+            <span className={`text-xs ${c.done ? "text-slate-700 font-medium" : "text-slate-400"}`}>{c.label}</span>
+          </div>
+        ))}
+      </div>
+      {!fields.idDocUrl && isIndividual && (
+        <p className="mt-3 text-xs font-semibold text-rose-600 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2">
+          ⚠️ La photo de votre pièce d'identité est obligatoire pour soumettre le dossier.
+        </p>
+      )}
+    </div>
+  );
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function F({ label, name, value, onChange, required, type = "text", placeholder }: {
+  label: string; name: string; value: string; onChange: (v: string) => void;
+  required?: boolean; type?: string; placeholder?: string;
 }) {
   return (
     <div>
       <label className="block text-xs font-semibold text-slate-600 mb-1">
         {label}{required && <span className="text-rose-500 ml-0.5">*</span>}
       </label>
-      <input type={type} name={name} defaultValue={defaultValue ?? ""} required={required} placeholder={placeholder} className={inputCls} />
+      <input type={type} name={name} value={value} onChange={e => onChange(e.target.value)} required={required} placeholder={placeholder} className={inputCls} />
     </div>
   );
 }
 
-function T({ label, name, defaultValue, rows = 5 }: { label: string; name: string; defaultValue?: string | null; rows?: number; }) {
+function T({ label, name, value, onChange, rows = 5 }: {
+  label: string; name: string; value: string; onChange: (v: string) => void; rows?: number;
+}) {
   return (
     <div>
       <label className="block text-xs font-semibold text-slate-600 mb-1">{label}</label>
-      <textarea name={name} defaultValue={defaultValue ?? ""} rows={rows} className={`${inputCls} resize-none`} />
+      <textarea name={name} value={value} onChange={e => onChange(e.target.value)} rows={rows} className={`${inputCls} resize-none`} />
     </div>
   );
 }
 
-function Sel({ label, name, defaultValue, required, children }: {
-  label: string; name: string; defaultValue?: string | null; required?: boolean; children: React.ReactNode;
+function Sel({ label, name, value, onChange, required, children }: {
+  label: string; name: string; value: string; onChange: (v: string) => void; required?: boolean; children: React.ReactNode;
 }) {
   return (
     <div>
       <label className="block text-xs font-semibold text-slate-600 mb-1">
         {label}{required && <span className="text-rose-500 ml-0.5">*</span>}
       </label>
-      <select name={name} defaultValue={defaultValue ?? ""} required={required} className={inputCls}>{children}</select>
+      <select name={name} value={value} onChange={e => onChange(e.target.value)} required={required} className={inputCls}>{children}</select>
     </div>
   );
 }
 
-function Section({ title, color = "slate", children }: { title: string; color?: string; children: React.ReactNode }) {
-  const colors: Record<string, string> = {
-    slate: "bg-slate-50 border-slate-100",
-    blue: "bg-blue-600 text-white border-blue-700",
+function Section({ title, children, color = "slate" }: { title: string; children: React.ReactNode; color?: string }) {
+  const headers: Record<string, string> = {
+    slate:   "bg-slate-50 border-slate-100",
+    blue:    "bg-blue-600 text-white border-blue-700",
     emerald: "bg-emerald-600 text-white border-emerald-700",
-    violet: "bg-violet-600 text-white border-violet-700",
+    violet:  "bg-violet-600 text-white border-violet-700",
   };
-  const headerCls = colors[color] ?? colors.slate;
   return (
     <div className="card-premium overflow-hidden">
-      <div className={`border-b px-5 py-3 ${headerCls}`}>
+      <div className={`border-b px-5 py-3 ${headers[color] ?? headers.slate}`}>
         <h3 className={`font-semibold text-sm ${color !== "slate" ? "text-white" : "text-ink"}`}>{title}</h3>
       </div>
       <div className="p-5 grid grid-cols-1 gap-4 sm:grid-cols-2">{children}</div>
     </div>
   );
 }
+
+// ─── Payment ──────────────────────────────────────────────────────────────────
 
 const PAYOUT_METHODS = [
   { group: "📱 Mobile Money Afrique", options: [
@@ -118,24 +284,12 @@ const PAYOUT_METHODS = [
   ]},
 ];
 
-function PaymentSection({ existing }: { existing: Existing }) {
+function PaymentSection({ existing, onMethodChange }: { existing: Existing; onMethodChange: (m: string) => void }) {
   const [method, setMethod] = useState(existing?.payoutMethod ?? "ORANGE_MONEY");
 
-  const isMobileMoney = ["ORANGE_MONEY","WAVE","MTN_MOMO","MOOV_MONEY","AIRTEL_MONEY","M_PESA"].includes(method);
-  const isCinetpay = method === "CINETPAY";
-  const isKkiapay = method === "KKIAPAY";
-  const isTmoney = method === "TMONEY";
-  const isFlooz = method === "FLOOZ";
-  const isBank = ["BANK_LOCAL","BANK_SEPA","BANK_SWIFT"].includes(method);
-  const isWesternUnion = method === "WESTERN_UNION";
-  const isMoneygram = method === "MONEYGRAM";
-  const isRia = method === "RIA";
-  const isExpressUnion = method === "EXPRESS_UNION";
-  const isPaypal = method === "PAYPAL";
-  const isWise = method === "WISE";
-  const isSkrill = method === "SKRILL";
-  const isCrypto = method === "CRYPTO";
-  const isCheque = method === "CHEQUE";
+  function change(m: string) { setMethod(m); onMethodChange(m); }
+
+  const isMM = ["ORANGE_MONEY","WAVE","MTN_MOMO","MOOV_MONEY","AIRTEL_MONEY","M_PESA"].includes(method);
 
   return (
     <div className="card-premium overflow-hidden">
@@ -146,7 +300,7 @@ function PaymentSection({ existing }: { existing: Existing }) {
       <div className="p-5 space-y-4">
         <div>
           <label className="block text-xs font-semibold text-slate-600 mb-1">Méthode préférée <span className="text-rose-500">*</span></label>
-          <select name="payoutMethod" value={method} required onChange={e => setMethod(e.target.value)} className={inputCls}>
+          <select name="payoutMethod" value={method} required onChange={e => change(e.target.value)} className={inputCls}>
             {PAYOUT_METHODS.map(g => (
               <optgroup key={g.group} label={g.group}>
                 {g.options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -155,67 +309,43 @@ function PaymentSection({ existing }: { existing: Existing }) {
           </select>
         </div>
 
-        {/* Mobile Money classique */}
-        {isMobileMoney && (
+        {isMM && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <F label="Numéro Mobile Money" name="mobileMoneyNum" defaultValue={existing?.mobileMoneyNum} required placeholder="+225 07 00 00 00 00" />
-            <F label="Nom du titulaire du compte" name="mobileMoneyOperator" defaultValue={existing?.mobileMoneyOperator} placeholder="Ex: KOUAKOU Jean" />
+            <WhatsAppField label="Numéro Mobile Money" name="mobileMoneyNum" defaultValue={existing?.mobileMoneyNum} required />
+            <div>
+              <label className="block text-xs font-semibold text-slate-600 mb-1">Nom du titulaire du compte</label>
+              <input name="mobileMoneyOperator" defaultValue={existing?.mobileMoneyOperator ?? ""} placeholder="Ex: KOUAKOU Jean" className={inputCls} />
+            </div>
           </div>
         )}
-
-        {/* CinetPay */}
-        {isCinetpay && <F label="Numéro CinetPay" name="cinetpayPhone" defaultValue={existing?.cinetpayPhone} required placeholder="+225 07 00 00 00 00" />}
-
-        {/* KKiaPay */}
-        {isKkiapay && <F label="Numéro KKiaPay" name="kkiapayPhone" defaultValue={existing?.kkiapayPhone} required placeholder="+229 97 00 00 00" />}
-
-        {/* T-Money */}
-        {isTmoney && <F label="Numéro T-Money" name="tmoneyPhone" defaultValue={existing?.tmoneyPhone} required placeholder="+228 90 00 00 00" />}
-
-        {/* Flooz */}
-        {isFlooz && <F label="Numéro Flooz" name="floozPhone" defaultValue={existing?.floozPhone} required placeholder="+229 97 00 00 00" />}
-
-        {/* Banque */}
-        {isBank && (
+        {method === "CINETPAY"      && <WhatsAppField label="Numéro CinetPay"    name="cinetpayPhone"   defaultValue={existing?.cinetpayPhone} required />}
+        {method === "KKIAPAY"       && <WhatsAppField label="Numéro KKiaPay"     name="kkiapayPhone"    defaultValue={existing?.kkiapayPhone} required />}
+        {method === "TMONEY"        && <WhatsAppField label="Numéro T-Money"     name="tmoneyPhone"     defaultValue={existing?.tmoneyPhone} required />}
+        {method === "FLOOZ"         && <WhatsAppField label="Numéro Flooz"       name="floozPhone"      defaultValue={existing?.floozPhone} required />}
+        {["BANK_LOCAL","BANK_SEPA","BANK_SWIFT"].includes(method) && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <F label="Nom de la banque" name="bankName" defaultValue={existing?.bankName} required />
-            <F label="Pays de la banque" name="bankCountry" defaultValue={existing?.bankCountry} required />
-            <F label="Numéro de compte" name="bankAccountNum" defaultValue={existing?.bankAccountNum} />
-            <F label="Code agence / Branche" name="bankBranch" defaultValue={existing?.bankBranch} />
+            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Nom de la banque <span className="text-rose-500">*</span></label><input name="bankName" defaultValue={existing?.bankName ?? ""} required className={inputCls} /></div>
+            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Pays de la banque <span className="text-rose-500">*</span></label><input name="bankCountry" defaultValue={existing?.bankCountry ?? ""} required className={inputCls} /></div>
+            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Numéro de compte</label><input name="bankAccountNum" defaultValue={existing?.bankAccountNum ?? ""} className={inputCls} /></div>
+            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Code agence</label><input name="bankBranch" defaultValue={existing?.bankBranch ?? ""} className={inputCls} /></div>
             {method !== "BANK_LOCAL" && <>
-              <F label="IBAN" name="iban" defaultValue={existing?.iban} placeholder="FR76 3000 6000 0112 3456 7890 189" />
-              <F label="Code SWIFT/BIC" name="swift" defaultValue={existing?.swift} placeholder="BNPAFRPPXXX" />
+              <div><label className="block text-xs font-semibold text-slate-600 mb-1">IBAN</label><input name="iban" defaultValue={existing?.iban ?? ""} placeholder="FR76 3000..." className={inputCls} /></div>
+              <div><label className="block text-xs font-semibold text-slate-600 mb-1">SWIFT/BIC</label><input name="swift" defaultValue={existing?.swift ?? ""} placeholder="BNPAFRPPXXX" className={inputCls} /></div>
             </>}
-            <div className="sm:col-span-2"><F label="RIB complet" name="rib" defaultValue={existing?.rib} /></div>
+            <div className="sm:col-span-2"><label className="block text-xs font-semibold text-slate-600 mb-1">RIB complet</label><input name="rib" defaultValue={existing?.rib ?? ""} className={inputCls} /></div>
           </div>
         )}
-
-        {/* Western Union */}
-        {isWesternUnion && <F label="Nom complet (tel que sur pièce d'identité)" name="westernUnionName" defaultValue={existing?.westernUnionName} required placeholder="NOM Prénom" />}
-
-        {/* MoneyGram */}
-        {isMoneygram && <F label="Nom complet MoneyGram" name="moneyGramName" defaultValue={existing?.moneyGramName} required placeholder="NOM Prénom" />}
-
-        {/* RIA */}
-        {isRia && <F label="Nom complet RIA" name="riaName" defaultValue={existing?.riaName} required placeholder="NOM Prénom" />}
-
-        {/* Express Union */}
-        {isExpressUnion && <F label="Numéro Express Union" name="expressUnionNum" defaultValue={existing?.expressUnionNum} required placeholder="+237 6 00 00 00 00" />}
-
-        {/* PayPal */}
-        {isPaypal && <F label="Adresse email PayPal" name="paypalEmail" defaultValue={existing?.paypalEmail} required type="email" placeholder="vous@email.com" />}
-
-        {/* Wise */}
-        {isWise && <F label="Email Wise (TransferWise)" name="wiseEmail" defaultValue={existing?.wiseEmail} required type="email" placeholder="vous@email.com" />}
-
-        {/* Skrill */}
-        {isSkrill && <F label="Email Skrill" name="skrillEmail" defaultValue={existing?.skrillEmail} required type="email" placeholder="vous@email.com" />}
-
-        {/* Crypto */}
-        {isCrypto && (
+        {method === "WESTERN_UNION" && <div><label className="block text-xs font-semibold text-slate-600 mb-1">Nom complet <span className="text-rose-500">*</span></label><input name="westernUnionName" defaultValue={existing?.westernUnionName ?? ""} required placeholder="NOM Prénom" className={inputCls} /></div>}
+        {method === "MONEYGRAM"     && <div><label className="block text-xs font-semibold text-slate-600 mb-1">Nom complet <span className="text-rose-500">*</span></label><input name="moneyGramName" defaultValue={existing?.moneyGramName ?? ""} required placeholder="NOM Prénom" className={inputCls} /></div>}
+        {method === "RIA"           && <div><label className="block text-xs font-semibold text-slate-600 mb-1">Nom complet RIA <span className="text-rose-500">*</span></label><input name="riaName" defaultValue={existing?.riaName ?? ""} required placeholder="NOM Prénom" className={inputCls} /></div>}
+        {method === "EXPRESS_UNION" && <WhatsAppField label="Numéro Express Union" name="expressUnionNum" defaultValue={existing?.expressUnionNum} required />}
+        {method === "PAYPAL"        && <div><label className="block text-xs font-semibold text-slate-600 mb-1">Email PayPal <span className="text-rose-500">*</span></label><input type="email" name="paypalEmail" defaultValue={existing?.paypalEmail ?? ""} required placeholder="vous@email.com" className={inputCls} /></div>}
+        {method === "WISE"          && <div><label className="block text-xs font-semibold text-slate-600 mb-1">Email Wise <span className="text-rose-500">*</span></label><input type="email" name="wiseEmail" defaultValue={existing?.wiseEmail ?? ""} required placeholder="vous@email.com" className={inputCls} /></div>}
+        {method === "SKRILL"        && <div><label className="block text-xs font-semibold text-slate-600 mb-1">Email Skrill <span className="text-rose-500">*</span></label><input type="email" name="skrillEmail" defaultValue={existing?.skrillEmail ?? ""} required placeholder="vous@email.com" className={inputCls} /></div>}
+        {method === "CRYPTO" && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Crypto-monnaie <span className="text-rose-500">*</span></label>
+              <label className="block text-xs font-semibold text-slate-600 mb-1">Crypto <span className="text-rose-500">*</span></label>
               <select name="cryptoCurrency" defaultValue={existing?.cryptoCurrency ?? ""} required className={inputCls}>
                 <option value="">-- Choisir --</option>
                 {["USDT","USDC","BTC","ETH","BNB","TRX","SOL","XRP","LTC","DOGE"].map(c => <option key={c} value={c}>{c}</option>)}
@@ -229,19 +359,18 @@ function PaymentSection({ existing }: { existing: Existing }) {
               </select>
             </div>
             <div className="sm:col-span-2">
-              <F label="Adresse du wallet (copiez-collez exactement)" name="cryptoAddress" defaultValue={existing?.cryptoAddress} required placeholder="0x... / T... / bc1..." />
+              <label className="block text-xs font-semibold text-slate-600 mb-1">Adresse wallet <span className="text-rose-500">*</span></label>
+              <input name="cryptoAddress" defaultValue={existing?.cryptoAddress ?? ""} required placeholder="0x... / T... / bc1..." className={inputCls} />
             </div>
             <div className="sm:col-span-2 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-700">
               ⚠️ Vérifiez soigneusement votre adresse et le réseau. Toute erreur entraîne une perte définitive des fonds.
             </div>
           </div>
         )}
-
-        {/* Chèque */}
-        {isCheque && (
+        {method === "CHEQUE" && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <F label="Libellé du chèque (à l'ordre de)" name="chequePayable" defaultValue={existing?.chequePayable} required placeholder="NOM Prénom ou raison sociale" />
-            <F label="Banque émettrice" name="chequeBank" defaultValue={existing?.chequeBank} />
+            <div><label className="block text-xs font-semibold text-slate-600 mb-1">À l'ordre de <span className="text-rose-500">*</span></label><input name="chequePayable" defaultValue={existing?.chequePayable ?? ""} required placeholder="NOM Prénom" className={inputCls} /></div>
+            <div><label className="block text-xs font-semibold text-slate-600 mb-1">Banque émettrice</label><input name="chequeBank" defaultValue={existing?.chequeBank ?? ""} className={inputCls} /></div>
           </div>
         )}
       </div>
@@ -249,231 +378,7 @@ function PaymentSection({ existing }: { existing: Existing }) {
   );
 }
 
-function PaymentFields({ prefix, method }: { prefix: string; method: string }) {
-  const isMobileMoney = ["ORANGE_MONEY","WAVE","MTN_MOMO","MOOV_MONEY","AIRTEL_MONEY","M_PESA"].includes(method);
-  return (
-    <div className="space-y-3 pt-1">
-      {isMobileMoney && (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <F label="Numéro" name={`${prefix}_num`} placeholder="+225 07 00 00 00 00" />
-          <F label="Nom titulaire" name={`${prefix}_name`} placeholder="NOM Prénom" />
-        </div>
-      )}
-      {method === "CINETPAY"      && <F label="Numéro CinetPay"    name={`${prefix}_num`}   placeholder="+225 07 00 00 00 00" />}
-      {method === "KKIAPAY"       && <F label="Numéro KKiaPay"     name={`${prefix}_num`}   placeholder="+229 97 00 00 00" />}
-      {method === "TMONEY"        && <F label="Numéro T-Money"     name={`${prefix}_num`}   placeholder="+228 90 00 00 00" />}
-      {method === "FLOOZ"         && <F label="Numéro Flooz"       name={`${prefix}_num`}   placeholder="+229 97 00 00 00" />}
-      {method === "WESTERN_UNION" && <F label="Nom complet"        name={`${prefix}_name`}  placeholder="NOM Prénom" />}
-      {method === "MONEYGRAM"     && <F label="Nom complet"        name={`${prefix}_name`}  placeholder="NOM Prénom" />}
-      {method === "RIA"           && <F label="Nom complet RIA"    name={`${prefix}_name`}  placeholder="NOM Prénom" />}
-      {method === "EXPRESS_UNION" && <F label="Numéro Express Union" name={`${prefix}_num`} placeholder="+237 6 00 00 00 00" />}
-      {method === "PAYPAL"        && <F label="Email PayPal"       name={`${prefix}_email`} type="email" placeholder="vous@email.com" />}
-      {method === "WISE"          && <F label="Email Wise"         name={`${prefix}_email`} type="email" placeholder="vous@email.com" />}
-      {method === "SKRILL"        && <F label="Email Skrill"       name={`${prefix}_email`} type="email" placeholder="vous@email.com" />}
-      {["BANK_LOCAL","BANK_SEPA","BANK_SWIFT"].includes(method) && (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <F label="Banque" name={`${prefix}_bankName`} />
-          <F label="Pays banque" name={`${prefix}_bankCountry`} />
-          {method !== "BANK_LOCAL" && <>
-            <F label="IBAN" name={`${prefix}_iban`} placeholder="FR76..." />
-            <F label="SWIFT/BIC" name={`${prefix}_swift`} placeholder="BNPAFRPPXXX" />
-          </>}
-          <div className="sm:col-span-2"><F label="Numéro de compte / RIB" name={`${prefix}_rib`} /></div>
-        </div>
-      )}
-      {method === "CRYPTO" && (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Crypto</label>
-            <select name={`${prefix}_cryptoCurrency`} className={inputCls}>
-              <option value="">-- Choisir --</option>
-              {["USDT","USDC","BTC","ETH","BNB","TRX","SOL","XRP","LTC","DOGE"].map(c => <option key={c} value={c}>{c}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Réseau</label>
-            <select name={`${prefix}_cryptoNetwork`} className={inputCls}>
-              <option value="">-- Choisir --</option>
-              {["TRC20 (Tron)","ERC20 (Ethereum)","BEP20 (BSC)","Bitcoin (BTC)","Solana","XRP Ledger","Litecoin"].map(n => <option key={n} value={n}>{n}</option>)}
-            </select>
-          </div>
-          <div className="sm:col-span-2"><F label="Adresse wallet" name={`${prefix}_cryptoAddress`} placeholder="0x... / T... / bc1..." /></div>
-        </div>
-      )}
-      {method === "CHEQUE" && (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <F label="À l'ordre de" name={`${prefix}_chequePayable`} placeholder="NOM Prénom ou raison sociale" />
-          <F label="Banque émettrice" name={`${prefix}_chequeBank`} />
-        </div>
-      )}
-    </div>
-  );
-}
-
-function SecondaryPaymentSection({ slot, label, defaultMethod, defaultDetails }: {
-  slot: "2" | "3"; label: string; defaultMethod?: string | null; defaultDetails?: string | null;
-}) {
-  const parsed = (() => { try { return defaultDetails ? JSON.parse(defaultDetails) : {}; } catch { return {}; } })();
-  const [method, setMethod] = useState(defaultMethod ?? "");
-  const prefix = `sec${slot}`;
-
-  return (
-    <div className="card-premium overflow-hidden border-dashed">
-      <div className="bg-slate-50 border-b border-slate-200 px-5 py-3 flex items-center justify-between">
-        <div>
-          <h3 className="font-semibold text-sm text-slate-700">{label}</h3>
-          <p className="text-xs text-slate-400 mt-0.5">Optionnel — en cas d&apos;indisponibilité de votre méthode principale</p>
-        </div>
-        {method && <span className="text-[10px] font-bold text-teal-600 bg-teal-50 border border-teal-200 rounded-lg px-2 py-0.5">Défini</span>}
-      </div>
-      <div className="p-5 space-y-4">
-        <div>
-          <label className="block text-xs font-semibold text-slate-600 mb-1">Méthode {slot === "2" ? "secondaire 1" : "secondaire 2"}</label>
-          <select name={`payoutMethod${slot}`} value={method} onChange={e => setMethod(e.target.value)} className={inputCls}>
-            <option value="">-- Aucune (optionnel) --</option>
-            {PAYOUT_METHODS.map(g => (
-              <optgroup key={g.group} label={g.group}>
-                {g.options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-              </optgroup>
-            ))}
-          </select>
-        </div>
-        {method && <PaymentFields prefix={prefix} method={method} />}
-        {/* Champs cachés pour préremplir depuis les données existantes */}
-        {Object.entries(parsed).map(([k, v]) => (
-          <input key={k} type="hidden" name={`${prefix}_${k}_prefill`} defaultValue={String(v)} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function IndividualForm({ existing }: { existing: Existing }) {
-  return (
-    <>
-      <Section title="👤 Identité à l'état civil" color="blue">
-        <div className="sm:col-span-2"><F label="Nom et prénoms exacts (état civil)" name="fullName" defaultValue={existing?.fullName} required placeholder="KOUAKOU Jean-Marc" /></div>
-        <Sel label="Type de pièce d'identité" name="idType" defaultValue={existing?.idType} required>
-          <option value="">-- Choisir --</option>
-          <option value="CIN">Carte Nationale d&apos;Identité (CNI/CIN)</option>
-          <option value="PASSEPORT">Passeport biométrique</option>
-          <option value="PERMIS">Permis de conduire</option>
-          <option value="AUTRE">Autre document officiel</option>
-        </Sel>
-        <F label="Numéro de la pièce d'identité" name="idNumber" defaultValue={existing?.idNumber} required placeholder="CI-XXXX-XXXXXX" />
-        <F label="Email de contact" name="contactEmail" defaultValue={existing?.companyEmail} type="email" placeholder="votre@email.com" />
-        <F label="Profession / Métier actuel" name="profession" defaultValue={existing?.profession} placeholder="Enseignant, Commercial, Entrepreneur…" />
-        <F label="Pays de résidence" name="country" defaultValue={existing?.country} required placeholder="Côte d'Ivoire" />
-        <F label="Ville / Région" name="city" defaultValue={existing?.city} required placeholder="Abidjan — Cocody" />
-      </Section>
-
-      {/* Pièce d'identité — upload */}
-      <div className="card-premium overflow-hidden">
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 border-b border-blue-700 px-5 py-3">
-          <h3 className="font-semibold text-sm text-white">🪪 Photo de la pièce d&apos;identité</h3>
-          <p className="text-xs text-blue-100 mt-0.5">CNI recto/verso, passeport ou permis — obligatoire pour la validation.</p>
-        </div>
-        <div className="p-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <FileUpload
-            name="idDocUrl"
-            defaultUrl={existing?.idDocUrl}
-            folder="ibig-kyc-docs"
-            accept="image/jpeg,image/png,image/webp,application/pdf"
-            label="Recto (face avant) *"
-            hint="JPEG, PNG ou PDF · max 10 Mo"
-            preview="image"
-          />
-          <FileUpload
-            name="idDocBack"
-            defaultUrl={existing?.idDocBack}
-            folder="ibig-kyc-docs"
-            accept="image/jpeg,image/png,image/webp,application/pdf"
-            label="Verso (face arrière) — facultatif pour passeport"
-            hint="JPEG, PNG ou PDF · max 10 Mo"
-            preview="image"
-          />
-        </div>
-        <div className="bg-amber-50 border-t border-amber-100 px-5 py-2.5">
-          <p className="text-xs text-amber-700">⚠️ Vos documents sont transmis de façon sécurisée et ne sont utilisés qu&apos;à des fins de vérification.</p>
-        </div>
-      </div>
-
-      {/* CV */}
-      <div className="card-premium overflow-hidden">
-        <div className="bg-slate-50 border-b border-slate-100 px-5 py-3">
-          <h3 className="font-semibold text-sm text-ink">📄 Curriculum Vitae / Parcours <span className="text-slate-400 font-normal">(optionnel)</span></h3>
-        </div>
-        <div className="p-5 space-y-4">
-          <FileUpload
-            name="cvFileUrl"
-            defaultUrl={existing?.cvFileUrl}
-            folder="ibig-kyc-cv"
-            accept="application/pdf,image/jpeg,image/png"
-            label="Uploader votre CV (PDF ou image)"
-            hint="PDF recommandé · max 10 Mo"
-            preview="none"
-          />
-          <div className="relative flex items-center gap-3">
-            <div className="flex-1 border-t border-slate-100" />
-            <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wide shrink-0">ou décrivez à la place</span>
-            <div className="flex-1 border-t border-slate-100" />
-          </div>
-          <T label="Résumé de votre parcours, compétences, expériences et réseaux professionnels" name="cvText" defaultValue={existing?.cvText} rows={5} />
-          <p className="text-xs text-slate-400">Si vous avez uploadé un CV, ce texte est optionnel.</p>
-        </div>
-      </div>
-
-      <Section title="📞 Contacts personnels">
-        <F label="WhatsApp principal" name="whatsapp" defaultValue={existing?.whatsapp} required placeholder="+225 07 00 00 00 00" />
-        <F label="Second contact" name="secondPhone" defaultValue={existing?.secondPhone} placeholder="+225 05 00 00 00 00" />
-      </Section>
-
-      <div className="card-premium overflow-hidden">
-        <div className="bg-slate-50 border-b border-slate-100 px-5 py-3">
-          <h3 className="font-semibold text-sm text-ink">👨‍👩‍👧 2 personnes à contacter en dehors de vous (obligatoire)</h3>
-          <p className="text-xs text-muted mt-0.5">Personnes joignables indépendamment — famille, amis, collègues.</p>
-        </div>
-        <div className="p-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <F label="Contact 1 — Nom et prénom" name="contact1Name" defaultValue={existing?.contact1Name} required placeholder="Kouamé Alice" />
-          <F label="Contact 1 — Téléphone / WhatsApp" name="contact1Phone" defaultValue={existing?.contact1Phone} required placeholder="+225 07 00 00 00 00" />
-          <F label="Contact 2 — Nom et prénom" name="contact2Name" defaultValue={existing?.contact2Name} required placeholder="Traoré Mohamed" />
-          <F label="Contact 2 — Téléphone / WhatsApp" name="contact2Phone" defaultValue={existing?.contact2Phone} required placeholder="+225 05 00 00 00 00" />
-        </div>
-      </div>
-    </>
-  );
-}
-
-function CompanyForm({ existing }: { existing: Existing }) {
-  return (
-    <>
-      <Section title="🏢 Identification de l'entreprise" color="violet">
-        <div className="sm:col-span-2"><F label="Dénomination sociale (nom légal de l'entreprise)" name="companyName" defaultValue={existing?.companyName} required /></div>
-        <F label="Registre de Commerce (RCCM)" name="rccm" defaultValue={existing?.rccm} required placeholder="CI-ABJ-XXXX-X-XXX-XXXX" />
-        <F label="NIF (Numéro d'Identification Fiscale)" name="nif" defaultValue={existing?.nif} required />
-        <F label="Compte Contribuable" name="compteContrib" defaultValue={existing?.compteContrib} />
-        <F label="Email officiel" name="companyEmail" defaultValue={existing?.companyEmail} type="email" placeholder="contact@entreprise.com" />
-        <F label="Pays du siège social" name="companyCountry" defaultValue={existing?.companyCountry} required placeholder="Côte d'Ivoire" />
-        <F label="Ville / Commune" name="companyCity" defaultValue={existing?.companyCity} required placeholder="Abidjan — Plateau" />
-        <div className="sm:col-span-2"><F label="Adresse complète du siège social" name="companyAddress" defaultValue={existing?.companyAddress} required placeholder="Rue des Jardins, Immeuble Delta, 2ème étage" /></div>
-        <F label="WhatsApp entreprise / standard" name="companyWhatsapp" defaultValue={existing?.companyWhatsapp} required placeholder="+225 27 00 00 00 00" />
-        <F label="Second téléphone de l'entreprise" name="companyPhone2" defaultValue={existing?.companyPhone2} placeholder="+225 07 00 00 00 00" />
-      </Section>
-
-      <Section title="👔 Représentant légal">
-        <F label="Nom et prénoms du représentant légal" name="legalRep" defaultValue={existing?.legalRep} required placeholder="KOUAKOU Jean-Baptiste" />
-        <Sel label="Titre / Fonction" name="legalRepTitle" defaultValue={existing?.legalRepTitle} required>
-          <option value="">-- Choisir --</option>
-          <option value="DG">Directeur Général (DG)</option>
-          <option value="PDG">Président Directeur Général (PDG)</option>
-          <option value="GERANT">Gérant</option>
-          <option value="ADMIN">Administrateur</option>
-          <option value="AUTRE">Autre</option>
-        </Sel>
-      </Section>
-    </>
-  );
-}
+// ─── Main form ────────────────────────────────────────────────────────────────
 
 export function VerificationForm({ initialType, existing }: {
   initialType?: string;
@@ -481,10 +386,59 @@ export function VerificationForm({ initialType, existing }: {
 }) {
   const [type, setType] = useState(initialType ?? "INDIVIDUAL");
 
+  // Controlled state for checklist tracking
+  const [fullName, setFullName]           = useState(existing?.fullName ?? "");
+  const [idType, setIdType]               = useState(existing?.idType ?? "");
+  const [idNumber, setIdNumber]           = useState(existing?.idNumber ?? "");
+  const [country, setCountry]             = useState(existing?.country ?? "");
+  const [city, setCity]                   = useState(existing?.city ?? "");
+  const [whatsapp, setWhatsapp]           = useState(existing?.whatsapp ?? "");
+  const [idDocUrl, setIdDocUrl]           = useState(existing?.idDocUrl ?? "");
+  const [payoutMethod, setPayoutMethod]   = useState(existing?.payoutMethod ?? "ORANGE_MONEY");
+  const [contact1Name, setContact1Name]   = useState(existing?.contact1Name ?? "");
+  const [contact1Phone, setContact1Phone] = useState(existing?.contact1Phone ?? "");
+  const [contact2Name, setContact2Name]   = useState(existing?.contact2Name ?? "");
+  const [contact2Phone, setContact2Phone] = useState(existing?.contact2Phone ?? "");
+
+  // Company
+  const [companyName, setCompanyName]         = useState(existing?.companyName ?? "");
+  const [rccm, setRccm]                       = useState(existing?.rccm ?? "");
+  const [nif, setNif]                         = useState(existing?.nif ?? "");
+  const [companyCountry, setCompanyCountry]   = useState(existing?.companyCountry ?? "");
+  const [companyCity, setCompanyCity]         = useState(existing?.companyCity ?? "");
+  const [companyAddress, setCompanyAddress]   = useState(existing?.companyAddress ?? "");
+  const [companyWhatsapp, setCompanyWhatsapp] = useState(existing?.companyWhatsapp ?? "");
+  const [legalRep, setLegalRep]               = useState(existing?.legalRep ?? "");
+  const [legalRepTitle, setLegalRepTitle]     = useState(existing?.legalRepTitle ?? "");
+
+  const [submitError, setSubmitError] = useState("");
+
+  const checkFields = {
+    fullName, idType, idNumber, country, city, whatsapp, idDocUrl, payoutMethod,
+    contact1Name, contact1Phone, contact2Name, contact2Phone,
+    companyName, rccm, nif, companyCountry, companyCity, companyAddress, companyWhatsapp, legalRep, legalRepTitle,
+  };
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (type === "INDIVIDUAL" && !idDocUrl) {
+      setSubmitError("⚠️ Vous devez uploader la photo de votre pièce d'identité avant de soumettre.");
+      document.getElementById("id-doc-section")?.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+    setSubmitError("");
+    const fd = new FormData(e.currentTarget);
+    await submitVerification(fd);
+  }
+
   return (
-    <form action={submitVerification} className="space-y-5">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <input type="hidden" name="partnerType" value={type} />
 
+      {/* Checklist */}
+      <ProgressChecklist type={type} fields={checkFields} />
+
+      {/* Type toggle */}
       <div className="card-premium p-5">
         <p className="text-sm font-semibold text-ink mb-3">Vous êtes :</p>
         <div className="grid grid-cols-2 gap-3">
@@ -492,16 +446,8 @@ export function VerificationForm({ initialType, existing }: {
             { val: "INDIVIDUAL", label: "👤 Particulier", sub: "Personne physique" },
             { val: "COMPANY",    label: "🏢 Entreprise",  sub: "Société, ONG, association" },
           ].map((opt) => (
-            <button
-              key={opt.val}
-              type="button"
-              onClick={() => setType(opt.val)}
-              className={`rounded-xl border-2 p-4 text-left transition-all ${
-                type === opt.val
-                  ? "border-blue-500 bg-blue-50 shadow-sm"
-                  : "border-slate-200 bg-slate-50 hover:border-slate-300"
-              }`}
-            >
+            <button key={opt.val} type="button" onClick={() => setType(opt.val)}
+              className={`rounded-xl border-2 p-4 text-left transition-all ${type === opt.val ? "border-blue-500 bg-blue-50 shadow-sm" : "border-slate-200 bg-slate-50 hover:border-slate-300"}`}>
               <p className="font-bold text-sm text-ink">{opt.label}</p>
               <p className="text-xs text-muted mt-0.5">{opt.sub}</p>
             </button>
@@ -509,32 +455,205 @@ export function VerificationForm({ initialType, existing }: {
         </div>
       </div>
 
-      {type === "INDIVIDUAL" ? <IndividualForm existing={existing} /> : <CompanyForm existing={existing} />}
+      {type === "INDIVIDUAL" ? (
+        <>
+          {/* Identité */}
+          <div className="card-premium overflow-hidden">
+            <div className="bg-blue-600 border-b border-blue-700 px-5 py-3">
+              <h3 className="font-semibold text-sm text-white">👤 Identité à l'état civil</h3>
+            </div>
+            <div className="p-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <F label="Nom et prénoms exacts (état civil)" name="fullName" value={fullName} onChange={setFullName} required placeholder="KOUAKOU Jean-Marc" />
+              </div>
+              <Sel label="Type de pièce d'identité" name="idType" value={idType} onChange={setIdType} required>
+                <option value="">-- Choisir --</option>
+                <option value="CIN">Carte Nationale d&apos;Identité (CNI/CIN)</option>
+                <option value="PASSEPORT">Passeport biométrique</option>
+                <option value="PERMIS">Permis de conduire</option>
+                <option value="AUTRE">Autre document officiel</option>
+              </Sel>
+              <F label="Numéro de la pièce d'identité" name="idNumber" value={idNumber} onChange={setIdNumber} required placeholder="CI-XXXX-XXXXXX" />
+              <F label="Pays de résidence" name="country" value={country} onChange={setCountry} required placeholder="Côte d'Ivoire" />
+              <F label="Ville / Région" name="city" value={city} onChange={setCity} required placeholder="Abidjan — Cocody" />
+              <F label="Email de contact" name="contactEmail" value={existing?.companyEmail ?? ""} onChange={() => {}} type="email" placeholder="votre@email.com" />
+              <F label="Profession / Métier actuel" name="profession" value={existing?.profession ?? ""} onChange={() => {}} placeholder="Enseignant, Commercial, Entrepreneur…" />
+            </div>
+          </div>
 
-      {/* Méthode principale */}
-      <PaymentSection existing={existing} />
+          {/* Pièce d'identité */}
+          <div id="id-doc-section" className="card-premium overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-600 to-blue-700 border-b border-blue-700 px-5 py-3">
+              <h3 className="font-semibold text-sm text-white">🪪 Photo de la pièce d&apos;identité <span className="font-normal text-blue-200">(obligatoire)</span></h3>
+              <p className="text-xs text-blue-100 mt-0.5">CNI recto/verso, passeport ou permis — sans cette photo, la soumission est bloquée.</p>
+            </div>
+            <div className="p-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <FileUpload
+                  name="idDocUrl"
+                  defaultUrl={existing?.idDocUrl}
+                  folder="ibig-kyc-docs"
+                  accept="image/jpeg,image/png,image/webp,application/pdf"
+                  label="Recto (face avant) *"
+                  hint="JPEG, PNG ou PDF · max 10 Mo"
+                  preview="image"
+                  onUpload={url => setIdDocUrl(url)}
+                />
+                {!idDocUrl && (
+                  <p className="mt-1 text-xs font-semibold text-rose-500">Ce document est obligatoire ✱</p>
+                )}
+              </div>
+              <FileUpload
+                name="idDocBack"
+                defaultUrl={existing?.idDocBack}
+                folder="ibig-kyc-docs"
+                accept="image/jpeg,image/png,image/webp,application/pdf"
+                label="Verso (face arrière) — facultatif pour passeport"
+                hint="JPEG, PNG ou PDF · max 10 Mo"
+                preview="image"
+              />
+            </div>
+            <div className="bg-amber-50 border-t border-amber-100 px-5 py-2.5">
+              <p className="text-xs text-amber-700">⚠️ Vos documents sont transmis de façon sécurisée et ne sont utilisés qu&apos;à des fins de vérification KYC.</p>
+            </div>
+          </div>
+
+          {/* Contacts */}
+          <div className="card-premium overflow-hidden">
+            <div className="bg-slate-50 border-b border-slate-100 px-5 py-3">
+              <h3 className="font-semibold text-sm text-ink">📞 Contacts</h3>
+            </div>
+            <div className="p-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <WhatsAppField label="WhatsApp principal" name="whatsapp" defaultValue={existing?.whatsapp} required />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 mb-1">Second contact</label>
+                <input name="secondPhone" defaultValue={existing?.secondPhone ?? ""} placeholder="+225 05 00 00 00 00" className={inputCls} />
+              </div>
+            </div>
+          </div>
+
+          {/* 2 contacts tiers */}
+          <div className="card-premium overflow-hidden">
+            <div className="bg-slate-50 border-b border-slate-100 px-5 py-3">
+              <h3 className="font-semibold text-sm text-ink">👨‍👩‍👧 2 personnes à contacter en dehors de vous <span className="text-rose-500">*</span></h3>
+              <p className="text-xs text-muted mt-0.5">Personnes joignables indépendamment — famille, amis, collègues.</p>
+            </div>
+            <div className="p-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <F label="Contact 1 — Nom et prénom" name="contact1Name" value={contact1Name} onChange={setContact1Name} required placeholder="Kouamé Alice" />
+              <F label="Contact 1 — Téléphone / WhatsApp" name="contact1Phone" value={contact1Phone} onChange={setContact1Phone} required placeholder="+225 07 00 00 00 00" />
+              <F label="Contact 2 — Nom et prénom" name="contact2Name" value={contact2Name} onChange={setContact2Name} required placeholder="Traoré Mohamed" />
+              <F label="Contact 2 — Téléphone / WhatsApp" name="contact2Phone" value={contact2Phone} onChange={setContact2Phone} required placeholder="+225 05 00 00 00 00" />
+            </div>
+          </div>
+
+          {/* CV (facultatif) */}
+          <div className="card-premium overflow-hidden">
+            <div className="bg-slate-50 border-b border-slate-100 px-5 py-3">
+              <h3 className="font-semibold text-sm text-ink">📄 Curriculum Vitae / Parcours <span className="text-slate-400 font-normal">(optionnel)</span></h3>
+            </div>
+            <div className="p-5 space-y-4">
+              <FileUpload
+                name="cvFileUrl"
+                defaultUrl={existing?.cvFileUrl}
+                folder="ibig-kyc-cv"
+                accept="application/pdf,image/jpeg,image/png"
+                label="Uploader votre CV (PDF ou image)"
+                hint="PDF recommandé · max 10 Mo"
+                preview="none"
+              />
+              <div className="relative flex items-center gap-3">
+                <div className="flex-1 border-t border-slate-100" />
+                <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wide shrink-0">ou décrivez à la place</span>
+                <div className="flex-1 border-t border-slate-100" />
+              </div>
+              <T label="Résumé de votre parcours, compétences, expériences" name="cvText" value={existing?.cvText ?? ""} onChange={() => {}} rows={4} />
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          {/* Entreprise */}
+          <div className="card-premium overflow-hidden">
+            <div className="bg-violet-600 border-b border-violet-700 px-5 py-3">
+              <h3 className="font-semibold text-sm text-white">🏢 Identification de l'entreprise</h3>
+            </div>
+            <div className="p-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <F label="Dénomination sociale (nom légal)" name="companyName" value={companyName} onChange={setCompanyName} required />
+              </div>
+              <F label="RCCM (Registre de Commerce)" name="rccm" value={rccm} onChange={setRccm} required placeholder="CI-ABJ-XXXX-X-XXX-XXXX" />
+              <F label="NIF (Numéro d'Identification Fiscale)" name="nif" value={nif} onChange={setNif} required />
+              <F label="Compte Contribuable" name="compteContrib" value={existing?.compteContrib ?? ""} onChange={() => {}} />
+              <F label="Email officiel" name="companyEmail" value={existing?.companyEmail ?? ""} onChange={() => {}} type="email" placeholder="contact@entreprise.com" />
+              <F label="Pays du siège social" name="companyCountry" value={companyCountry} onChange={setCompanyCountry} required placeholder="Côte d'Ivoire" />
+              <F label="Ville / Commune" name="companyCity" value={companyCity} onChange={setCompanyCity} required placeholder="Abidjan — Plateau" />
+              <div className="sm:col-span-2">
+                <F label="Adresse complète du siège social" name="companyAddress" value={companyAddress} onChange={setCompanyAddress} required placeholder="Rue des Jardins, Immeuble Delta, 2ème étage" />
+              </div>
+              <div className="sm:col-span-2">
+                <WhatsAppField label="WhatsApp entreprise / standard" name="companyWhatsapp" defaultValue={existing?.companyWhatsapp} required />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 mb-1">Second téléphone</label>
+                <input name="companyPhone2" defaultValue={existing?.companyPhone2 ?? ""} placeholder="+225 07 00 00 00 00" className={inputCls} />
+              </div>
+            </div>
+          </div>
+
+          {/* Représentant légal */}
+          <div className="card-premium overflow-hidden">
+            <div className="bg-slate-50 border-b border-slate-100 px-5 py-3">
+              <h3 className="font-semibold text-sm text-ink">👔 Représentant légal</h3>
+            </div>
+            <div className="p-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <F label="Nom et prénoms du représentant légal" name="legalRep" value={legalRep} onChange={setLegalRep} required placeholder="KOUAKOU Jean-Baptiste" />
+              <Sel label="Titre / Fonction" name="legalRepTitle" value={legalRepTitle} onChange={setLegalRepTitle} required>
+                <option value="">-- Choisir --</option>
+                <option value="DG">Directeur Général (DG)</option>
+                <option value="PDG">Président Directeur Général (PDG)</option>
+                <option value="GERANT">Gérant</option>
+                <option value="ADMIN">Administrateur</option>
+                <option value="AUTRE">Autre</option>
+              </Sel>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Paiement */}
+      <PaymentSection existing={existing} onMethodChange={setPayoutMethod} />
 
       {/* Méthodes secondaires */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-4 space-y-1">
-        <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">💳 Méthodes de paiement de secours (optionnel)</p>
-        <p className="text-xs text-slate-400 mb-4">En cas d&apos;indisponibilité de votre méthode principale, l&apos;équipe utilisera ces alternatives dans l&apos;ordre.</p>
-        <div className="space-y-4">
-          <SecondaryPaymentSection slot="2" label="🥈 Méthode secondaire 1"
-            defaultMethod={(existing as any)?.payoutMethod2}
-            defaultDetails={(existing as any)?.payoutDetails2} />
-          <SecondaryPaymentSection slot="3" label="🥉 Méthode secondaire 2"
-            defaultMethod={(existing as any)?.payoutMethod3}
-            defaultDetails={(existing as any)?.payoutDetails3} />
-        </div>
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 space-y-4">
+        <p className="text-xs font-bold text-slate-500 uppercase tracking-wide">💳 Méthodes de paiement de secours <span className="font-normal normal-case text-slate-400">(optionnel)</span></p>
+        <p className="text-xs text-slate-400">En cas d&apos;indisponibilité de votre méthode principale, l&apos;équipe utilisera ces alternatives.</p>
       </div>
+
+      {/* Erreur de soumission */}
+      {submitError && (
+        <div className="rounded-xl border border-rose-300 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700">
+          {submitError}
+        </div>
+      )}
 
       <p className="text-xs text-muted bg-slate-50 rounded-xl border border-slate-100 px-4 py-3">
         🔒 En soumettant ce formulaire, vous certifiez l&apos;exactitude des informations. Toute fausse déclaration entraîne la suspension immédiate et définitive du compte sans paiement des commissions dues.
       </p>
 
-      <button type="submit" className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-6 py-3.5 text-sm font-bold text-white shadow-md hover:from-blue-700 hover:to-violet-700 transition-all">
+      <button
+        type="submit"
+        disabled={type === "INDIVIDUAL" && !idDocUrl}
+        className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-6 py-3.5 text-sm font-bold text-white shadow-md hover:from-blue-700 hover:to-violet-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+      >
         📤 Soumettre mon dossier de vérification
       </button>
+      {type === "INDIVIDUAL" && !idDocUrl && (
+        <p className="text-xs text-center text-rose-500 font-semibold">
+          Uploadez votre pièce d&apos;identité pour activer le bouton de soumission.
+        </p>
+      )}
     </form>
   );
 }

@@ -11,6 +11,7 @@ type Props = {
   hint?: string;
   preview?: "image" | "none";
   maxMb?: number;
+  onUpload?: (url: string) => void;
 };
 
 export function FileUpload({
@@ -22,6 +23,7 @@ export function FileUpload({
   hint,
   preview = "image",
   maxMb = 10,
+  onUpload,
 }: Props) {
   const [url, setUrl]       = useState(defaultUrl ?? "");
   const [loading, setLoading] = useState(false);
@@ -43,6 +45,7 @@ export function FileUpload({
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? "Erreur upload"); return; }
       setUrl(data.url);
+      onUpload?.(data.url);
     } catch {
       setError("Erreur réseau");
     } finally {
