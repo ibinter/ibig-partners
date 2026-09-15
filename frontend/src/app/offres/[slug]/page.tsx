@@ -355,7 +355,7 @@ export default async function OffrePage({
                   </h2>
                 </div>
                 <div className="px-4 sm:px-6 py-4">
-                  <p className="text-sm text-slate-600 leading-relaxed">{product.description}</p>
+                  <p className="text-sm text-slate-600 leading-relaxed [overflow-wrap:break-word]">{product.description}</p>
                 </div>
               </div>
             )}
@@ -376,7 +376,7 @@ export default async function OffrePage({
                       >
                         ✓
                       </span>
-                      <span className="text-sm text-slate-700 leading-relaxed">{b.trim().replace(/\.$/, "")}.</span>
+                      <span className="min-w-0 text-sm text-slate-700 leading-relaxed [overflow-wrap:break-word]">{b.trim().replace(/\.$/, "")}.</span>
                     </li>
                   ))}
                 </ul>
@@ -437,7 +437,7 @@ export default async function OffrePage({
                   <h2 className="text-sm font-extrabold text-slate-800">Pour qui ?</h2>
                 </div>
                 <div className="px-4 sm:px-6 py-4">
-                  <p className="text-sm text-slate-600 leading-relaxed">{audience}</p>
+                  <p className="text-sm text-slate-600 leading-relaxed [overflow-wrap:break-word]">{audience}</p>
                 </div>
               </div>
             )}
@@ -454,7 +454,7 @@ export default async function OffrePage({
                     <li key={i} className="flex items-start gap-3 rounded-xl p-3 border border-slate-100 bg-slate-50/50">
                       <span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-white text-[10px] font-extrabold mt-0.5"
                         style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accentDark})` }}>✓</span>
-                      <span className="text-sm text-slate-700 font-medium">{item}</span>
+                      <span className="min-w-0 text-sm text-slate-700 font-medium [overflow-wrap:break-word]">{item}</span>
                     </li>
                   ))}
                 </ul>
