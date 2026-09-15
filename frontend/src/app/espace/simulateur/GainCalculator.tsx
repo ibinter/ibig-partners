@@ -74,7 +74,7 @@ export function GainCalculator({ initialStatus = "STARTER", products }: { initia
   const isMonthly = type === "MONTHLY_SUB";
 
   return (
-    <div className="grid gap-5 lg:grid-cols-5">
+    <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
       {/* Contrôles */}
       <div className="card-premium p-5 lg:col-span-3">
         <h3 className="mb-4 text-sm font-bold text-ink">Paramètres de simulation</h3>

@@ -119,7 +119,7 @@ export default function LiensClient({ cards, branches }: Props) {
           Aucun lien pour ces critères.
         </div>
       ) : (
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {filtered.map((card) => (
             <div
               key={card.id}

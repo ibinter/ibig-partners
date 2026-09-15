@@ -27,7 +27,7 @@ export default async function TemoignagesPublicPage() {
         {withNames.length === 0 ? (
           <p className="text-center text-gray-400">Les témoignages arrivent bientôt.</p>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {withNames.map((t: any) => (
               <div key={t.id} className="rounded-2xl border bg-white dark:bg-gray-900 p-5 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex gap-1 mb-3">

@@ -340,7 +340,7 @@ export default async function OffrePage({
         )}
 
         {/* Layout 2 colonnes sur desktop */}
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
           {/* Colonne principale */}
           <div className="lg:col-span-2 space-y-6">

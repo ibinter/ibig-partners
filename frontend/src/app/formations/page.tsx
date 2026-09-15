@@ -140,7 +140,7 @@ export default async function FormationsPage() {
         <section className="py-12 px-4 bg-slate-50">
           <div className="mx-auto max-w-7xl">
             <Suspense fallback={
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div key={i} className="card-premium h-64 animate-pulse bg-slate-100 rounded-2xl" />
                 ))}

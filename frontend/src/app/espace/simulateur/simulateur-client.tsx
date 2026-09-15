@@ -144,7 +144,7 @@ export default function SimulateurClient() {
       {/* Scénarios */}
       <div className="rounded-2xl border border-violet-100 bg-violet-50 p-4 space-y-2">
         <p className="text-xs font-bold text-violet-700 uppercase tracking-wide">⚡ Scénarios prêts</p>
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
           {SCENARIOS.map(s => (
             <button key={s.label} onClick={() => applyScenario(s)}
               className="rounded-xl border border-violet-200 bg-white hover:bg-violet-50 px-3 py-2.5 text-left transition group">
@@ -155,7 +155,7 @@ export default function SimulateurClient() {
         </div>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         {/* ── LEFT ── */}
         <div className="space-y-4">
 
