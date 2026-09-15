@@ -51,7 +51,7 @@ function footer(doc: jsPDF, pageNum: number, totalPages: number) {
   doc.setFontSize(8);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(...GREY);
-  doc.text("IBIG SARL — RCCM CI-ABJ-2020-B-XXXXX — NIF XXXXXXXX — Abidjan, Plateau, Côte d'Ivoire", 14, y + 5);
+  doc.text("IBIG SARL — RCCM CI-ABJ-2020-B-XXXXX — NIF XXXXXXXX — Abidjan, Cocody Riviera Palmeraie, Côte d'Ivoire", 14, y + 5);
   doc.text(`Page ${pageNum} / ${totalPages}`, 196, y + 5, { align: "right" });
   doc.setTextColor(...DARK);
 }
@@ -131,7 +131,7 @@ export function generateContratPDF(data: ContratData): Buffer {
   doc.text("1.1  La Société", 16, y);
   y += 5.5;
   y = kv(doc, y, "Dénomination :", "IBIG SARL");
-  y = kv(doc, y, "Siège social :", "Abidjan, Plateau, Côte d'Ivoire");
+  y = kv(doc, y, "Siège social :", "Abidjan, Cocody Riviera Palmeraie, Côte d'Ivoire");
   y = kv(doc, y, "Programme :", "IBIG PARTNERS — www.ibigpartners.com");
   y += 2;
 

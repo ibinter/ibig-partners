@@ -33,10 +33,10 @@ export default async function ContratPage() {
       <Card>
         <div className="rounded-xl border border-slate-200 bg-slate-50 p-6 text-sm text-slate-700 space-y-4 max-h-[60vh] overflow-y-auto">
           <h2 className="text-base font-bold text-slate-900 text-center">CONTRAT DE PARTENARIAT AFFILIÉ — IBIG PARTNERS</h2>
-          <p className="text-center text-xs text-slate-500">IBIG SARL · Abidjan, Plateau, Côte d'Ivoire · www.ibigpartners.com</p>
+          <p className="text-center text-xs text-slate-500">IBIG SARL · Abidjan, Cocody Riviera Palmeraie, Côte d'Ivoire · www.ibigpartners.com</p>
 
           <h3 className="font-semibold text-slate-900">Article 1 — Parties au contrat</h3>
-          <p><strong>La Société :</strong> IBIG SARL, siège social à Abidjan, Plateau, Côte d'Ivoire, exploitant le programme d'affiliation IBIG PARTNERS.<br />
+          <p><strong>La Société :</strong> IBIG SARL, siège social à Abidjan, Cocody Riviera Palmeraie, Côte d'Ivoire, exploitant le programme d'affiliation IBIG PARTNERS.<br />
           <strong>Le Partenaire :</strong> toute personne physique ou morale ayant soumis un dossier KYC et dont le compte a été approuvé par IBIG SARL.</p>
 
           <h3 className="font-semibold text-slate-900">Article 2 — Déclarations et garanties du Partenaire</h3>
