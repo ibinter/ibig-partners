@@ -87,8 +87,8 @@ export function ShareButtons({ url, title, description }: ShareButtonsProps) {
   ];
 
   return (
-    <div className="rounded-3xl bg-white shadow-sm border border-slate-100 p-6">
-      <div className="flex items-center gap-3 mb-5">
+    <div className="rounded-2xl sm:rounded-3xl bg-white shadow-sm border border-slate-100 p-4 sm:p-6">
+      <div className="flex items-center gap-3 mb-4">
         <span className="text-2xl">🔗</span>
         <h2 className="text-base font-extrabold text-slate-900">Partager cette offre</h2>
       </div>

@@ -347,14 +347,14 @@ export default async function OffrePage({
 
             {/* Description */}
             {product.description && (
-              <div className="rounded-3xl bg-white shadow-sm border border-slate-100 overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
+              <div className="rounded-2xl sm:rounded-3xl bg-white shadow-sm border border-slate-100 overflow-hidden">
+                <div className="px-4 sm:px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
                   <span className="text-xl">{isCourse ? "🎓" : isSoftware ? "⚙️" : isService ? "🤝" : "📦"}</span>
                   <h2 className="text-sm font-extrabold text-slate-800">
                     {isCourse ? "À propos de cette formation" : isSoftware ? "À propos de ce logiciel" : isService ? "À propos de cette prestation" : "À propos de cette offre"}
                   </h2>
                 </div>
-                <div className="px-6 py-5">
+                <div className="px-4 sm:px-6 py-4">
                   <p className="text-sm text-slate-600 leading-relaxed">{product.description}</p>
                 </div>
               </div>
@@ -362,16 +362,16 @@ export default async function OffrePage({
 
             {/* Points clés */}
             {bullets.length > 0 && (
-              <div className="rounded-3xl bg-white shadow-sm border border-slate-100 overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
+              <div className="rounded-2xl sm:rounded-3xl bg-white shadow-sm border border-slate-100 overflow-hidden">
+                <div className="px-4 sm:px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
                   <span className="text-xl">✨</span>
                   <h2 className="text-sm font-extrabold text-slate-800">Ce que vous allez obtenir</h2>
                 </div>
                 <ul className="divide-y divide-slate-50">
                   {bullets.map((b, i) => (
-                    <li key={i} className="flex items-start gap-4 px-6 py-4 hover:bg-slate-50/60 transition">
+                    <li key={i} className="flex items-start gap-3 px-4 sm:px-6 py-3.5 hover:bg-slate-50/60 transition">
                       <span
-                        className="shrink-0 mt-0.5 w-6 h-6 rounded-full flex items-center justify-center text-white text-[11px] font-extrabold shadow-sm"
+                        className="shrink-0 mt-0.5 w-5 h-5 rounded-full flex items-center justify-center text-white text-[10px] font-extrabold shadow-sm"
                         style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accentDark})` }}
                       >
                         ✓
@@ -385,58 +385,58 @@ export default async function OffrePage({
 
             {/* Tarifs formations */}
             {isCourse && product.price > 0 && (
-              <div className="rounded-3xl bg-white shadow-sm border border-slate-100 overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
+              <div className="rounded-2xl sm:rounded-3xl bg-white shadow-sm border border-slate-100 overflow-hidden">
+                <div className="px-4 sm:px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
                   <span className="text-xl">💰</span>
                   <h2 className="text-sm font-extrabold text-slate-800">Tarifs & Modalités</h2>
                 </div>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
+                  <table className="w-full text-xs sm:text-sm">
                     <thead>
                       <tr style={{ background: theme.light }}>
-                        <th className="text-left px-6 py-3 text-xs font-extrabold uppercase tracking-wide text-slate-500">Modalité</th>
-                        <th className="text-right px-4 py-3 text-xs font-extrabold uppercase tracking-wide text-slate-500">💻 En ligne</th>
-                        <th className="text-right px-6 py-3 text-xs font-extrabold uppercase tracking-wide text-slate-500">🏛️ Présentiel</th>
+                        <th className="text-left px-3 sm:px-6 py-3 text-[10px] sm:text-xs font-extrabold uppercase tracking-wide text-slate-500">Modalité</th>
+                        <th className="text-right px-2 sm:px-4 py-3 text-[10px] sm:text-xs font-extrabold uppercase tracking-wide text-slate-500">💻 En ligne</th>
+                        <th className="text-right px-3 sm:px-6 py-3 text-[10px] sm:text-xs font-extrabold uppercase tracking-wide text-slate-500">🏛️ Présentiel</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-50">
                       {(() => {
                         const r5 = (x: number) => Math.round(x / 5000) * 5000;
                         const pres = r5(product.price * 16000 / 11250);
-                        const fmt = (n: number) => n.toLocaleString("fr-FR") + " FCFA";
+                        const fmt = (n: number) => n.toLocaleString("fr-FR") + " F";
                         return [
-                          { icon: "🖥️", label: "E-learning (à votre rythme)", ligne: fmt(r5(product.price * 0.50)), presentiel: "—", highlight: false },
-                          { icon: "👤", label: "Individuel (en direct)", ligne: fmt(product.price), presentiel: fmt(pres), highlight: true },
-                          { icon: "👥", label: "Groupe 3–5 pers / pers", ligne: fmt(r5(product.price * 0.70)), presentiel: fmt(r5(pres * 0.70)), highlight: false },
-                          { icon: "👥", label: "Groupe 6–10 pers / pers", ligne: fmt(r5(product.price * 0.55)), presentiel: fmt(r5(pres * 0.55)), highlight: false },
-                          { icon: "🏢", label: "Groupe 10+ pers / pers", ligne: fmt(r5(product.price * 0.45)), presentiel: fmt(r5(pres * 0.45)), highlight: false },
+                          { icon: "🖥️", label: "E-learning", ligne: fmt(r5(product.price * 0.50)), presentiel: "—", highlight: false },
+                          { icon: "👤", label: "Individuel", ligne: fmt(product.price), presentiel: fmt(pres), highlight: true },
+                          { icon: "👥", label: "Groupe 3–5", ligne: fmt(r5(product.price * 0.70)), presentiel: fmt(r5(pres * 0.70)), highlight: false },
+                          { icon: "👥", label: "Groupe 6–10", ligne: fmt(r5(product.price * 0.55)), presentiel: fmt(r5(pres * 0.55)), highlight: false },
+                          { icon: "🏢", label: "Groupe 10+", ligne: fmt(r5(product.price * 0.45)), presentiel: fmt(r5(pres * 0.45)), highlight: false },
                         ];
                       })().map((row) => (
                         <tr key={row.label} className={`hover:bg-slate-50/80 transition ${row.highlight ? "font-semibold" : ""}`} style={row.highlight ? { background: theme.light } : {}}>
-                          <td className="px-6 py-3.5 text-slate-700"><span className="mr-2">{row.icon}</span>{row.label}</td>
-                          <td className="px-4 py-3.5 text-right font-bold text-slate-900">{row.ligne}</td>
-                          <td className="px-6 py-3.5 text-right font-bold text-slate-900">{row.presentiel}</td>
+                          <td className="px-3 sm:px-6 py-3 text-slate-700"><span className="mr-1">{row.icon}</span>{row.label}</td>
+                          <td className="px-2 sm:px-4 py-3 text-right font-bold text-slate-900 tabular-nums">{row.ligne}</td>
+                          <td className="px-3 sm:px-6 py-3 text-right font-bold text-slate-900 tabular-nums">{row.presentiel}</td>
                         </tr>
                       ))}
                       <tr className="border-t-2 border-slate-100" style={{ background: theme.light }}>
-                        <td className="px-6 py-3 text-slate-700 font-medium"><span className="mr-2">🌍</span>Intra-entreprise / International</td>
-                        <td className="px-4 py-3 text-right text-slate-500 italic font-medium" colSpan={2}>Sur devis</td>
+                        <td className="px-3 sm:px-6 py-3 text-slate-700 font-medium"><span className="mr-1">🌍</span>Intra / Intl.</td>
+                        <td className="px-2 py-3 text-right text-slate-500 italic font-medium" colSpan={2}>Sur devis</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
-                <p className="px-6 py-3 text-[11px] text-slate-400 italic border-t border-slate-50">* Tarifs indicatifs. Contactez-nous pour un devis personnalisé selon votre profil et le nombre de participants.</p>
+                <p className="px-4 sm:px-6 py-3 text-[10px] text-slate-400 italic border-t border-slate-50">* Tarifs indicatifs — devis personnalisé sur demande.</p>
               </div>
             )}
 
             {/* Public cible */}
             {audience && (
-              <div className="rounded-3xl bg-white shadow-sm border border-slate-100 overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
+              <div className="rounded-2xl sm:rounded-3xl bg-white shadow-sm border border-slate-100 overflow-hidden">
+                <div className="px-4 sm:px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
                   <span className="text-xl">🎯</span>
                   <h2 className="text-sm font-extrabold text-slate-800">Pour qui ?</h2>
                 </div>
-                <div className="px-6 py-5">
+                <div className="px-4 sm:px-6 py-4">
                   <p className="text-sm text-slate-600 leading-relaxed">{audience}</p>
                 </div>
               </div>
@@ -444,14 +444,14 @@ export default async function OffrePage({
 
             {/* Ce qui est inclus */}
             {includes.length > 0 && (
-              <div className="rounded-3xl bg-white shadow-sm border border-slate-100 overflow-hidden">
-                <div className="px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
+              <div className="rounded-2xl sm:rounded-3xl bg-white shadow-sm border border-slate-100 overflow-hidden">
+                <div className="px-4 sm:px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
                   <span className="text-xl">📦</span>
                   <h2 className="text-sm font-extrabold text-slate-800">Ce qui est inclus</h2>
                 </div>
-                <ul className="grid sm:grid-cols-2 gap-3 p-6">
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 p-4 sm:p-6">
                   {includes.map((item, i) => (
-                    <li key={i} className="flex items-start gap-3 rounded-2xl p-3.5 border border-slate-100 bg-slate-50/50">
+                    <li key={i} className="flex items-start gap-3 rounded-xl p-3 border border-slate-100 bg-slate-50/50">
                       <span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-white text-[10px] font-extrabold mt-0.5"
                         style={{ background: `linear-gradient(135deg, ${theme.accent}, ${theme.accentDark})` }}>✓</span>
                       <span className="text-sm text-slate-700 font-medium">{item}</span>
