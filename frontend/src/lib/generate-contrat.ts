@@ -378,7 +378,36 @@ export function generateContratPDF(data: ContratData): Buffer {
   );
   y += 4;
 
-  y = sectionTitle(doc, y, "ARTICLE 14 — DROIT APPLICABLE ET JURIDICTION COMPÉTENTE");
+  y = sectionTitle(doc, y, "ARTICLE 14 — RENONCIATION AUX RECOURS CONTRE IBIG SARL");
+
+  doc.setFillColor(255, 243, 243);
+  doc.setDrawColor(220, 38, 38);
+  doc.setLineWidth(0.4);
+  doc.rect(14, y, 182, 38, "FD");
+  doc.setLineWidth(0.2);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.setTextColor(185, 28, 28);
+  doc.text("CLAUSE DE NON-RECOURS — LU ET ACCEPTÉ EXPRESSÉMENT", 105, y + 6, { align: "center" });
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8.5);
+  const renoncLines = doc.splitTextToSize(
+    "Le Partenaire reconnaît expressément et irrévocablement qu'IBIG SARL dispose d'un pouvoir " +
+    "discrétionnaire absolu pour : (a) suspendre ou fermer tout compte, à tout moment, sans justification " +
+    "ni préavis, en cas de suspicion de fraude, d'inactivité prolongée ou de comportement contraire aux " +
+    "intérêts du programme ; (b) modifier unilatéralement les taux de commission, les règles du programme " +
+    "ou les conditions d'accès, avec un préavis de 15 jours ; (c) refuser tout paiement dont la légitimité " +
+    "est douteuse, pendant la durée de l'enquête interne. " +
+    "Le Partenaire renonce expressément à tout recours judiciaire ou extrajudiciaire contre IBIG SARL " +
+    "pour les décisions prises dans ce cadre, sauf en cas de faute lourde avérée d'IBIG SARL.",
+    174,
+  ) as string[];
+  doc.setTextColor(120, 20, 20);
+  doc.text(renoncLines, 16, y + 13);
+  doc.setDrawColor(200, 200, 200);
+  y += 43;
+
+  y = sectionTitle(doc, y, "ARTICLE 16 — DROIT APPLICABLE ET JURIDICTION COMPÉTENTE");
   y = paragraph(doc, y,
     "Le présent contrat est régi exclusivement par le droit ivoirien. Tout litige sera soumis " +
     "en premier lieu à une tentative de règlement amiable (30 jours). À défaut, les parties " +
@@ -387,7 +416,7 @@ export function generateContratPDF(data: ContratData): Buffer {
   );
   y += 4;
 
-  y = sectionTitle(doc, y, "ARTICLE 15 — ACCEPTATION ET VALEUR CONTRACTUELLE");
+  y = sectionTitle(doc, y, "ARTICLE 17 — ACCEPTATION ET VALEUR CONTRACTUELLE");
   y = paragraph(doc, y,
     "En soumettant son dossier KYC et en activant son compte IBIG PARTNERS, le Partenaire " +
     "reconnaît avoir lu, compris et accepté sans réserve l'intégralité des dispositions du " +
