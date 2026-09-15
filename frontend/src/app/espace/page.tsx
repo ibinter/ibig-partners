@@ -415,35 +415,35 @@ export default async function DashboardPage({
           <Link
             key={a.href}
             href={a.href}
-            className={`flex flex-col items-center gap-1.5 rounded-2xl px-2 py-3 text-center text-xs font-semibold transition-colors ${a.color}`}
+            className={`flex flex-col items-center gap-1.5 rounded-2xl px-1 py-3 text-center text-[10px] sm:text-xs font-semibold transition-colors ${a.color}`}
           >
-            <span className="text-2xl">{a.icon}</span>
-            <span className="leading-tight">{a.label}</span>
+            <span className="text-xl sm:text-2xl">{a.icon}</span>
+            <span className="leading-tight line-clamp-2">{a.label}</span>
           </Link>
         ))}
       </div>
 
       {/* ── 4 KPI cards ── */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 p-4 text-white shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wide text-blue-200">CA généré</p>
-          <p className="mt-1 text-2xl font-extrabold">{fcfa(summary.revenue)}</p>
-          <p className="mt-0.5 text-xs text-blue-300">{summary.confirmedSales} vente{summary.confirmedSales !== 1 ? "s" : ""} confirmée{summary.confirmedSales !== 1 ? "s" : ""}</p>
+        <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 p-4 text-white shadow-sm overflow-hidden">
+          <p className="text-xs font-semibold uppercase tracking-wide text-blue-200 truncate">CA généré</p>
+          <p className="mt-1 text-base sm:text-2xl font-extrabold truncate">{fcfa(summary.revenue)}</p>
+          <p className="mt-0.5 text-[11px] text-blue-300 truncate">{summary.confirmedSales} vente{summary.confirmedSales !== 1 ? "s" : ""} confirmée{summary.confirmedSales !== 1 ? "s" : ""}</p>
         </div>
-        <div className="rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-4 text-white shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wide text-amber-100">Commissions à venir</p>
-          <p className="mt-1 text-2xl font-extrabold">{fcfa(summary.payable)}</p>
-          <p className="mt-0.5 text-xs text-amber-100">en attente + validées</p>
+        <div className="rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-4 text-white shadow-sm overflow-hidden">
+          <p className="text-xs font-semibold uppercase tracking-wide text-amber-100 truncate">Commissions à venir</p>
+          <p className="mt-1 text-base sm:text-2xl font-extrabold truncate">{fcfa(summary.payable)}</p>
+          <p className="mt-0.5 text-[11px] text-amber-100">en attente + validées</p>
         </div>
-        <div className="rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 p-4 text-white shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-200">Commissions versées</p>
-          <p className="mt-1 text-2xl font-extrabold">{fcfa(summary.paid)}</p>
-          <p className="mt-0.5 text-xs text-emerald-200">total perçu</p>
+        <div className="rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 p-4 text-white shadow-sm overflow-hidden">
+          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-200 truncate">Commissions versées</p>
+          <p className="mt-1 text-base sm:text-2xl font-extrabold truncate">{fcfa(summary.paid)}</p>
+          <p className="mt-0.5 text-[11px] text-emerald-200">total perçu</p>
         </div>
-        <div className="rounded-2xl bg-gradient-to-br from-slate-700 to-slate-800 p-4 text-white shadow-sm">
+        <div className="rounded-2xl bg-gradient-to-br from-slate-700 to-slate-800 p-4 text-white shadow-sm overflow-hidden">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-300">Mon réseau</p>
           <p className="mt-1 text-2xl font-extrabold">{counts.reduce((a, b) => a + b, 0)}</p>
-          <p className="mt-0.5 text-xs text-slate-400">N1 : {counts[0]} · N2 : {counts[1]} · N3 : {counts[2]}</p>
+          <p className="mt-0.5 text-[11px] text-slate-400">N1 : {counts[0]} · N2 : {counts[1]} · N3 : {counts[2]}</p>
         </div>
       </div>
 
@@ -528,7 +528,7 @@ export default async function DashboardPage({
       </div>
 
       {/* ── Phase 8 : CP Wallet + Niveau + Score ── */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {/* CP Balance */}
         <div className="rounded-2xl bg-gradient-to-br from-violet-600 to-purple-700 p-4 text-white shadow-sm">
           <div className="flex items-center justify-between mb-2">
@@ -600,7 +600,7 @@ export default async function DashboardPage({
       </div>
 
       {/* ── Temps réel : ventes du jour + objectif mois + rang ── */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {/* Ventes aujourd'hui */}
         <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm flex items-center gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-rose-50 text-2xl">🔥</div>
