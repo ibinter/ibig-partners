@@ -293,7 +293,10 @@ export async function sendAccountApprovedEmail(opts: {
   to: string;
   firstName: string;
   code: string;
+  userId: string;
 }) {
+  const contratUrl = `${SITE}/api/contrat/${opts.userId}`;
+
   const tpl = await getDbTemplate("approbation");
   if (tpl) {
     const subject = tpl.subject
@@ -301,7 +304,8 @@ export async function sendAccountApprovedEmail(opts: {
       .replace(/\{\{code\}\}/g, opts.code);
     const bodyHtml = tpl.body
       .replace(/\{\{firstName\}\}/g, opts.firstName)
-      .replace(/\{\{code\}\}/g, opts.code);
+      .replace(/\{\{code\}\}/g, opts.code)
+      .replace(/\{\{contratUrl\}\}/g, contratUrl);
     await sendEmail({ to: opts.to, subject, html: layout(bodyHtml) });
     return;
   }
@@ -325,9 +329,24 @@ export async function sendAccountApprovedEmail(opts: {
       </p>
     </div>
 
-    <p style="color:#5b6577;font-size:14px;">
+    <p style="color:#5b6577;font-size:14px;margin:0 0 8px;">
       Votre code d'affiliation : <strong style="color:#0b5fff;">${opts.code}</strong>
     </p>
+
+    <div style="background:#eff6ff;border-radius:10px;padding:16px 20px;margin:20px 0;border:1px solid #bfdbfe;">
+      <p style="margin:0 0 8px;font-size:14px;font-weight:700;color:#1d4ed8;">
+        📄 Votre contrat de partenariat est disponible
+      </p>
+      <p style="margin:0 0 12px;font-size:13px;color:#1e40af;line-height:1.5;">
+        Téléchargez et conservez votre contrat signé électroniquement. Il récapitule
+        vos droits, vos taux de commission et les conditions du programme.
+      </p>
+      <a href="${contratUrl}"
+        style="display:inline-block;background:#1d4ed8;color:#fff;font-weight:700;font-size:13px;
+        padding:10px 24px;border-radius:8px;text-decoration:none;">
+        📥 Télécharger mon contrat (PDF)
+      </a>
+    </div>
 
     ${btn("Accéder à mon espace", `${SITE}/espace`)}
   `);

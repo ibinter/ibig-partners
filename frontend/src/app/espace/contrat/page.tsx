@@ -61,15 +61,25 @@ export default async function ContratPage() {
         </div>
 
         {contract?.confirmed ? (
-          <div className="mt-5 rounded-xl bg-emerald-50 border border-emerald-200 p-4 flex items-center gap-3">
-            <span className="text-2xl">✅</span>
-            <div>
-              <p className="font-semibold text-emerald-800">Contrat signé électroniquement</p>
-              <p className="text-xs text-emerald-600">
-                Signé le {new Date(contract.signedAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
-                {contract.ipAddress ? ` · IP: ${contract.ipAddress}` : ""}
-              </p>
+          <div className="mt-5 space-y-3">
+            <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-4 flex items-center gap-3">
+              <span className="text-2xl">✅</span>
+              <div>
+                <p className="font-semibold text-emerald-800">Contrat signé électroniquement</p>
+                <p className="text-xs text-emerald-600">
+                  Signé le {new Date(contract.signedAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                  {contract.ipAddress ? ` · IP: ${contract.ipAddress}` : ""}
+                </p>
+              </div>
             </div>
+            {user.verificationStatus === "VERIFIED" && (
+              <a
+                href={`/api/contrat/${user.id}`}
+                className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition shadow-sm"
+              >
+                📥 Télécharger mon contrat (PDF)
+              </a>
+            )}
           </div>
         ) : (
           <form action={signContract} className="mt-5 space-y-4">
