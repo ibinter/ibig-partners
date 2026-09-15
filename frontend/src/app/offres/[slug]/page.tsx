@@ -347,8 +347,8 @@ export default async function OffrePage({
 
             {/* Description */}
             {product.description && (
-              <div className="rounded-2xl sm:rounded-3xl bg-white shadow-sm border border-slate-100 overflow-hidden">
-                <div className="px-4 sm:px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
+              <div className="rounded-2xl sm:rounded-3xl bg-white shadow-sm border border-slate-100">
+                <div className="rounded-t-2xl sm:rounded-t-3xl px-4 sm:px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
                   <span className="text-xl">{isCourse ? "🎓" : isSoftware ? "⚙️" : isService ? "🤝" : "📦"}</span>
                   <h2 className="text-sm font-extrabold text-slate-800">
                     {isCourse ? "À propos de cette formation" : isSoftware ? "À propos de ce logiciel" : isService ? "À propos de cette prestation" : "À propos de cette offre"}
@@ -362,8 +362,8 @@ export default async function OffrePage({
 
             {/* Points clés */}
             {bullets.length > 0 && (
-              <div className="rounded-2xl sm:rounded-3xl bg-white shadow-sm border border-slate-100 overflow-hidden">
-                <div className="px-4 sm:px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
+              <div className="rounded-2xl sm:rounded-3xl bg-white shadow-sm border border-slate-100">
+                <div className="rounded-t-2xl sm:rounded-t-3xl px-4 sm:px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
                   <span className="text-xl">✨</span>
                   <h2 className="text-sm font-extrabold text-slate-800">Ce que vous allez obtenir</h2>
                 </div>
@@ -385,8 +385,8 @@ export default async function OffrePage({
 
             {/* Tarifs formations */}
             {isCourse && product.price > 0 && (
-              <div className="rounded-2xl sm:rounded-3xl bg-white shadow-sm border border-slate-100 overflow-hidden">
-                <div className="px-4 sm:px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
+              <div className="rounded-2xl sm:rounded-3xl bg-white shadow-sm border border-slate-100">
+                <div className="rounded-t-2xl sm:rounded-t-3xl px-4 sm:px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
                   <span className="text-xl">💰</span>
                   <h2 className="text-sm font-extrabold text-slate-800">Tarifs & Modalités</h2>
                 </div>
@@ -431,8 +431,8 @@ export default async function OffrePage({
 
             {/* Public cible */}
             {audience && (
-              <div className="rounded-2xl sm:rounded-3xl bg-white shadow-sm border border-slate-100 overflow-hidden">
-                <div className="px-4 sm:px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
+              <div className="rounded-2xl sm:rounded-3xl bg-white shadow-sm border border-slate-100">
+                <div className="rounded-t-2xl sm:rounded-t-3xl px-4 sm:px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
                   <span className="text-xl">🎯</span>
                   <h2 className="text-sm font-extrabold text-slate-800">Pour qui ?</h2>
                 </div>
@@ -444,8 +444,8 @@ export default async function OffrePage({
 
             {/* Ce qui est inclus */}
             {includes.length > 0 && (
-              <div className="rounded-2xl sm:rounded-3xl bg-white shadow-sm border border-slate-100 overflow-hidden">
-                <div className="px-4 sm:px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
+              <div className="rounded-2xl sm:rounded-3xl bg-white shadow-sm border border-slate-100">
+                <div className="rounded-t-2xl sm:rounded-t-3xl px-4 sm:px-6 py-4 border-b border-slate-50 flex items-center gap-3" style={{ background: theme.light }}>
                   <span className="text-xl">📦</span>
                   <h2 className="text-sm font-extrabold text-slate-800">Ce qui est inclus</h2>
                 </div>
