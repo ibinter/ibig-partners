@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/ui";
@@ -89,7 +89,7 @@ export default async function BadgesPage() {
       />
 
       {/* ── KPIs ── */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <div className="rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-4 text-white shadow-sm">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-100">Badges obtenus</p>
           <p className="mt-1 text-3xl font-extrabold">{usePlaceholders ? earnedReal.length : earnedCount}</p>

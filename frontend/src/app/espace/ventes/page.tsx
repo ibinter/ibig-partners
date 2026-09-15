@@ -80,30 +80,30 @@ export default async function EspaceVentesPage() {
 
       {/* ── 4 KPIs ── */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <div className="rounded-2xl bg-gradient-to-br from-slate-600 to-slate-700 p-4 text-white shadow-sm">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-300">Total déclarations</p>
+        <div className="rounded-2xl bg-gradient-to-br from-slate-600 to-slate-700 p-4 text-white shadow-sm overflow-hidden">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-300 truncate">Total déclarations</p>
           <p className="mt-1 text-2xl font-extrabold">{total}</p>
           <p className="mt-0.5 text-xs text-slate-400">toutes déclarations</p>
         </div>
-        <div className="rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-4 text-white shadow-sm">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-100">En attente</p>
+        <div className="rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 p-4 text-white shadow-sm overflow-hidden">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-100 truncate">En attente</p>
           <p className="mt-1 text-2xl font-extrabold">{pending}</p>
           <p className="mt-0.5 text-xs text-amber-100">validation sous 24-48h</p>
         </div>
-        <div className="rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 p-4 text-white shadow-sm">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-emerald-200">Confirmées</p>
+        <div className="rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-600 p-4 text-white shadow-sm overflow-hidden">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-emerald-200 truncate">Confirmées</p>
           <p className="mt-1 text-2xl font-extrabold">{confirmed}</p>
-          <p className="mt-0.5 text-xs text-emerald-200">{fcfa(totalAmount)} encaissés</p>
+          <p className="mt-0.5 text-[11px] text-emerald-200 truncate">{fcfa(totalAmount)} encaissés</p>
         </div>
-        <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 p-4 text-white shadow-sm">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-blue-200">Commissions N1</p>
-          <p className="mt-1 text-2xl font-extrabold">{fcfa(commN1)}</p>
+        <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 p-4 text-white shadow-sm overflow-hidden">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-blue-200 truncate">Commissions N1</p>
+          <p className="mt-1 text-base sm:text-2xl font-extrabold truncate">{fcfa(commN1)}</p>
           <p className="mt-0.5 text-xs text-blue-200">sur ventes directes</p>
         </div>
       </div>
 
       {/* ── Canaux ── */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {[
           {
             icon: "🔗",
@@ -200,7 +200,7 @@ export default async function EspaceVentesPage() {
           {/* Infos client */}
           <div>
             <p className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3">Informations client</p>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <Field label="Nom complet du client *" name="customerName" required placeholder="Ex : Kofi Asante" />
               <Field label="Téléphone client" name="customerPhone" placeholder="+225 07 01 02 03" />
               <Field label="E-mail client" name="customerEmail" type="email" placeholder="Pour son reçu (optionnel)" />

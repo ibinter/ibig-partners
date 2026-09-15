@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/ui";
@@ -196,7 +196,7 @@ export default async function AcademiePage({
       {/* ── Ressources rapides ── */}
       <div>
         <h2 className="text-base font-bold text-slate-800 mb-3">⚡ Ressources rapides</h2>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {RESSOURCES.map((r) => (
             <Link key={r.label} href={r.href} className={`rounded-2xl border p-4 flex flex-col gap-2 hover:shadow-md transition-all ${r.color}`}>
               <span className="text-2xl">{r.icon}</span>

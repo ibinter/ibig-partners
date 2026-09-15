@@ -1,4 +1,4 @@
-import { requireUser } from "@/lib/auth";
+﻿import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { fcfa, formatDate } from "@/lib/format";
 import { PageHeader } from "@/components/ui";
@@ -54,7 +54,7 @@ export default async function CommissionsPage() {
       />
 
       {/* ── KPIs globaux ── */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {[
           { label: "Total cumulé", value: fcfa(grandTotal), color: "text-slate-700", bg: "bg-white" },
           { label: "Commissions payées", value: fcfa(grandPaid), color: "text-emerald-600", bg: "bg-emerald-50" },
@@ -70,7 +70,7 @@ export default async function CommissionsPage() {
       {/* ── Répartition par niveau ── */}
       <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
         <h3 className="font-semibold text-slate-800 text-sm mb-4">Répartition multi-niveaux</h3>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {byLevel.filter((b) => b.count > 0).map((b) => (
             <div key={b.lvl} className={`rounded-xl p-4 ${LEVEL_COLOR[b.lvl]?.split(" ")[0] ?? "bg-slate-50"}`}>
               <div className="flex items-center gap-2 mb-2">

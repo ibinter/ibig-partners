@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/format";
@@ -283,7 +283,7 @@ export default async function SupportPage() {
       {/* ── Contact direct ── */}
       <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
         <h3 className="font-semibold text-sm text-slate-800 mb-3">Autres canaux de contact</h3>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {[
             { icon: "💬", label: "WhatsApp Support", sub: "Réponse sous 24h", href: "https://wa.me/2250701000000", ext: true },
             { icon: "📧", label: "Email",            sub: "support@ibigpartners.com", href: "mailto:support@ibigpartners.com", ext: true },

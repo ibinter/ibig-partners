@@ -265,7 +265,7 @@ export default async function ObjectifsPage() {
         <h2 className="font-semibold text-slate-800 text-sm mb-3">
           💡 Conseils pour progresser
         </h2>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           {tips.map((tip) => (
             <Card key={tip.title} className="p-4">
               <div className="flex items-start gap-3">

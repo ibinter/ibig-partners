@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { fcfa } from "@/lib/format";
@@ -426,7 +426,7 @@ export default async function FormationPage() {
       <div id="systeme">
         <h2 className="text-base font-bold text-slate-800 mb-1">Le système 3 niveaux</h2>
         <p className="text-sm text-slate-500 mb-4">Vous gagnez sur vos ventes directes <strong>ET</strong> sur celles de vos filleuls (N2) et leurs filleuls (N3).</p>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {[
             { level: "Niveau 1 (N1)", who: "Vos ventes directes", rate: "Taux plein", color: "from-blue-600 to-blue-700", ex: "Vous vendez → vous touchez le taux maximum" },
             { level: "Niveau 2 (N2)", who: "Ventes de vos filleuls", rate: "50% du taux N1", color: "from-violet-500 to-violet-700", ex: "Votre filleul vend → vous touchez la moitié de votre taux N1" },
