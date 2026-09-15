@@ -169,96 +169,123 @@ export default async function EspaceVentesPage() {
 
       {/* ── Formulaire déclaration ── */}
       <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
-        <div className="bg-gradient-to-r from-blue-600 to-violet-700 px-5 py-4">
-          <h3 className="font-bold text-white">📝 Déclarer une vente manuelle</h3>
-          <p className="text-xs text-blue-100 mt-0.5">
-            Indiquez les informations du client et une preuve de paiement pour accélérer la validation (24–48h).
-          </p>
+        <div className="bg-gradient-to-r from-blue-600 to-violet-700 px-5 py-4 flex items-center justify-between">
+          <div>
+            <h3 className="font-bold text-white">📝 Déclarer une vente</h3>
+            <p className="text-xs text-blue-100 mt-0.5">3 champs · validation sous 24–48h</p>
+          </div>
+          <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-bold text-white">
+            {3 - pending > 0 ? `${3 - pending} déclaration${3 - pending > 1 ? "s" : ""} restante${3 - pending > 1 ? "s" : ""}` : "Limite atteinte"}
+          </span>
         </div>
 
-        <form action={declareSale} className="p-5 space-y-5">
-          {/* Produit + Montant */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Field label="Produit vendu *" name="productId">
-              <select name="productId" required className={selectCls}>
-                <option value="">— Choisir le produit —</option>
-                {products.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.branch.name} · {p.name} — {fcfa(p.price)}
-                  </option>
-                ))}
-              </select>
-            </Field>
-            <Field
-              label="Montant encaissé (FCFA)"
-              name="amount"
+        <form action={declareSale} className="p-5 space-y-4">
+
+          {/* ── Champ 1 : Produit ── */}
+          <div>
+            <label className="block text-xs font-bold text-slate-600 mb-1.5">
+              1 · Produit vendu <span className="text-rose-500">*</span>
+            </label>
+            <select name="productId" required className={selectCls}>
+              <option value="">— Choisir le produit —</option>
+              {products.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.branch.name} · {p.name}{p.price > 0 ? ` — ${fcfa(p.price)}` : " — Sur devis"}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* ── Champ 2 : Montant ── */}
+          <div>
+            <label className="block text-xs font-bold text-slate-600 mb-1.5">
+              2 · Montant encaissé (FCFA)
+              <span className="ml-1 text-[10px] font-normal text-slate-400">· Laisser vide = prix officiel du produit</span>
+            </label>
+            <input
               type="number"
-              placeholder="Laisser vide = prix du produit"
+              name="amount"
+              min="0"
+              placeholder="Auto-rempli selon le produit"
+              className={selectCls}
             />
           </div>
 
-          {/* Infos client */}
+          {/* ── Champ 3 : Preuve ── */}
           <div>
-            <p className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3">Informations client</p>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <Field label="Nom complet du client *" name="customerName" required placeholder="Ex : Kofi Asante" />
-              <Field label="Téléphone client" name="customerPhone" placeholder="+225 07 01 02 03" />
-              <Field label="E-mail client" name="customerEmail" type="email" placeholder="Pour son reçu (optionnel)" />
-            </div>
-          </div>
-
-          {/* Canal + Preuve texte */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Field label="Canal de vente" name="channel">
-              <select name="channel" className={selectCls}>
-                <option value="WhatsApp">WhatsApp</option>
-                <option value="Téléphone">Téléphone</option>
-                <option value="Abonnement SaaS direct">Abonnement SaaS direct</option>
-                <option value="Présentiel">Présentiel</option>
-                <option value="Autre">Autre</option>
-              </select>
-            </Field>
-            <Field
-              label="Référence / preuve de paiement"
-              name="proofNote"
-              placeholder="Ex : Orange Money réf. OM123456 — 12/08"
-            />
-          </div>
-
-          {/* Preuve de paiement — upload ou lien */}
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3">Preuve de paiement</p>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <label className="block text-xs font-bold text-slate-600 mb-1.5">
+              3 · Preuve de paiement <span className="text-rose-500">*</span>
+              <span className="ml-1 text-[10px] font-normal text-slate-400">· capture écran OU référence transaction</span>
+            </label>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <FileUpload
                 name="proofUrl"
                 folder="ibig-ventes-preuves"
                 accept="image/jpeg,image/png,image/webp,application/pdf"
-                label="Uploader une capture / reçu"
-                hint="JPEG, PNG ou PDF · max 10 Mo"
+                label="Photo / reçu"
+                hint="JPEG, PNG, PDF · max 10 Mo"
                 preview="image"
               />
-              <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5">
-                  Ou coller un lien (Google Drive, WhatsApp…)
-                </label>
+              <div className="flex flex-col gap-2">
+                <input
+                  type="text"
+                  name="proofNote"
+                  placeholder="Ex : Orange Money réf. OM123456 — 12/08"
+                  className={selectCls}
+                />
                 <input
                   type="url"
                   name="proofUrlAlt"
-                  placeholder="https://drive.google.com/..."
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  placeholder="Ou lien Google Drive / WhatsApp…"
+                  className={selectCls}
                 />
-                <p className="text-[11px] text-slate-400 mt-1">Si vous uploadez une capture, ce champ est ignoré.</p>
               </div>
             </div>
           </div>
 
+          {/* ── Infos optionnelles ── */}
+          <details className="group rounded-xl border border-slate-100 bg-slate-50 overflow-hidden">
+            <summary className="flex cursor-pointer items-center justify-between px-4 py-3 text-xs font-semibold text-slate-500 hover:text-slate-700 select-none list-none">
+              <span>+ Informations supplémentaires (optionnel — accélère la validation)</span>
+              <span className="text-slate-300 group-open:hidden">▼</span>
+              <span className="text-slate-300 hidden group-open:inline">▲</span>
+            </summary>
+            <div className="px-4 pb-4 pt-1 space-y-3 border-t border-slate-100">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 mb-1">Nom du client</label>
+                  <input type="text" name="customerName" placeholder="Ex : Kofi Asante" className={selectCls} />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 mb-1">Téléphone</label>
+                  <input type="tel" name="customerPhone" placeholder="+225 07 01 02 03" className={selectCls} />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-500 mb-1">E-mail</label>
+                  <input type="email" name="customerEmail" placeholder="client@email.com" className={selectCls} />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 mb-1">Canal de vente</label>
+                <select name="channel" className={selectCls}>
+                  <option value="WhatsApp">WhatsApp</option>
+                  <option value="Téléphone">Téléphone</option>
+                  <option value="Abonnement SaaS direct">Abonnement SaaS direct</option>
+                  <option value="Présentiel">Présentiel</option>
+                  <option value="Autre">Autre</option>
+                </select>
+              </div>
+            </div>
+          </details>
+
           <div className="flex items-center justify-between gap-4 pt-1">
-            <p className="text-xs text-rose-600 font-semibold">
-              ⚠️ Une preuve de paiement est obligatoire. Toute déclaration sans preuve valide sera rejetée.
+            <p className="text-[11px] text-slate-400 leading-relaxed">
+              Toute déclaration sans preuve valide sera rejetée automatiquement.
             </p>
             <button
               type="submit"
-              className="shrink-0 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-6 py-2.5 text-sm font-bold text-white shadow hover:from-blue-700 hover:to-violet-700 transition"
+              disabled={pending >= 3}
+              className="shrink-0 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-7 py-2.5 text-sm font-bold text-white shadow hover:from-blue-700 hover:to-violet-700 transition disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Soumettre →
             </button>

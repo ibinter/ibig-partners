@@ -102,6 +102,7 @@ export default async function EspaceLayout({
     { href: "/espace/vip",                       label: "Programme VIP",        icon: "💎", group: "Compte" },
     { href: "/espace/temoignage",                label: "Mon témoignage",       icon: "⭐", group: "Compte" },
     { href: "/espace/leaderboard-optin",         label: "Classement public",    icon: "🏅", group: "Compte" },
+    { href: "/espace/webhooks",                   label: "Webhook / API",        icon: "🔌", group: "Compte" },
     { href: "/espace/support",                   label: "Support",              icon: "🎫", group: "Compte" },
 
     // Ressources

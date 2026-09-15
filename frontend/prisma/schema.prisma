@@ -111,6 +111,10 @@ model User {
 
   preferredCurrency String @default("FCFA")
 
+  // Webhook sortant — notifications vers CRM/Zapier du partenaire
+  webhookUrl    String?
+  webhookSecret String?
+
   createdAt DateTime @default(now())
 }
 

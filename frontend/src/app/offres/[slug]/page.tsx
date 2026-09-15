@@ -30,19 +30,21 @@ export async function generateMetadata({
   const baseUrl   = process.env.NEXT_PUBLIC_SITE_URL || "https://ibigpartners.com";
   const title     = product.name;
   const tagline   = md.tagline || product.description?.slice(0, 160) || product.name;
-  const imageUrl  = md.imageUrl || undefined;
   const canonical = ref ? `${baseUrl}/offres/${slug}?ref=${ref}` : `${baseUrl}/offres/${slug}`;
+  // Priorité : image custom du produit, sinon image OG dynamique générée par Next.js
+  const imageUrl  = md.imageUrl || `${baseUrl}/offres/${slug}/opengraph-image`;
 
   return {
     title: `${title} — IBIG PARTNERS`,
     description: tagline,
+    alternates: { canonical: `${baseUrl}/offres/${slug}` },
     openGraph: {
       title, description: tagline, url: canonical,
       siteName: "IBIG PARTNERS",
-      images: imageUrl ? [{ url: imageUrl }] : [],
+      images: [{ url: imageUrl, width: 1200, height: 630, alt: title }],
       type: "website",
     },
-    twitter: { card: "summary_large_image", title, description: tagline, images: imageUrl ? [imageUrl] : [] },
+    twitter: { card: "summary_large_image", title, description: tagline, images: [imageUrl] },
   };
 }
 
@@ -69,7 +71,6 @@ const BRANCH_THEME: Record<string, { gradient: string; gradientDark: string; acc
   "ibig-conseil-plus":   { gradient: "from-slate-600 to-slate-800",   gradientDark: "from-slate-700 to-slate-900",   accent: "#475569", accentDark: "#334155", light: "#f8fafc", emoji: "📋" },
   "ibig-market":         { gradient: "from-rose-500 to-pink-700",     gradientDark: "from-rose-700 to-pink-900",     accent: "#f43f5e", accentDark: "#e11d48", light: "#fff1f2", emoji: "🛒" },
   "ibig-multiservices":  { gradient: "from-orange-400 to-amber-600",  gradientDark: "from-orange-600 to-amber-800",  accent: "#f97316", accentDark: "#ea580c", light: "#fff7ed", emoji: "🛠️" },
-  "ibig-financement":    { gradient: "from-emerald-500 to-green-700", gradientDark: "from-emerald-700 to-green-900", accent: "#059669", accentDark: "#047857", light: "#ecfdf5", emoji: "💰" },
   "ibig-emploi-talents": { gradient: "from-fuchsia-500 to-purple-700",gradientDark: "from-fuchsia-700 to-purple-900",accent: "#a21caf", accentDark: "#86198f", light: "#fdf4ff", emoji: "👥" },
 };
 

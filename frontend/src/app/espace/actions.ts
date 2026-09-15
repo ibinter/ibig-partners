@@ -243,7 +243,8 @@ export async function declareSale(formData: FormData) {
   const proofUrl    = proofUrlUp || proofUrlAlt;
   const amountRaw = Number(formData.get("amount"));
 
-  if (!productId || !customerName) return;
+  if (!productId) return;
+  const name = customerName || "—";
 
   // La preuve (texte ou image) est obligatoire pour éviter les fausses déclarations.
   if (!proofNote && !proofUrl) return;
@@ -265,7 +266,7 @@ export async function declareSale(formData: FormData) {
       reference: `VTE-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
       productId,
       sellerId: user.id,
-      customerName: `${customerName} [${channel}]`,
+      customerName: `${name} [${channel}]`,
       customerPhone: customerPhone || null,
       customerEmail: customerEmail || null,
       amount,

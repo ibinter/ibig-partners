@@ -7,6 +7,7 @@ import { COOKIE_TRACKING_DAYS, type PricingType } from "@/lib/constants";
 import { effectiveRate } from "@/lib/commissions";
 import LiensClient from "./liens-client";
 import UtmGenerator from "./utm-generator";
+import { LiensQuickCopy } from "./copy-button";
 
 export const dynamic = "force-dynamic";
 
@@ -105,6 +106,31 @@ export default async function LiensPage() {
           <p className="mt-0.5 text-xs text-violet-200">{branches.length} branche{branches.length !== 1 ? "s" : ""}</p>
         </div>
       </div>
+
+      {/* ── Quick copy : top 3 liens ── */}
+      {cards.length > 0 && (
+        <div className="rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-slate-50 p-4">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-blue-500 mb-3">⚡ Copie rapide — top produits</p>
+          <div className="space-y-2">
+            {cards.slice(0, 3).map((c) => (
+              <div key={c.id} className="flex items-center gap-3 rounded-xl bg-white border border-slate-100 shadow-sm px-3 py-2.5">
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-slate-800 truncate">{c.productName}</p>
+                  <p className="font-mono text-[10px] text-slate-400 truncate mt-0.5">{c.url}</p>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  {c.clicks > 0 && (
+                    <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
+                      {c.clicks} clics
+                    </span>
+                  )}
+                  <LiensQuickCopy url={c.url} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ── Conseil si aucun lien ── */}
       {links.length === 0 && (

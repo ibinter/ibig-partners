@@ -30,6 +30,7 @@ import {
 import { logAction } from "@/lib/audit";
 import { checkAndPromoteStatusAfter } from "@/lib/status";
 import { autoComputeMatches } from "@/app/admin/opportunites/matching-actions";
+import { sendWebhook } from "@/lib/webhook";
 
 // --- Partenaires ---
 export async function approvePartner(formData: FormData) {
@@ -262,6 +263,33 @@ export async function confirmSale(formData: FormData) {
         customerName: sale.customerName,
         reference: sale.reference,
       }),
+    );
+  }
+
+  // Webhook sortant vers le CRM du partenaire (si configuré)
+  const sellerWebhook = await (prisma as any).user.findUnique({
+    where: { id: sale.sellerId },
+    select: { webhookUrl: true, webhookSecret: true },
+  });
+  if (sellerWebhook?.webhookUrl) {
+    const commission = await prisma.commission.findFirst({
+      where: { saleId: sale.id, userId: sale.sellerId },
+      select: { amount: true, rate: true },
+    });
+    after(() =>
+      sendWebhook(sellerWebhook.webhookUrl, sellerWebhook.webhookSecret, {
+        event: "sale.confirmed",
+        timestamp: new Date().toISOString(),
+        data: {
+          saleId: sale.id,
+          productName: sale.product.name,
+          amount: sale.amount,
+          commissionAmount: commission?.amount ?? 0,
+          commissionRate: commission?.rate ?? 0,
+          customerName: sale.customerName,
+          confirmedAt: new Date().toISOString(),
+        },
+      }).catch(() => {}),
     );
   }
 

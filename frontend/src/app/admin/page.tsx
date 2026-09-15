@@ -50,6 +50,40 @@ export default async function AdminDashboard() {
     prisma.missionApplication.count({ where: { status: "PENDING" } }),
   ]);
 
+  // ── Funnel onboarding ce mois ──────────────────────────────────────────
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const [
+    inscritsMois,
+    contratSignesMois,
+    kycSoumisMois,
+    kycValidesMois,
+    sansContratJ3,
+    sansKycJ7,
+  ] = await Promise.all([
+    prisma.user.count({ where: { role: "PARTNER", createdAt: { gte: startOfMonth } } }),
+    prisma.contract.count({ where: { signedAt: { not: null }, createdAt: { gte: startOfMonth } } }),
+    (async () => { try { return await (prisma as any).verificationRequest.count({ where: { createdAt: { gte: startOfMonth } } }); } catch { return 0; } })(),
+    (async () => { try { return await (prisma as any).verificationRequest.count({ where: { status: "VERIFIED", createdAt: { gte: startOfMonth } } }); } catch { return 0; } })(),
+    // Sans contrat depuis 3+ jours
+    prisma.user.count({
+      where: {
+        role: "PARTNER",
+        createdAt: { lte: new Date(now.getTime() - 3 * 86400000) },
+        contract: null,
+      },
+    }),
+    // Sans KYC depuis 7+ jours
+    prisma.user.count({
+      where: {
+        role: "PARTNER",
+        createdAt: { lte: new Date(now.getTime() - 7 * 86400000) },
+        verificationStatus: "NONE",
+      },
+    }),
+  ]);
+
   const topSellers = await prisma.sale.groupBy({
     by: ["sellerId"],
     where: { status: "CONFIRMED" },
@@ -112,6 +146,80 @@ export default async function AdminDashboard() {
           accent="slate"
           icon="✅"
         />
+      </div>
+
+      {/* ── Funnel onboarding ce mois ── */}
+      <div className="mt-4 rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3">
+          <p className="text-sm font-semibold text-slate-800">Funnel onboarding — ce mois</p>
+          <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-500">{inscritsMois} inscrits</span>
+        </div>
+        <div className="grid grid-cols-2 gap-0 divide-x divide-slate-100 sm:grid-cols-4">
+          {[
+            {
+              label: "Inscrits",
+              value: inscritsMois,
+              pct: null,
+              icon: "🙋",
+              color: "text-blue-600",
+              bg: "bg-blue-50",
+            },
+            {
+              label: "Contrat signé",
+              value: contratSignesMois,
+              pct: inscritsMois > 0 ? Math.round((contratSignesMois / inscritsMois) * 100) : 0,
+              icon: "✍️",
+              color: "text-violet-600",
+              bg: "bg-violet-50",
+            },
+            {
+              label: "KYC soumis",
+              value: kycSoumisMois,
+              pct: inscritsMois > 0 ? Math.round((kycSoumisMois / inscritsMois) * 100) : 0,
+              icon: "📋",
+              color: "text-amber-600",
+              bg: "bg-amber-50",
+            },
+            {
+              label: "KYC validé",
+              value: kycValidesMois,
+              pct: kycSoumisMois > 0 ? Math.round((kycValidesMois / kycSoumisMois) * 100) : 0,
+              icon: "✅",
+              color: "text-emerald-600",
+              bg: "bg-emerald-50",
+            },
+          ].map((s, i) => (
+            <div key={s.label} className={`flex flex-col items-center py-5 px-4 ${i > 0 ? "border-t border-slate-100 sm:border-t-0" : ""}`}>
+              <span className={`flex h-9 w-9 items-center justify-center rounded-full text-base ${s.bg}`}>{s.icon}</span>
+              <p className={`mt-2 text-2xl font-extrabold ${s.color}`}>{s.value}</p>
+              <p className="text-xs text-slate-500 mt-0.5">{s.label}</p>
+              {s.pct !== null && (
+                <div className="mt-2 w-full">
+                  <div className="h-1.5 w-full rounded-full bg-slate-100">
+                    <div className="h-1.5 rounded-full bg-current transition-all" style={{ width: `${Math.min(s.pct, 100)}%`, color: s.color.replace("text-", "") }} />
+                  </div>
+                  <p className="mt-1 text-center text-[11px] font-semibold text-slate-400">{s.pct}%</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+        {/* Alertes relances */}
+        {(sansContratJ3 > 0 || sansKycJ7 > 0) && (
+          <div className="border-t border-slate-100 px-5 py-3 flex flex-wrap gap-3">
+            {sansContratJ3 > 0 && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-violet-50 border border-violet-200 px-3 py-1 text-xs font-semibold text-violet-700">
+                ✍️ {sansContratJ3} sans contrat depuis 3+ jours
+              </span>
+            )}
+            {sansKycJ7 > 0 && (
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200 px-3 py-1 text-xs font-semibold text-amber-700">
+                ⏳ {sansKycJ7} sans KYC depuis 7+ jours
+              </span>
+            )}
+            <span className="text-xs text-slate-400 self-center">→ relances automatiques actives</span>
+          </div>
+        )}
       </div>
 
       {/* Raccourcis d'action */}

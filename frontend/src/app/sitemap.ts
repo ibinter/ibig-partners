@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { prisma } from "@/lib/prisma";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL && process.env.NEXT_PUBLIC_SITE_URL.startsWith("https://")
@@ -30,12 +31,30 @@ const ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.S
   { path: "/en/cookies", priority: 0.2, changeFrequency: "yearly" },
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = new Date();
-  return ROUTES.map((r) => ({
+
+  const staticRoutes: MetadataRoute.Sitemap = ROUTES.map((r) => ({
     url: `${SITE_URL}${r.path}`,
     lastModified,
     changeFrequency: r.changeFrequency,
     priority: r.priority,
   }));
+
+  // Pages produits dynamiques — une entrée par produit actif
+  let productRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const products = await prisma.product.findMany({
+      where: { active: true },
+      select: { slug: true },
+    });
+    productRoutes = products.map((p) => ({
+      url: `${SITE_URL}/offres/${p.slug}`,
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    }));
+  } catch { /* Ne pas bloquer le build si la DB est inaccessible */ }
+
+  return [...staticRoutes, ...productRoutes];
 }
