@@ -230,18 +230,17 @@ export default async function OffrePage({
           }} />
         </div>
 
-        <div className="relative mx-auto max-w-4xl px-5 pt-8 pb-12">
+        <div className="relative mx-auto max-w-4xl px-4 sm:px-5 pt-6 sm:pt-8 pb-10 sm:pb-12">
 
           {/* Branche + type */}
-          <div className="flex items-center gap-2 mb-5 flex-wrap">
+          <div className="flex flex-wrap items-center gap-2 mb-5">
             <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-full bg-white/20 text-white border border-white/20">
               {theme.emoji} {product.branch.name}
             </span>
-            <span className="text-white/30">·</span>
             <span className="text-[11px] font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-white/10 text-white/70 border border-white/10">
               {PRICING_LABEL[product.pricingType] ?? product.pricingType}
             </span>
-            <span className="ml-auto text-[11px] font-extrabold px-3 py-1.5 rounded-full text-white border border-white/30 animate-pulse" style={{ background: "rgba(255,255,255,0.15)" }}>
+            <span className="text-[11px] font-extrabold px-3 py-1.5 rounded-full text-white border border-white/30 animate-pulse" style={{ background: "rgba(255,255,255,0.15)" }}>
               {urgencyText}
             </span>
           </div>
@@ -258,7 +257,7 @@ export default async function OffrePage({
           )}
 
           {/* Titre */}
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-white leading-tight tracking-tight mb-4" style={{ textShadow: "0 2px 20px rgba(0,0,0,0.2)" }}>
+          <h1 className="text-2xl sm:text-5xl font-extrabold text-white leading-tight tracking-tight mb-4" style={{ textShadow: "0 2px 20px rgba(0,0,0,0.2)" }}>
             {product.name}
           </h1>
 
@@ -273,16 +272,16 @@ export default async function OffrePage({
           <div className="flex flex-col sm:flex-row items-start sm:items-stretch gap-4">
             {/* Card prix — masquée pour les formations (tableau des tarifs suffit) */}
             {!isCourse && (
-              <div className="rounded-2xl bg-white/15 border border-white/25 backdrop-blur-sm px-6 py-5 min-w-[180px]">
+              <div className="rounded-2xl bg-white/15 border border-white/25 backdrop-blur-sm px-5 py-4 min-w-0 sm:min-w-[180px]">
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-white/50 mb-1">Prix de référence</p>
-                <p className="text-4xl font-extrabold text-white leading-none">{priceDisplay}</p>
+                <p className="text-2xl sm:text-4xl font-extrabold text-white leading-none truncate">{priceDisplay}</p>
                 {isService && <p className="text-xs text-white/55 mt-2 font-medium">Devis gratuit · Sous 24h</p>}
               </div>
             )}
             {isCourse && (
-              <div className="rounded-2xl bg-white/15 border border-white/25 backdrop-blur-sm px-6 py-5">
+              <div className="rounded-2xl bg-white/15 border border-white/25 backdrop-blur-sm px-5 py-4">
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-white/50 mb-1">Tarification</p>
-                <p className="text-lg font-extrabold text-white leading-snug">Plusieurs formules disponibles</p>
+                <p className="text-base font-extrabold text-white leading-snug">Plusieurs formules disponibles</p>
                 <p className="text-xs text-white/55 mt-1 font-medium">↓ Voir le tableau des tarifs ci-dessous</p>
               </div>
             )}
@@ -317,12 +316,12 @@ export default async function OffrePage({
 
       {/* ── BANDEAU TRUST ───────────────────────────────────── */}
       <div className="bg-white border-b border-slate-100 shadow-sm">
-        <div className="mx-auto max-w-4xl px-4 py-3 overflow-x-auto">
-          <div className="flex items-center gap-6 min-w-max">
+        <div className="mx-auto max-w-4xl px-4 py-3">
+          <div className="flex items-center gap-3 flex-wrap justify-center sm:justify-start">
             {trustBadges.map(b => (
-              <div key={b.label} className="flex items-center gap-1.5 shrink-0">
-                <span className="text-base">{b.icon}</span>
-                <span className="text-xs font-bold text-slate-600 whitespace-nowrap">{b.label}</span>
+              <div key={b.label} className="flex items-center gap-1.5">
+                <span className="text-sm">{b.icon}</span>
+                <span className="text-[11px] font-bold text-slate-600 whitespace-nowrap">{b.label}</span>
               </div>
             ))}
           </div>
@@ -606,39 +605,39 @@ export default async function OffrePage({
             <p className="text-xs font-extrabold uppercase tracking-widest text-amber-900">💼 Opportunité partenaire</p>
           </div>
           <div className="p-7">
-            <div className="flex items-start gap-4">
-              <div className="text-5xl shrink-0">🤝</div>
-              <div className="flex-1 space-y-4">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl shrink-0">🤝</span>
                 <div>
-                  <h3 className="text-lg font-extrabold text-amber-900">Vous aussi, devenez Partenaire IBIG !</h3>
-                  <p className="text-sm text-amber-800 leading-relaxed mt-1">
-                    Recommandez ce produit autour de vous et touchez des commissions sur chaque vente. Inscription gratuite, aucun stock, aucun risque.
+                  <h3 className="text-base font-extrabold text-amber-900">Vous aussi, devenez Partenaire IBIG !</h3>
+                  <p className="text-xs text-amber-800 leading-relaxed mt-0.5">
+                    Recommandez ce produit autour de vous et touchez des commissions sur chaque vente. Inscription gratuite.
                   </p>
                 </div>
-                <div className="grid sm:grid-cols-2 gap-2.5">
-                  {[
-                    { icon: "💰", text: "Commissions jusqu'à 15 % / vente" },
-                    { icon: "🌐", text: "Réseau multi-niveaux N1, N2, N3" },
-                    { icon: "📊", text: "Dashboard & liens personnalisés" },
-                    { icon: "🎓", text: "Accès à tout le catalogue IBIG" },
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-2.5 rounded-xl bg-white border border-amber-100 px-3 py-2.5 shadow-sm">
-                      <span className="text-xl">{item.icon}</span>
-                      <span className="text-xs font-bold text-amber-900">{item.text}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 pt-1">
-                  <a
-                    href={`/rejoindre${affCode ? `?ref=${affCode}&` : "?"}product=${encodeURIComponent(product.name)}`}
-                    className="inline-flex items-center gap-2 rounded-2xl bg-amber-500 hover:bg-amber-600 transition-all hover:-translate-y-0.5 shadow-lg px-6 py-3 text-sm font-extrabold text-white"
-                  >
-                    🚀 Rejoindre gratuitement →
-                  </a>
-                  {partnerName && (
-                    <p className="text-xs text-amber-700 font-medium">Votre parrain : <strong>{partnerName}</strong></p>
-                  )}
-                </div>
+              </div>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {[
+                  { icon: "💰", text: "Commissions jusqu'à 15 % / vente" },
+                  { icon: "🌐", text: "Réseau multi-niveaux N1, N2, N3" },
+                  { icon: "📊", text: "Dashboard & liens personnalisés" },
+                  { icon: "🎓", text: "Accès à tout le catalogue IBIG" },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-2.5 rounded-xl bg-white border border-amber-100 px-3 py-2.5 shadow-sm">
+                    <span className="text-lg">{item.icon}</span>
+                    <span className="text-xs font-bold text-amber-900">{item.text}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                <a
+                  href={`/rejoindre${affCode ? `?ref=${affCode}&` : "?"}product=${encodeURIComponent(product.name)}`}
+                  className="inline-flex items-center gap-2 rounded-2xl bg-amber-500 hover:bg-amber-600 transition-all hover:-translate-y-0.5 shadow-lg px-6 py-3 text-sm font-extrabold text-white"
+                >
+                  🚀 Rejoindre gratuitement →
+                </a>
+                {partnerName && (
+                  <p className="text-xs text-amber-700 font-medium">Votre parrain : <strong>{partnerName}</strong></p>
+                )}
               </div>
             </div>
           </div>
