@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { DashboardShell, type NavItem } from "@/components/dashboard-shell";
@@ -15,6 +17,21 @@ export default async function EspaceLayout({
   // Afficher la visite guidee pour les nouveaux affilies (compte < 7 jours)
   const accountAgeMs = Date.now() - new Date(user.createdAt).getTime();
   const isNewUser = user.role === "PARTNER" && accountAgeMs < 7 * 24 * 60 * 60 * 1000;
+
+  // Vérifier si le contrat est signé (obligatoire pour les partenaires approuvés)
+  const contract = user.approved
+    ? await (prisma as any).contract.findUnique({ where: { userId: user.id }, select: { confirmed: true } })
+    : null;
+  const mustSignContract = user.approved && user.role === "PARTNER" && !contract?.confirmed;
+
+  // Rediriger vers /espace/contrat si non signé (sauf si déjà sur cette page)
+  if (mustSignContract) {
+    const hdrs = await headers();
+    const pathname = hdrs.get("x-invoke-path") ?? hdrs.get("next-url") ?? "";
+    if (!pathname.includes("/espace/contrat")) {
+      redirect("/espace/contrat");
+    }
+  }
 
   const unread = await prisma.notification.count({
     where: {
@@ -127,6 +144,27 @@ export default async function EspaceLayout({
               Renvoyer l&apos;email →
             </button>
           </form>
+        </div>
+      )}
+      {mustSignContract && (
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border-2 border-red-500 bg-red-600 px-4 py-3.5">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">📋</span>
+            <div>
+              <p className="text-sm font-bold text-white">
+                ⚠️ Vous devez signer votre contrat pour accéder à l&apos;espace partenaire
+              </p>
+              <p className="text-xs mt-0.5 text-red-100">
+                Lisez et signez le contrat de partenariat IBIG ci-dessous pour débloquer toutes les fonctionnalités.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/espace/contrat"
+            className="shrink-0 rounded-xl bg-white px-4 py-2 text-sm font-bold text-red-700 hover:bg-red-50 shadow-sm"
+          >
+            Signer maintenant →
+          </Link>
         </div>
       )}
       {needsVerification && (
