@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
-import { SiteHeader } from "@/components/site-header";
+import { SiteHeader } from "@/components/site-chrome";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";

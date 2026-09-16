@@ -23,6 +23,7 @@ const TYPE_LABELS: Record<PricingType, string> = {
   COURSE: "Formation",
   SERVICE: "Service / Prestation",
   PRODUCT: "Produit",
+  ONE_TIME: "Achat unique",
 };
 
 const CUSTOM_KEY = "__custom__";
