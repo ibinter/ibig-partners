@@ -2,6 +2,7 @@ import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { formatDate } from "@/lib/format";
 import { PageHeader } from "@/components/ui";
+import { DescriptionBlock } from "@/components/DescriptionBlock";
 
 export const dynamic = "force-dynamic";
 
@@ -130,7 +131,7 @@ export default async function LitigesPage() {
                     <div className="font-medium">{d.subject}</div>
                     <div className="text-sm text-gray-500 mt-1">{d.user?.firstName} {d.user?.lastName} ({d.user?.code}) — {formatDate(d.createdAt)}</div>
                     {d.referenceId && <div className="text-xs text-gray-400">Réf: {d.referenceId}</div>}
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">{d.description}</p>
+                    <div className="mt-2"><DescriptionBlock text={d.description} /></div>
                   </div>
                   <span className={`px-2 py-1 rounded text-xs font-medium ${statusColor[d.status] || ""}`}>{d.status}</span>
                 </div>

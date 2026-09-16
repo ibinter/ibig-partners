@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { DescriptionBlock } from "@/components/DescriptionBlock";
 
 const CATEGORIES = ["AUTRE","FORMATION","DIGITAL","IMMOBILIER","SANTE","FINANCE","INDUSTRIE","COMMERCE","AGRICULTURE","ENERGIE","TRANSPORT","TOURISME"];
 const STATUSES_FILTER = ["","GOLD","MASTER","ELITE","GOLD,MASTER,ELITE"];
@@ -139,7 +140,7 @@ export default function AppelsAdminClient({ rows, createAction, sendInvitationsA
             {/* Détail */}
             {expanded === row.id && (
               <div className="border-t p-4 space-y-4">
-                <p className="text-sm text-gray-700 whitespace-pre-wrap">{row.description}</p>
+                <DescriptionBlock text={row.description} />
                 {row.deadline && (
                   <p className="text-xs text-amber-700">⏰ Date limite : {new Date(row.deadline).toLocaleDateString("fr-FR")}</p>
                 )}

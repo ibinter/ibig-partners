@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { fcfa, formatDate } from "@/lib/format";
+import { DescriptionBlock } from "@/components/DescriptionBlock";
 
 const CATEGORY_LABELS: Record<string, string> = {
   FORMATION: "Formation", DIGITAL: "Digital / IT", IMMOBILIER: "Immobilier",
@@ -150,7 +151,7 @@ export default function BesoinsAdminClient({
 
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Description</p>
-                    <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">{n.description}</p>
+                    <DescriptionBlock text={n.description} />
                   </div>
 
                   {n.adminNote && (
