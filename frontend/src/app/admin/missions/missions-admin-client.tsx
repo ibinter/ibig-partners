@@ -12,7 +12,7 @@ function DescriptionBlock({ text, maxLines = 6 }: { text: string; maxLines?: num
   // On split sur \n d'abord, puis sur "•" pour chaque ligne
   const rawLines = text.split(/\n/).flatMap(line => {
     const parts = line.split(/(?=\s*•\s)/);
-    return parts.map(p => p.trim()).filter(Boolean);
+    return parts.map(p => p.trim()).filter(p => p && p !== "*" && p !== "-");
   });
 
   // Classifie chaque fragment

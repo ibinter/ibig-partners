@@ -7,7 +7,7 @@ function DescriptionBlock({ text, maxLines = 6 }: { text: string; maxLines?: num
   if (!text) return null;
   const rawLines = text.split(/\n/).flatMap(line => {
     const parts = line.split(/(?=\s*•\s)/);
-    return parts.map(p => p.trim()).filter(Boolean);
+    return parts.map(p => p.trim()).filter(p => p && p !== "*" && p !== "-");
   });
   type Block = { type: "heading" | "bullet" | "text"; content: string };
   const blocks: Block[] = rawLines.map(line => {
