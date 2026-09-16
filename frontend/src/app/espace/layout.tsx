@@ -106,6 +106,7 @@ export default async function EspaceLayout({
     { href: "/espace/support",                   label: "Support",              icon: "🎫", group: "Compte" },
 
     // Ressources
+    { href: "/espace/faq",                 label: "FAQ — 100 questions",    icon: "❓", group: "Ressources" },
     { href: "/espace/bienvenue",          label: "Guide démarrage",        icon: "🚀", group: "Ressources" },
     { href: "/espace/plan-compensation",  label: "Plan de compensation",   icon: "💎", group: "Ressources" },
     { href: "/espace/kit",                label: "Kit Marketing",          icon: "🎨", group: "Ressources" },
