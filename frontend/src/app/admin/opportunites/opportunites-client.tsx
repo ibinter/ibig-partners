@@ -2,6 +2,46 @@
 
 import { useState, useMemo, useRef } from "react";
 
+function DescriptionBlock({ text, maxLines = 6 }: { text: string; maxLines?: number }) {
+  const [expanded, setExpanded] = useState(false);
+  if (!text) return null;
+  const rawLines = text.split(/\n/).flatMap(line => {
+    const parts = line.split(/(?=\s*•\s)/);
+    return parts.map(p => p.trim()).filter(Boolean);
+  });
+  type Block = { type: "heading" | "bullet" | "text"; content: string };
+  const blocks: Block[] = rawLines.map(line => {
+    const clean = line.replace(/^•\s*/, "").trim();
+    if (/^\d+\.\s/.test(clean)) return { type: "heading", content: clean };
+    if (line.trimStart().startsWith("•")) return { type: "bullet", content: clean };
+    return { type: "text", content: clean };
+  });
+  const isLong = blocks.length > maxLines;
+  const visible = expanded || !isLong ? blocks : blocks.slice(0, maxLines);
+  return (
+    <div className="space-y-1.5">
+      {visible.map((b, i) => {
+        if (b.type === "heading") return (
+          <p key={i} className="text-xs font-bold text-slate-700 mt-2 first:mt-0">{b.content}</p>
+        );
+        if (b.type === "bullet") return (
+          <div key={i} className="flex gap-2 items-start">
+            <span className="mt-1 h-1.5 w-1.5 rounded-full bg-blue-400 shrink-0" />
+            <p className="text-sm text-slate-600 leading-relaxed">{b.content}</p>
+          </div>
+        );
+        return <p key={i} className="text-sm text-slate-600 leading-relaxed">{b.content}</p>;
+      })}
+      {isLong && (
+        <button onClick={() => setExpanded(!expanded)}
+          className="text-xs font-bold text-blue-500 hover:text-blue-700 transition mt-1">
+          {expanded ? "▲ Réduire" : `▼ Voir tout (${blocks.length - maxLines} lignes de plus)`}
+        </button>
+      )}
+    </div>
+  );
+}
+
 const STATUS_LABELS: Record<string, string> = {
   NEW: "Nouveau",
   IN_PROGRESS: "En cours",
@@ -495,7 +535,7 @@ export default function OpportunitesClient({
 
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400 mb-1">Description</p>
-                    <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">{o.description}</p>
+                    <DescriptionBlock text={o.description} />
                   </div>
 
                   {/* Fil de messages */}
