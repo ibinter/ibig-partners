@@ -2,6 +2,55 @@
 
 import { useState } from "react";
 
+/** Rend une description structurée : détecte les puces •, les numéros "1." et les sauts de ligne */
+function DescriptionBlock({ text, maxLines = 6 }: { text: string; maxLines?: number }) {
+  const [expanded, setExpanded] = useState(false);
+
+  if (!text) return null;
+
+  // Normalise les séparateurs : • peut être en milieu de ligne (style copié-collé)
+  // On split sur \n d'abord, puis sur "•" pour chaque ligne
+  const rawLines = text.split(/\n/).flatMap(line => {
+    const parts = line.split(/(?=\s*•\s)/);
+    return parts.map(p => p.trim()).filter(Boolean);
+  });
+
+  // Classifie chaque fragment
+  type Block = { type: "heading" | "bullet" | "text"; content: string };
+  const blocks: Block[] = rawLines.map(line => {
+    const clean = line.replace(/^•\s*/, "").trim();
+    if (/^\d+\.\s/.test(clean)) return { type: "heading", content: clean };
+    if (line.trimStart().startsWith("•")) return { type: "bullet", content: clean };
+    return { type: "text", content: clean };
+  });
+
+  const isLong = blocks.length > maxLines;
+  const visible = expanded || !isLong ? blocks : blocks.slice(0, maxLines);
+
+  return (
+    <div className="space-y-1.5">
+      {visible.map((b, i) => {
+        if (b.type === "heading") return (
+          <p key={i} className="text-xs font-bold text-slate-700 mt-2 first:mt-0">{b.content}</p>
+        );
+        if (b.type === "bullet") return (
+          <div key={i} className="flex gap-2 items-start">
+            <span className="mt-1 h-1.5 w-1.5 rounded-full bg-blue-400 shrink-0" />
+            <p className="text-sm text-slate-600 leading-relaxed">{b.content}</p>
+          </div>
+        );
+        return <p key={i} className="text-sm text-slate-600 leading-relaxed">{b.content}</p>;
+      })}
+      {isLong && (
+        <button onClick={() => setExpanded(!expanded)}
+          className="text-xs font-bold text-blue-500 hover:text-blue-700 transition mt-1">
+          {expanded ? "▲ Réduire" : `▼ Voir tout (${blocks.length - maxLines} lignes de plus)`}
+        </button>
+      )}
+    </div>
+  );
+}
+
 const CATEGORY_LABELS: Record<string, string> = {
   FORMATION: "🎓 Formation", DIGITAL: "💻 Digital", INFORMATIQUE: "⚙️ Logiciels",
   IMMOBILIER: "🏠 Immobilier", BTP: "🏗️ BTP", CONSEIL: "📋 Conseil",
@@ -396,7 +445,9 @@ export default function MissionsAdminClient({
                       <span className="text-[10px] text-slate-400">{fmtDate(r.createdAt)}</span>
                     </div>
                     <h3 className="font-extrabold text-slate-900 text-base">{r.title}</h3>
-                    <p className="text-sm text-slate-600 mt-1 leading-relaxed">{r.description}</p>
+                    <div className="mt-2">
+                      <DescriptionBlock text={r.description} />
+                    </div>
                   </div>
                 </div>
 
@@ -815,7 +866,7 @@ export default function MissionsAdminClient({
                 <div className="border-t border-slate-100 px-5 py-5 space-y-5">
                   {/* Description + infos */}
                   <div className="space-y-2">
-                    <p className="text-sm text-slate-600 leading-relaxed">{m.description}</p>
+                    <DescriptionBlock text={m.description} />
                     {m.proofInstructions && (
                       <div className="rounded-xl border border-violet-100 bg-violet-50 px-4 py-3">
                         <p className="text-xs font-bold text-violet-700 mb-1">📎 Preuves attendues</p>
