@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
+import { DescriptionBlock } from "@/components/DescriptionBlock";
 
 const DIFFICULTY_CONFIG: Record<string, { label: string; badge: string; icon: string }> = {
   EASY:   { label: "Facile",    badge: "bg-emerald-100 text-emerald-700 border-emerald-200", icon: "🟢" },
@@ -191,7 +192,7 @@ function MissionModal({ m, onClose, applyAction, withdrawAction, submitProofActi
           </div>
 
           {/* Description */}
-          {m.description && <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line">{m.description}</p>}
+          {m.description && <DescriptionBlock text={m.description} />}
 
           {/* Méta */}
           <div className="grid grid-cols-2 gap-2 text-xs">

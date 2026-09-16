@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
+import { DescriptionBlock } from "@/components/DescriptionBlock";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -195,7 +196,7 @@ export default async function MissionDetailPage({ params }: { params: Promise<{ 
                 <h2 className="text-sm font-extrabold text-slate-800">Description de la mission</h2>
               </div>
               <div className="px-6 py-5">
-                <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">{mission.description}</p>
+                <DescriptionBlock text={mission.description} />
               </div>
             </div>
 

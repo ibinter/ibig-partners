@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { fcfa, formatDate } from "@/lib/format";
+import { DescriptionBlock } from "@/components/DescriptionBlock";
 
 const CATEGORY_LABELS: Record<string, string> = {
   FORMATION: "Formation", DIGITAL: "Digital / IT", IMMOBILIER: "Immobilier",
@@ -108,7 +109,7 @@ function PublicCard({ row, alreadyIn, note, onNoteChange, onInterest }: PublicCa
         </div>
       </div>
 
-      <p className="text-sm text-slate-600 leading-relaxed">{row.description}</p>
+      <DescriptionBlock text={row.description} />
 
       <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-slate-400">
         {row.estimatedValue > 0 && (
@@ -388,7 +389,7 @@ export default function OpportunitesAffilieClient({
                 {(STATUS_LABELS[selected.status] ?? { label: selected.status }).label}
               </span>
             </div>
-            <p className="text-sm text-slate-600 leading-relaxed">{selected.description}</p>
+            <DescriptionBlock text={selected.description} />
             {selected.adminNote && (
               <div className="rounded-xl bg-brand-50 border border-brand-100 px-4 py-2 text-sm text-brand-700">
                 <span className="font-semibold">Réponse IBIG :</span> {selected.adminNote}

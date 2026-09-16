@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { fcfa, formatDate } from "@/lib/format";
 import { MultiImageUpload } from "@/components/multi-image-upload";
+import { DescriptionBlock } from "@/components/DescriptionBlock";
 
 const CATEGORY_LABELS: Record<string, string> = {
   FORMATION: "Formation", DIGITAL: "Digital / IT", IMMOBILIER: "Immobilier",
@@ -141,7 +142,7 @@ export default function BesoinsAffilieClient({
                   </div>
                 </div>
 
-                <p className="text-sm text-slate-600 leading-relaxed">{row.description}</p>
+                <DescriptionBlock text={row.description} />
 
                 <div className="flex items-center gap-4 text-xs text-slate-400 flex-wrap">
                   <span>📅 {formatDate(row.createdAt)}</span>
