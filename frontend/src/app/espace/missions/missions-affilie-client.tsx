@@ -816,21 +816,59 @@ export default function MissionsAffilieClient({
                 ))}
               </div>
 
-              {(myApps as any).map((a: any) => (
-                <div key={a.id} className={`rounded-2xl border bg-white p-4 flex items-center gap-4 ${a.status === "SUBMITTED" ? "border-violet-200 ring-1 ring-violet-100" : "border-slate-100"}`}>
-                  <span className={`shrink-0 rounded-xl px-3 py-1.5 text-[10px] font-bold uppercase ${APP_STATUS[a.status]?.badge ?? "bg-slate-100 text-slate-500"}`}>
-                    {APP_STATUS[a.status]?.label ?? a.status}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-sm text-slate-800 truncate">{a.missionTitle}</p>
-                    {a.note && <p className="text-xs text-slate-400 truncate">« {a.note} »</p>}
-                    {a.proofNote && <p className="text-xs text-violet-600 truncate">Preuve : {a.proofNote}</p>}
-                    {a.result && <p className="text-xs text-emerald-600 font-medium truncate">✓ {a.result}</p>}
-                    {a.cpEarned > 0 && <p className="text-xs text-violet-700 font-bold">+{a.cpEarned} CP gagnés</p>}
-                  </div>
-                  <p className="shrink-0 text-xs text-slate-400">{fmtDate(a.createdAt)}</p>
-                </div>
-              ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {(myApps as any).map((a: any) => {
+                  const st = APP_STATUS[a.status] ?? { label: a.status, badge: "bg-slate-100 text-slate-500" };
+                  const isWon = a.status === "VALIDATED" || a.status === "COMPLETED";
+                  return (
+                    <div key={a.id} className={`rounded-2xl border bg-white p-4 flex flex-col gap-2.5 ${
+                      a.status === "SUBMITTED" ? "border-violet-200 ring-1 ring-violet-100" :
+                      isWon ? "border-emerald-200 ring-1 ring-emerald-100" :
+                      a.status === "ACCEPTED" ? "border-blue-200 ring-1 ring-blue-100" :
+                      "border-slate-100"
+                    }`}>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-bold text-sm text-slate-900 leading-snug line-clamp-2">{a.missionTitle}</p>
+                          <p className="text-[10px] text-slate-400 mt-0.5">Candidature du {fmtDate(a.createdAt)}</p>
+                        </div>
+                        <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-bold whitespace-nowrap ${st.badge}`}>
+                          {st.label}
+                        </span>
+                      </div>
+                      {a.note && (
+                        <p className="text-xs text-slate-500 bg-slate-50 rounded-lg px-3 py-2 line-clamp-2 italic">
+                          « {a.note} »
+                        </p>
+                      )}
+                      {a.result && (
+                        <p className="text-xs text-emerald-700 font-semibold bg-emerald-50 rounded-lg px-3 py-2">
+                          ✓ {a.result}
+                        </p>
+                      )}
+                      {a.proofNote && (
+                        <p className="text-xs text-violet-700 bg-violet-50 rounded-lg px-3 py-2 line-clamp-2">
+                          📎 Preuve soumise : {a.proofNote}
+                        </p>
+                      )}
+                      {(a.cpEarned > 0 || a.commissionEarned > 0) && (
+                        <div className="flex gap-2 mt-0.5">
+                          {a.cpEarned > 0 && (
+                            <span className="rounded-full bg-violet-100 text-violet-700 px-2.5 py-0.5 text-[10px] font-bold">
+                              +{a.cpEarned} CP
+                            </span>
+                          )}
+                          {a.commissionEarned > 0 && (
+                            <span className="rounded-full bg-emerald-100 text-emerald-700 px-2.5 py-0.5 text-[10px] font-bold">
+                              +{new Intl.NumberFormat("fr-FR").format(a.commissionEarned)} FCFA
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </>
           )}
         </div>

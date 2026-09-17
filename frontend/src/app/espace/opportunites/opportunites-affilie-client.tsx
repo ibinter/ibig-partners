@@ -4,6 +4,8 @@ import { useState, useMemo } from "react";
 import { fcfa, formatDate } from "@/lib/format";
 import { DescriptionBlock } from "@/components/DescriptionBlock";
 
+const PAGE_SIZE = 12;
+
 const CATEGORY_LABELS: Record<string, string> = {
   FORMATION: "Formation", DIGITAL: "Digital / IT", IMMOBILIER: "Immobilier",
   PARTENARIAT: "Partenariat", COMMERCIAL: "Commercial / Vente", CONSEIL: "Conseil",
@@ -109,7 +111,7 @@ function PublicCard({ row, alreadyIn, note, onNoteChange, onInterest }: PublicCa
         </div>
       </div>
 
-      <DescriptionBlock text={row.description} />
+      <DescriptionBlock text={row.description} maxLines={4} />
 
       <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-slate-400">
         {row.estimatedValue > 0 && (
@@ -177,6 +179,8 @@ export default function OpportunitesAffilieClient({
   );
   const [categoryFilter, setCategoryFilter] = useState<string>("ALL");
   const [publisherFilter, setPublisherFilter] = useState<"ALL" | "ENTERPRISE" | "PARTNER">("ALL");
+  const [search, setSearch]     = useState("");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const categories = useMemo(() => {
     const cats = new Set(publicRows.map(r => r.category));
@@ -188,14 +192,25 @@ export default function OpportunitesAffilieClient({
     [publicRows, interested]
   );
 
-  const filtered = useMemo(() => publicRows.filter(r => {
-    if (categoryFilter !== "ALL" && r.category !== categoryFilter) return false;
-    if (publisherFilter !== "ALL" && r.publisherType !== publisherFilter) return false;
-    return true;
-  }), [publicRows, categoryFilter, publisherFilter]);
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase().trim();
+    return publicRows.filter(r => {
+      if (categoryFilter !== "ALL" && r.category !== categoryFilter) return false;
+      if (publisherFilter !== "ALL" && r.publisherType !== publisherFilter) return false;
+      if (q && !r.title.toLowerCase().includes(q) && !r.description.toLowerCase().includes(q) && !r.publisherName.toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }, [publicRows, categoryFilter, publisherFilter, search]);
 
   function handleNoteChange(id: string, val: string) {
     setNoteMap(prev => ({ ...prev, [id]: val }));
+  }
+
+  function resetFilters() {
+    setCategoryFilter("ALL");
+    setPublisherFilter("ALL");
+    setSearch("");
+    setVisibleCount(PAGE_SIZE);
   }
 
   async function handleInterest(row: PublicRow) {
@@ -220,24 +235,34 @@ export default function OpportunitesAffilieClient({
   }
 
   const inputCls = "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100";
-  const showFilters = categoryFilter === "ALL" && publisherFilter === "ALL";
+  const isFiltering = categoryFilter !== "ALL" || publisherFilter !== "ALL" || search.trim() !== "";
+  const showRecommended = !isFiltering;
+  const visibleFiltered = filtered.filter(r => !(r.isRecommended && showRecommended && !interested.has(r.id)));
+  const paged = visibleFiltered.slice(0, visibleCount);
+  const hasMore = visibleFiltered.length > visibleCount;
 
   return (
     <div className="space-y-4">
       {/* Onglets */}
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex gap-2 flex-wrap border-b border-slate-100 pb-3">
         {([
-          { key: "public", label: `🌐 Toutes les annonces (${publicRows.length})` },
-          { key: "mine",   label: `📤 Mes annonces (${myRows.length})` },
-          { key: "submit", label: "➕ Publier une annonce" },
+          { key: "public", label: "Toutes les annonces", count: publicRows.length, emoji: "🌐" },
+          { key: "mine",   label: "Mes annonces",        count: myRows.length,    emoji: "📤" },
+          { key: "submit", label: "Publier",             count: null,             emoji: "➕" },
         ] as const).map(t => (
           <button key={t.key} onClick={() => { setTab(t.key); setSelected(null); }}
-            className={`rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${
+            className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${
               tab === t.key
                 ? "bg-brand-600 text-white shadow"
                 : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"
             }`}>
-            {t.label}
+            <span>{t.emoji}</span>
+            <span>{t.label}</span>
+            {t.count !== null && (
+              <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
+                tab === t.key ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"
+              }`}>{t.count}</span>
+            )}
           </button>
         ))}
       </div>
@@ -245,9 +270,24 @@ export default function OpportunitesAffilieClient({
       {/* ── Onglet : Toutes les annonces ── */}
       {tab === "public" && (
         <div className="space-y-4">
-          {/* Filtres */}
+          {/* Barre de recherche + filtres */}
           {publicRows.length > 0 && (
-            <div className="rounded-2xl border border-slate-100 bg-white px-4 py-3 space-y-3">
+            <div className="rounded-2xl border border-slate-100 bg-white px-4 py-4 space-y-3">
+              {/* Recherche */}
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
+                <input
+                  type="text"
+                  value={search}
+                  onChange={e => { setSearch(e.target.value); setVisibleCount(PAGE_SIZE); }}
+                  placeholder="Rechercher par titre, description, entreprise…"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-4 py-2.5 text-sm focus:border-brand-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-100"
+                />
+                {search && (
+                  <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs font-bold">✕</button>
+                )}
+              </div>
+              {/* Filtres */}
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-wide mr-1">Type</span>
                 {(["ALL", "ENTERPRISE", "PARTNER"] as const).map(f => (
@@ -255,7 +295,7 @@ export default function OpportunitesAffilieClient({
                     key={f}
                     label={f === "ALL" ? "Tous" : f === "ENTERPRISE" ? "🏢 Entreprises" : "👤 Partenaires"}
                     active={publisherFilter === f}
-                    onClick={() => setPublisherFilter(f)}
+                    onClick={() => { setPublisherFilter(f); setVisibleCount(PAGE_SIZE); }}
                   />
                 ))}
               </div>
@@ -267,28 +307,40 @@ export default function OpportunitesAffilieClient({
                       key={cat}
                       label={cat === "ALL" ? "Tous" : (CATEGORY_LABELS[cat] ?? cat)}
                       active={categoryFilter === cat}
-                      onClick={() => setCategoryFilter(cat)}
+                      onClick={() => { setCategoryFilter(cat); setVisibleCount(PAGE_SIZE); }}
                     />
                   ))}
+                </div>
+              )}
+              {isFiltering && (
+                <div className="flex items-center justify-between pt-1 border-t border-slate-100">
+                  <span className="text-xs text-slate-500">
+                    <strong className="text-slate-700">{filtered.length}</strong> résultat{filtered.length !== 1 ? "s" : ""}
+                  </span>
+                  <button onClick={resetFilters} className="text-xs text-brand-600 font-semibold hover:underline">
+                    Réinitialiser les filtres
+                  </button>
                 </div>
               )}
             </div>
           )}
 
           {/* Recommandations */}
-          {recommended.length > 0 && showFilters && (
+          {recommended.length > 0 && showRecommended && (
             <div className="space-y-2">
               <p className="text-xs font-bold uppercase tracking-wider text-violet-500">🎯 Recommandé pour vous</p>
-              {recommended.map(row => (
-                <PublicCard
-                  key={row.id}
-                  row={row}
-                  alreadyIn={interested.has(row.id)}
-                  note={noteMap[row.id] ?? ""}
-                  onNoteChange={handleNoteChange}
-                  onInterest={handleInterest}
-                />
-              ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {recommended.map(row => (
+                  <PublicCard
+                    key={row.id}
+                    row={row}
+                    alreadyIn={interested.has(row.id)}
+                    note={noteMap[row.id] ?? ""}
+                    onNoteChange={handleNoteChange}
+                    onInterest={handleInterest}
+                  />
+                ))}
+              </div>
               <div className="border-t border-slate-100 pt-2">
                 <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Toutes les annonces</p>
               </div>
@@ -296,7 +348,7 @@ export default function OpportunitesAffilieClient({
           )}
 
           {/* Liste filtrée */}
-          {filtered.length === 0 ? (
+          {paged.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-slate-200 bg-white py-16 text-center">
               <p className="text-4xl mb-3">🤝</p>
               <p className="font-semibold text-slate-600">
@@ -309,20 +361,38 @@ export default function OpportunitesAffilieClient({
                   ? "Revenez bientôt — l'équipe IBIG publie régulièrement de nouvelles opportunités."
                   : "Essayez un autre secteur ou type de publication."}
               </p>
+              {isFiltering && (
+                <button onClick={resetFilters} className="mt-4 text-sm text-brand-600 font-semibold hover:underline">
+                  Voir toutes les annonces
+                </button>
+              )}
             </div>
           ) : (
-            filtered
-              .filter(r => !(r.isRecommended && showFilters && !interested.has(r.id)))
-              .map(row => (
-                <PublicCard
-                  key={row.id}
-                  row={row}
-                  alreadyIn={interested.has(row.id)}
-                  note={noteMap[row.id] ?? ""}
-                  onNoteChange={handleNoteChange}
-                  onInterest={handleInterest}
-                />
-              ))
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {paged.map(row => (
+                  <PublicCard
+                    key={row.id}
+                    row={row}
+                    alreadyIn={interested.has(row.id)}
+                    note={noteMap[row.id] ?? ""}
+                    onNoteChange={handleNoteChange}
+                    onInterest={handleInterest}
+                  />
+                ))}
+              </div>
+              {hasMore && (
+                <div className="text-center">
+                  <button
+                    onClick={() => setVisibleCount(c => c + PAGE_SIZE)}
+                    className="rounded-xl border border-slate-200 bg-white px-6 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 hover:border-brand-300 transition-colors"
+                  >
+                    Charger {Math.min(PAGE_SIZE, visibleFiltered.length - visibleCount)} annonces de plus
+                  </button>
+                  <p className="text-xs text-slate-400 mt-1">{paged.length} / {visibleFiltered.length} affichées</p>
+                </div>
+              )}
+            </>
           )}
         </div>
       )}
