@@ -42,17 +42,22 @@ export function MigrateButton() {
 function SyncButton({ label, endpoint, className }: { label: string; endpoint: string; className: string }) {
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
+  const [isError, setIsError] = useState(false);
 
   async function handle() {
     setLoading(true);
     setMsg("");
+    setIsError(false);
     try {
       const r = await fetch(endpoint, { method: "POST" });
       const d = await r.json();
-      setMsg(d.message ?? (r.ok ? "OK" : d.error ?? "Erreur"));
-      if (r.ok) setTimeout(() => window.location.reload(), 1200);
-    } catch {
-      setMsg("Erreur réseau");
+      const text = d.message ?? (r.ok ? "✓ Synchronisation OK" : (d.error ?? "Erreur inconnue"));
+      setMsg(text);
+      setIsError(!r.ok);
+      if (r.ok) setTimeout(() => window.location.reload(), 2000);
+    } catch (e: any) {
+      setMsg(`Erreur réseau : ${e?.message ?? "inconnu"}`);
+      setIsError(true);
     } finally {
       setLoading(false);
     }
@@ -61,9 +66,13 @@ function SyncButton({ label, endpoint, className }: { label: string; endpoint: s
   return (
     <div className="flex flex-col items-end gap-1">
       <button onClick={handle} disabled={loading} className={className}>
-        {loading ? "En cours…" : label}
+        {loading ? "⏳ En cours…" : label}
       </button>
-      {msg && <p className="text-xs text-slate-500 max-w-[220px] text-right">{msg}</p>}
+      {msg && (
+        <p className={`text-xs max-w-[260px] text-right font-medium ${isError ? "text-red-600" : "text-emerald-600"}`}>
+          {msg}
+        </p>
+      )}
     </div>
   );
 }
@@ -218,15 +227,6 @@ export function SyncDigitalKitsButton() {
   );
 }
 
-export function SyncFinancementButton() {
-  return (
-    <SyncButton
-      label="Sync FINANCEMENT"
-      endpoint="/api/admin/sync-financement"
-      className="rounded-lg border border-green-300 bg-green-50 px-4 py-2 text-sm font-semibold text-green-700 hover:bg-green-100 disabled:opacity-50"
-    />
-  );
-}
 
 export function SyncEmploiButton() {
   return (
