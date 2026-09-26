@@ -7,30 +7,32 @@ export const dynamic = "force-dynamic";
 async function sendNotification(fd: FormData) {
   "use server";
   const title = fd.get("title") as string;
-  const message = fd.get("message") as string;
-  const target = fd.get("target") as string; // ALL | LEVEL | USER
+  const body = fd.get("message") as string;
+  const target = fd.get("target") as string;
   const targetValue = fd.get("targetValue") as string;
-  const type = fd.get("type") as string;
+  const url = fd.get("url") as string | null;
 
-  if (!title || !message) return;
+  if (!title || !body) return;
 
   try {
     if (target === "USER" && targetValue) {
-      await (prisma as any).notification.create({
-        data: { userId: targetValue, title, message, type: type || "INFO", read: false },
+      await prisma.notification.create({
+        data: { userId: targetValue, title, body, url: url || null },
       });
     } else {
-      const where: any = { role: "PARTNER", approved: true };
-      const users = await prisma.user.findMany({ where, select: { id: true } });
+      const users = await prisma.user.findMany({
+        where: { role: "PARTNER", approved: true },
+        select: { id: true },
+      });
       for (const u of users) {
         try {
-          await (prisma as any).notification.create({
-            data: { userId: u.id, title, message, type: type || "INFO", read: false },
+          await prisma.notification.create({
+            data: { userId: u.id, title, body, url: url || null },
           });
         } catch { /* skip */ }
       }
     }
-  } catch { /* notification model may not exist */ }
+  } catch { /* skip */ }
 }
 
 export default async function AdminNotificationsPage() {
@@ -87,12 +89,8 @@ export default async function AdminNotificationsPage() {
               <input type="text" name="title" required placeholder="Titre de la notification" className="w-full border rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 dark:border-gray-600" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type</label>
-              <select name="type" className="w-full border rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 dark:border-gray-600">
-                {notifTypes.map((t) => (
-                  <option key={t.value} value={t.value}>{t.label}</option>
-                ))}
-              </select>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Lien (optionnel)</label>
+              <input type="text" name="url" placeholder="/espace/missions" className="w-full border rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 dark:border-gray-600" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Destinataires *</label>
@@ -161,22 +159,19 @@ export default async function AdminNotificationsPage() {
                 <tr className="border-b dark:border-gray-700 text-left text-gray-500">
                   <th className="pb-2 pr-4">Destinataire</th>
                   <th className="pb-2 pr-4">Titre</th>
-                  <th className="pb-2 pr-4">Type</th>
+                  <th className="pb-2 pr-4">Message</th>
                   <th className="pb-2">Lu</th>
                 </tr>
               </thead>
               <tbody className="divide-y dark:divide-gray-700">
-                {recentNotifs.map((n: any) => {
-                  const typeInfo = notifTypes.find((t) => t.value === n.type);
-                  return (
-                    <tr key={n.id}>
-                      <td className="py-2 pr-4 font-medium">{n.user?.firstName} {n.user?.lastName} <span className="text-gray-400 text-xs">({n.user?.code})</span></td>
-                      <td className="py-2 pr-4">{n.title}</td>
-                      <td className="py-2 pr-4"><span className={`text-xs px-2 py-0.5 rounded ${typeInfo?.color}`}>{typeInfo?.label || n.type}</span></td>
-                      <td className="py-2">{n.read ? <span className="text-green-600">✓</span> : <span className="text-gray-400">—</span>}</td>
-                    </tr>
-                  );
-                })}
+                {recentNotifs.map((n: any) => (
+                  <tr key={n.id}>
+                    <td className="py-2 pr-4 font-medium">{n.user?.firstName} {n.user?.lastName} <span className="text-gray-400 text-xs">({n.user?.code ?? "tous"})</span></td>
+                    <td className="py-2 pr-4">{n.title}</td>
+                    <td className="py-2 pr-4 text-gray-500 text-xs max-w-xs truncate">{n.body}</td>
+                    <td className="py-2">{n.read ? <span className="text-green-600">✓</span> : <span className="text-gray-400">—</span>}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
