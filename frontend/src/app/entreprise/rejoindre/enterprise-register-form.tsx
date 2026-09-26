@@ -79,8 +79,8 @@ export default function EnterpriseRegisterForm({
       </div>
 
       <div>
-        <label className={labelCls}>Site web</label>
-        <input name="website" type="url" placeholder="https://acme.ci" className={inputCls} />
+        <label className={labelCls}>Site web <span className="text-slate-400 font-normal">(optionnel)</span></label>
+        <input name="website" type="text" placeholder="https://acme.ci" className={inputCls} />
       </div>
 
       <div>
