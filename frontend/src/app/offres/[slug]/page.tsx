@@ -117,7 +117,10 @@ export default async function OffrePage({
 
   const product = await (prisma as any).product.findUnique({
     where: { slug, active: true },
-    include: { branch: true },
+    include: {
+      branch: true,
+      commissionRates: { orderBy: [{ level: "asc" }, { monthIndex: "asc" }] },
+    },
   });
 
   if (!product) notFound();
@@ -461,6 +464,130 @@ export default async function OffrePage({
                 </ul>
               </div>
             )}
+
+            {/* Commissions partenaire */}
+            {(() => {
+              const rates: { level: number; monthIndex: number; rate: number }[] = product.commissionRates ?? [];
+              const hasRates = rates.length > 0;
+              const fallbackRate = product.rate ?? 8;
+              const levels = [1, 2, 3];
+              const levelColors = ["#3b82f6", "#8b5cf6", "#f59e0b"];
+              const levelLabels = ["N1 — Partenaire direct", "N2 — Filleul de votre filleul", "N3 — Réseau 3ᵉ niveau"];
+              const levelDesc = [
+                "Vous vendez directement ce produit à un client",
+                "Un partenaire de votre réseau réalise la vente",
+                "Un partenaire du réseau de votre filleul vend",
+              ];
+              return (
+                <div className="rounded-2xl sm:rounded-3xl bg-white shadow-sm border border-slate-100 overflow-hidden">
+                  <div className="px-4 sm:px-6 py-4 border-b border-slate-100 flex items-center justify-between" style={{ background: "linear-gradient(135deg, #041B4D 0%, #1e3a8a 100%)" }}>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl">💰</span>
+                      <div>
+                        <h2 className="text-sm font-extrabold text-white">Vos commissions partenaire</h2>
+                        <p className="text-[10px] text-white/60 font-medium mt-0.5">Réseau multi-niveaux IBIG PARTNERS</p>
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-full bg-white/15 text-white border border-white/20">
+                      3 niveaux
+                    </span>
+                  </div>
+
+                  {hasRates ? (
+                    <div>
+                      {/* Grille mensuelle */}
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                          <thead>
+                            <tr className="border-b border-slate-100 bg-slate-50">
+                              <th className="text-left px-4 sm:px-6 py-3 text-[10px] font-extrabold uppercase tracking-wide text-slate-500">Niveau</th>
+                              {Array.from(new Set(rates.map(r => r.monthIndex))).sort().map(m => (
+                                <th key={m} className="text-right px-3 py-3 text-[10px] font-extrabold uppercase tracking-wide text-slate-500 whitespace-nowrap">
+                                  {rates.filter(r => r.monthIndex === m).length > 0 ? (isSoftware ? `Mois ${m}` : "Taux") : ""}
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-50">
+                            {levels.map((lv, li) => {
+                              const lvRates = rates.filter(r => r.level === lv);
+                              if (lvRates.length === 0) return null;
+                              const months = Array.from(new Set(rates.map(r => r.monthIndex))).sort();
+                              return (
+                                <tr key={lv} className="hover:bg-slate-50/60 transition">
+                                  <td className="px-4 sm:px-6 py-3.5">
+                                    <div className="flex items-center gap-2.5">
+                                      <span className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-extrabold text-white" style={{ background: levelColors[li] }}>
+                                        N{lv}
+                                      </span>
+                                      <span className="text-xs font-bold text-slate-700">Niveau {lv}</span>
+                                    </div>
+                                  </td>
+                                  {months.map(m => {
+                                    const r = lvRates.find(x => x.monthIndex === m);
+                                    return (
+                                      <td key={m} className="px-3 py-3.5 text-right">
+                                        {r ? (
+                                          <span className="inline-flex items-center justify-end gap-1">
+                                            <span className="text-base font-extrabold text-slate-900 tabular-nums">{r.rate}%</span>
+                                            {product.price > 0 && (
+                                              <span className="text-[10px] text-slate-400 font-medium">
+                                                ≈ {Math.round(product.price * r.rate / 100).toLocaleString("fr-FR")} F
+                                              </span>
+                                            )}
+                                          </span>
+                                        ) : <span className="text-slate-300">—</span>}
+                                      </td>
+                                    );
+                                  })}
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Fallback : taux unique rate du produit */
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-slate-100">
+                      {levels.map((lv, li) => {
+                        const rate = lv === 1 ? fallbackRate : lv === 2 ? Math.round(fallbackRate * 0.5) : Math.round(fallbackRate * 0.25);
+                        const earn = product.price > 0 ? Math.round(product.price * rate / 100) : null;
+                        return (
+                          <div key={lv} className="bg-white p-5 flex flex-col gap-3">
+                            <div className="flex items-center gap-2.5">
+                              <span className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-extrabold text-white shrink-0" style={{ background: levelColors[li] }}>
+                                N{lv}
+                              </span>
+                              <div>
+                                <p className="text-[11px] font-extrabold text-slate-800 leading-tight">{levelLabels[li].split("—")[0].trim()}</p>
+                                <p className="text-[10px] text-slate-400 font-medium leading-tight">{levelLabels[li].split("—")[1]?.trim()}</p>
+                              </div>
+                            </div>
+                            <div>
+                              <p className="text-3xl font-extrabold leading-none" style={{ color: levelColors[li] }}>{rate}%</p>
+                              {earn && <p className="text-[11px] text-slate-500 font-medium mt-1">≈ {earn.toLocaleString("fr-FR")} F / vente</p>}
+                            </div>
+                            <p className="text-[10px] text-slate-500 leading-relaxed">{levelDesc[li]}</p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  <div className="px-4 sm:px-6 py-3 bg-slate-50 border-t border-slate-100 flex flex-wrap gap-4 items-center justify-between">
+                    <p className="text-[10px] text-slate-400 italic">* Commissions versées après validation de la vente par IBIG.</p>
+                    <a
+                      href={`/rejoindre${affCode ? `?ref=${affCode}` : ""}`}
+                      className="inline-flex items-center gap-1.5 text-[11px] font-extrabold px-4 py-2 rounded-xl text-white transition hover:opacity-90"
+                      style={{ background: "linear-gradient(135deg, #FF6A00, #e05500)" }}
+                    >
+                      🚀 Devenir partenaire →
+                    </a>
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Partage */}
             <ShareButtons url={shareUrl} title={product.name} description={product.description} />
