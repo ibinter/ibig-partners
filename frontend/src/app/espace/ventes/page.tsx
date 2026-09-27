@@ -167,6 +167,24 @@ export default async function EspaceVentesPage() {
         </div>
       )}
 
+      {/* ── AVERTISSEMENT LÉGAL ── */}
+      <div className="rounded-2xl border-2 border-red-400 bg-red-50 px-5 py-4 flex items-start gap-3">
+        <span className="text-2xl shrink-0 mt-0.5">🚨</span>
+        <div>
+          <p className="font-extrabold text-red-800 text-sm uppercase tracking-wide">
+            Avertissement légal — Fausse déclaration
+          </p>
+          <p className="text-sm text-red-700 mt-1.5 leading-relaxed">
+            <strong>Toute fausse déclaration de vente ou preuve falsifiée entraîne la suspension immédiate et définitive de votre compte partenaire</strong>,
+            sans préavis ni remboursement des commissions en attente.
+            Vos commissions sont annulées et votre accès à la plateforme est révoqué.
+          </p>
+          <p className="text-xs text-red-600 mt-2 font-medium">
+            Des poursuites légales peuvent être engagées. En soumettant une déclaration, vous certifiez sur l'honneur que la vente est réelle et que la preuve fournie est authentique.
+          </p>
+        </div>
+      </div>
+
       {/* ── Formulaire déclaration ── */}
       <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
         <div className="bg-gradient-to-r from-blue-600 to-violet-700 px-5 py-4 flex items-center justify-between">

@@ -342,6 +342,63 @@ export async function cancelSale(formData: FormData) {
   revalidatePath("/admin/commissions");
 }
 
+/**
+ * Rejeter une vente frauduleuse ET suspendre immédiatement le compte de l'affilié.
+ * Réservé aux admins. Utilisé quand la preuve est clairement fabriquée.
+ */
+export async function rejectAndSuspend(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id"));
+  const reason = String(formData.get("reason") || "Fausse déclaration de vente détectée.").trim();
+
+  const sale = await prisma.sale.findUnique({
+    where: { id },
+    include: {
+      seller: { select: { id: true, firstName: true, lastName: true, email: true } },
+      product: { select: { name: true } },
+    },
+  });
+  if (!sale) return;
+
+  // Supprimer commissions non versées
+  await prisma.commission.deleteMany({ where: { saleId: id, status: { not: "PAID" } } });
+
+  // Rejeter la vente
+  await prisma.sale.update({
+    where: { id },
+    data: { status: "REJECTED", proofNote: `[FRAUDE] ${reason}` },
+  });
+
+  // Suspendre le compte immédiatement : active=false + note interne
+  await prisma.user.update({
+    where: { id: sale.sellerId },
+    data: {
+      active: false,
+      rejectionNote: `Compte suspendu le ${new Date().toLocaleDateString("fr-FR")} suite à une fausse déclaration de vente (réf. ${sale.reference}). Motif : ${reason}`,
+    } as any,
+  });
+
+  // Notifier le partenaire
+  await prisma.notification.create({
+    data: {
+      userId: sale.sellerId,
+      title: "🚫 Compte suspendu — fausse déclaration",
+      body: `Votre compte IBIG PARTNERS a été suspendu suite à une fausse déclaration de vente (réf. ${sale.reference}). Motif : ${reason}. Contactez support@ibigpartners.com pour contester.`,
+      url: "/espace",
+    },
+  });
+
+  const { logActivity } = await import("@/lib/activity");
+  await logActivity({
+    userId: sale.sellerId,
+    action: "ACCOUNT_SUSPENDED",
+    detail: `Fausse déclaration vente ${sale.reference} — ${reason}`,
+  });
+
+  revalidatePath("/admin/ventes");
+  revalidatePath("/admin/partenaires");
+}
+
 export async function addPaidMonth(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("id"));

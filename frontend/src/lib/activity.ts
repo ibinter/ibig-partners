@@ -16,7 +16,8 @@ export type ActivityAction =
   | "KYC_SUBMITTED"
   | "OPPORTUNITY_CREATED"
   | "CONNECT_REQUEST"
-  | "PAYOUT_REQUESTED";
+  | "PAYOUT_REQUESTED"
+  | "ACCOUNT_SUSPENDED";
 
 interface LogActivityOptions {
   userId?: string;

@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { fcfa, formatDate } from "@/lib/format";
 import { Badge, Button, Card, Field, PageHeader, statusTone } from "@/components/ui";
 import { MONTHLY_DURATION, PRICING_TYPE_LABELS, SALE_STATUS_LABELS } from "@/lib/constants";
-import { addPaidMonth, cancelSale, confirmSale, createSale } from "../actions";
+import { addPaidMonth, cancelSale, confirmSale, createSale, rejectAndSuspend } from "../actions";
 import { ExportButton } from "@/components/export-button";
 
 export const dynamic = "force-dynamic";
@@ -207,19 +207,35 @@ export default async function VentesPage() {
                               Rejeter
                             </span>
                           </summary>
-                          <form action={cancelSale} className="absolute right-0 z-10 mt-1 w-64 rounded-xl border border-slate-200 bg-white p-3 shadow-xl">
-                            <input type="hidden" name="id" value={s.id} />
-                            <p className="text-xs font-bold text-slate-700 mb-1.5">Motif de rejet (envoyé au partenaire)</p>
-                            <textarea
-                              name="reason"
-                              rows={3}
-                              placeholder="Ex : Image envoyée ne correspond pas à un reçu de paiement valide."
-                              className="w-full rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-300 resize-none"
-                            />
-                            <Button type="submit" variant="ghost" size="sm" className="mt-2 w-full bg-rose-600 text-white hover:bg-rose-700">
-                              Confirmer le rejet
-                            </Button>
-                          </form>
+                          <div className="absolute right-0 z-10 mt-1 w-72 rounded-xl border border-slate-200 bg-white p-3 shadow-xl space-y-2">
+                            <p className="text-xs font-bold text-slate-700">Motif de rejet (envoyé au partenaire)</p>
+                            {/* Rejet simple */}
+                            <form action={cancelSale} className="space-y-1.5">
+                              <input type="hidden" name="id" value={s.id} />
+                              <textarea
+                                name="reason"
+                                rows={2}
+                                placeholder="Ex : Image ne correspond pas à un reçu valide."
+                                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-xs outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-300 resize-none"
+                              />
+                              <Button type="submit" variant="ghost" size="sm" className="w-full bg-rose-100 text-rose-700 hover:bg-rose-200 border border-rose-200">
+                                Rejeter uniquement
+                              </Button>
+                            </form>
+                            {/* Rejet + Suspension */}
+                            <form action={rejectAndSuspend} className="space-y-1.5">
+                              <input type="hidden" name="id" value={s.id} />
+                              <textarea
+                                name="reason"
+                                rows={2}
+                                placeholder="Ex : Preuve manifestement falsifiée. Fraude confirmée."
+                                className="w-full rounded-lg border border-red-200 bg-red-50 px-2.5 py-1.5 text-xs outline-none focus:border-red-500 focus:ring-1 focus:ring-red-300 resize-none"
+                              />
+                              <Button type="submit" variant="ghost" size="sm" className="w-full bg-red-600 text-white hover:bg-red-700 font-bold">
+                                🚫 Rejeter + Suspendre le compte
+                              </Button>
+                            </form>
+                          </div>
                         </details>
                       )}
                       {s.status !== "CANCELLED" && s.status !== "PENDING" && s.status !== "REJECTED" && (
