@@ -23,24 +23,37 @@ export function ScrollReveal({
     const el = ref.current;
     if (!el) return;
 
-    // État initial — invisible
     el.style.opacity = "0";
+
+    const reveal = () => {
+      setTimeout(() => {
+        el.classList.add(`animate-${animation}`);
+        el.style.opacity = "";
+      }, delay);
+    };
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setTimeout(() => {
-            el.classList.add(`animate-${animation}`);
-            el.style.opacity = "";
-          }, delay);
+          reveal();
           observer.unobserve(el);
         }
       },
-      { threshold }
+      { threshold, rootMargin: "0px 0px -50px 0px" }
     );
 
     observer.observe(el);
-    return () => observer.disconnect();
+
+    // Fallback : si après 1.5s l'élément n'a pas été révélé, on force
+    const fallback = setTimeout(() => {
+      el.style.opacity = "";
+      el.classList.add(`animate-${animation}`);
+    }, 1500 + delay);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(fallback);
+    };
   }, [animation, delay, threshold]);
 
   return (
