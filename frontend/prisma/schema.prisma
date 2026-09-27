@@ -289,6 +289,8 @@ model Sale {
   providerRef   String?  @unique // id de transaction du processeur (Moneroo) — anti-doublon
   proofNote     String?  // note / référence de paiement fournie par l'affilié (vente déclarée)
   proofUrl      String?  // lien vers une preuve (capture, reçu) fournie par l'affilié
+  riskScore     Int      @default(0)   // 0–100 : score de risque fraude calculé à la déclaration
+  riskFlags     String?  // flags séparés par | ex: MONTANT_ELEVE|PREUVE_FAIBLE
   createdAt     DateTime @default(now())
 
   commissions Commission[]

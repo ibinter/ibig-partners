@@ -28,6 +28,27 @@ export default async function VentesPage() {
   ]);
 
   const pendingFromAffiliates = sales.filter((s) => s.status === "PENDING");
+  const highRisk = sales.filter((s) => s.status === "PENDING" && (s as any).riskScore >= 50);
+  const medRisk  = sales.filter((s) => s.status === "PENDING" && (s as any).riskScore >= 20 && (s as any).riskScore < 50);
+
+  function RiskBadge({ score, flags }: { score: number; flags: string | null }) {
+    if (score === 0) return <span className="text-[10px] font-bold text-emerald-600">✓ OK</span>;
+    const color = score >= 50 ? "text-red-700 bg-red-50 border-red-200" : "text-amber-700 bg-amber-50 border-amber-200";
+    const label = score >= 70 ? "ÉLEVÉ" : score >= 50 ? "SUSPECT" : "MODÉRÉ";
+    const flagList = flags?.split("|") ?? [];
+    const flagLabels: Record<string, string> = {
+      MONTANT_ELEVE: "montant > catalogue",
+      PREUVE_FAIBLE: "preuve insuffisante",
+      CONTACT_CLIENT_MANQUANT: "pas de contact client",
+      HISTORIQUE_REJETS: "rejets antérieurs",
+    };
+    const tip = flagList.map(f => flagLabels[f.split(":")[0]] ?? f).join(", ");
+    return (
+      <span className={`inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide ${color}`} title={tip}>
+        {score >= 50 ? "⚠️" : "⚡"} {label} {score}
+      </span>
+    );
+  }
 
   return (
     <div>
@@ -37,14 +58,29 @@ export default async function VentesPage() {
         action={<ExportButton type="ventes" label="Exporter CSV" />}
       />
 
-      {pendingFromAffiliates.length > 0 && (
-        <div className="mb-6 rounded-2xl border border-amber-300 bg-amber-50 px-5 py-4">
-          <p className="font-bold text-amber-800">
-            ⏳ {pendingFromAffiliates.length} vente{pendingFromAffiliates.length > 1 ? "s" : ""} en attente de validation
-          </p>
-          <p className="text-sm text-amber-700 mt-1">
-            Des affiliés ont déclaré des ventes manuelles (WhatsApp, abonnement SaaS direct, etc.). Vérifiez et confirmez pour générer leurs commissions.
-          </p>
+      {/* ── Alertes risque ─────────────────────────────────────────── */}
+      {highRisk.length > 0 && (
+        <div className="mb-4 rounded-2xl border-2 border-red-300 bg-red-50 px-5 py-4 flex items-start gap-3">
+          <span className="text-2xl shrink-0">🚨</span>
+          <div>
+            <p className="font-extrabold text-red-800">
+              {highRisk.length} vente{highRisk.length > 1 ? "s" : ""} à risque ÉLEVÉ — vérification urgente requise
+            </p>
+            <p className="text-sm text-red-700 mt-1">
+              Ces déclarations présentent plusieurs signaux suspects (montant anormal, doublon client, preuve absente ou faible). Ne pas confirmer sans vérification.
+            </p>
+          </div>
+        </div>
+      )}
+      {medRisk.length > 0 && highRisk.length === 0 && (
+        <div className="mb-4 rounded-2xl border border-amber-300 bg-amber-50 px-5 py-4">
+          <p className="font-bold text-amber-800">⚡ {medRisk.length} vente{medRisk.length > 1 ? "s" : ""} avec signaux de risque modéré — à examiner</p>
+        </div>
+      )}
+      {pendingFromAffiliates.length > 0 && highRisk.length === 0 && medRisk.length === 0 && (
+        <div className="mb-4 rounded-2xl border border-amber-300 bg-amber-50 px-5 py-4">
+          <p className="font-bold text-amber-800">⏳ {pendingFromAffiliates.length} vente{pendingFromAffiliates.length > 1 ? "s" : ""} en attente de validation</p>
+          <p className="text-sm text-amber-700 mt-1">Vérifiez les preuves et confirmez pour générer les commissions.</p>
         </div>
       )}
 
@@ -92,18 +128,23 @@ export default async function VentesPage() {
                 <th>Produit</th>
                 <th>Type</th>
                 <th>Vendeur</th>
-                <th>Client</th>
+                <th>Client + Preuve</th>
                 <th>Montant</th>
                 <th>Mois payés</th>
                 <th>Comm.</th>
+                <th>Risque</th>
                 <th>Statut</th>
                 <th>Date</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {sales.map((s) => (
-                <tr key={s.id}>
+              {sales.map((s) => {
+                const risk: number = (s as any).riskScore ?? 0;
+                const flags: string | null = (s as any).riskFlags ?? null;
+                const rowBg = risk >= 50 && s.status === "PENDING" ? "bg-red-50/60" : risk >= 20 && s.status === "PENDING" ? "bg-amber-50/40" : "";
+                return (
+                <tr key={s.id} className={rowBg}>
                   <td>
                     <span className="font-mono text-xs text-muted">{s.reference}</span>
                   </td>
@@ -140,6 +181,7 @@ export default async function VentesPage() {
                     {s.pricingType === "MONTHLY_SUB" ? `${s.monthsPaid}/${MONTHLY_DURATION}` : "—"}
                   </td>
                   <td className="text-center">{s._count.commissions}</td>
+                  <td><RiskBadge score={risk} flags={flags} /></td>
                   <td>
                     <Badge tone={statusTone(s.status)}>{SALE_STATUS_LABELS[s.status]}</Badge>
                   </td>
@@ -189,10 +231,10 @@ export default async function VentesPage() {
                     </div>
                   </td>
                 </tr>
-              ))}
+              );})}
               {sales.length === 0 && (
                 <tr>
-                  <td colSpan={11} className="py-12 text-center text-muted text-sm">
+                  <td colSpan={12} className="py-12 text-center text-muted text-sm">
                     Aucune vente enregistrée.
                   </td>
                 </tr>

@@ -261,6 +261,67 @@ export async function declareSale(formData: FormData) {
   // Montant réellement encaissé (l'affilié peut l'ajuster ; défaut = prix produit).
   const amount = amountRaw > 0 ? Math.round(amountRaw) : product.price;
 
+  // ── Anti-fraude 1 : plafond montant (150 % du prix catalogue) ─────────────
+  if (product.price > 0 && amount > product.price * 1.5) return;
+
+  // ── Anti-fraude 2 : doublon client (même téléphone + même produit, 30 j) ──
+  if (customerPhone) {
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const duplicate = await prisma.sale.findFirst({
+      where: {
+        productId,
+        customerPhone,
+        createdAt: { gte: thirtyDaysAgo },
+        status: { not: "CANCELLED" },
+      },
+    });
+    if (duplicate) {
+      // Marquer comme doublon suspect plutôt que bloquer silencieusement
+      await prisma.sale.create({
+        data: {
+          reference: `VTE-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
+          productId,
+          sellerId: user.id,
+          customerName: `${name} [${channel}]`,
+          customerPhone: customerPhone || null,
+          customerEmail: customerEmail || null,
+          amount,
+          pricingType: product.pricingType,
+          status: "PENDING",
+          monthsPaid: 1,
+          proofNote: proofNote || null,
+          proofUrl: proofUrl || null,
+          riskScore: 80,
+          riskFlags: `DOUBLON_CLIENT:${duplicate.reference}`,
+        } as any,
+      });
+      const { logActivity } = await import("@/lib/activity");
+      await logActivity({ userId: user.id, action: "SALE_DECLARED", detail: `[DOUBLON SUSPECT] Produit: ${product.name} — ${amount.toLocaleString("fr-FR")} FCFA` });
+      const admins = await prisma.user.findMany({ where: { role: { in: ["ADMIN", "SUPERADMIN"] } }, select: { id: true } });
+      if (admins.length > 0) {
+        await prisma.notification.createMany({
+          data: admins.map((a) => ({
+            userId: a.id,
+            title: "⚠️ Vente suspecte — doublon client",
+            body: `${user.firstName} ${user.lastName} a déclaré une vente « ${product.name} » avec le même numéro client qu'une vente récente (réf. ${duplicate.reference}).`,
+            url: "/admin/ventes",
+          })),
+        });
+      }
+      return;
+    }
+  }
+
+  // ── Anti-fraude 3 : score de risque automatique ────────────────────────────
+  let riskScore = 0;
+  const riskReasons: string[] = [];
+  if (product.price > 0 && amount > product.price * 1.1) { riskScore += 30; riskReasons.push("MONTANT_ELEVE"); }
+  if (!proofUrl && proofNote && proofNote.length < 20) { riskScore += 25; riskReasons.push("PREUVE_FAIBLE"); }
+  if (!customerPhone && !customerEmail) { riskScore += 20; riskReasons.push("CONTACT_CLIENT_MANQUANT"); }
+  // Vérifier si ce partenaire a déjà eu des ventes REJECTED
+  const rejectedCount = await prisma.sale.count({ where: { sellerId: user.id, status: "CANCELLED" } });
+  if (rejectedCount >= 2) { riskScore += 25; riskReasons.push(`HISTORIQUE_REJETS:${rejectedCount}`); }
+
   await prisma.sale.create({
     data: {
       reference: `VTE-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
@@ -277,6 +338,7 @@ export async function declareSale(formData: FormData) {
       monthsPaid: 1,
       proofNote: proofNote || null,
       proofUrl: proofUrl || null,
+      ...(riskScore > 0 ? { riskScore, riskFlags: riskReasons.join("|") } as any : {}),
     },
   });
 
@@ -289,11 +351,12 @@ export async function declareSale(formData: FormData) {
     select: { id: true },
   });
   if (admins.length > 0) {
+    const riskPrefix = riskScore >= 50 ? "⚠️ VENTE SUSPECTE" : riskScore >= 20 ? "⚡ Risque modéré" : "🧾 Nouvelle vente";
     await prisma.notification.createMany({
       data: admins.map((a) => ({
         userId: a.id,
-        title: "🧾 Nouvelle vente à valider",
-        body: `${user.firstName} ${user.lastName} a déclaré une vente « ${product.name} » (${amount.toLocaleString("fr-FR")} FCFA). À vérifier et confirmer.`,
+        title: `${riskPrefix} à valider`,
+        body: `${user.firstName} ${user.lastName} — « ${product.name} » ${amount.toLocaleString("fr-FR")} FCFA${riskScore > 0 ? ` · Score risque : ${riskScore}/100 (${riskReasons.join(", ")})` : ""}.`,
         url: "/admin/ventes",
       })),
     });
