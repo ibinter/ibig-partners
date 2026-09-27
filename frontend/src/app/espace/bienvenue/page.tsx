@@ -222,10 +222,94 @@ export default async function BienvenuePage() {
         </div>
       </div>
 
-      {/* Nouvelles fonctionnalités */}
+      {/* Plan 30 jours */}
+      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+        <div className="bg-gradient-to-r from-slate-800 to-slate-900 px-5 py-4 flex items-center gap-3">
+          <span className="text-2xl">📅</span>
+          <div>
+            <h3 className="text-sm font-bold text-white">Votre plan de lancement — 30 jours</h3>
+            <p className="text-[11px] text-slate-400 mt-0.5">Suivez ce calendrier pour générer vos premières commissions rapidement.</p>
+          </div>
+        </div>
+        <div className="divide-y divide-slate-50">
+          {[
+            {
+              period: "J 1-3", label: "Comprendre & configurer",
+              color: "bg-blue-600", pill: "bg-blue-100 text-blue-700",
+              items: ["Lisez le Guide de Démarrage (PDF)", "Configurez votre profil et coordonnées de paiement", "Choisissez 1-2 niches selon votre réseau (ex : enseignants → SCOLABY, commerçants → GESCOMXEL)", "Activez les produits correspondants et récupérez vos liens"],
+              link: "/espace/documents", linkLabel: "📄 Mes Documents",
+            },
+            {
+              period: "J 4-7", label: "Préparer et prospecter",
+              color: "bg-amber-500", pill: "bg-amber-100 text-amber-700",
+              items: ["Copiez 2-3 argumentaires depuis le Kit Marketing", "Envoyez des messages personnalisés à 20 contacts qualifiés", "Ajoutez chaque prospect dans le CRM pour suivi", "Utilisez le Coach IA pour préparer vos réponses aux objections"],
+              link: "/espace/kit", linkLabel: "🎨 Kit Marketing",
+            },
+            {
+              period: "Sem. 2", label: "Convertir et déclarer",
+              color: "bg-emerald-600", pill: "bg-emerald-100 text-emerald-700",
+              items: ["Relancez les prospects sans réponse (J+3)", "Proposez une démo ou un devis sur les plus chauds", "Déclarez chaque vente confirmée pour créditer votre commission", "Objectif : 1ère vente dans les 14 premiers jours"],
+              link: "/espace/prospects", linkLabel: "📇 CRM Prospects",
+            },
+            {
+              period: "Sem. 3-4", label: "Recruter et multiplier",
+              color: "bg-violet-600", pill: "bg-violet-100 text-violet-700",
+              items: ["Recrutez 2-3 filleuls dans votre entourage — chaque vente qu'ils font vous rapporte", "Partagez votre lien de parrainage sur vos réseaux", "Participez aux challenges pour progresser vers SILVER", "Consultez le simulateur pour projeter vos revenus avec un réseau actif"],
+              link: "/espace/simulateur", linkLabel: "🧮 Simulateur de gains",
+            },
+          ].map((p) => (
+            <div key={p.period} className="px-5 py-4 flex gap-4 items-start">
+              <div className={`shrink-0 rounded-xl ${p.color} text-white text-[10px] font-extrabold uppercase tracking-wide px-2.5 py-1.5 text-center min-w-[52px]`}>
+                {p.period}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  <p className="text-sm font-bold text-slate-800">{p.label}</p>
+                  <span className={`text-[10px] font-bold rounded-full px-2 py-0.5 ${p.pill}`}>{p.period}</span>
+                </div>
+                <ul className="space-y-1">
+                  {p.items.map((item, i) => (
+                    <li key={i} className="flex gap-2 text-xs text-slate-600">
+                      <span className="text-slate-300 shrink-0">→</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link href={p.link} className="mt-2 inline-block text-[11px] font-bold text-blue-600 hover:underline">{p.linkLabel}</Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Raccourcis outils */}
+      <div className="rounded-2xl border border-slate-200 bg-white p-5">
+        <h3 className="text-sm font-bold text-slate-800 mb-4">🛠️ Vos outils essentiels</h3>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {[
+            { icon: "🤖", label: "Coach IA",      sub: "Argumentaires & scripts",    href: "/espace/coach" },
+            { icon: "📇", label: "CRM Prospects", sub: "Pipeline Kanban",             href: "/espace/prospects" },
+            { icon: "🧮", label: "Simulateur",    sub: "Projeter vos revenus",        href: "/espace/simulateur" },
+            { icon: "💎", label: "Commissions",   sub: "Taux & statuts",              href: "/espace/plan-compensation" },
+            { icon: "🎨", label: "Kit Marketing", sub: "Visuels & argumentaires",     href: "/espace/kit" },
+            { icon: "📄", label: "Documents",     sub: "PDF officiels",               href: "/espace/documents" },
+            { icon: "🔥", label: "Challenges",    sub: "Progresser plus vite",        href: "/espace/challenges" },
+            { icon: "🌐", label: "Mon Réseau",    sub: "Filleuls & équipe",           href: "/espace/reseau" },
+          ].map((t) => (
+            <Link key={t.href} href={t.href}
+              className="rounded-xl border border-slate-100 bg-slate-50 p-3 hover:border-blue-200 hover:bg-blue-50 transition group">
+              <p className="text-xl mb-1">{t.icon}</p>
+              <p className="text-xs font-bold text-slate-800 group-hover:text-blue-700">{t.label}</p>
+              <p className="text-[10px] text-slate-400 mt-0.5">{t.sub}</p>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Ce que la plateforme fait pour vous */}
       <div className="rounded-2xl border border-blue-100 bg-blue-50/40 p-5">
         <div className="flex items-center gap-2 mb-4">
-          <span className="rounded-full bg-blue-600 px-3 py-1 text-[10px] font-bold text-white uppercase tracking-wide">Nouveautés</span>
+          <span className="rounded-full bg-blue-600 px-3 py-1 text-[10px] font-bold text-white uppercase tracking-wide">Automatique</span>
           <h3 className="text-sm font-bold text-blue-900">Ce que la plateforme fait pour vous</h3>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -241,8 +325,8 @@ export default async function BienvenuePage() {
           </div>
           <div className="rounded-xl bg-white border border-blue-100 p-4">
             <p className="text-lg mb-1">🗂️</p>
-            <p className="text-xs font-bold text-slate-800 mb-1">CRM Pipeline Kanban</p>
-            <p className="text-[11px] text-slate-500 leading-relaxed">Suivez chaque prospect de Contacté à Converti en vue Kanban. Historique des échanges (appels, emails, réunions), relances intelligentes et export CSV.</p>
+            <p className="text-xs font-bold text-slate-800 mb-1">Cookie tracking 90 jours</p>
+            <p className="text-[11px] text-slate-500 leading-relaxed">Un prospect clique votre lien aujourd'hui et achète dans 3 mois — vous touchez quand même la commission. Le tracking dure 90 jours.</p>
           </div>
         </div>
       </div>

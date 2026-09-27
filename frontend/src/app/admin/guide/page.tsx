@@ -239,7 +239,6 @@ export default function GuidePage() {
         ["IBIG DIGITAL","Création digitale : site vitrine, e-commerce, refonte web, identité visuelle, community management, production photo/vidéo, campagnes (Meta/Google/TikTok Ads), email marketing, SEO, formation réseaux sociaux — intermark-business.com/digital","Commission : 10% N1 - 5% N2 - 2% N3"],
         ["IBIG DIGITAL KITS","Transformation numérique : intégration ERP (SAP/SAGE/Odoo/IBIG), développement web sur mesure, application mobile iOS & Android, chatbot IA, GED, kit marketing digital, formation ERP, cybersécurité & audit SI — kits.intermark-business.com","Commission : 10% N1 - 5% N2 - 2% N3"],
         ["IBIG CONSEIL+","Structuration, comptabilité, juridique, conseil stratégique, création d'entreprise — intermark-business.com/conseil","Commission : 10% N1 - 5% N2 - 2% N3 sur la mission"],
-        ["IBIG FINANCEMENT","Crédit PME, assurances (auto, santé, vie, RC pro, transport), épargne retraite, leasing, financement agricole, gestion de patrimoine — 20 offres","Commission : 5% N1 - 2,5% N2 - 1% N3"],
         ["IBIG EMPLOI & TALENTS","Recrutement CDI/CDD, placement cadres, audit RH, coaching dirigeants, outplacement, externalisation RH, GPEC, marque employeur — 20 offres","Commission : 10% N1 - 5% N2 - 2% N3"],
         ["IBIG PARTNERS","Programme d'affiliation multi-niveaux, représentation commerciale, B2B — ibigpartners.com","Commission : Variable selon branche & niveau"],
         ["IBIG MULTISERVICES","Événementiel, déménagement, maintenance, accueil VIP, logistique, gardiennage, transport VIP et 55 services — intermark-business.com/multiservices","Commission : 10% N1 - 5% N2 - 2% N3"],
@@ -440,7 +439,6 @@ export default function GuidePage() {
           ["IBIG DIGITAL","10%","5%","2%"],
           ["IBIG DIGITAL KITS","10%","5%","2%"],
           ["IBIG CONSEIL+","10%","5%","2%"],
-          ["IBIG FINANCEMENT","5%","2,5%","1%"],
           ["IBIG EMPLOI & TALENTS","10%","5%","2%"],
           ["IBIG MULTISERVICES","10%","5%","2%"],
         ],
@@ -683,38 +681,6 @@ export default function GuidePage() {
       // @ts-ignore
       py = (doc as any).lastAutoTable.finalY + 4;
 
-      // ── IBIG FINANCEMENT ──
-      if (py > 240) { newPage(); header(8,14); footer(); py = 22; }
-      py = subTitle("IBIG FINANCEMENT — N1=5% · N2=2,5% · N3=1%",py);
-      // @ts-ignore
-      autoTable(doc,{
-        startY: py,
-        head: [["Service","Tarif indicatif","N1"]],
-        body: [
-          ["Microcrédit PME (500 000 à 5 000 000 FCFA)","Sur devis","5%"],
-          ["Crédit de Trésorerie & Fonds de Roulement PME","Sur devis","5%"],
-          ["Financement Équipement / Leasing","Sur devis","5%"],
-          ["Financement Immobilier (Crédit hypothécaire)","Sur devis","5%"],
-          ["Financement Agricole & Rural","Sur devis","5%"],
-          ["Assurance Santé Collective","Dès 50 000 FCFA/mois","5%"],
-          ["Assurance Vie & Prévoyance","Dès 25 000 FCFA/mois","5%"],
-          ["Assurance Entreprise Multirisques","Dès 300 000 FCFA/an","5%"],
-          ["Assurance Auto Flotte Professionnelle","Dès 150 000 FCFA/an/véhicule","5%"],
-          ["Assurance RC Professionnelle & Décennale","Sur devis","5%"],
-          ["Plan d'Épargne Retraite Individuel","Dès 25 000 FCFA/mois","5%"],
-          ["Aide à la Levée de Fonds","Dès 400 000 FCFA","5%"],
-          ["Conseil en Investissement & Gestion de Patrimoine","Sur devis","5%"],
-        ],
-        headStyles: { fillColor: BLUE,textColor: WHITE,fontStyle: "bold",fontSize: 7.5 },
-        bodyStyles: { fontSize: 7.5,textColor: DARK },
-        alternateRowStyles: { fillColor: LIGHT },
-        margin: { left: 14,right: 14 },
-        styles: { cellPadding: 2 },
-        columnStyles: { 2: { textColor: [0,140,0] as [number,number,number],fontStyle: "bold",halign: "center" } },
-      });
-      // @ts-ignore
-      py = (doc as any).lastAutoTable.finalY + 4;
-
       // ── IBIG EMPLOI & TALENTS ──
       if (py > 240) { newPage(); header(8,14); footer(); py = 22; }
       py = subTitle("IBIG EMPLOI & TALENTS — N1=10% · N2=5% · N3=2%",py);
@@ -776,7 +742,7 @@ export default function GuidePage() {
       });
       // @ts-ignore
       py = (doc as any).lastAutoTable.finalY + 4;
-      py = infoBox("Catalogue complet : 11 branches · 14 logiciels SaaS · 10 formations certifiantes · 5 services immobiliers · 5 catégories commerce · 10 services digitaux · 8 solutions numériques · 6 missions conseil · 20 offres financement & assurances · 20 offres emploi & RH · 55 multiservices = 330+ produits et formules disponibles à promouvoir.",py,[235,255,245]);
+      py = infoBox("Catalogue complet : 10 branches · 14 logiciels SaaS · 10 formations certifiantes · 5 services immobiliers · 5 catégories commerce · 10 services digitaux · 8 solutions numériques · 6 missions conseil · 20 offres emploi & RH · 55 multiservices = 310+ produits et formules disponibles à promouvoir.",py,[235,255,245]);
 
       // ═══════════════════════════════════════════════════════════
       // PAGE 9 — KYC ET LIENS
@@ -1179,7 +1145,7 @@ export default function GuidePage() {
 
       py = subTitle("Questions fréquentes (FAQ)",py);
       const faq = [
-        ["Par ou commencer quand on est nouveau partenaire ?","Plan d'action 7 jours : Jour 1 - KYC + parcourir le catalogue 330+ produits. Jour 2 - Activer vos liens d'affiliation. Jour 3 - Partager a 10 contacts de confiance. Jours 4-5 - Recruter votre 1er filleul. Jours 6-7 - Completer 3 modules de l'Academie IBIG."],
+        ["Par ou commencer quand on est nouveau partenaire ?","Plan d'action 7 jours : Jour 1 - KYC + parcourir le catalogue 310+ produits. Jour 2 - Activer vos liens d'affiliation. Jour 3 - Partager a 10 contacts de confiance. Jours 4-5 - Recruter votre 1er filleul. Jours 6-7 - Completer 3 modules de l'Academie IBIG."],
         ["L'inscription est-elle payante ?","Non. L'inscription sur IBIG PARTNERS est 100% gratuite et sans investissement obligatoire."],
         ["Quand sont versées les commissions ?","Les commissions sont validées par l'équipe IBIG puis virées selon votre méthode de paiement configurée. Délai standard : 7 jours ouvrés après validation."],
         ["Puis-je m'inscrire depuis n'importe quel pays ?","Oui. IBIG PARTNERS est une plateforme panafricaine ouverte à tous les pays d'Afrique et à la diaspora mondiale."],
@@ -1271,11 +1237,11 @@ export default function GuidePage() {
   }
 
   const chapters = [
-    { num: "01", title: "Présentation & Branches",       desc: "11 branches, vision, mission, engagement IBIG SARL",       icon: "🌍" },
+    { num: "01", title: "Présentation & Branches",       desc: "10 branches, vision, mission, engagement IBIG SARL",       icon: "🌍" },
     { num: "02", title: "Inscription & Types de comptes", desc: "Particulier, entreprise, ONG — processus étape par étape", icon: "✍️" },
     { num: "03", title: "Tableau de bord",                desc: "Vue d'ensemble, KPIs temps réel, alertes, navigation",     icon: "📊" },
     { num: "04", title: "Commissions N1/N2/N3",           desc: "Taux par branche, statuts, bonus, dégressivité SOFT",      icon: "💰" },
-    { num: "05", title: "Catalogue des produits",          desc: "330+ produits : 14 ERP, 10 formations, immo, market, digital, kits, conseil, multiservices", icon: "📦" },
+    { num: "05", title: "Catalogue des produits",          desc: "310+ produits : 14 ERP, 10 formations, immo, market, digital, kits, conseil, multiservices", icon: "📦" },
     { num: "06", title: "KYC & Activation paiements",     desc: "Vérification identité, étapes, délais, méthodes",          icon: "🔐" },
     { num: "07", title: "Liens & QR codes",               desc: "Génération, cookie 90j, partage WhatsApp/réseaux",         icon: "🔗" },
     { num: "07b", title: "Kit Marketing",                  desc: "Argumentaires personnalisés, visuels, scripts WhatsApp, vidéos par branche", icon: "🎨" },

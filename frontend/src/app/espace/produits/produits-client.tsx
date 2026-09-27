@@ -209,7 +209,6 @@ const BRANCH_TO_SECTOR: Record<string, string> = {
   "ibig-conseil-plus": "CONSEIL",
   "ibig-market": "COMMERCE",
   "ibig-multiservices": "SERVICES",
-  "ibig-financement": "FINANCEMENT",
   "ibig-emploi-talents": "EMPLOI_RH",
 };
 
@@ -250,7 +249,6 @@ const BRANCH_ICONS: Record<string, string> = {
   "ibig-conseil-plus": "📋",
   "ibig-partners-branch": "🌐",
   "ibig-multiservices": "🛠️",
-  "ibig-financement": "💰",
   "ibig-emploi-talents": "👥",
 };
 

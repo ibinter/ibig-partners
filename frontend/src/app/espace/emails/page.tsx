@@ -14,12 +14,12 @@ const SEQ_LABELS: Record<string, string> = {
 
 const STEP_LABELS: Record<string, { title: string; desc: string }> = {
   J0:        { title: "Bienvenue & Guide PDF",           desc: "Email de bienvenue avec votre guide affilié et code" },
-  J1:        { title: "Les 11 branches IBIG",            desc: "Tableau des branches et taux de commission" },
+  J1:        { title: "Les 10 branches IBIG",            desc: "Tableau des branches et taux de commission" },
   J3:        { title: "Scripts WhatsApp",                desc: "Scripts de prospection prêts à copier" },
   J7:        { title: "Bilan semaine 1",                 desc: "Récap + plan d'action personnalisé" },
   J14:       { title: "Méthodes des affiliés actifs",    desc: "Ce que font les partenaires qui réussissent" },
   J21:       { title: "Motivation parrainage",           desc: "La force du réseau gagnant-gagnant" },
-  J45:       { title: "Nouvelles branches IBIG",         desc: "IBIG FINANCEMENT & EMPLOI & TALENTS" },
+  J45:       { title: "Nouvelles branches IBIG",         desc: "IBIG EMPLOI & TALENTS" },
   J60:       { title: "Votre espace vous attend",        desc: "Reprenez quand vous voulez" },
   IMMEDIATE: { title: "Notification immédiate",          desc: "Email envoyé en temps réel" },
 };

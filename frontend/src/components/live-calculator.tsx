@@ -80,17 +80,6 @@ const BRANCHES = [
     n3: 0.02,
   },
   {
-    key: "FINANCEMENT",
-    label: "IBIG FINANCEMENT",
-    emoji: "💰",
-    desc: "Microfinance & assurance",
-    avgPrice: 400000,
-    priceNote: "par produit financier",
-    n1: 0.05,
-    n2: 0.03,
-    n3: 0.01,
-  },
-  {
     key: "EMPLOI",
     label: "IBIG EMPLOI & TALENTS",
     emoji: "🤝",

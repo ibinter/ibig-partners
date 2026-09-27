@@ -147,13 +147,13 @@ export default async function VerificationPage() {
       {/* ── Statut VERIFIED ── */}
       {status === "VERIFIED" && (
         <>
-          <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 flex items-start gap-3">
-            <span className="text-2xl shrink-0">✅</span>
+          <div className="rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 px-5 py-5 text-white flex items-start gap-4">
+            <span className="text-3xl shrink-0">🎉</span>
             <div>
-              <p className="font-semibold text-emerald-800">Compte vérifié — Paiements activés</p>
-              <p className="mt-0.5 text-sm text-emerald-700">
-                Votre identité a été vérifiée avec succès. Vous pouvez demander un virement dès que vos
-                commissions dépassent 5 000 FCFA.
+              <p className="font-extrabold text-base">Compte vérifié — Paiements activés !</p>
+              <p className="mt-0.5 text-sm text-emerald-100 leading-relaxed">
+                Votre identité a été vérifiée avec succès. Vous pouvez désormais demander un virement
+                dès que vos commissions atteignent <strong className="text-white">5 000 FCFA</strong>.
               </p>
             </div>
           </div>
@@ -187,27 +187,23 @@ export default async function VerificationPage() {
             </div>
           )}
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <Link
-              href="/espace/paiements"
-              className="flex items-center gap-3 rounded-2xl border border-emerald-100 bg-emerald-50 px-5 py-4 hover:bg-emerald-100 transition"
-            >
-              <span className="text-2xl">💸</span>
-              <div>
-                <p className="font-semibold text-emerald-800 text-sm">Demander un virement</p>
-                <p className="text-xs text-emerald-600 mt-0.5">Seuil minimum : 5 000 FCFA</p>
-              </div>
-            </Link>
-            <Link
-              href="/espace/commissions"
-              className="flex items-center gap-3 rounded-2xl border border-blue-100 bg-blue-50 px-5 py-4 hover:bg-blue-100 transition"
-            >
-              <span className="text-2xl">📊</span>
-              <div>
-                <p className="font-semibold text-blue-800 text-sm">Voir mes commissions</p>
-                <p className="text-xs text-blue-600 mt-0.5">Toutes vos commissions en détail</p>
-              </div>
-            </Link>
+          {/* Actions rapides post-vérification */}
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { icon: "🧩", label: "Activer mes produits",   sub: "Choisir ce que je promeut",     href: "/espace/produits",    color: "border-blue-100 bg-blue-50 hover:bg-blue-100", text: "text-blue-800", sub2: "text-blue-600" },
+              { icon: "🔗", label: "Mes liens affiliés",      sub: "Récupérer mes liens de suivi",  href: "/espace/liens",       color: "border-violet-100 bg-violet-50 hover:bg-violet-100", text: "text-violet-800", sub2: "text-violet-600" },
+              { icon: "💸", label: "Demander un virement",    sub: "Seuil minimum : 5 000 FCFA",    href: "/espace/paiements",   color: "border-emerald-100 bg-emerald-50 hover:bg-emerald-100", text: "text-emerald-800", sub2: "text-emerald-600" },
+              { icon: "🚀", label: "Guide de démarrage",      sub: "Plan 30 jours inclus",          href: "/espace/bienvenue",   color: "border-amber-100 bg-amber-50 hover:bg-amber-100", text: "text-amber-800", sub2: "text-amber-600" },
+            ].map((item) => (
+              <Link key={item.href} href={item.href}
+                className={`flex items-start gap-3 rounded-2xl border px-4 py-3 transition ${item.color}`}>
+                <span className="text-2xl shrink-0">{item.icon}</span>
+                <div>
+                  <p className={`text-sm font-semibold ${item.text}`}>{item.label}</p>
+                  <p className={`text-xs mt-0.5 ${item.sub2}`}>{item.sub}</p>
+                </div>
+              </Link>
+            ))}
           </div>
         </>
       )}

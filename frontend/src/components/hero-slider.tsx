@@ -99,15 +99,6 @@ export const CATALOG_HERO_SLIDES: HeroSlide[] = [
     accent: "rose",
   },
   {
-    eyebrow: "IBIG FINANCEMENT — Microfinance & Assurance",
-    titleLead: "Accompagnez les investisseurs,",
-    titleHighlight: "touchez jusqu'à 25 000 FCFA",
-    desc: "Microcrédits PME, assurance multirisques, levée de fonds — le marché financier africain vous attend.",
-    stat: "5%", statLabel: "commission N1",
-    bg: "linear-gradient(135deg,#713f12 0%,#ca8a04 100%)",
-    accent: "yellow",
-  },
-  {
     eyebrow: "IBIG EMPLOI & TALENTS — Recrutement & RH",
     titleLead: "Placez des talents,",
     titleHighlight: "gagnez sur chaque recrutement",

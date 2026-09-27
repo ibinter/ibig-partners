@@ -51,7 +51,7 @@ const CATEGORIES = [
       {
         icon: "🏢",
         label: "Argumentaire pour un DRH",
-        prompt: "J'ai un rendez-vous avec un DRH d'une entreprise de 50 personnes la semaine prochaine. Quels produits IBIG EMPLOI & TALENTS et IBIG FINANCEMENT dois-je lui proposer ? Donne-moi un argumentaire structuré et les commissions que je peux gagner.",
+        prompt: "J'ai un rendez-vous avec un DRH d'une entreprise de 50 personnes la semaine prochaine. Quels produits IBIG EMPLOI & TALENTS dois-je lui proposer ? Donne-moi un argumentaire structuré et les commissions que je peux gagner.",
       },
       {
         icon: "🚀",

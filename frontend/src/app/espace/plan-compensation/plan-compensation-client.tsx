@@ -235,23 +235,30 @@ export default function PlanCompensationClient({ userStatus }: { userStatus: str
           {/* Services */}
           <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden sm:col-span-2">
             <div className="bg-gradient-to-r from-rose-500 to-pink-600 px-4 py-3">
-              <p className="text-xs font-bold text-white/80 uppercase tracking-wide">🛠️ Services & Produits (taux variable)</p>
-              <p className="text-[10px] text-rose-200">N1 = taux du produit · N2 = N1 × 50% · N3 = N1 × 25%</p>
+              <p className="text-xs font-bold text-white/80 uppercase tracking-wide">🛠️ Services & Produits — taux N1 par branche</p>
+              <p className="text-[10px] text-rose-200">N2 = N1 × 50% · N3 = N1 × 25%</p>
             </div>
             <div className="p-4">
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {[
-                  { branch: "IBIG IMMO TRUST", rate: 10, example: 5000000 },
-                  { branch: "IBIG CONSEIL+",   rate: 20, example: 500000 },
-                  { branch: "IBIG DIGITAL",    rate: 15, example: 300000 },
+                  { branch: "IBIG IMMO TRUST",       rate: 10, example: 5000000,  icon: "🏠" },
+                  { branch: "IBIG CONSEIL+",          rate: 15, example: 500000,   icon: "📊", note: "10-20% selon mission" },
+                  { branch: "IBIG DIGITAL",           rate: 10, example: 300000,   icon: "💻" },
+                  { branch: "IBIG DIGITAL KITS",      rate: 15, example: 400000,   icon: "🔧" },
+                  { branch: "IBIG MARKET",            rate: 8,  example: 200000,   icon: "🛒" },
+                  { branch: "IBIG EMPLOI & TALENTS",  rate: 10, example: 150000,   icon: "👥" },
+                  { branch: "IBIG MULTISERVICES",     rate: 10, example: 250000,   icon: "⚙️" },
+                  { branch: "IBIG PARTNERS (B2B)",    rate: 10, example: 500000,   icon: "🤝" },
                 ].map(r => (
                   <div key={r.branch} className="rounded-xl border border-slate-100 bg-slate-50 p-3">
-                    <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500 mb-2">{r.branch}</p>
+                    <p className="text-sm mb-1">{r.icon}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wide text-slate-600 mb-1 leading-tight">{r.branch}</p>
+                    {"note" in r && r.note && <p className="text-[9px] text-slate-400 mb-1 italic">{r.note}</p>}
                     <div className="space-y-1 text-xs">
                       <div className="flex justify-between"><span className="text-blue-600 font-bold">N1 ({r.rate}%)</span><span className="font-bold text-slate-700">{fmt(r.example * r.rate / 100)}</span></div>
                       <div className="flex justify-between"><span className="text-purple-600">N2 ({r.rate/2}%)</span><span className="text-slate-500">{fmt(r.example * r.rate / 200)}</span></div>
-                      <div className="flex justify-between"><span className="text-indigo-600">N3 ({r.rate/4}%)</span><span className="text-slate-400">{fmt(r.example * r.rate / 400)}</span></div>
-                      <div className="border-t border-slate-200 pt-1 text-[10px] text-slate-400">Exemple : {fmt(r.example)} de vente</div>
+                      <div className="flex justify-between"><span className="text-indigo-600">N3 ({(r.rate/4).toFixed(2).replace(".00","").replace(/\.?0+$/,"")}%)</span><span className="text-slate-400">{fmt(r.example * r.rate / 400)}</span></div>
+                      <div className="border-t border-slate-200 pt-1 text-[9px] text-slate-400">Ex: {fmt(r.example)}</div>
                     </div>
                   </div>
                 ))}

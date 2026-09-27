@@ -46,7 +46,6 @@ export async function FlagshipProducts() {
     "IBIG DIGITAL KITS":    { bar: "from-teal-500 to-cyan-600",     chip: "bg-teal-50 text-teal-700",     emoji: "⚙️" },
     "IBIG CONSEIL+":        { bar: "from-orange-500 to-red-600",    chip: "bg-orange-50 text-orange-700", emoji: "📊" },
     "IBIG MULTISERVICES":   { bar: "from-rose-500 to-pink-600",     chip: "bg-rose-50 text-rose-700",     emoji: "🔧" },
-    "IBIG FINANCEMENT":     { bar: "from-yellow-500 to-amber-600",  chip: "bg-amber-50 text-amber-800",   emoji: "💰" },
     "IBIG EMPLOI & TALENTS":{ bar: "from-slate-600 to-slate-800",   chip: "bg-slate-100 text-slate-700",  emoji: "🤝" },
   };
 

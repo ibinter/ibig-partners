@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PageHeader, Card } from "@/components/ui";
@@ -112,7 +113,7 @@ export default async function ContratPage() {
         </div>
 
         {contract?.confirmed ? (
-          <div className="mt-5 space-y-3">
+          <div className="mt-5 space-y-4">
             <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-4 flex items-center gap-3">
               <span className="text-2xl">✅</span>
               <div>
@@ -123,21 +124,83 @@ export default async function ContratPage() {
                 </p>
               </div>
             </div>
+
+            {/* Guide prochaine étape */}
+            {user.verificationStatus !== "VERIFIED" && (
+              <div className="rounded-xl bg-gradient-to-br from-blue-600 to-violet-700 p-5 text-white">
+                <p className="font-bold text-sm mb-1">🎉 Contrat signé — quelle est la prochaine étape ?</p>
+                <p className="text-xs text-blue-100 leading-relaxed mb-4">
+                  Pour activer le versement de vos commissions, vous devez vérifier votre identité (KYC).
+                  L&apos;équipe IBIG examine les dossiers sous 48h ouvrables.
+                </p>
+                <div className="grid grid-cols-3 gap-2 mb-4 text-center text-xs">
+                  {[
+                    ["✅", "Contrat signé"],
+                    ["→", "Vérification KYC"],
+                    ["💸", "Commissions versées"],
+                  ].map(([icon, label]) => (
+                    <div key={String(label)} className="rounded-lg bg-white/15 px-2 py-2">
+                      <p className="text-base">{icon}</p>
+                      <p className="font-semibold mt-0.5">{label}</p>
+                    </div>
+                  ))}
+                </div>
+                <Link
+                  href="/espace/verification"
+                  className="inline-flex items-center gap-2 rounded-xl bg-white text-blue-700 font-bold text-sm px-5 py-2.5 hover:bg-blue-50 transition shadow"
+                >
+                  🔐 Vérifier mon identité maintenant →
+                </Link>
+              </div>
+            )}
+
             {user.verificationStatus === "VERIFIED" && (
-              <a
-                href={`/api/contrat/${user.id}`}
-                className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition shadow-sm"
-              >
-                📥 Télécharger mon contrat (PDF)
-              </a>
+              <div className="space-y-3">
+                <a
+                  href={`/api/contrat/${user.id}`}
+                  className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition shadow-sm"
+                >
+                  📥 Télécharger mon contrat (PDF)
+                </a>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <Link href="/espace/produits" className="flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50 p-3 hover:bg-blue-100 transition">
+                    <span className="text-xl">🧩</span>
+                    <div>
+                      <p className="text-sm font-semibold text-blue-800">Activer mes produits</p>
+                      <p className="text-xs text-blue-600 mt-0.5">Choisissez ce que vous voulez promouvoir</p>
+                    </div>
+                  </Link>
+                  <Link href="/espace/bienvenue" className="flex items-start gap-3 rounded-xl border border-emerald-100 bg-emerald-50 p-3 hover:bg-emerald-100 transition">
+                    <span className="text-xl">🚀</span>
+                    <div>
+                      <p className="text-sm font-semibold text-emerald-800">Guide de démarrage</p>
+                      <p className="text-xs text-emerald-600 mt-0.5">6 étapes pour vos premières commissions</p>
+                    </div>
+                  </Link>
+                </div>
+              </div>
             )}
           </div>
         ) : (
           <form action={signContract} className="mt-5 space-y-4">
+            {/* Checklist avant signature */}
+            <div className="rounded-xl bg-amber-50 border border-amber-200 p-4 space-y-2">
+              <p className="text-xs font-bold text-amber-800 uppercase tracking-wide">Avant de signer</p>
+              {[
+                "J'ai lu l'intégralité du contrat ci-dessus",
+                "Je comprends que les commissions sont versées sur des ventes réelles confirmées",
+                "Je sais que toute fraude entraîne résiliation immédiate et poursuites",
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-2 text-xs text-amber-700">
+                  <span className="text-amber-500 shrink-0 mt-0.5">→</span>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
             <label className="flex items-start gap-3 cursor-pointer">
               <input type="checkbox" name="confirmed" required className="mt-0.5 accent-blue-600" />
               <span className="text-sm text-slate-700">
-                J'ai lu et j'accepte les termes du contrat de partenariat IBIG. Je confirme que les informations de mon compte sont exactes et que je suis majeur(e).
+                J&apos;ai lu et j&apos;accepte les termes du contrat de partenariat IBIG. Je confirme que les informations de mon compte sont exactes et que je suis majeur(e).
               </span>
             </label>
             <button type="submit" className="rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition shadow-sm">

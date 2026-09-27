@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     template: "%s | IBIG PARTNERS",
   },
   description:
-    "Rejoignez IBIG PARTNERS, le programme d'affiliation panafricain n°1 : commissions sur 14 logiciels SaaS, formations certifiantes, immobilier et 11 branches IBIG SARL. Inscription gratuite, paiement Mobile Money.",
+    "Rejoignez IBIG PARTNERS, le programme d'affiliation panafricain n°1 : commissions sur 14 logiciels SaaS, formations certifiantes, immobilier et 10 branches IBIG SARL. Inscription gratuite, paiement Mobile Money.",
   keywords: [
     "affiliation Afrique", "programme d'affiliation Côte d'Ivoire", "gagner de l'argent en ligne Afrique",
     "commission marketing Abidjan", "IBIG PARTNERS", "IBIG SARL", "réseau MLM légal Afrique",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "IBIG PARTNERS — Programme d'Affiliation Panafricain",
     description:
-      "Un seul compte pour promouvoir 14 logiciels et ERP SaaS, formations, immobilier et services des 11 branches d'IBIG SARL, avec des commissions transparentes.",
+      "Un seul compte pour promouvoir 14 logiciels et ERP SaaS, formations, immobilier et services des 10 branches d'IBIG SARL, avec des commissions transparentes.",
     siteName: "IBIG PARTNERS",
     locale: "fr_FR",
     type: "website",
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "IBIG PARTNERS — Programme d'Affiliation Panafricain",
     description:
-      "Un seul compte pour promouvoir 14 logiciels et ERP SaaS, formations, immobilier et services des 11 branches d'IBIG SARL.",
+      "Un seul compte pour promouvoir 14 logiciels et ERP SaaS, formations, immobilier et services des 10 branches d'IBIG SARL.",
     images: ["/icon-512.png"],
   },
   manifest: "/manifest.webmanifest",
@@ -120,7 +120,7 @@ export default function RootLayout({
                     height: 512,
                   },
                   description:
-                    "Programme d'affiliation panafricain : un seul compte pour accéder à 14 logiciels ERP SaaS, formations certifiantes, immobilier et services des 11 branches IBIG SARL.",
+                    "Programme d'affiliation panafricain : un seul compte pour accéder à 14 logiciels ERP SaaS, formations certifiantes, immobilier et services des 10 branches IBIG SARL.",
                   areaServed: ["CI", "SN", "CM", "BJ", "TG", "BF", "GN", "ML", "MR", "NE", "CD"],
                   sameAs: [
                     "https://www.facebook.com/ibigpartners",

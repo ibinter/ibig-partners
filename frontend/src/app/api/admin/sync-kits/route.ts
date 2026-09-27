@@ -132,20 +132,6 @@ const KITS: KitSeed[] = [
     content: "Votre contact déménage ou a besoin d'entretien ? IBIG MULTISERVICES couvre le déménagement (emballage, transport, stockage), la maintenance (plomberie, électricité, climatisation) et le nettoyage de locaux. Devis rapide, intervention sous 48h.",
   },
 
-  // ── IBIG FINANCEMENT ─────────────────────────────────────────────────
-  {
-    branchSlug: "ibig-financement", title: "Argumentaire Crédit PME", type: "ARGUMENT",
-    content: "Votre contact a besoin de financement pour son entreprise ? IBIG FINANCEMENT facilite l'accès au crédit PME (fonds de roulement, équipement, leasing), avec accompagnement du dossier de A à Z. Commission N1 = 5% du montant du dossier.",
-  },
-  {
-    branchSlug: "ibig-financement", title: "Argumentaire Assurance Entreprise", type: "ARGUMENT",
-    content: "Toute entreprise a besoin d'être couverte. IBIG FINANCEMENT propose des assurances multirisques, RC professionnelle, flotte auto et assurance santé collective pour les équipes. Des offres adaptées à toutes les tailles de PME, dès 25 000 FCFA/mois.",
-  },
-  {
-    branchSlug: "ibig-financement", title: "Argumentaire Épargne & Patrimoine", type: "ARGUMENT",
-    content: "Aidez votre entourage à préparer l'avenir : IBIG FINANCEMENT propose des plans d'épargne retraite individuels et du conseil en gestion de patrimoine. Des solutions sécurisées et accessibles, dès 25 000 FCFA/mois.",
-  },
-
   // ── IBIG EMPLOI & TALENTS ────────────────────────────────────────────
   {
     branchSlug: "ibig-emploi-talents", title: "Argumentaire Recrutement CDI/CDD", type: "ARGUMENT",
@@ -197,6 +183,6 @@ export async function POST() {
     ok: true,
     created,
     skipped,
-    message: `${created} ressource(s) de kit marketing synchronisée(s) sur les 11 branches.${skipped.length ? ` Branches introuvables : ${skipped.join(", ")}.` : ""}`,
+    message: `${created} ressource(s) de kit marketing synchronisée(s) sur les 10 branches.${skipped.length ? ` Branches introuvables : ${skipped.join(", ")}.` : ""}`,
   });
 }

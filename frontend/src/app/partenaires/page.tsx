@@ -127,6 +127,37 @@ export default async function PartenairesPage() {
           </div>
         </section>
 
+        {/* ══ POURQUOI REJOINDRE ══ */}
+        <section className="py-20 bg-white">
+          <div className="mx-auto max-w-6xl px-4">
+            <ScrollReveal animation="fade-up">
+              <div className="text-center mb-12">
+                <span className="rounded-full bg-blue-50 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-600">Pourquoi rejoindre ?</span>
+                <h2 className="mt-4 text-2xl font-extrabold text-ink sm:text-3xl">Pourquoi rejoindre IBIG PARTNERS ?</h2>
+                <p className="mx-auto mt-3 max-w-2xl text-muted">Des avantages concrets, pas des promesses. Voici ce que vous obtenez dès votre inscription.</p>
+              </div>
+            </ScrollReveal>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                { icon: "💰", title: "Commissions jusqu'à 20%", desc: "Les taux les plus élevés du marché en Côte d'Ivoire. IBIG SOFT jusqu'à 20% dès le premier mois, IBIG DIGITAL KITS 15%, et bien plus.", border: "border-l-amber-400" },
+                { icon: "🔄", title: "3 niveaux de revenus", desc: "Gagnez sur vos propres ventes (N1), sur les ventes de vos filleuls (N2) et sur les ventes de leurs filleuls (N3). Un réseau qui travaille pour vous.", border: "border-l-blue-400" },
+                { icon: "📱", title: "Paiement Mobile Money", desc: "Orange Money, Wave, MTN MoMo ou virement bancaire. Retirez dès 5 000 FCFA de commissions accumulées.", border: "border-l-green-400" },
+                { icon: "🕐", title: "Cookie tracking 90 jours", desc: "Un visiteur clique sur votre lien aujourd'hui et achète dans 3 mois — vous touchez quand même la commission. 90 jours de fenêtre garantie.", border: "border-l-violet-400" },
+                { icon: "🆓", title: "100% gratuit pour toujours", desc: "Inscription gratuite, formation gratuite, outils de suivi gratuits. Aucun frais, aucun abonnement, aucun achat obligatoire. Jamais.", border: "border-l-emerald-400" },
+                { icon: "🏢", title: "10 branches à promouvoir", desc: "Logiciels SaaS, formations, immobilier, digital, conseil, emploi, multiservices — 14 produits et plus de 1 000 missions disponibles.", border: "border-l-orange-400" },
+              ].map((item, i) => (
+                <ScrollReveal key={item.title} animation="fade-up" delay={i * 60}>
+                  <div className={`card-premium p-6 h-full border-l-4 ${item.border} hover:shadow-md transition-shadow`}>
+                    <div className="text-3xl mb-3">{item.icon}</div>
+                    <h3 className="font-bold text-ink text-sm mb-2">{item.title}</h3>
+                    <p className="text-xs text-muted leading-relaxed">{item.desc}</p>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ══ PARTENAIRES INSTITUTIONNELS ══ */}
         {institutional.length > 0 && (
           <section className="py-20 bg-white">
@@ -337,6 +368,143 @@ export default async function PartenairesPage() {
                     <p className="text-2xl mb-1">{icon}</p>
                     <p className="text-2xl font-extrabold text-amber-400">{val}</p>
                     <p className="mt-1 text-xs text-slate-400">{label}</p>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ══ COMMENT ÇA MARCHE ══ */}
+        <section className="py-20 bg-slate-50">
+          <div className="mx-auto max-w-5xl px-4">
+            <ScrollReveal animation="fade-up">
+              <div className="text-center mb-14">
+                <span className="rounded-full bg-green-50 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-green-600">Simple et rapide</span>
+                <h2 className="mt-4 text-2xl font-extrabold text-ink sm:text-3xl">Comment ça marche — 4 étapes</h2>
+                <p className="mx-auto mt-3 max-w-2xl text-muted">De l&apos;inscription à votre premier paiement en moins d&apos;une semaine.</p>
+              </div>
+            </ScrollReveal>
+            <div className="relative">
+              {/* Connecting line (desktop) */}
+              <div className="hidden lg:block absolute top-8 left-[12.5%] right-[12.5%] h-0.5 bg-brand-200 z-0" />
+              <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 relative z-10">
+                {[
+                  { num: "1", icon: "✍️", title: "Inscrivez-vous gratuitement", desc: "Créez votre compte en 2 minutes. Aucune carte bancaire, aucun frais d'entrée." },
+                  { num: "2", icon: "🎯", title: "Choisissez vos produits", desc: "Sélectionnez parmi 14 logiciels SaaS, formations, services immobiliers et plus encore." },
+                  { num: "3", icon: "🔗", title: "Partagez votre lien", desc: "Votre lien unique avec tracking cookie 90 jours. Partagez via WhatsApp, réseaux sociaux, email." },
+                  { num: "4", icon: "💸", title: "Recevez vos commissions", desc: "Paiement sur Orange Money, Wave ou MTN MoMo. Délai 7-14 jours ouvrés dès 5 000 FCFA." },
+                ].map((step, i) => (
+                  <ScrollReveal key={step.num} animation="fade-up" delay={i * 80}>
+                    <div className="flex flex-col items-center text-center">
+                      <div className="relative mb-4">
+                        <div className="h-16 w-16 rounded-full bg-brand-600 text-white flex items-center justify-center text-xl font-extrabold shadow-lg">
+                          {step.num}
+                        </div>
+                        <div className="absolute -bottom-1 -right-1 h-7 w-7 rounded-full bg-white border-2 border-brand-100 flex items-center justify-center text-sm shadow-sm">
+                          {step.icon}
+                        </div>
+                      </div>
+                      <h3 className="font-bold text-ink text-sm mb-2">{step.title}</h3>
+                      <p className="text-xs text-muted leading-relaxed">{step.desc}</p>
+                    </div>
+                  </ScrollReveal>
+                ))}
+              </div>
+            </div>
+            <ScrollReveal animation="fade-up">
+              <div className="mt-12 text-center">
+                <Link href="/rejoindre" className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-8 py-3.5 font-bold text-white shadow-md hover:bg-brand-700 transition-all hover:-translate-y-0.5">
+                  Démarrer maintenant — c&apos;est gratuit →
+                </Link>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        {/* ══ PRODUITS PHARES ══ */}
+        <section className="py-20 bg-white">
+          <div className="mx-auto max-w-6xl px-4">
+            <ScrollReveal animation="fade-up">
+              <div className="text-center mb-12">
+                <span className="rounded-full bg-amber-50 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-amber-600">À promouvoir</span>
+                <h2 className="mt-4 text-2xl font-extrabold text-ink sm:text-3xl">Nos produits phares</h2>
+                <p className="mx-auto mt-3 max-w-2xl text-muted">Des logiciels que des entreprises africaines achètent chaque mois. Vous recommandez, vous êtes payé.</p>
+              </div>
+            </ScrollReveal>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                { name: "SCOLABY", cat: "IBIG SOFT", price: "10 000 F/mois", commission: "20%", desc: "Logiciel de gestion scolaire — universités, lycées, écoles privées.", color: "bg-blue-50 text-blue-700", border: "border-blue-100" },
+                { name: "LOKATIVO", cat: "IBIG SOFT", price: "9 900 F/mois", commission: "20%", desc: "Gestion locative et immobilière pour agences et propriétaires.", color: "bg-violet-50 text-violet-700", border: "border-violet-100" },
+                { name: "IBIG FLEET 360", cat: "IBIG SOFT", price: "19 900 F/mois", commission: "20%", desc: "Gestion de flotte de véhicules — transport, BTP, sociétés de livraison.", color: "bg-amber-50 text-amber-700", border: "border-amber-100" },
+                { name: "CONSTRUIRO", cat: "IBIG SOFT", price: "15 000 F/mois", commission: "20%", desc: "Suivi de chantiers et gestion de projets de construction.", color: "bg-orange-50 text-orange-700", border: "border-orange-100" },
+                { name: "Formation EDUFORM", cat: "IBIG EDUFORM", price: "Prix variable", commission: "10%", desc: "Formations professionnelles certifiées — comptabilité, marketing, informatique et plus.", color: "bg-green-50 text-green-700", border: "border-green-100" },
+                { name: "IBIG IMMO TRUST", cat: "IMMO TRUST", price: "Sur vente immobilière", commission: "10%", desc: "Agence immobilière — vente, location et gestion de patrimoine en Côte d'Ivoire.", color: "bg-pink-50 text-pink-700", border: "border-pink-100" },
+              ].map((prod, i) => (
+                <ScrollReveal key={prod.name} animation="fade-up" delay={i * 60}>
+                  <div className={`card-premium p-5 h-full border ${prod.border} hover:shadow-md transition-shadow`}>
+                    <div className="flex items-start justify-between gap-2 mb-3">
+                      <div>
+                        <h3 className="font-extrabold text-ink text-base leading-tight">{prod.name}</h3>
+                        <p className="text-[10px] text-muted mt-0.5 uppercase tracking-wide">{prod.cat}</p>
+                      </div>
+                      <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${prod.color}`}>
+                        N1 : {prod.commission}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted leading-relaxed mb-3">{prod.desc}</p>
+                    <p className="text-xs font-semibold text-ink">{prod.price}</p>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
+            <ScrollReveal animation="fade-up">
+              <p className="text-center mt-8 text-xs text-muted">
+                Et 8 autres logiciels : ZELIVRY, STOCKFLOW, GESCOMXEL, SANTAREX, AGRIFRIK, GESTMONEY, ANOUANZÊ, IBIG FACTPRO…
+              </p>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        {/* ══ FAQ ══ */}
+        <section className="py-20 bg-white border-t border-slate-100">
+          <div className="mx-auto max-w-3xl px-4">
+            <ScrollReveal animation="fade-up">
+              <div className="text-center mb-12">
+                <span className="rounded-full bg-slate-100 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-slate-600">Vos questions</span>
+                <h2 className="mt-4 text-2xl font-extrabold text-ink sm:text-3xl">Questions fréquentes</h2>
+              </div>
+            </ScrollReveal>
+            <div className="space-y-4">
+              {[
+                {
+                  q: "C'est gratuit ? Vraiment ?",
+                  a: "Oui. Aucun frais d'inscription, aucun abonnement, aucun achat obligatoire. Jamais. Vous vous inscrivez, vous promouvez, vous êtes payé — point final.",
+                },
+                {
+                  q: "Je dois vendre quoi exactement ?",
+                  a: "Des logiciels, formations et services que des entreprises réelles achètent chaque jour en Côte d'Ivoire. Vous recommandez via votre lien, IBIG s'occupe du reste : démonstration, contrat, SAV.",
+                },
+                {
+                  q: "Comment je suis payé ?",
+                  a: "Via Orange Money, Wave, MTN MoMo ou virement bancaire dès que vous atteignez 5 000 FCFA de commissions accumulées. Délai de traitement : 7 à 14 jours ouvrés après validation.",
+                },
+                {
+                  q: "Est-ce légal ? C'est un Ponzi ?",
+                  a: "Non, absolument pas. IBIG SARL est une société légalement enregistrée en Côte d'Ivoire (Abidjan, Cocody Riviera Palmeraie). Les commissions sont versées uniquement sur des ventes réelles de produits réels à des clients réels. Même modèle qu'Amazon Associates ou les programmes d'affiliation des grandes marques.",
+                },
+                {
+                  q: "Combien peut-on gagner réellement ?",
+                  a: "Cela dépend de votre activité. Exemple concret : 5 ventes SCOLABY par mois à 10 000 F × 20% = 2 000 F chacune = 10 000 FCFA/mois avec vos seules ventes. Avec un réseau de 10 filleuls actifs qui font chacun 3 ventes par mois, le N2 multiplie vos revenus sans effort supplémentaire.",
+                },
+              ].map((faq, i) => (
+                <ScrollReveal key={i} animation="fade-up" delay={i * 50}>
+                  <div className="rounded-xl border border-slate-200 bg-white p-6 hover:border-brand-200 transition-colors">
+                    <h3 className="font-bold text-ink text-sm mb-3 flex items-start gap-2">
+                      <span className="text-brand-600 shrink-0 mt-0.5">Q.</span>
+                      {faq.q}
+                    </h3>
+                    <p className="text-sm text-muted leading-relaxed pl-5">{faq.a}</p>
                   </div>
                 </ScrollReveal>
               ))}

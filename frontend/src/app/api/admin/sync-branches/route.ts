@@ -87,15 +87,6 @@ const BRANCHES_DATA = [
     order: 9, active: true,
   },
   {
-    slug: "ibig-financement", name: "IBIG FINANCEMENT",
-    tagline: "Épargne, crédit, assurance & investissement",
-    description: "IBIG FINANCEMENT accompagne particuliers et entreprises dans tous leurs besoins financiers : tontines digitales, plans d'épargne, accompagnement crédit (personnel, PME, immobilier, leasing), souscription d'assurances (vie, auto, santé, voyage), placement OPCVM, obligations d'État et conseil en gestion de patrimoine. Intermédiation financière au service de l'Afrique.",
-    website: "https://intermark-business.com/financement",
-    offerType: "Service financier & assurance",
-    commissionModel: "5% N1 • 2,5% N2 • 1% N3",
-    order: 10, active: true,
-  },
-  {
     slug: "ibig-emploi-talents", name: "IBIG EMPLOI & TALENTS",
     tagline: "Recrutement, placement & RH externalisée",
     description: "IBIG EMPLOI & TALENTS est le pôle ressources humaines du groupe IBIG SARL : recrutement de cadres, techniciens et ouvriers qualifiés, placement de personnel domestique, intérim, mise à disposition d'équipes, externalisation RH, insertion professionnelle et formation. La solution RH complète pour entreprises et candidats.",
@@ -122,7 +113,7 @@ export async function POST() {
     data: { active: false },
   });
 
-  // Upsert des 11 branches officielles
+  // Upsert des 10 branches officielles
   let upserted = 0;
   for (const b of BRANCHES_DATA) {
     await prisma.branch.upsert({

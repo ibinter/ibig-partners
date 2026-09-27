@@ -70,7 +70,7 @@ Comment orienter le partenaire sur les missions :
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 PRODUITS ET COMMISSIONS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-11 branches IBIG SARL :
+10 branches IBIG SARL :
 
 • IBIG SOFT — 14 logiciels/ERP SaaS : Scolaby (écoles, dès 10k/mois), IBIG Fleet 360 (flottes, dès 19,9k/mois), Lokativo (locatif, dès 9,9k/mois), GESCOMXEL (commerce, dès 5k/mois), Zelivry (livraison, dès 4,9k/mois), STOCKFLOW ERP (stock, dès 5k/mois), CONSTRUIRO ERP (BTP, dès 15k/mois), SANTAREX ERP (santé, dès 12k/mois), AGRIFRIK (agri, dès 6,5k/mois), GESTMONEY (Mobile Money, dès 9,9k/mois), ANOUANZÊ ERP (ONG, dès 12,9k/mois), IBIG FactPro (facturation, dès 4,9k/mois), SECRETIS ERP (secrétariat, dès 4,9k/mois), IBIG DocPro (documents à l'unité, dès 100 FCFA)
   → Commission 20% N1 dégressif sur 4 mois (M1=20%, M2=15%, M3=10%, M4=5%)
@@ -94,9 +94,6 @@ PRODUITS ET COMMISSIONS
 • IBIG CONSEIL+ — audit, comptabilité, juridique, création d'entreprise, structuration
   → Commission 10% N1/5% N2/2% N3
 
-• IBIG FINANCEMENT — 20 offres : crédit PME (dès 500k→5M FCFA), leasing, assurance santé (50k/mois), assurance vie (25k/mois), assurance auto flotte (150k/an), assurance entreprise multirisques (300k/an), RC pro, épargne retraite (25k/mois), levée de fonds (400k), gestion de patrimoine
-  → Commission 5% N1/2,5% N2/1% N3
-  → Cibles : DG de PME, DAF, transporteurs (flotte), employeurs (santé collective), professions libérales (RC pro)
 
 • IBIG EMPLOI & TALENTS — 20 offres : recrutement CDI (300k), CDD (150k), placement cadres (200k), externalisation RH (200k/mois), audit RH (200k), coaching dirigeants (150k/mois), GPEC (350k), outplacement (300k), portage salarial, assessment center (250k)
   → Commission 10% N1/5% N2/2% N3

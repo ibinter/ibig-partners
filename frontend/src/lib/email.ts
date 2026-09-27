@@ -812,8 +812,8 @@ export async function sendOnboardingJ0Email(opts: {
     </h2>
     <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
       ${isFr
-        ? `Votre compte vient d'être activé. Vous faites maintenant partie du réseau d'affiliation <strong>INTERMARK BUSINESS INTERNATIONAL GROUP</strong> — 11 branches, 330+ produits & services.`
-        : `Your account has just been activated. You are now part of the <strong>INTERMARK BUSINESS INTERNATIONAL GROUP</strong> affiliate network — 11 branches, 330+ products & services.`}
+        ? `Votre compte vient d'être activé. Vous faites maintenant partie du réseau d'affiliation <strong>INTERMARK BUSINESS INTERNATIONAL GROUP</strong> — 10 branches, 310+ produits & services.`
+        : `Your account has just been activated. You are now part of the <strong>INTERMARK BUSINESS INTERNATIONAL GROUP</strong> affiliate network — 10 branches, 310+ products & services.`}
     </p>
 
     <div style="background:linear-gradient(135deg,#0b5fff,#1a3fbf);border-radius:12px;padding:24px 28px;margin-bottom:24px;color:#fff;">
@@ -832,8 +832,8 @@ export async function sendOnboardingJ0Email(opts: {
       </p>
       <p style="margin:0;font-size:14px;color:#166534;line-height:1.9;">
         ${isFr
-          ? `1. Téléchargez votre <a href="${SITE}/espace/guide" style="color:#0b5fff;font-weight:700;">Guide Affilié PDF</a> — tout savoir sur les 11 branches<br/>2. Activez vos liens d'affiliation dans <a href="${SITE}/espace/liens" style="color:#0b5fff;font-weight:700;">Mes Liens</a><br/>3. Complétez votre KYC pour recevoir vos premières commissions`
-          : `1. Download your <a href="${SITE}/espace/guide" style="color:#0b5fff;font-weight:700;">Affiliate Guide PDF</a> — all about the 11 branches<br/>2. Activate your affiliate links in <a href="${SITE}/espace/liens" style="color:#0b5fff;font-weight:700;">My Links</a><br/>3. Complete your KYC to receive your first commissions`}
+          ? `1. Téléchargez votre <a href="${SITE}/espace/guide" style="color:#0b5fff;font-weight:700;">Guide Affilié PDF</a> — tout savoir sur les 10 branches<br/>2. Activez vos liens d'affiliation dans <a href="${SITE}/espace/liens" style="color:#0b5fff;font-weight:700;">Mes Liens</a><br/>3. Complétez votre KYC pour recevoir vos premières commissions`
+          : `1. Download your <a href="${SITE}/espace/guide" style="color:#0b5fff;font-weight:700;">Affiliate Guide PDF</a> — all about the 10 branches<br/>2. Activate your affiliate links in <a href="${SITE}/espace/liens" style="color:#0b5fff;font-weight:700;">My Links</a><br/>3. Complete your KYC to receive your first commissions`}
       </p>
     </div>
 
@@ -866,7 +866,7 @@ export async function sendOnboardingJ0Email(opts: {
   });
 }
 
-// Onboarding J1 — Découvrir les 11 branches
+// Onboarding J1 — Découvrir les 10 branches
 export async function sendOnboardingJ1Email(opts: {
   to: string;
   firstName: string;
@@ -881,7 +881,6 @@ export async function sendOnboardingJ1Email(opts: {
     { icon: "🎨", name: "IBIG DIGITAL", taux: "10%", desc: isFr ? "Sites web & communication" : "Websites & communication" },
     { icon: "🤖", name: "IBIG DIGITAL KITS", taux: "15%", desc: isFr ? "IA, ERP, kits numériques" : "AI, ERP, digital kits" },
     { icon: "📊", name: "IBIG CONSEIL+", taux: "10%", desc: isFr ? "Comptabilité & conseil" : "Accounting & consulting" },
-    { icon: "🏦", name: "IBIG FINANCEMENT", taux: "5%", desc: isFr ? "Crédit PME, assurances" : "SME credit, insurance" },
     { icon: "👔", name: "IBIG EMPLOI & TALENTS", taux: "10%", desc: isFr ? "Recrutement & RH" : "Recruitment & HR" },
     { icon: "🌍", name: "IBIG PARTNERS", taux: "Variable", desc: isFr ? "Programme d'affiliation" : "Affiliate program" },
     { icon: "🔧", name: "IBIG MULTISERVICES", taux: "10%", desc: isFr ? "55 services événements/logistique" : "55 services events/logistics" },
@@ -902,8 +901,8 @@ export async function sendOnboardingJ1Email(opts: {
     </h2>
     <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
       ${isFr
-        ? "Chaque branche est une opportunité de commission. Voici un aperçu rapide des 11 branches du groupe IBIG."
-        : "Each branch is a commission opportunity. Here is a quick overview of IBIG's 11 branches."}
+        ? "Chaque branche est une opportunité de commission. Voici un aperçu rapide des 10 branches du groupe IBIG."
+        : "Each branch is a commission opportunity. Here is a quick overview of IBIG's 10 branches."}
     </p>
 
     <div style="background:#f8fafc;border-radius:12px;overflow:hidden;margin-bottom:24px;">
@@ -934,7 +933,7 @@ export async function sendOnboardingJ1Email(opts: {
   return sendEmail({
     to: opts.to,
     subject: isFr
-      ? `Jour 1 — Vos 11 branches IBIG et comment en tirer profit`
+      ? `Jour 1 — Vos 10 branches IBIG et comment en tirer profit`
       : `Day 1 — Your 11 IBIG branches and how to profit`,
     html,
   });
@@ -1214,27 +1213,17 @@ export async function sendReengageJ45Email(opts: {
   const isFr = opts.lang !== "en";
   const html = layout(`
     <h2 style="margin:0 0 8px;font-size:24px;color:#0f1729;">
-      ${isFr ? `${opts.firstName}, IBIG a lancé 2 nouvelles branches 🚀` : `${opts.firstName}, IBIG launched 2 new branches 🚀`}
+      ${isFr ? `${opts.firstName}, IBIG a lancé une nouvelle branche 🚀` : `${opts.firstName}, IBIG launched a new branch 🚀`}
     </h2>
     <p style="margin:0 0 20px;color:#5b6577;font-size:15px;line-height:1.6;">
       ${isFr
-        ? "Depuis votre dernière connexion, le groupe IBIG a lancé IBIG FINANCEMENT et IBIG EMPLOI & TALENTS. Ce sont des marchés porteurs avec de vraies opportunités."
-        : "Since your last login, the IBIG group has launched IBIG FINANCEMENT and IBIG EMPLOI & TALENTS. These are promising markets with real opportunities."}
+        ? "Depuis votre dernière connexion, le groupe IBIG a lancé IBIG EMPLOI & TALENTS. C'est un marché porteur avec de vraies opportunités."
+        : "Since your last login, the IBIG group has launched IBIG EMPLOI & TALENTS. This is a promising market with real opportunities."}
     </p>
 
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
       <tr>
-        <td style="padding:0 8px 0 0;width:50%;vertical-align:top;">
-          <div style="background:#eff6ff;border-radius:12px;padding:20px;border:1px solid #bfdbfe;height:100%;">
-            <p style="margin:0 0 4px;font-size:20px;">🏦</p>
-            <p style="margin:0 0 6px;font-size:14px;font-weight:800;color:#1e40af;">IBIG FINANCEMENT</p>
-            <p style="margin:0 0 8px;font-size:13px;color:#3b82f6;">5% N1 · 2,5% N2 · 1% N3</p>
-            <p style="margin:0;font-size:13px;color:#5b6577;">
-              ${isFr ? "Crédit PME, leasing, assurances, épargne retraite, levée de fonds." : "SME credit, leasing, insurance, retirement savings, fundraising."}
-            </p>
-          </div>
-        </td>
-        <td style="padding:0 0 0 8px;width:50%;vertical-align:top;">
+        <td style="padding:0;width:100%;vertical-align:top;">
           <div style="background:#f0fdf4;border-radius:12px;padding:20px;border:1px solid #bbf7d0;height:100%;">
             <p style="margin:0 0 4px;font-size:20px;">👔</p>
             <p style="margin:0 0 6px;font-size:14px;font-weight:800;color:#166534;">IBIG EMPLOI & TALENTS</p>

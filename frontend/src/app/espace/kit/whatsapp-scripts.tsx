@@ -179,6 +179,123 @@ Des questions ? Je suis là — ${a.name} (${a.code})`,
     ],
   },
   {
+    category: "💼 Entreprises & B2B",
+    color: "from-slate-700 to-slate-900",
+    items: [
+      {
+        label: "IBIG DIGITAL KITS — ERP & transformation digitale",
+        text: (a: AffiliateInfo) =>
+          `Bonjour [PRENOM] 👋
+
+Tu gères une entreprise de taille moyenne et tu cherches à structurer tes processus ?
+
+*IBIG DIGITAL KITS* propose des solutions ERP, IA, cybersécurité et développement sur mesure — conçues pour les PME et institutions africaines.
+
+Des outils qui remplacent 5 logiciels différents par une seule plateforme intégrée.
+
+Je peux organiser une présentation avec un expert IBIG si tu veux aller plus loin.
+
+${a.name} — Partenaire IBIG (${a.code})`,
+      },
+      {
+        label: "IBIG CONSEIL+ — comptabilité & création d'entreprise",
+        text: (a: AffiliateInfo) =>
+          `Bonjour [PRENOM] 👋
+
+Tu viens de créer ou tu veux créer ton entreprise ? Ou tu cherches un cabinet sérieux pour ta comptabilité ?
+
+*IBIG CONSEIL+* accompagne les entrepreneurs : création de société, comptabilité, audit fiscal, certification ISO et stratégie d'entreprise.
+
+Des experts locaux qui connaissent la réalité ivoirienne et africaine.
+
+Je peux te mettre en contact directement. ${a.name} (${a.code})`,
+      },
+      {
+        label: "IBIG IMMO TRUST — achat/vente immobilier",
+        text: (a: AffiliateInfo) =>
+          `Bonjour [PRENOM] 👋
+
+Tu cherches un terrain, un appartement ou une maison à Abidjan ? Ou tu as un bien à vendre ou louer ?
+
+*IBIG IMMO TRUST* est une agence immobilière de confiance avec un portefeuille de biens vérifiés — terrains, résidences, bureaux, locations et accompagnement diaspora.
+
+Dis-moi ton projet et je te mets en contact avec l'équipe. ${a.name} (${a.code})`,
+      },
+      {
+        label: "IBIG EMPLOI & TALENTS — recrutement RH",
+        text: (a: AffiliateInfo) =>
+          `Bonjour [PRENOM] 👋
+
+Tu recrutes pour ton entreprise ou tu cherches un emploi qualifié ?
+
+*IBIG EMPLOI & TALENTS* accompagne les entreprises pour le recrutement, le placement et l'externalisation RH — avec une base de candidats qualifiés et un suivi sérieux.
+
+Tu veux que je t'envoie plus d'infos ? ${a.name} (${a.code})`,
+      },
+    ],
+  },
+  {
+    category: "📱 Réseaux sociaux (Facebook / LinkedIn)",
+    color: "from-blue-700 to-indigo-800",
+    items: [
+      {
+        label: "Post Facebook — logiciels PME",
+        text: (a: AffiliateInfo) =>
+          `🔧 Tu gères une entreprise en Côte d'Ivoire ?
+
+Ces logiciels SaaS africains vont changer ta façon de travailler :
+
+✅ SCOLABY — gestion scolaire (10 000 F/mois)
+✅ STOCKFLOW — gestion de stock (5 000 F/mois)
+✅ GESCOMXEL — gestion commerciale (5 000 F/mois)
+✅ IBIG FACTPRO — facturation pro (4 900 F/mois)
+✅ IBIG FLEET 360 — gestion de flotte (19 900 F/mois)
+
+Essai gratuit disponible. Paiement Mobile Money.
+
+📩 Contactez-moi pour une démo : ${a.name}
+🔗 Code partenaire : ${a.code}`,
+      },
+      {
+        label: "Post LinkedIn — opportunité partenariat B2B",
+        text: (a: AffiliateInfo) =>
+          `Vous êtes consultant, formateur ou responsable commercial en Afrique de l'Ouest ?
+
+Le Groupe IBIG SARL recherche des partenaires affiliés pour développer son portefeuille de solutions dans votre réseau.
+
+🔹 14 logiciels SaaS métiers
+🔹 Formations professionnelles certifiantes
+🔹 Services immobiliers, digitaux et conseils
+🔹 Commissions jusqu'à 20% — sur 3 niveaux
+🔹 Cookie tracking 90 jours · Paiement Mobile Money
+
+Programme 100% gratuit. Pas d'investissement requis.
+
+Je suis ${a.name}, partenaire IBIG (code : ${a.code}).
+Envoyez-moi un message si vous souhaitez en savoir plus.
+
+#IBIG #Affiliation #PME #Afrique #CotedIvoire`,
+      },
+      {
+        label: "Story/Status WhatsApp — général",
+        text: (a: AffiliateInfo) =>
+          `💰 Tu veux gagner des commissions sans investir ?
+
+Je suis partenaire IBIG PARTNERS.
+Je recommande des logiciels, formations et services à des entreprises.
+Et je touche jusqu'à 20% de commission par vente.
+
+✅ Gratuit
+✅ Paiement Mobile Money
+✅ Commissions sur 3 niveaux
+
+Intéressé(e) ? Réponds à ce message 👇
+
+${a.name} · Code : ${a.code}`,
+      },
+    ],
+  },
+  {
     category: "⚡ Clôture & conversion",
     color: "from-amber-500 to-orange-600",
     items: [
