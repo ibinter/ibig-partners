@@ -69,10 +69,15 @@ const COUNTRY_CODES = [
 
 function parsePhoneCode(phone: string | null | undefined): { code: string; num: string } {
   if (!phone) return { code: "+225", num: "" };
+  // Strip leading spaces and sanitize (remove negative sign from corrupted values)
+  const clean = phone.trim().replace(/^-/, "");
+  if (!clean) return { code: "+225", num: "" };
+  const normalized = clean.startsWith("+") ? clean : "+" + clean;
   for (const c of COUNTRY_CODES) {
-    if (phone.startsWith(c.code)) return { code: c.code, num: phone.slice(c.code.length).trim() };
+    if (normalized.startsWith(c.code)) return { code: c.code, num: normalized.slice(c.code.length).trim() };
   }
-  return { code: "+225", num: phone };
+  // Local number without country code — keep as-is in the num field
+  return { code: "+225", num: clean.replace(/^\+/, "") };
 }
 
 function WhatsAppField({ name, defaultValue, required, label }: {
@@ -542,9 +547,9 @@ export function VerificationForm({ initialType, existing }: {
             </div>
             <div className="p-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <F label="Contact 1 — Nom et prénom" name="contact1Name" value={contact1Name} onChange={setContact1Name} required placeholder="Kouamé Alice" />
-              <F label="Contact 1 — Téléphone / WhatsApp" name="contact1Phone" value={contact1Phone} onChange={setContact1Phone} required placeholder="+225 07 00 00 00 00" />
+              <WhatsAppField label="Contact 1 — Téléphone / WhatsApp" name="contact1Phone" defaultValue={existing?.contact1Phone} required />
               <F label="Contact 2 — Nom et prénom" name="contact2Name" value={contact2Name} onChange={setContact2Name} required placeholder="Traoré Mohamed" />
-              <F label="Contact 2 — Téléphone / WhatsApp" name="contact2Phone" value={contact2Phone} onChange={setContact2Phone} required placeholder="+225 05 00 00 00 00" />
+              <WhatsAppField label="Contact 2 — Téléphone / WhatsApp" name="contact2Phone" defaultValue={existing?.contact2Phone} required />
             </div>
           </div>
 
