@@ -99,7 +99,7 @@ function WhatsAppField({ name, defaultValue, required, label }: {
           value={code}
           onChange={e => setCode(e.target.value)}
           className="rounded-xl border border-slate-200 bg-slate-50 px-2 py-2.5 text-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 shrink-0"
-          style={{ minWidth: "180px" }}
+          style={{ maxWidth: "140px" }}
         >
           {COUNTRY_CODES.map(c => (
             <option key={c.code} value={c.code}>{c.label}</option>
@@ -111,7 +111,7 @@ function WhatsAppField({ name, defaultValue, required, label }: {
           onChange={e => setNum(e.target.value)}
           required={required}
           placeholder="07 00 00 00 00"
-          className={inputCls}
+          className={`${inputCls} min-w-0`}
         />
       </div>
       <p className="mt-1 text-[11px] text-slate-400">Ex : {code} 07 00 00 00 00 — ce numéro doit recevoir des messages WhatsApp</p>
