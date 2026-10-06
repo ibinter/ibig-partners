@@ -193,16 +193,23 @@ export async function registerAction(_prev: unknown, formData: FormData) {
   // Créer un token de vérification email (valide 24h)
   const crypto = await import("crypto");
   const verifyToken = crypto.randomBytes(32).toString("hex");
-  await (prisma as any).emailVerificationToken.create({
-    data: {
-      userId: user.id,
-      token: verifyToken,
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    },
-  });
+  let verifyUrl = "";
+  try {
+    await (prisma as any).emailVerificationToken.create({
+      data: {
+        userId: user.id,
+        token: verifyToken,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      },
+    });
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    verifyUrl = `${siteUrl}/api/auth/verify-email?token=${verifyToken}`;
+  } catch (e) {
+    console.error("[auth] emailVerificationToken.create échoué — migration manquante ?", e);
+  }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  const verifyUrl = `${siteUrl}/api/auth/verify-email?token=${verifyToken}`;
+  if (!verifyUrl) verifyUrl = `${siteUrl}/api/auth/verify-email?token=${verifyToken}`;
 
   after(async () => {
     await sendRegistrationReceivedEmail({
