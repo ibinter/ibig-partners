@@ -9,9 +9,11 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   try {
     const user = await requireUser();
+    const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
     const notifs = await prisma.notification.findMany({
       where: {
         OR: [{ userId: user.id }, { userId: null }],
+        createdAt: { gte: since },
       },
       orderBy: { createdAt: "desc" },
       take: 3,
