@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     "rejoindre IBIG PARTNERS", "inscription réseau commercial Afrique", "créer compte partenaire IBIG",
     "opportunités d'affaires Côte d'Ivoire", "devenir partenaire IBIG SARL", "rejoindre réseau commercial Abidjan",
   ],
-  alternates: { canonical: "/rejoindre" },
+  alternates: { canonical: "/rejoindre", languages: { "en": "/en/rejoindre" } },
   openGraph: {
     title: "Rejoindre IBIG PARTNERS — Inscription Gratuite en 2 minutes",
     description: "Devenez partenaire IBIG SARL gratuitement et commencez à générer des commissions dès aujourd'hui sur 14 logiciels, formations et services.",

@@ -11,6 +11,10 @@ export const metadata: Metadata = {
   title: "Catalogue des produits | IBIG PARTNERS",
   description:
     "Découvrez tous les produits IBIG SARL : logiciels SaaS, formations certifiantes, services immobiliers, marketing et plus. Gagnez des commissions en les promouvant.",
+  alternates: {
+    canonical: "/catalogue",
+    languages: { "en": "/en/catalogue" },
+  },
   openGraph: {
     title: "Catalogue des produits IBIG PARTNERS",
     description:

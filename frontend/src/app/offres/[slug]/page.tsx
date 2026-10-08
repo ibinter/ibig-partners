@@ -203,8 +203,42 @@ export default async function OffrePage({
 
   const shareUrl = affCode ? `${baseUrl}/offres/${product.slug}?ref=${affCode}` : `${baseUrl}/offres/${product.slug}`;
 
+  // JSON-LD Service — rich snippets Google
+  const baseUrlJsonLd = process.env.NEXT_PUBLIC_SITE_URL || "https://ibigpartners.com";
+  let md2: any = {};
+  try { if (product.marketingData) md2 = JSON.parse(product.marketingData); } catch { /**/ }
+  const taglineJsonLd = md2.tagline || product.description?.slice(0, 160) || product.name;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `${baseUrlJsonLd}/offres/${product.slug}`,
+    name: product.name,
+    description: taglineJsonLd,
+    url: `${baseUrlJsonLd}/offres/${product.slug}`,
+    provider: {
+      "@type": "Organization",
+      name: product.branch?.name ?? "IBIG SARL",
+      url: product.branch?.website ?? "https://ibigpartners.com",
+    },
+    offers: product.price > 0 ? {
+      "@type": "Offer",
+      priceCurrency: "XOF",
+      price: product.price,
+      availability: "https://schema.org/InStock",
+      url: `${baseUrlJsonLd}/offres/${product.slug}`,
+    } : undefined,
+    areaServed: {
+      "@type": "Place",
+      name: "Afrique de l'Ouest",
+    },
+  };
+
   return (
     <div className="min-h-screen bg-slate-50">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {affCode && <SetRefCookie code={affCode} />}
 
       {/* ── BARRE STICKY MOBILE ─────────────────────────────── */}

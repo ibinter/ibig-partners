@@ -1,5 +1,26 @@
+import type { Metadata } from "next";
 export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
+
+export const metadata: Metadata = {
+  title: "Témoignages Partenaires IBIG — Avis & Résultats Réels",
+  description:
+    "Découvrez les témoignages authentiques des partenaires IBIG PARTNERS : commissions gagnées, ventes réalisées, progression de statut. Des résultats concrets en Côte d'Ivoire et en Afrique.",
+  alternates: { canonical: "/temoignages" },
+  openGraph: {
+    title: "Témoignages — Ce que disent les partenaires IBIG PARTNERS",
+    description:
+      "Avis réels de partenaires affiliés IBIG SARL : commissions Mobile Money, ventes de logiciels SaaS, formations et services. Rejoignez le réseau panafricain.",
+    siteName: "IBIG PARTNERS",
+    locale: "fr_FR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Témoignages Partenaires IBIG PARTNERS",
+    description: "Les vrais résultats de nos partenaires affiliés en Afrique.",
+  },
+};
 
 export default async function TemoignagesPublicPage() {
   const testimonials = await (prisma as any).testimonial.findMany({

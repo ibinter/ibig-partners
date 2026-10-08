@@ -1,6 +1,27 @@
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Classement des Meilleurs Partenaires IBIG — Top Affiliés du Mois",
+  description:
+    "Consultez le classement mensuel des meilleurs partenaires affiliés IBIG PARTNERS : ventes, commissions et progressions. Rejoignez le réseau et grimpez dans le classement.",
+  alternates: { canonical: "/classement-public" },
+  openGraph: {
+    title: "Top Partenaires IBIG — Classement Mensuel",
+    description:
+      "Les partenaires les plus performants du programme d'affiliation IBIG PARTNERS. Classement mis à jour chaque mois.",
+    siteName: "IBIG PARTNERS",
+    locale: "fr_FR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Classement Partenaires IBIG PARTNERS",
+    description: "Top affiliés du mois — ventes et commissions en Afrique.",
+  },
+};
 
 export default async function ClassementPublicPage() {
   const now = new Date();

@@ -7,13 +7,16 @@ import { getCurrentUser } from "@/lib/auth";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Catalogue des missions | IBIG PARTNERS",
+  title: "Missions commerciales IBIG PARTNERS — Candidatez & Gagnez",
   description:
-    "Parcourez les missions disponibles sur IBIG PARTNERS : génération de leads, ventes, formations, logiciels SaaS et plus. Inscrivez-vous pour candidater.",
+    "Parcourez 1 095+ missions disponibles sur IBIG PARTNERS : génération de leads, ventes de logiciels SaaS, formations, immobilier et services. Inscription gratuite pour candidater.",
+  alternates: {
+    canonical: "/missions",
+  },
   openGraph: {
-    title: "Catalogue des missions IBIG PARTNERS",
+    title: "Missions IBIG PARTNERS — Missions commerciales rémunérées en Afrique",
     description:
-      "Des missions concrètes à accomplir pour gagner des commissions. Visibles sans inscription — candidature réservée aux partenaires.",
+      "1 095+ missions concrètes à accomplir pour gagner des commissions. Visibles sans inscription — candidature réservée aux partenaires IBIG.",
     type: "website",
   },
 };
