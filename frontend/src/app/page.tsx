@@ -115,7 +115,7 @@ const STATUS_CONFIG = [
 
 function SectionEyebrow({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <span className={`label-caps inline-block rounded-full px-4 py-1.5 ${className}`}>
+    <span className={`label-caps inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[11px] font-bold tracking-[0.12em] ${className}`}>
       {children}
     </span>
   );
@@ -188,13 +188,20 @@ export default async function HomePage() {
       <SiteHeader />
 
       {/* ═══ Bandeau stats live ═══ */}
-      <div className="bg-gradient-to-r from-slate-900 to-slate-800 py-2.5 text-center">
-        <div className="mx-auto flex flex-wrap items-center justify-center gap-6 px-4 text-xs font-semibold text-slate-300">
-          <span>👥 <span className="text-white">{liveStats.partners.toLocaleString("fr-FR")}</span> partenaires inscrits</span>
-          <span className="text-slate-600 hidden sm:inline">|</span>
-          <span>🛍️ <span className="text-white">{liveStats.products.toLocaleString("fr-FR")}</span> produits disponibles</span>
-          <span className="text-slate-600 hidden sm:inline">|</span>
-          <span>🎯 <span className="text-white">{liveStats.missions > 0 ? liveStats.missions.toLocaleString("fr-FR") + "+" : "1 095+"}</span> missions disponibles</span>
+      <div className="relative overflow-hidden bg-[#030d1f] py-3">
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-900/40 via-transparent to-brand-900/40 pointer-events-none" />
+        <div className="mx-auto flex flex-wrap items-center justify-center gap-4 sm:gap-8 px-4">
+          {[
+            { emoji: "👥", val: liveStats.partners.toLocaleString("fr-FR"), label: "partenaires" },
+            { emoji: "🛍️", val: liveStats.products.toLocaleString("fr-FR"), label: "produits" },
+            { emoji: "🎯", val: liveStats.missions > 0 ? liveStats.missions.toLocaleString("fr-FR") + "+" : "1 095+", label: "missions" },
+          ].map(({ emoji, val, label }) => (
+            <span key={label} className="flex items-center gap-2 text-xs font-medium text-slate-400">
+              <span className="text-sm">{emoji}</span>
+              <span className="font-extrabold text-white tabular-nums" style={{ fontFamily: "var(--font-jakarta,sans-serif)" }}>{val}</span>
+              <span>{label}</span>
+            </span>
+          ))}
         </div>
       </div>
 
@@ -218,11 +225,11 @@ export default async function HomePage() {
       </HeroSlider>
 
       {/* ═══════════ TRUST BAR ═══════════ */}
-      <section className="border-b border-slate-100 bg-white py-5">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-10 gap-y-3 px-4 text-sm font-medium text-slate-600">
+      <section className="border-b border-slate-100/80 bg-white py-4">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-6 gap-y-2.5 px-4">
           {TRUST.map(({ icon, text }) => (
-            <span key={text} className="flex items-center gap-2">
-              <Icon name={icon} className="h-4 w-4 text-brand-500" />
+            <span key={text} className="flex items-center gap-2 rounded-full bg-slate-50 px-3.5 py-1.5 text-xs font-semibold text-slate-600 ring-1 ring-slate-100">
+              <Icon name={icon} className="h-3.5 w-3.5 text-brand-500 shrink-0" />
               {text}
             </span>
           ))}
@@ -233,58 +240,78 @@ export default async function HomePage() {
       <OpportunitySubmitCta />
 
       {/* ═══════════ 3 ÉTAPES — comment ça marche ═══════════ */}
-      <section className="bg-white py-10 border-b border-slate-100">
-        <div className="mx-auto max-w-5xl px-4">
-          <div className="text-center mb-8">
-            <span className="label-caps inline-block rounded-full bg-brand-50 px-4 py-1.5 text-brand-600">
-              Simple comme bonjour
-            </span>
-            <h2 className="mt-3 text-2xl font-extrabold text-ink sm:text-3xl">
-              3 étapes pour vos premières commissions
+      <section className="relative overflow-hidden bg-white py-16 border-b border-slate-100">
+        {/* Fond déco subtil */}
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-brand-50/60 blur-3xl" />
+          <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-amber-50/50 blur-3xl" />
+        </div>
+        <div className="relative mx-auto max-w-5xl px-4">
+          <div className="text-center mb-12">
+            <SectionEyebrow className="bg-brand-50 text-brand-600">✦ Simple comme bonjour</SectionEyebrow>
+            <h2 className="mt-4 text-3xl font-extrabold text-ink sm:text-4xl lg:text-5xl">
+              3 étapes pour vos premières<br className="hidden sm:block" /> commissions
             </h2>
           </div>
-          <div className="grid gap-6 sm:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-3">
             {[
               {
                 step: "01",
                 icon: "⚡",
-                title: "Inscrivez-vous — 2 min",
+                title: "Inscrivez-vous en 2 min",
                 desc: "Créez votre compte gratuitement. Aucune carte bancaire, aucun investissement, aucun stock.",
-                color: "from-brand-500 to-brand-700",
+                from: "from-brand-500",
+                to: "to-brand-700",
+                light: "bg-brand-50",
               },
               {
                 step: "02",
                 icon: "🔗",
                 title: "Choisissez & partagez",
                 desc: "Activez les produits qui vous correspondent et partagez votre lien unique sur WhatsApp, Facebook, ou en personne.",
-                color: "from-amber-500 to-orange-600",
+                from: "from-amber-400",
+                to: "to-orange-500",
+                light: "bg-amber-50",
               },
               {
                 step: "03",
                 icon: "💰",
-                title: "Soyez payé en 7 jours",
+                title: "Payé en 7 jours",
                 desc: "Dès qu'une vente est confirmée, votre commission est versée par Orange Money, Wave ou virement bancaire.",
-                color: "from-emerald-500 to-teal-600",
+                from: "from-emerald-500",
+                to: "to-teal-600",
+                light: "bg-emerald-50",
               },
-            ].map((step) => (
-              <div key={step.step} className="relative flex flex-col items-start gap-4 rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
-                <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${step.color} text-2xl shadow`}>
+            ].map((step, i) => (
+              <div key={step.step} className="card-premium group relative flex flex-col gap-5 p-7 overflow-hidden">
+                {/* Numéro fantôme */}
+                <span className="absolute -right-2 -top-3 text-8xl font-black text-slate-50 select-none leading-none transition-transform group-hover:scale-110" style={{ fontFamily: "var(--font-jakarta,sans-serif)" }}>
+                  {step.step}
+                </span>
+                {/* Icône */}
+                <div className={`relative z-10 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${step.from} ${step.to} text-2xl shadow-lg`}>
                   {step.icon}
                 </div>
-                <div className="absolute top-4 right-4 text-5xl font-extrabold text-slate-50 select-none">{step.step}</div>
-                <div>
-                  <h3 className="font-extrabold text-ink">{step.title}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-muted">{step.desc}</p>
+                <div className="relative z-10">
+                  <h3 className="text-lg font-bold text-ink">{step.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted">{step.desc}</p>
                 </div>
+                {/* Indicateur de connexion entre étapes */}
+                {i < 2 && (
+                  <div className="pointer-events-none absolute -right-3 top-1/2 z-20 hidden -translate-y-1/2 sm:flex">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-md text-xs font-black text-slate-400">→</span>
+                  </div>
+                )}
               </div>
             ))}
           </div>
-          <div className="mt-8 text-center">
+          <div className="mt-10 text-center">
             <a
               href="/rejoindre"
-              className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-8 py-4 font-bold text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-brand-700"
+              className="group inline-flex items-center gap-3 rounded-2xl bg-gradient-to-r from-brand-600 to-brand-700 px-9 py-4 font-bold text-white shadow-xl shadow-brand-500/25 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand-500/30"
             >
-              Commencer maintenant — c&apos;est gratuit →
+              <span>Commencer maintenant — c&apos;est gratuit</span>
+              <span className="transition-transform group-hover:translate-x-1">→</span>
             </a>
           </div>
         </div>
@@ -300,17 +327,21 @@ export default async function HomePage() {
       {tickerPartners.length > 0 && <PartnersTicker partners={tickerPartners} />}
 
       {/* ═══════════ CALCULATEUR LIVE (NEW) ═══════════ */}
-      <section id="simulateur" className="scroll-mt-20 bg-slate-50 py-20">
-        <div className="mx-auto max-w-6xl px-4">
+      <section id="simulateur" className="scroll-mt-20 relative overflow-hidden py-20 sm:py-28" style={{ background: "linear-gradient(160deg, #f8faff 0%, #eef4ff 50%, #f0fdf4 100%)" }}>
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute top-0 right-0 h-72 w-72 rounded-full bg-brand-200/30 blur-3xl" />
+          <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-emerald-200/30 blur-3xl" />
+        </div>
+        <div className="relative mx-auto max-w-6xl px-4">
           <ScrollReveal animation="fade-up">
-            <div className="text-center mb-10">
+            <div className="text-center mb-12">
               <SectionEyebrow className="bg-amber-50 text-amber-600">
                 ⚡ Simulez · Décidez · Lancez-vous
               </SectionEyebrow>
-              <h2 className="mt-4 text-3xl font-extrabold text-ink sm:text-4xl">
+              <h2 className="mt-5 text-3xl font-extrabold text-ink sm:text-4xl lg:text-5xl">
                 Combien pourriez-vous gagner ?
               </h2>
-              <p className="mx-auto mt-3 max-w-xl text-muted">
+              <p className="mx-auto mt-4 max-w-xl text-muted text-base">
                 Bougez les sliders et découvrez votre revenu potentiel en temps réel.
               </p>
             </div>
@@ -322,31 +353,40 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════ MISSION / AFRIQUE ═══════════ */}
-      <section id="mission" className="relative overflow-hidden bg-white py-14 sm:py-20 lg:py-24">
-        <div className="mx-auto max-w-6xl px-4">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
+      <section id="mission" className="relative overflow-hidden py-16 sm:py-24 lg:py-32" style={{ background: "linear-gradient(135deg, #020b1a 0%, #041630 50%, #071e40 100%)" }}>
+        {/* Décos */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute top-0 right-0 h-[500px] w-[500px] translate-x-1/3 -translate-y-1/4 rounded-full bg-brand-600/10 blur-3xl" />
+          <div className="absolute bottom-0 left-0 h-[400px] w-[400px] -translate-x-1/3 translate-y-1/4 rounded-full bg-emerald-500/8 blur-3xl" />
+          {/* Grille de points */}
+          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+        </div>
+        <div className="relative mx-auto max-w-6xl px-4">
+          <div className="grid items-center gap-14 lg:grid-cols-2">
             <ScrollReveal animation="slide-left">
               <div>
-                <SectionEyebrow className="bg-emerald-50 text-emerald-600">Notre raison d&apos;être</SectionEyebrow>
-                <h2 className="mt-4 text-3xl font-extrabold text-ink sm:text-4xl">
-                  La plateforme d&apos;opportunités pensée pour l&apos;Afrique
+                <SectionEyebrow className="bg-emerald-500/15 text-emerald-400">✦ Notre raison d&apos;être</SectionEyebrow>
+                <h2 className="mt-5 text-4xl font-extrabold text-white sm:text-5xl lg:text-6xl leading-[1.05]">
+                  La plateforme<br />
+                  <span className="bg-gradient-to-r from-brand-400 to-emerald-400 bg-clip-text text-transparent">pensée pour</span><br />
+                  l&apos;Afrique
                 </h2>
-                <p className="mt-4 text-lg leading-relaxed text-muted">
+                <p className="mt-6 text-base leading-relaxed text-slate-300 max-w-lg">
                   IBIG PARTNERS n&apos;est pas qu&apos;un programme d&apos;affiliation. C&apos;est un
-                  levier d&apos;inclusion économique : permettre à chacun de générer un revenu
+                  levier d&apos;inclusion économique — permettre à chacun de générer un revenu
                   digne en valorisant des solutions africaines, et de bâtir une équipe qui
                   perpétue ces revenus.
                 </p>
-                <p className="mt-3 leading-relaxed text-muted">
+                <p className="mt-4 leading-relaxed text-slate-400">
                   Notre objectif : faire émerger une génération d&apos;entrepreneurs du
                   numérique, du Nord au Sud du continent, et au-delà avec la diaspora.
                 </p>
                 <Link
                   href="/rejoindre"
-                  className="mt-7 inline-flex items-center gap-2 rounded-xl bg-brand-600 px-6 py-3 font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-brand-700"
+                  className="group mt-8 inline-flex items-center gap-3 rounded-2xl bg-white px-7 py-4 font-bold text-brand-700 shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:bg-brand-50"
                 >
                   Rejoindre le mouvement
-                  <Icon name="rocket" className="h-4 w-4" />
+                  <Icon name="rocket" className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
             </ScrollReveal>
@@ -354,12 +394,12 @@ export default async function HomePage() {
             <div className="grid gap-4 sm:grid-cols-2">
               {MISSION.map((m, i) => (
                 <ScrollReveal key={m.title} animation="fade-up" delay={i * 100}>
-                  <div className="card-premium h-full p-6">
-                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600">
+                  <div className="card-glass h-full p-6">
+                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500/20 to-brand-700/20 text-brand-300 ring-1 ring-white/10">
                       <Icon name={m.icon} className="h-6 w-6" />
                     </div>
-                    <h3 className="mt-4 font-bold text-ink">{m.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted">{m.desc}</p>
+                    <h3 className="mt-4 font-bold text-white">{m.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-slate-400">{m.desc}</p>
                   </div>
                 </ScrollReveal>
               ))}
@@ -369,29 +409,29 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════ POURQUOI ═══════════ */}
-      <section className="bg-slate-50 py-14 sm:py-20 lg:py-24">
+      <section className="bg-white py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-4">
           <ScrollReveal animation="fade-up">
             <div className="text-center">
-              <SectionEyebrow className="bg-brand-50 text-brand-600">Pourquoi nous choisir</SectionEyebrow>
-              <h2 className="mt-4 text-3xl font-extrabold text-ink sm:text-4xl">
-                Tous les avantages, aucune contrainte
+              <SectionEyebrow className="bg-brand-50 text-brand-600">✦ Pourquoi nous choisir</SectionEyebrow>
+              <h2 className="mt-5 text-3xl font-extrabold text-ink sm:text-4xl lg:text-5xl">
+                Tous les avantages,<br className="hidden sm:block" /> aucune contrainte
               </h2>
-              <p className="mx-auto mt-3 max-w-xl text-muted">
+              <p className="mx-auto mt-4 max-w-xl text-muted text-base leading-relaxed">
                 Une plateforme conçue pour vous donner les atouts d&apos;un commercial
                 d&apos;élite, en toute liberté.
               </p>
             </div>
           </ScrollReveal>
 
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {POSITIONING.map(({ icon, title, desc }, i) => (
               <ScrollReveal key={title} animation="fade-up" delay={i * 100}>
-                <div className="card-premium group h-full p-6">
-                  <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 transition-transform group-hover:scale-110">
-                    <Icon name={icon} className="h-6 w-6" />
+                <div className="card-premium group h-full p-7">
+                  <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-lg shadow-brand-500/25 transition-all duration-300 group-hover:scale-110 group-hover:shadow-brand-500/40">
+                    <Icon name={icon} className="h-7 w-7" />
                   </div>
-                  <h3 className="mt-4 font-bold text-ink">{title}</h3>
+                  <h3 className="mt-5 text-base font-bold text-ink">{title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted">{desc}</p>
                 </div>
               </ScrollReveal>
@@ -401,15 +441,18 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════ BRANCHES ═══════════ */}
-      <section id="branches" className="bg-white py-14 sm:py-20 lg:py-24">
-        <div className="mx-auto max-w-6xl px-4">
+      <section id="branches" className="relative overflow-hidden bg-slate-50 py-16 sm:py-24 lg:py-32">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[800px] w-[800px] rounded-full bg-brand-50/80 blur-3xl" />
+        </div>
+        <div className="relative mx-auto max-w-6xl px-4">
           <ScrollReveal animation="fade-up">
             <div className="text-center">
-              <SectionEyebrow className="bg-violet-50 text-violet-600">INTERMARK BUSINESS INTERNATIONAL GROUP SARL</SectionEyebrow>
-              <h2 className="mt-4 text-3xl font-extrabold text-ink sm:text-4xl">
+              <SectionEyebrow className="bg-violet-50 text-violet-600">✦ IBIG SARL</SectionEyebrow>
+              <h2 className="mt-5 text-3xl font-extrabold text-ink sm:text-4xl lg:text-5xl">
                 {branches.length || "10"} branches à promouvoir
               </h2>
-              <p className="mx-auto mt-3 max-w-2xl text-muted">
+              <p className="mx-auto mt-4 max-w-2xl text-muted text-base leading-relaxed">
                 Chaque branche dispose de sa ligne de produits et de son propre modèle
                 de commissions — tout géré depuis un seul espace partenaire. À elle seule,
                 la branche IBIG SOFT compte 14 logiciels métiers couvrant plus de 17 secteurs.
@@ -417,22 +460,23 @@ export default async function HomePage() {
             </div>
           </ScrollReveal>
 
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {branches.map((b, i) => {
               const accent = BRANCH_ACCENTS[i % BRANCH_ACCENTS.length];
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const branchWebsite: string | undefined = (b as any).website;
               const cardContent = (
                 <div className="card-premium group flex h-full flex-col overflow-hidden p-0">
-                  <div className={`h-1.5 w-full bg-gradient-to-r ${accent.bar}`} />
-                  <div className="flex flex-1 flex-col p-6">
-                    <div className={`inline-flex h-11 w-11 items-center justify-center rounded-xl ${accent.chip}`}>
-                      <Icon name="building" className="h-5 w-5" />
+                  {/* Barre colorée haute */}
+                  <div className={`h-1 w-full bg-gradient-to-r ${accent.bar}`} />
+                  <div className="flex flex-1 flex-col p-7">
+                    <div className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl ${accent.chip} transition-transform duration-300 group-hover:scale-110`}>
+                      <Icon name="building" className="h-6 w-6" />
                     </div>
-                    <h3 className="mt-4 text-lg font-extrabold text-ink">{b.name}</h3>
-                    <p className="label-caps mt-1 text-slate-400">{b.tagline}</p>
-                    <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-600">{b.description}</p>
-                    <div className="mt-4 space-y-1.5 border-t border-slate-100 pt-3 text-xs text-muted">
+                    <h3 className="mt-5 text-lg font-extrabold text-ink leading-tight">{b.name}</h3>
+                    <p className="label-caps mt-1.5 text-slate-400 text-[10px]">{b.tagline}</p>
+                    <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-500">{b.description}</p>
+                    <div className="mt-5 space-y-1.5 border-t border-slate-100 pt-4 text-xs text-muted">
                       {b.offerType && (
                         <p><span className="font-semibold text-slate-700">Offre :</span> {b.offerType}</p>
                       )}
@@ -440,8 +484,8 @@ export default async function HomePage() {
                         <p><span className="font-semibold text-slate-700">Commission :</span> {b.commissionModel}</p>
                       )}
                       {branchWebsite && (
-                        <p className="mt-2">
-                          <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-600">
+                        <p className="mt-3">
+                          <span className={`inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r ${accent.bar} px-3 py-1.5 text-xs font-bold text-white shadow-sm`}>
                             ↗ Voir le site
                           </span>
                         </p>
@@ -477,15 +521,15 @@ export default async function HomePage() {
       <CommissionDetails />
 
       {/* ═══════════ COMMISSIONS ═══════════ */}
-      <section id="commissions" className="bg-slate-50 py-14 sm:py-20 lg:py-24">
+      <section id="commissions" className="bg-white py-16 sm:py-24 lg:py-32">
         <div className="mx-auto max-w-6xl px-4">
           <ScrollReveal animation="fade-up">
             <div className="text-center">
-              <SectionEyebrow className="bg-emerald-50 text-emerald-600">Rémunération transparente</SectionEyebrow>
-              <h2 className="mt-4 text-3xl font-extrabold text-ink sm:text-4xl">
+              <SectionEyebrow className="bg-emerald-50 text-emerald-600">✦ Rémunération transparente</SectionEyebrow>
+              <h2 className="mt-5 text-3xl font-extrabold text-ink sm:text-4xl lg:text-5xl">
                 Grille de commissions
               </h2>
-              <p className="mx-auto mt-3 max-w-2xl text-muted">
+              <p className="mx-auto mt-4 max-w-2xl text-muted text-base leading-relaxed">
                 Vous touchez sur vos ventes <strong>et</strong> sur celles de vos filleuls
                 jusqu&apos;au 3ème niveau.
               </p>
@@ -572,15 +616,15 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════ SIMULATEUR ═══════════ */}
-      <section className="gradient-simulateur py-14 sm:py-20 lg:py-24 text-white">
+      <section className="py-16 sm:py-24 lg:py-32 text-white" style={{ background: "linear-gradient(135deg, #030d20 0%, #061535 40%, #082050 100%)" }}>
         <div className="mx-auto max-w-6xl px-4">
           <ScrollReveal animation="fade-up">
             <div className="text-center">
-              <SectionEyebrow className="bg-white/10 text-brand-200">Exemple concret</SectionEyebrow>
-              <h2 className="mt-4 text-3xl font-extrabold sm:text-4xl">
+              <SectionEyebrow className="bg-white/10 text-brand-200">✦ Exemples concrets</SectionEyebrow>
+              <h2 className="mt-5 text-3xl font-extrabold sm:text-4xl lg:text-5xl">
                 Combien puis-je gagner&nbsp;?
               </h2>
-              <p className="mx-auto mt-3 max-w-xl text-brand-200">
+              <p className="mx-auto mt-4 max-w-xl text-brand-200 text-base leading-relaxed">
                 Scénarios réalistes sur plusieurs branches IBIG — logiciels SaaS, formations, digital, immobilier et services.
               </p>
             </div>
@@ -620,7 +664,7 @@ export default async function HomePage() {
               },
             ].map((scenario) => (
               <ScrollReveal key={scenario.label} animation="scale-in" delay={scenario.delay}>
-                <div className={`flex h-full flex-col rounded-2xl border p-6 backdrop-blur-sm ${scenario.border}`}>
+                <div className={`flex h-full flex-col rounded-3xl border p-7 backdrop-blur-sm ${scenario.border}`}>
                   {scenario.badge && (
                     <div className="mb-1 flex justify-end">
                       <span className="rounded-full bg-gold-400/20 px-2 py-0.5 text-xs font-bold text-gold-400">
@@ -661,9 +705,10 @@ export default async function HomePage() {
             <div className="mt-6 text-center">
               <Link
                 href="/rejoindre"
-                className="inline-block rounded-xl bg-white px-8 py-4 font-bold text-brand-700 shadow-xl transition-all duration-200 hover:-translate-y-1 hover:bg-brand-50 hover:shadow-2xl"
+                className="group inline-flex items-center gap-3 rounded-2xl bg-white px-9 py-4 font-extrabold text-brand-700 shadow-2xl shadow-black/30 transition-all duration-300 hover:-translate-y-2 hover:bg-brand-50 hover:shadow-3xl"
               >
-                Commencer à gagner maintenant →
+                Commencer à gagner maintenant
+                <span className="transition-transform group-hover:translate-x-1">→</span>
               </Link>
             </div>
           </ScrollReveal>
@@ -799,15 +844,18 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════ STATUTS ═══════════ */}
-      <section id="statuts" className="bg-slate-50 py-14 sm:py-20 lg:py-24">
-        <div className="mx-auto max-w-6xl px-4">
+      <section id="statuts" className="relative overflow-hidden bg-slate-50 py-16 sm:py-24 lg:py-32">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-amber-50/60 blur-3xl" />
+        </div>
+        <div className="relative mx-auto max-w-6xl px-4">
           <ScrollReveal animation="fade-up">
             <div className="text-center">
-              <SectionEyebrow className="bg-amber-50 text-amber-600">Progressez et gagnez plus</SectionEyebrow>
-              <h2 className="mt-4 text-3xl font-extrabold text-ink sm:text-4xl">
+              <SectionEyebrow className="bg-amber-50 text-amber-600">✦ Progressez et gagnez plus</SectionEyebrow>
+              <h2 className="mt-5 text-3xl font-extrabold text-ink sm:text-4xl lg:text-5xl">
                 Votre statut grandit avec vous
               </h2>
-              <p className="mx-auto mt-3 max-w-2xl text-muted">
+              <p className="mx-auto mt-4 max-w-2xl text-muted text-base leading-relaxed">
                 Plus vous vendez et développez votre réseau, plus votre taux de commission
                 augmente automatiquement.
               </p>
@@ -933,17 +981,15 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════ CONFIANCE & TRANSPARENCE ═══════════ */}
-      <section id="transparence" className="bg-slate-50 py-20">
+      <section id="transparence" className="bg-white py-16 sm:py-24">
         <div className="mx-auto max-w-5xl px-4">
           <ScrollReveal animation="fade-up">
-            <div className="text-center mb-12">
-              <span className="label-caps inline-block rounded-full px-4 py-1.5 bg-emerald-50 text-emerald-600">
-                Programme d&apos;affiliation — pas un Ponzi
-              </span>
-              <h2 className="mt-4 text-3xl font-extrabold text-ink sm:text-4xl">
+            <div className="text-center mb-14">
+              <SectionEyebrow className="bg-emerald-50 text-emerald-600">✦ Confiance & Légitimité</SectionEyebrow>
+              <h2 className="mt-5 text-3xl font-extrabold text-ink sm:text-4xl lg:text-5xl">
                 Pourquoi IBIG PARTNERS est légitime
               </h2>
-              <p className="mx-auto mt-3 max-w-2xl text-muted">
+              <p className="mx-auto mt-4 max-w-2xl text-muted text-base leading-relaxed">
                 Un système de Ponzi n&apos;a aucun produit réel. Ici, chaque commission est liée à une vente réelle.
                 Voici les preuves concrètes.
               </p>
@@ -952,41 +998,17 @@ export default async function HomePage() {
 
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {([
-              {
-                icon: "✅",
-                title: "Inscription 100% gratuite",
-                desc: "Aucun frais d'entrée, aucun achat obligatoire, aucun stock à constituer. Vous ne risquez rien financièrement.",
-              },
-              {
-                icon: "🛍️",
-                title: "Des produits réels et livrables",
-                desc: "Logiciels SaaS, formations certifiantes, transactions immobilières, services digitaux — des clients les utilisent aujourd'hui.",
-              },
-              {
-                icon: "💰",
-                title: "Commission = vente, pas recrutement",
-                desc: "Si personne ne vend rien, personne n'est payé. Vos gains viennent du chiffre d'affaires généré, jamais de l'inscription d'un nouveau membre.",
-              },
-              {
-                icon: "📋",
-                title: "Taux publics et transparents",
-                desc: "20% N1, 10% N2, 5% N3 — tout est affiché publiquement. Aucune promesse de rendement garanti. Zéro opacité.",
-              },
-              {
-                icon: "🏢",
-                title: "Entreprise enregistrée en Côte d'Ivoire",
-                desc: "IBIG SARL — Intermark Business International Group — est une société légalement constituée avec des activités physiques vérifiables.",
-              },
-              {
-                icon: "🌍",
-                title: "10 branches indépendantes du programme",
-                desc: "IBIG SOFT, EDUFORM, IMMO TRUST… existent et fonctionnent avec ou sans partenaires affiliés. Le produit précède le programme.",
-              },
+              { icon: "✅", title: "Inscription 100% gratuite", desc: "Aucun frais d'entrée, aucun achat obligatoire, aucun stock à constituer. Vous ne risquez rien financièrement." },
+              { icon: "🛍️", title: "Des produits réels et livrables", desc: "Logiciels SaaS, formations certifiantes, transactions immobilières, services digitaux — des clients les utilisent aujourd'hui." },
+              { icon: "💰", title: "Commission = vente, pas recrutement", desc: "Si personne ne vend rien, personne n'est payé. Vos gains viennent du chiffre d'affaires généré, jamais de l'inscription d'un nouveau membre." },
+              { icon: "📋", title: "Taux publics et transparents", desc: "20% N1, 10% N2, 5% N3 — tout est affiché publiquement. Aucune promesse de rendement garanti. Zéro opacité." },
+              { icon: "🏢", title: "Entreprise enregistrée en Côte d'Ivoire", desc: "IBIG SARL — Intermark Business International Group — est une société légalement constituée avec des activités physiques vérifiables." },
+              { icon: "🌍", title: "10 branches indépendantes du programme", desc: "IBIG SOFT, EDUFORM, IMMO TRUST… existent et fonctionnent avec ou sans partenaires affiliés. Le produit précède le programme." },
             ] as { icon: string; title: string; desc: string }[]).map((item, i) => (
               <ScrollReveal key={item.title} animation="fade-up" delay={i * 60}>
-                <div className="card-premium flex flex-col gap-3 p-6 h-full">
-                  <span className="text-3xl">{item.icon}</span>
-                  <h3 className="font-bold text-ink">{item.title}</h3>
+                <div className="card-premium flex flex-col gap-4 p-7 h-full">
+                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-3xl">{item.icon}</span>
+                  <h3 className="font-bold text-ink text-base">{item.title}</h3>
                   <p className="text-sm text-muted leading-relaxed">{item.desc}</p>
                 </div>
               </ScrollReveal>
@@ -1002,12 +1024,12 @@ export default async function HomePage() {
       </section>
 
       {/* ═══════════ FAQ ═══════════ */}
-      <section id="faq" className="bg-white py-14 sm:py-20 lg:py-24">
+      <section id="faq" className="bg-slate-50 py-16 sm:py-24">
         <div className="mx-auto max-w-3xl px-4">
           <ScrollReveal animation="fade-up">
             <div className="text-center">
-              <SectionEyebrow className="bg-brand-50 text-brand-600">Foire aux questions</SectionEyebrow>
-              <h2 className="mt-4 text-3xl font-extrabold text-ink sm:text-4xl">Questions fréquentes</h2>
+              <SectionEyebrow className="bg-brand-50 text-brand-600">✦ Foire aux questions</SectionEyebrow>
+              <h2 className="mt-5 text-3xl font-extrabold text-ink sm:text-4xl lg:text-5xl">Questions fréquentes</h2>
             </div>
           </ScrollReveal>
 
@@ -1026,55 +1048,73 @@ export default async function HomePage() {
       <Testimonials />
 
       {/* ═══════════ CTA FINAL ═══════════ */}
-      <section className="bg-gradient-to-br from-brand-700 via-brand-600 to-brand-800 py-14 sm:py-20 lg:py-24 text-white">
-        <div className="mx-auto max-w-4xl px-4 text-center">
+      <section className="relative overflow-hidden py-20 sm:py-32 text-white" style={{ background: "linear-gradient(135deg, #020b1a 0%, #041630 40%, #0a2550 80%, #061535 100%)" }}>
+        {/* Décos d'arrière-plan */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 h-[600px] w-[600px] rounded-full bg-brand-600/15 blur-3xl" />
+          <div className="absolute -bottom-40 -left-40 h-[500px] w-[500px] rounded-full bg-emerald-500/10 blur-3xl" />
+          <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle, white 1.5px, transparent 1.5px)", backgroundSize: "36px 36px" }} />
+        </div>
+
+        <div className="relative mx-auto max-w-4xl px-4 text-center">
           <ScrollReveal animation="fade-up">
-            {/* Urgence */}
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-brand-100 mb-6">
-              <span className="flex h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
+            {/* Statut live */}
+            <div className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/8 px-5 py-2.5 text-sm font-semibold text-slate-200 mb-8 backdrop-blur-sm">
+              <span className="flex h-2.5 w-2.5 animate-pulse rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
               Inscription gratuite · Paiement garanti sous 7 jours
             </div>
 
-            <h2 className="text-3xl font-extrabold sm:text-5xl">
-              Rejoignez IBIG PARTNERS<br className="hidden sm:block" /> maintenant — c&apos;est gratuit
+            <h2 className="text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl" style={{ fontFamily: "var(--font-jakarta,sans-serif)", letterSpacing: "-0.04em" }}>
+              Rejoignez IBIG PARTNERS
+              <br />
+              <span className="bg-gradient-to-r from-brand-300 to-emerald-300 bg-clip-text text-transparent">
+                maintenant — c&apos;est gratuit
+              </span>
             </h2>
-            <p className="mt-6 text-lg text-brand-100 sm:text-xl">
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-300 leading-relaxed sm:text-xl">
               Des centaines de partenaires en Afrique francophone génèrent déjà des revenus avec nos produits.
-              Plus de <strong className="text-white">1 095 missions</strong> vous attendent dans 10 branches.
+              Plus de <strong className="font-extrabold text-white">1 095 missions</strong> vous attendent dans {branches.length || "10"} branches.
             </p>
 
             {/* Mini-preuves sociales */}
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-sm">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               {[
-                "✅ Inscription en 2 min",
-                "💸 Payé par Orange Money ou Wave",
-                "🔓 Aucun investissement requis",
-                "🌍 Ouvert diaspora",
-              ].map((t) => (
-                <span key={t} className="rounded-full bg-white/10 px-3 py-1.5 font-medium text-brand-100">{t}</span>
+                { e: "✅", t: "Inscription en 2 min" },
+                { e: "💸", t: "Orange Money & Wave" },
+                { e: "🔓", t: "Aucun investissement" },
+                { e: "🌍", t: "Ouvert à la diaspora" },
+              ].map(({ e, t }) => (
+                <span key={t} className="flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 text-sm font-medium text-slate-200 backdrop-blur-sm">
+                  <span>{e}</span>{t}
+                </span>
               ))}
             </div>
 
-            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/rejoindre"
-                className="w-full rounded-xl bg-white px-8 py-4 font-extrabold text-brand-700 shadow-xl transition-all hover:-translate-y-1 hover:bg-brand-50 hover:shadow-2xl sm:w-auto"
+                className="group w-full rounded-2xl bg-gradient-to-r from-brand-500 to-brand-600 px-9 py-4.5 font-extrabold text-white shadow-2xl shadow-brand-500/30 transition-all duration-300 hover:-translate-y-2 hover:shadow-3xl hover:shadow-brand-500/40 sm:w-auto"
               >
-                Créer mon compte maintenant →
+                <span className="flex items-center justify-center gap-3">
+                  Créer mon compte maintenant
+                  <span className="transition-transform group-hover:translate-x-1">→</span>
+                </span>
               </Link>
               <a
                 href={`https://wa.me/2250778882592?text=${encodeURIComponent("Bonjour IBIG PARTNERS 👋 Je veux des informations sur le programme d'affiliation.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full rounded-xl border border-white/30 bg-white/10 px-8 py-4 font-bold text-white shadow-sm transition-all hover:-translate-y-1 hover:bg-white/20 sm:w-auto flex items-center justify-center gap-2"
+                className="group w-full rounded-2xl border border-white/20 bg-white/10 px-9 py-4.5 font-bold text-white backdrop-blur-sm transition-all duration-300 hover:-translate-y-2 hover:bg-white/18 hover:border-white/30 sm:w-auto"
               >
-                <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 shrink-0">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                </svg>
-                Parler sur WhatsApp
+                <span className="flex items-center justify-center gap-3">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 shrink-0 text-emerald-400">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                  </svg>
+                  Parler sur WhatsApp
+                </span>
               </a>
             </div>
-            <p className="mt-6 text-sm text-brand-200">Aucun frais caché · Sans engagement · Support 7j/7</p>
+            <p className="mt-8 text-sm text-slate-500">Aucun frais caché · Sans engagement · Support 7j/7</p>
           </ScrollReveal>
         </div>
       </section>

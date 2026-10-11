@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Poppins } from "next/font/google";
+import { Plus_Jakarta_Sans, DM_Sans } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { PWARegister, PWAInstallBanner } from "@/components/pwa-register";
@@ -7,17 +7,17 @@ import { TawkVisibility } from "@/components/tawk-visibility";
 import { TawkChat } from "@/components/tawk-chat";
 import { PageTracker } from "@/components/page-tracker";
 
-const inter = Inter({
-  variable: "--font-inter",
+const jakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+const dmSans = DM_Sans({
+  variable: "--font-dm",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -99,7 +99,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${inter.variable} ${poppins.variable} h-full antialiased`}>
+    <html lang="fr" className={`${jakartaSans.variable} ${dmSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <script
           type="application/ld+json"
