@@ -1255,6 +1255,20 @@ export async function validateMissionApplication(formData: FormData) {
     const mission = app.mission;
     const cpToCredit = (mission.rewardType === "CP" || mission.rewardType === "MIXED") ? (mission.cpAmount ?? 0) : 0;
 
+    // RÈGLE DE SÉCURITÉ FINANCIÈRE :
+    // - Mission MIXED : on crédite UNIQUEMENT les CP à la validation du lead.
+    //   Le cash (commissionEarned) reste à 0 et ne sera versé qu'après
+    //   confirmation d'une vente réelle via la route /api/admin/confirm-sale.
+    // - Mission CASH pure : commissionEarned enregistré, mais le paiement
+    //   physique doit être déclenché manuellement par l'admin après encaissement.
+    // - Mission CP pure : aucun cash, seulement les points.
+    const commissionEarnedAtValidation =
+      mission.rewardType === "MIXED"
+        ? 0  // bloqué — cash libéré uniquement sur vente confirmée
+        : mission.rewardType === "CASH"
+          ? (mission.compensationAmount ?? 0)
+          : 0;
+
     await (prisma as any).missionApplication.update({
       where: { id },
       data: {
@@ -1262,7 +1276,7 @@ export async function validateMissionApplication(formData: FormData) {
         validatedAt: new Date(),
         validatedBy: (admin as any).id ?? "admin",
         cpEarned: cpToCredit,
-        commissionEarned: mission.rewardType !== "CP" ? (mission.compensationAmount ?? 0) : 0,
+        commissionEarned: commissionEarnedAtValidation,
         updatedAt: new Date(),
         ...(adminNote ? { result: adminNote } : {}),
       },
@@ -1278,7 +1292,7 @@ export async function validateMissionApplication(formData: FormData) {
           ref: `MISSION-${mission.id}`,
           missionApplicationId: id,
           adminId: (admin as any).id ?? "admin",
-          adminNote: `Mission validée : ${mission.title}`,
+          adminNote: `Mission validée (lead) : ${mission.title}${mission.rewardType === "MIXED" ? " — cash bloqué jusqu'à vente confirmée" : ""}`,
         },
       });
     }
@@ -1289,7 +1303,8 @@ export async function validateMissionApplication(formData: FormData) {
       missionTitle: mission.title,
       missionCode: mission.code ?? undefined,
       rewardType: mission.rewardType ?? "CASH",
-      compensationAmount: mission.compensationAmount ?? 0,
+      // Pour MIXED : on informe que les CP sont crédités, le cash viendra après vente
+      compensationAmount: mission.rewardType === "MIXED" ? 0 : (mission.compensationAmount ?? 0),
       cpAmount: mission.cpAmount ?? 0,
       compensationType: mission.compensationType ?? "FIXED",
     }).catch(() => {}));

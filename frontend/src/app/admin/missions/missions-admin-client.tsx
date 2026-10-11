@@ -1,6 +1,95 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+
+// Bouton sécurisé pour libérer le cash uniquement après vente réelle confirmée
+function ConfirmSaleButton({ applicationId, partnerName, missionTitle }: { applicationId: string; partnerName: string; missionTitle: string }) {
+  const [open, setOpen] = useState(false);
+  const [saleRef, setSaleRef] = useState("");
+  const [amountCollected, setAmountCollected] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<{ ok: boolean; message: string } | null>(null);
+
+  async function handleConfirm() {
+    if (!saleRef.trim() || !amountCollected) return;
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/confirm-mission-sale", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          applicationId,
+          saleRef: saleRef.trim(),
+          amountCollected: Number(amountCollected),
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setResult({ ok: true, message: data.message });
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        setResult({ ok: false, message: data.error ?? "Erreur inconnue" });
+      }
+    } catch {
+      setResult({ ok: false, message: "Erreur réseau" });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="relative inline-block">
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="rounded-lg px-2.5 py-1 text-[10px] font-bold border border-amber-300 text-amber-800 bg-amber-50 hover:bg-amber-100 transition"
+      >
+        💰 Libérer le cash (vente confirmée)
+      </button>
+      {open && (
+        <div className="absolute bottom-8 left-0 z-50 w-72 rounded-2xl border border-amber-200 bg-white shadow-xl p-4 space-y-3">
+          <p className="text-xs font-extrabold text-slate-800">Confirmer la vente réelle</p>
+          <p className="text-[10px] text-slate-500">
+            Partenaire : <strong>{partnerName}</strong><br />
+            Cette action libère le cash uniquement si <strong>IBIG SARL a encaissé l'argent</strong>.
+          </p>
+          <div className="space-y-2">
+            <input
+              type="text"
+              placeholder="Réf. vente / N° facture *"
+              value={saleRef}
+              onChange={e => setSaleRef(e.target.value)}
+              className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-amber-400"
+            />
+            <input
+              type="number"
+              placeholder="Montant encaissé par IBIG (FCFA) *"
+              value={amountCollected}
+              onChange={e => setAmountCollected(e.target.value)}
+              className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-amber-400"
+            />
+          </div>
+          {result && (
+            <p className={`text-[10px] font-bold rounded-lg px-3 py-2 ${result.ok ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700"}`}>
+              {result.message}
+            </p>
+          )}
+          <div className="flex gap-2">
+            <button
+              onClick={handleConfirm}
+              disabled={loading || !saleRef.trim() || !amountCollected}
+              className="flex-1 rounded-xl bg-amber-500 px-3 py-2 text-[10px] font-extrabold text-white disabled:opacity-50 hover:bg-amber-600 transition"
+            >
+              {loading ? "…" : "✅ Confirmer et libérer"}
+            </button>
+            <button onClick={() => setOpen(false)} className="rounded-xl border border-slate-200 px-3 py-2 text-[10px] text-slate-500 hover:bg-slate-50">
+              Annuler
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 import { DescriptionBlock } from "@/components/DescriptionBlock";
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -1049,13 +1138,23 @@ export default function MissionsAdminClient({
                                   </div>
                                 )}
 
-                                {/* Marquer COMPLETED si VALIDATED */}
-                                {a.status === "VALIDATED" && (
+                                {/* Libérer le cash UNIQUEMENT après vente réelle (missions MIXED) */}
+                                {a.status === "VALIDATED" && selectedMission?.rewardType === "MIXED" && a.commissionEarned === 0 && (
+                                  <ConfirmSaleButton applicationId={a.id} partnerName={a.partnerName} missionTitle={selectedMission.title} />
+                                )}
+
+                                {/* Marquer COMPLETED si VALIDATED (non-MIXED ou déjà payé) */}
+                                {a.status === "VALIDATED" && selectedMission?.rewardType !== "MIXED" && (
                                   <form action={updateAppAction}>
                                     <input type="hidden" name="id" value={a.id} />
                                     <input type="hidden" name="status" value="COMPLETED" />
                                     <button type="submit" className="rounded-lg px-2.5 py-1 text-[10px] font-bold border border-emerald-200 text-emerald-700 bg-white hover:bg-emerald-50 transition">★ Terminée</button>
                                   </form>
+                                )}
+                                {a.status === "VALIDATED" && selectedMission?.rewardType === "MIXED" && a.commissionEarned > 0 && (
+                                  <span className="rounded-lg px-2.5 py-1 text-[10px] font-bold bg-emerald-100 text-emerald-700">
+                                    ✅ Cash libéré : {a.commissionEarned.toLocaleString("fr-FR")} FCFA
+                                  </span>
                                 )}
                               </div>
                             </div>
