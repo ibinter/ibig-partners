@@ -237,3 +237,23 @@ export function SyncEmploiButton() {
     />
   );
 }
+
+export function SyncMarketButton() {
+  return (
+    <SyncButton
+      label="Sync IBIG MARKET"
+      endpoint="/api/admin/sync-market"
+      className="rounded-lg border border-orange-300 bg-orange-50 px-4 py-2 text-sm font-semibold text-orange-700 hover:bg-orange-100 disabled:opacity-50"
+    />
+  );
+}
+
+export function SyncElearningButton() {
+  return (
+    <SyncButton
+      label="Sync IBIG eLEARNING"
+      endpoint="/api/admin/sync-elearning"
+      className="rounded-lg border border-teal-300 bg-teal-50 px-4 py-2 text-sm font-semibold text-teal-700 hover:bg-teal-100 disabled:opacity-50"
+    />
+  );
+}

@@ -14,6 +14,8 @@ import {
   SyncPartnersButton, SyncMultiservicesButton, SyncImmoButton,
   SyncKitsButton, SyncAcademieButton, MigrateButton,
   SyncEmploiButton,
+  SyncMarketButton,
+  SyncElearningButton,
 } from "./sync-button";
 import CatalogClient from "./catalog-client";
 
@@ -117,6 +119,8 @@ export default async function BranchesPage({
             <p className="px-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-muted">Synchroniser les catalogues</p>
             <SyncSoftButton />
             <SyncImmoButton />
+            <SyncMarketButton />
+            <SyncElearningButton />
             <SyncMultiservicesButton />
 
             <SyncEmploiButton />
