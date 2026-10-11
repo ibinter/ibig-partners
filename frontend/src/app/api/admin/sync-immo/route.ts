@@ -1,6 +1,7 @@
 ﻿import { NextResponse } from "next/server";
 import { isSyncAuthorized } from "@/lib/sync-auth";
 import { syncBranchWithFeed } from "@/lib/catalog-feed";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -502,6 +503,13 @@ export async function POST() {
     if (!(await isSyncAuthorized())) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
+
+    // Enregistre l'URL du flux live ibigimmotrust.com
+    await prisma.setting.upsert({
+      where: { key: "catalog_feed_ibig-immo-trust" },
+      update: { value: "https://ibigimmotrust.com/api/catalogue.php" },
+      create: { key: "catalog_feed_ibig-immo-trust", value: "https://ibigimmotrust.com/api/catalogue.php" },
+    }).catch(() => {});
 
     const result = await syncBranchWithFeed("ibig-immo-trust", "IBIG IMMO TRUST", IMMO_PRODUCTS, { notify: true });
     if (!result.ok) {

@@ -7204,6 +7204,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: true, done: start, total: EDUFORM_PRODUCTS.length, message: "Terminé" });
     }
 
+    // Enregistre l'URL du flux live ibig-eduform.com lors du 1er chunk
+    if (start === 0) {
+      await prisma.setting.upsert({
+        where: { key: "catalog_feed_ibig-eduform" },
+        update: { value: "https://ibig-eduform.com/api/catalogue.php" },
+        create: { key: "catalog_feed_ibig-eduform", value: "https://ibig-eduform.com/api/catalogue.php" },
+      }).catch(() => {});
+    }
+
     const mainBranch = await prisma.branch.findUnique({ where: { slug: "ibig-eduform" } });
     if (!mainBranch) {
       return NextResponse.json({ error: "Branche ibig-eduform introuvable en base" }, { status: 500 });

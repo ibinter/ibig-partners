@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isSyncAuthorized } from "@/lib/sync-auth";
 import { syncBranchWithFeed } from "@/lib/catalog-feed";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -949,6 +950,13 @@ export async function POST() {
     if (!(await isSyncAuthorized())) {
       return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
     }
+
+    // Enregistre l'URL du flux live ibigsoft.com (priorité sur le fallback hardcodé)
+    await prisma.setting.upsert({
+      where: { key: "catalog_feed_ibig-soft" },
+      update: { value: "https://ibigsoft.com/api/catalogue.php" },
+      create: { key: "catalog_feed_ibig-soft", value: "https://ibigsoft.com/api/catalogue.php" },
+    }).catch(() => {}); // silencieux si la table Setting n'existe pas encore
 
     const result = await syncBranchWithFeed("ibig-soft", "IBIG SOFT", SOFT_PRODUCTS, { notify: true });
     if (!result.ok) {
