@@ -3,6 +3,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 import { DescriptionBlock } from "@/components/DescriptionBlock";
+import { getCurrentUser } from "@/lib/auth";
 import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -126,11 +127,26 @@ export default async function MissionDetailPage({ params }: { params: Promise<{ 
       category: true,
       missionType: true,
       minLevel: true,
+      minCpRequired: true,
       _count: { select: { applications: true } },
     },
   });
 
   if (!mission || mission.status === "ARCHIVED" || mission.active === false) notFound();
+
+  // Solde CP de l'utilisateur connecté
+  const user = await getCurrentUser();
+  let userCpBalance = 0;
+  if (user) {
+    try {
+      const cpAgg = await (prisma as any).pointTransaction.aggregate({
+        where: { userId: user.id },
+        _sum: { points: true },
+      });
+      userCpBalance = cpAgg._sum?.points ?? 0;
+    } catch { userCpBalance = 0; }
+  }
+  const isLocked = user && (mission.minCpRequired ?? 0) > 0 && userCpBalance < (mission.minCpRequired ?? 0);
 
   const c = getBranchColor(mission.branch);
   const isClosed = mission.status === "CLOSED";
@@ -478,6 +494,28 @@ export default async function MissionDetailPage({ params }: { params: Promise<{ 
                     <div className="rounded-2xl bg-slate-100 px-4 py-3 text-center text-sm font-semibold text-slate-500">
                       🔒 Mission clôturée
                     </div>
+                  ) : isLocked ? (
+                    <div className="space-y-2">
+                      <div className="rounded-2xl bg-amber-50 border border-amber-200 px-4 py-3.5 text-center">
+                        <p className="text-sm font-extrabold text-amber-700">🔒 Mission verrouillée</p>
+                        <p className="text-xs text-amber-600 mt-1">Il vous faut <strong>{mission.minCpRequired} CP</strong> pour accéder.</p>
+                        <p className="text-xs text-amber-500 mt-0.5">Votre solde actuel : <strong>{userCpBalance} CP</strong></p>
+                      </div>
+                      <Link
+                        href="/espace/missions"
+                        className="block w-full rounded-2xl py-3 text-center text-xs font-bold text-slate-600 border border-slate-200 hover:bg-slate-50 transition"
+                      >
+                        Accomplir des missions CP →
+                      </Link>
+                    </div>
+                  ) : user ? (
+                    <Link
+                      href="/espace/missions"
+                      className="block w-full rounded-2xl py-3.5 text-center text-sm font-extrabold text-white shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
+                      style={{ background: `linear-gradient(135deg, ${c.text}, #041B4D)` }}
+                    >
+                      🎯 Candidater à cette mission →
+                    </Link>
                   ) : (
                     <>
                       <Link

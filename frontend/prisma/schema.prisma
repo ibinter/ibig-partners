@@ -661,6 +661,7 @@ model Mission {
   zone               String    @default("Côte d'Ivoire")
   difficulty         String    @default("MEDIUM")     // EASY | MEDIUM | HARD
   minLevel           String    @default("")           // vide = tous niveaux
+  minCpRequired      Int       @default(0)            // CP minimum pour accéder à la mission
   slots              Int       @default(5)
   deadline           DateTime?
   // Preuves

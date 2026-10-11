@@ -92,6 +92,18 @@ export default async function MissionsPage({
     ];
   }
 
+  // Solde CP du partenaire connecté
+  let userCpBalance = 0;
+  if (user) {
+    try {
+      const cpAgg = await (prisma as any).pointTransaction.aggregate({
+        where: { userId: user.id },
+        _sum: { points: true },
+      });
+      userCpBalance = cpAgg._sum?.points ?? 0;
+    } catch { userCpBalance = 0; }
+  }
+
   const [missions, branches, total] = await Promise.all([
     (prisma as any).mission.findMany({
       where,
@@ -101,7 +113,7 @@ export default async function MissionsPage({
         id: true, title: true, description: true, branch: true,
         rewardType: true, compensationType: true, compensationAmount: true,
         cpAmount: true, difficulty: true, deadline: true, slots: true,
-        missionType: true, zone: true,
+        missionType: true, zone: true, minCpRequired: true,
         _count: { select: { applications: true } },
       },
     }),
@@ -274,6 +286,7 @@ export default async function MissionsPage({
                 {missions.map((m: any) => {
                   const c  = getBranchColor(m.branch);
                   const rc = REWARD_CONFIG[m.rewardType] ?? { bg: "#f1f5f9", text: "#475569", label: m.rewardType, icon: "📦" };
+                  const isLocked = user && (m.minCpRequired ?? 0) > 0 && userCpBalance < (m.minCpRequired ?? 0);
 
                   const cashAmt = m.compensationAmount ?? 0;
                   const cpAmt   = m.cpAmount ?? 0;
@@ -297,7 +310,7 @@ export default async function MissionsPage({
 
                   return (
                     <article key={m.id}
-                      className="group flex flex-col sm:flex-row gap-0 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+                      className={`group flex flex-col sm:flex-row gap-0 rounded-2xl bg-white border shadow-sm transition-all duration-200 overflow-hidden ${isLocked ? "border-amber-200 opacity-80" : "border-slate-100 hover:shadow-lg hover:-translate-y-0.5"}`}
                     >
                       {/* Bande latérale colorée */}
                       <div className={`sm:w-1.5 h-1.5 sm:h-auto bg-gradient-to-b ${c.gradient} shrink-0`} />
@@ -327,6 +340,11 @@ export default async function MissionsPage({
                             {deadlineDays !== null && deadlineDays <= 7 && (
                               <span className="rounded-lg bg-rose-50 border border-rose-100 px-2 py-0.5 text-[10px] font-bold text-rose-600">
                                 ⏱ {deadlineDays}j restants
+                              </span>
+                            )}
+                            {isLocked && (
+                              <span className="inline-flex items-center gap-1 rounded-lg bg-amber-50 border border-amber-200 px-2 py-0.5 text-[10px] font-bold text-amber-700">
+                                🔒 {m.minCpRequired} CP requis
                               </span>
                             )}
                           </div>
@@ -373,7 +391,16 @@ export default async function MissionsPage({
                           )}
 
                           {/* CTA */}
-                          {user ? (
+                          {isLocked ? (
+                            <div className="flex flex-col items-center gap-1">
+                              <div className="inline-flex items-center justify-center gap-1 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 px-4 py-2.5 text-xs font-extrabold whitespace-nowrap cursor-not-allowed">
+                                🔒 Mission verrouillée
+                              </div>
+                              <span className="text-[10px] text-amber-600 font-semibold text-center">
+                                Vous avez {userCpBalance} CP / {m.minCpRequired} requis
+                              </span>
+                            </div>
+                          ) : user ? (
                             <Link href={`/missions/${m.id}`}
                               className="inline-flex items-center justify-center gap-1 rounded-xl bg-[#041B4D] hover:bg-[#0c2d6b] text-white px-4 py-2.5 text-xs font-extrabold transition whitespace-nowrap"
                             >
