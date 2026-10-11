@@ -1262,11 +1262,13 @@ export async function validateMissionApplication(formData: FormData) {
     // - Mission CASH pure : commissionEarned enregistré, mais le paiement
     //   physique doit être déclenché manuellement par l'admin après encaissement.
     // - Mission CP pure : aucun cash, seulement les points.
+    const boostPercent = (app.cpBoostUsed ?? 0) / 1000; // 1000 CP = +1%
+    const baseCommission = mission.rewardType === "CASH" ? (mission.compensationAmount ?? 0) : 0;
     const commissionEarnedAtValidation =
       mission.rewardType === "MIXED"
         ? 0  // bloqué — cash libéré uniquement sur vente confirmée
         : mission.rewardType === "CASH"
-          ? (mission.compensationAmount ?? 0)
+          ? Math.round(baseCommission * (1 + boostPercent / 100))
           : 0;
 
     await (prisma as any).missionApplication.update({

@@ -712,6 +712,7 @@ model MissionApplication {
   // Récompenses gagnées
   cpEarned           Int @default(0)
   commissionEarned   Int @default(0)
+  cpBoostUsed        Int @default(0)  // CP dépensés pour booster la commission (1000 CP = +1%)
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 

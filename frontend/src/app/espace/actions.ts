@@ -603,6 +603,55 @@ export async function submitMissionProof(formData: FormData) {
   revalidatePath("/espace/missions");
 }
 
+// ─── Boost Commission CP ─────────────────────────────────────────────────────
+export async function activateCpBoost(formData: FormData) {
+  const user = await requireUser();
+  const applicationId = String(formData.get("applicationId"));
+  const cpAmount = parseInt(String(formData.get("cpAmount") || "0"), 10);
+
+  // Validation : multiple de 1000, entre 1000 et 5000
+  if (!cpAmount || cpAmount < 1000 || cpAmount > 5000 || cpAmount % 1000 !== 0) return;
+
+  // Vérifier que la candidature appartient au partenaire et est en cours
+  const app = await (prisma as any).missionApplication.findFirst({
+    where: { id: applicationId, userId: user.id, status: { in: ["ACCEPTED", "SUBMITTED"] } },
+    include: { mission: { select: { rewardType: true, title: true } } },
+  });
+  if (!app) return;
+  if (app.mission.rewardType === "CP") return; // boost inutile sur mission CP pure
+  if (app.cpBoostUsed > 0) return; // boost déjà activé
+
+  // Vérifier le solde CP
+  const cpAgg = await (prisma as any).pointTransaction.aggregate({
+    where: { userId: user.id },
+    _sum: { points: true },
+  });
+  const balance = cpAgg._sum?.points ?? 0;
+  if (balance < cpAmount) return;
+
+  // Débiter les CP + enregistrer le boost
+  await (prisma as any).pointTransaction.create({
+    data: {
+      userId: user.id,
+      points: cpAmount,
+      type: "DEBIT",
+      reason: "MISSION",
+      ref: applicationId,
+      adminNote: `Boost commission +${cpAmount / 1000}% — Mission : ${app.mission.title}`,
+    },
+  });
+
+  await (prisma as any).missionApplication.update({
+    where: { id: applicationId },
+    data: { cpBoostUsed: cpAmount, updatedAt: new Date() },
+  });
+
+  const { logActivity } = await import("@/lib/activity");
+  await logActivity({ userId: user.id, action: "CP_BOOST_ACTIVATED", detail: `${cpAmount} CP → +${cpAmount / 1000}% sur candidature ${applicationId}` });
+
+  revalidatePath("/espace/missions");
+}
+
 // ─── Boutique CP ─────────────────────────────────────────────────────────────
 export async function claimReward(formData: FormData) {
   const user = await requireUser();

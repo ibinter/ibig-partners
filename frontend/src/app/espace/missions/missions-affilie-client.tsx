@@ -54,7 +54,7 @@ const ZONE_ICONS: Record<string, string> = {
 type MissionApp = {
   id: string; status: string; note: string; result: string;
   proofUrl: string; proofNote: string; submittedAt: string | null;
-  cpEarned: number; commissionEarned: number; createdAt: string;
+  cpEarned: number; commissionEarned: number; cpBoostUsed: number; createdAt: string;
 };
 
 type MyApp = MissionApp & { missionId: string; missionTitle: string; missionStatus: string; };
@@ -95,17 +95,21 @@ function daysLeft(iso: string) {
 }
 
 // ── Mission Detail Modal ──────────────────────────────────────────────────────
-function MissionModal({ m, onClose, applyAction, withdrawAction, submitProofAction }: {
+function MissionModal({ m, onClose, applyAction, withdrawAction, submitProofAction, boostAction, userCpBalance }: {
   m: MissionRow;
   onClose: () => void;
   applyAction: (fd: FormData) => Promise<void>;
   withdrawAction: (fd: FormData) => Promise<void>;
   submitProofAction: (fd: FormData) => Promise<void>;
+  boostAction: (fd: FormData) => Promise<void>;
+  userCpBalance: number;
 }) {
   const [showForm, setShowForm] = useState(false);
   const [note, setNote] = useState("");
   const [proofUrl, setProofUrl] = useState("");
   const [proofNote, setProofNote] = useState("");
+  const [boostCp, setBoostCp] = useState(1000);
+  const [showBoostForm, setShowBoostForm] = useState(false);
   const [interestNote, setInterestNote] = useState("");
   const [showInterestForm, setShowInterestForm] = useState(false);
   const [interestDone, setInterestDone] = useState(!!m.myInterest);
@@ -283,6 +287,58 @@ function MissionModal({ m, onClose, applyAction, withdrawAction, submitProofActi
               </form>
             )}
 
+            {/* Boost Commission CP */}
+            {app && ["ACCEPTED", "SUBMITTED"].includes(app.status) && m.rewardType !== "CP" && (
+              app.cpBoostUsed > 0 ? (
+                <div className="rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 flex items-center gap-3">
+                  <span className="text-xl">⚡</span>
+                  <div>
+                    <p className="text-xs font-extrabold text-amber-700">Boost activé : +{app.cpBoostUsed / 1000}% sur cette vente</p>
+                    <p className="text-[10px] text-amber-600">{app.cpBoostUsed} CP investis</p>
+                  </div>
+                </div>
+              ) : !showBoostForm ? (
+                <button onClick={() => setShowBoostForm(true)}
+                  className="w-full rounded-xl border-2 border-dashed border-amber-300 bg-amber-50 text-amber-700 text-xs font-bold py-2.5 hover:bg-amber-100 transition">
+                  ⚡ Booster ma commission avec des CP
+                </button>
+              ) : (
+                <form action={boostAction} className="rounded-xl border border-amber-200 bg-amber-50 p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-extrabold text-amber-800">⚡ Booster ma commission</p>
+                    <button type="button" onClick={() => setShowBoostForm(false)} className="text-amber-500 text-xs hover:text-amber-700">✕</button>
+                  </div>
+                  <input type="hidden" name="applicationId" value={app.id} />
+                  <div>
+                    <p className="text-[10px] text-amber-700 mb-2">
+                      Investissez des CP pour augmenter votre commission sur cette vente.<br />
+                      <strong>1 000 CP = +1%</strong> (max 5 000 CP = +5%)
+                    </p>
+                    <div className="flex gap-2 flex-wrap">
+                      {[1000, 2000, 3000, 4000, 5000].map(v => (
+                        <button key={v} type="button"
+                          onClick={() => setBoostCp(v)}
+                          disabled={userCpBalance < v}
+                          className={`rounded-lg px-3 py-1.5 text-xs font-bold border transition ${boostCp === v ? "bg-amber-500 text-white border-amber-500" : "bg-white text-amber-700 border-amber-300 hover:bg-amber-100"} disabled:opacity-30 disabled:cursor-not-allowed`}>
+                          {v.toLocaleString("fr-FR")} CP<br />
+                          <span className="text-[9px]">+{v / 1000}%</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between text-[10px] text-amber-600">
+                    <span>Votre solde : <strong>{userCpBalance.toLocaleString("fr-FR")} CP</strong></span>
+                    <span>Après : <strong>{(userCpBalance - boostCp).toLocaleString("fr-FR")} CP</strong></span>
+                  </div>
+                  <input type="hidden" name="cpAmount" value={boostCp} />
+                  <button type="submit" disabled={userCpBalance < boostCp}
+                    className="w-full rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-sm font-extrabold py-2.5 transition disabled:opacity-40">
+                    ⚡ Activer +{boostCp / 1000}% ({boostCp.toLocaleString("fr-FR")} CP)
+                  </button>
+                </form>
+              )
+            )}
+
             {/* Candidature */}
             {!hasApp && spots > 0 && (
               !showForm ? (
@@ -355,11 +411,13 @@ function MissionModal({ m, onClose, applyAction, withdrawAction, submitProofActi
 }
 
 // ── Compact Mission Card ──────────────────────────────────────────────────────
-function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
+function MissionCard({ m, applyAction, withdrawAction, submitProofAction, boostAction, userCpBalance }: {
   m: MissionRow;
   applyAction: (fd: FormData) => Promise<void>;
   withdrawAction: (fd: FormData) => Promise<void>;
   submitProofAction: (fd: FormData) => Promise<void>;
+  boostAction: (fd: FormData) => Promise<void>;
+  userCpBalance: number;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -461,7 +519,8 @@ function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
 
       {open && (
         <MissionModal m={m} onClose={() => setOpen(false)}
-          applyAction={applyAction} withdrawAction={withdrawAction} submitProofAction={submitProofAction} />
+          applyAction={applyAction} withdrawAction={withdrawAction} submitProofAction={submitProofAction}
+          boostAction={boostAction} userCpBalance={userCpBalance} />
       )}
     </>
   );
@@ -470,7 +529,7 @@ function MissionCard({ m, applyAction, withdrawAction, submitProofAction }: {
 const PAGE_SIZE = 24;
 
 export default function MissionsAffilieClient({
-  rows, myApps, mySubmissions, applyAction, withdrawAction, submitProofAction,
+  rows, myApps, mySubmissions, applyAction, withdrawAction, submitProofAction, boostAction, userCpBalance,
 }: {
   rows: MissionRow[];
   myApps: MyApp[];
@@ -478,6 +537,8 @@ export default function MissionsAffilieClient({
   applyAction: (fd: FormData) => Promise<void>;
   withdrawAction: (fd: FormData) => Promise<void>;
   submitProofAction: (fd: FormData) => Promise<void>;
+  boostAction: (fd: FormData) => Promise<void>;
+  userCpBalance: number;
 }) {
   const [tab, setTab] = useState<"missions" | "mes-candidatures" | "mes-soumissions">("missions");
   const [search, setSearch] = useState("");
@@ -763,7 +824,7 @@ export default function MissionsAffilieClient({
           {/* Grille missions */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {paginated.map(m => (
-              <MissionCard key={m.id} m={m} applyAction={applyAction} withdrawAction={withdrawAction} submitProofAction={submitProofAction} />
+              <MissionCard key={m.id} m={m} applyAction={applyAction} withdrawAction={withdrawAction} submitProofAction={submitProofAction} boostAction={boostAction} userCpBalance={userCpBalance} />
             ))}
             {filtered.length === 0 && (
               <div className="col-span-full rounded-2xl border border-dashed border-slate-200 py-16 text-center">

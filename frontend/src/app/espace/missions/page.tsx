@@ -1,7 +1,7 @@
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/ui";
-import { applyToMission, withdrawMissionApplication, submitMissionProof } from "../actions";
+import { applyToMission, withdrawMissionApplication, submitMissionProof, activateCpBoost } from "../actions";
 import MissionsAffilieClient from "./missions-affilie-client";
 
 export const dynamic = "force-dynamic";
@@ -16,7 +16,7 @@ export default async function EspaceMissionsPage() {
       include: {
         applications: {
           where: { userId: user.id },
-          select: { id: true, status: true, note: true, result: true, createdAt: true, proofUrl: true, proofNote: true, submittedAt: true, cpEarned: true, commissionEarned: true },
+          select: { id: true, status: true, note: true, result: true, createdAt: true, proofUrl: true, proofNote: true, submittedAt: true, cpEarned: true, commissionEarned: true, cpBoostUsed: true },
         },
         media: { select: { url: true, mediaType: true, name: true } },
         interests: {
@@ -96,6 +96,12 @@ export default async function EspaceMissionsPage() {
     };
   });
 
+  const cpAgg = await (prisma as any).pointTransaction.aggregate({
+    where: { userId: user.id },
+    _sum: { points: true },
+  });
+  const userCpBalance: number = cpAgg._sum?.points ?? 0;
+
   const myApps = myApplications.map((a: any) => ({
     id: a.id,
     status: a.status,
@@ -131,6 +137,8 @@ export default async function EspaceMissionsPage() {
         applyAction={applyToMission}
         withdrawAction={withdrawMissionApplication}
         submitProofAction={submitMissionProof}
+        boostAction={activateCpBoost}
+        userCpBalance={userCpBalance}
       />
     </div>
   );
