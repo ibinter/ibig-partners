@@ -1139,19 +1139,19 @@ export default function MissionsAdminClient({
                                 )}
 
                                 {/* Libérer le cash UNIQUEMENT après vente réelle (missions MIXED) */}
-                                {a.status === "VALIDATED" && selectedMission?.rewardType === "MIXED" && a.commissionEarned === 0 && (
-                                  <ConfirmSaleButton applicationId={a.id} partnerName={a.partnerName} missionTitle={selectedMission.title} />
+                                {a.status === "VALIDATED" && m?.rewardType === "MIXED" && a.commissionEarned === 0 && (
+                                  <ConfirmSaleButton applicationId={a.id} partnerName={a.partnerName} missionTitle={m.title} />
                                 )}
 
                                 {/* Marquer COMPLETED si VALIDATED (non-MIXED ou déjà payé) */}
-                                {a.status === "VALIDATED" && selectedMission?.rewardType !== "MIXED" && (
+                                {a.status === "VALIDATED" && m?.rewardType !== "MIXED" && (
                                   <form action={updateAppAction}>
                                     <input type="hidden" name="id" value={a.id} />
                                     <input type="hidden" name="status" value="COMPLETED" />
                                     <button type="submit" className="rounded-lg px-2.5 py-1 text-[10px] font-bold border border-emerald-200 text-emerald-700 bg-white hover:bg-emerald-50 transition">★ Terminée</button>
                                   </form>
                                 )}
-                                {a.status === "VALIDATED" && selectedMission?.rewardType === "MIXED" && a.commissionEarned > 0 && (
+                                {a.status === "VALIDATED" && m?.rewardType === "MIXED" && a.commissionEarned > 0 && (
                                   <span className="rounded-lg px-2.5 py-1 text-[10px] font-bold bg-emerald-100 text-emerald-700">
                                     ✅ Cash libéré : {a.commissionEarned.toLocaleString("fr-FR")} FCFA
                                   </span>
