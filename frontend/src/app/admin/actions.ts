@@ -1640,3 +1640,19 @@ export async function addLeadNote(formData: FormData) {
 
   revalidatePath("/admin/opportunites");
 }
+
+export async function adminUpdatePartnerName(formData: FormData) {
+  await requireAdmin();
+  const userId    = String(formData.get("userId") || "").trim();
+  const firstName = String(formData.get("firstName") || "").trim();
+  const lastName  = String(formData.get("lastName") || "").trim();
+  if (!userId || !firstName || !lastName) return;
+
+  await (prisma as any).user.update({
+    where: { id: userId },
+    data: { firstName, lastName },
+  });
+
+  revalidatePath(`/admin/partenaires/${userId}`);
+  revalidatePath("/admin/partenaires");
+}

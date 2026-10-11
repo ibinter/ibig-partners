@@ -12,6 +12,7 @@ import {
   sendVerificationReminderToAll,
   bulkApproveAll,
   bulkSuspendInactive,
+  adminUpdatePartnerName,
 } from "../actions";
 import { adminContact } from "../messages/actions";
 import { ExportButton } from "@/components/export-button";
@@ -212,6 +213,12 @@ export default async function PartenairesPage({
                     {p.role !== "PARTNER" && (
                       <Badge tone="purple">{p.role}</Badge>
                     )}
+                    <form action={adminUpdatePartnerName} className="mt-1.5 flex items-center gap-1">
+                      <input type="hidden" name="userId" value={p.id} />
+                      <input name="firstName" defaultValue={p.firstName} placeholder="Prénom" className="w-20 rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-xs outline-none focus:border-blue-400" />
+                      <input name="lastName" defaultValue={p.lastName} placeholder="Nom" className="w-24 rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-xs outline-none focus:border-blue-400" />
+                      <SubmitButton variant="ghost" size="sm" pendingLabel="…">✏️</SubmitButton>
+                    </form>
                   </td>
                   <td>
                     <span className="font-mono text-xs text-muted">{p.code}</span>

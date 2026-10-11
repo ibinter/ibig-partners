@@ -154,6 +154,37 @@ export default async function ProfilPage() {
         <div className="lg:col-span-2 space-y-4">
           <form action={updateProfile} className="space-y-4">
 
+            {/* Section identité */}
+            <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
+              <div className="bg-gradient-to-r from-slate-700 to-slate-800 px-5 py-3">
+                <h3 className="font-semibold text-white text-sm">👤 Identité</h3>
+                <p className="text-xs text-slate-300 mt-0.5">
+                  {kycStatus === "VERIFIED" || kycStatus === "SUBMITTED"
+                    ? "Nom verrouillé après vérification KYC. Contactez l'administration pour toute correction."
+                    : "Modifiable jusqu'à la soumission de votre dossier KYC."}
+                </p>
+              </div>
+              <div className="p-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {kycStatus === "VERIFIED" || kycStatus === "SUBMITTED" ? (
+                  <>
+                    <div>
+                      <p className="text-xs font-semibold text-slate-500 mb-1">Prénom</p>
+                      <p className="text-sm text-slate-700 bg-slate-50 rounded-xl px-3.5 py-2.5 border border-slate-200">{user.firstName}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-slate-500 mb-1">Nom</p>
+                      <p className="text-sm text-slate-700 bg-slate-50 rounded-xl px-3.5 py-2.5 border border-slate-200">{user.lastName}</p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Field label="Prénom" name="firstName" defaultValue={user.firstName} placeholder="Prénom" required />
+                    <Field label="Nom" name="lastName" defaultValue={user.lastName} placeholder="Nom de famille" required />
+                  </>
+                )}
+              </div>
+            </div>
+
             {/* Section contact */}
             <div className="rounded-2xl border border-slate-100 bg-white shadow-sm overflow-hidden">
               <div className="bg-gradient-to-r from-slate-700 to-slate-800 px-5 py-3">

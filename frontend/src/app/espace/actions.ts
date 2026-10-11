@@ -448,20 +448,33 @@ export async function requestPayout() {
 
 export async function updateProfile(formData: FormData) {
   const user = await requireUser();
-  await (prisma as any).user.update({
+  const full = await (prisma as any).user.findUnique({
     where: { id: user.id },
-    data: {
-      phone: String(formData.get("phone") || user.phone).trim(),
-      city: String(formData.get("city") || "").trim() || null,
-      country: String(formData.get("country") || "").trim() || null,
-      payoutMethod: String(formData.get("payoutMethod") || user.payoutMethod),
-      payoutDetail: String(formData.get("payoutDetail") || "").trim() || null,
-      bio: String(formData.get("bio") || "").trim() || null,
-      photoUrl: String(formData.get("photoUrl") || "").trim() || null,
-      website: String(formData.get("website") || "").trim() || null,
-      publicListing: formData.get("publicListing") === "on",
-    },
+    select: { phone: true, payoutMethod: true, verificationStatus: true },
   });
+
+  const data: Record<string, unknown> = {
+    phone: String(formData.get("phone") || full.phone).trim(),
+    city: String(formData.get("city") || "").trim() || null,
+    country: String(formData.get("country") || "").trim() || null,
+    payoutMethod: String(formData.get("payoutMethod") || full.payoutMethod),
+    payoutDetail: String(formData.get("payoutDetail") || "").trim() || null,
+    bio: String(formData.get("bio") || "").trim() || null,
+    photoUrl: String(formData.get("photoUrl") || "").trim() || null,
+    website: String(formData.get("website") || "").trim() || null,
+    publicListing: formData.get("publicListing") === "on",
+  };
+
+  // Modification du nom autorisée uniquement avant KYC
+  const kycLocked = full.verificationStatus === "VERIFIED" || full.verificationStatus === "SUBMITTED";
+  if (!kycLocked) {
+    const firstName = String(formData.get("firstName") || "").trim();
+    const lastName  = String(formData.get("lastName") || "").trim();
+    if (firstName) data.firstName = firstName;
+    if (lastName)  data.lastName  = lastName;
+  }
+
+  await (prisma as any).user.update({ where: { id: user.id }, data });
   const { logActivity: _logProf } = await import("@/lib/activity");
   await _logProf({ userId: user.id, action: "PROFILE_UPDATE" });
   revalidatePath("/espace/profil");
