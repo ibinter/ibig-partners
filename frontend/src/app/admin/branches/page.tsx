@@ -43,7 +43,13 @@ export default async function BranchesPage({
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let branches: any[] = [];
+  let feedSettings: Record<string, string> = {};
   let dbError: string | null = null;
+
+  try {
+    const settings = await prisma.setting.findMany({ where: { key: { startsWith: "catalog_feed_" } } });
+    feedSettings = Object.fromEntries(settings.map((s) => [s.key.replace("catalog_feed_", ""), s.value]));
+  } catch { /* ignore si table absente */ }
 
   try {
     branches = await prisma.branch.findMany({
@@ -115,22 +121,31 @@ export default async function BranchesPage({
               </svg>
             </span>
           </summary>
-          <div className="absolute right-0 top-full z-50 mt-1 w-56 rounded-2xl border border-slate-100 bg-white p-3 shadow-xl space-y-1.5">
-            <p className="px-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-muted">Synchroniser les catalogues</p>
+          <div className="absolute right-0 top-full z-50 mt-1 w-60 rounded-2xl border border-slate-100 bg-white p-3 shadow-xl space-y-1.5">
+            {/* ── Sites IBIG (endpoints live) ── */}
+            <p className="px-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-muted">Sites IBIG — Catalogues live</p>
             <SyncSoftButton />
+            <SyncEduformButton />
             <SyncImmoButton />
             <SyncMarketButton />
             <SyncElearningButton />
-            <SyncMultiservicesButton />
-
-            <SyncEmploiButton />
-            <SyncPartnersButton />
-            <SyncConseilButton />
             <SyncDigitalButton />
-            <SyncDigitalKitsButton />
-            <SyncEduformButton />
-            <SyncKitsButton />
-            <SyncAcademieButton />
+
+            {/* ── Contenus internes ── */}
+            <div className="border-t border-slate-100 pt-1.5">
+              <p className="px-2 pb-1 text-[10px] font-bold uppercase tracking-wider text-muted">Contenus IBIG PARTNERS</p>
+              <div className="space-y-1.5">
+                <SyncMultiservicesButton />
+                <SyncEmploiButton />
+                <SyncPartnersButton />
+                <SyncConseilButton />
+                <SyncDigitalKitsButton />
+                <SyncKitsButton />
+                <SyncAcademieButton />
+              </div>
+            </div>
+
+            {/* ── Global ── */}
             <div className="border-t border-slate-100 pt-1.5">
               <SyncBranchesButton />
             </div>
@@ -157,6 +172,33 @@ export default async function BranchesPage({
           <p className={`mt-1 text-2xl font-bold ${missingLinkCount > 0 ? "text-amber-800" : "text-ink"}`}>{missingLinkCount}</p>
         </div>
       </div>
+
+      {/* ── Statut des endpoints catalogue live ───────────────────────────── */}
+      {Object.keys(feedSettings).length > 0 && (
+        <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4">
+          <p className="text-xs font-bold uppercase tracking-wider text-muted mb-3">Endpoints catalogue configurés</p>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              { slug: "ibig-soft",       label: "IBIG SOFT" },
+              { slug: "ibig-eduform",    label: "IBIG EDUFORM" },
+              { slug: "ibig-immo-trust", label: "IMMO TRUST" },
+              { slug: "ibig-market",     label: "IBIG MARKET" },
+              { slug: "ibig-elearning",  label: "IBIG eLEARNING" },
+              { slug: "ibig-digital",    label: "IBIG DIGITAL" },
+            ].map(({ slug, label }) => {
+              const url = feedSettings[slug];
+              return (
+                <div key={slug} className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs ${url ? "border-emerald-200 bg-emerald-50" : "border-slate-200 bg-slate-50"}`}>
+                  <span className={`h-2 w-2 rounded-full flex-shrink-0 ${url ? "bg-emerald-500" : "bg-slate-300"}`} />
+                  <span className={`font-semibold ${url ? "text-emerald-800" : "text-slate-400"}`}>{label}</span>
+                  {url && <span className="text-emerald-600 truncate">{url.replace("https://", "")}</span>}
+                  {!url && <span className="text-slate-400 italic">non configuré</span>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Formulaires inline (déclenchés par URL params) */}
       {action === "new-branch" && (
