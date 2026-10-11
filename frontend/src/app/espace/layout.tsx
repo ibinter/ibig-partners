@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { DashboardShell, type NavItem } from "@/components/dashboard-shell";
 import { CelebrationToaster } from "@/components/celebration-toaster";
 import OnboardingTourWrapper from "@/components/onboarding-tour-wrapper";
+import { WelcomeModal } from "@/components/welcome-modal";
 
 export default async function EspaceLayout({
   children,
@@ -211,6 +212,7 @@ export default async function EspaceLayout({
       {children}
       <CelebrationToaster />
       <OnboardingTourWrapper isNewUser={isNewUser} />
+      {user.role === "PARTNER" && <WelcomeModal userId={user.id} />}
     </DashboardShell>
   );
 }

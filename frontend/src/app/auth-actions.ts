@@ -239,7 +239,7 @@ export async function registerAction(_prev: unknown, formData: FormData) {
   await createSession({ userId: user.id, role: user.role });
   store.delete("ibig_ref");
 
-  redirect("/espace?bienvenue=1");
+  redirect("/espace/bienvenue?nouveau=1");
 }
 
 export async function registerEnterpriseAction(_prev: unknown, formData: FormData) {
