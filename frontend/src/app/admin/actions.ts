@@ -1656,3 +1656,38 @@ export async function adminUpdatePartnerName(formData: FormData) {
   revalidatePath(`/admin/partenaires/${userId}`);
   revalidatePath("/admin/partenaires");
 }
+
+export async function adminCreateOpportunity(formData: FormData) {
+  const admin = await requireAdmin();
+
+  const title       = String(formData.get("title") || "").trim();
+  const category    = String(formData.get("category") || "AUTRE").trim();
+  const description = String(formData.get("description") || "").trim();
+  if (!title || !description) return;
+
+  const estimatedValue      = parseInt(String(formData.get("estimatedValue") || "0"), 10) || 0;
+  const partnerCommission   = parseInt(String(formData.get("partnerCommission") || "0"), 10) || 0;
+  const partnerCommissionType = String(formData.get("partnerCommissionType") || "FIXED");
+  const visibility          = String(formData.get("visibility") || "PRIVATE");
+  const deadline            = String(formData.get("deadline") || "").trim();
+  const adminNote           = String(formData.get("adminNote") || "").trim();
+
+  await (prisma as any).opportunity.create({
+    data: {
+      userId: admin.id,
+      title,
+      category,
+      description,
+      estimatedValue,
+      partnerCommission,
+      partnerCommissionType,
+      visibility,
+      adminNote: adminNote || null,
+      deadline: deadline ? new Date(deadline) : null,
+      status: "APPROVED",
+    },
+  });
+
+  revalidatePath("/admin/opportunites");
+  revalidatePath("/espace/opportunites");
+}
