@@ -179,8 +179,8 @@ export async function POST() {
 
     await prisma.setting.upsert({
       where: { key: "catalog_feed_ibig-elearning" },
-      update: { value: "https://ibig-elearning.com/api/catalogue.php" },
-      create: { key: "catalog_feed_ibig-elearning", value: "https://ibig-elearning.com/api/catalogue.php" },
+      update: { value: "https://ibig-elearning.com/api/catalogue" },
+      create: { key: "catalog_feed_ibig-elearning", value: "https://ibig-elearning.com/api/catalogue" },
     }).catch(() => {});
 
     const result = await syncBranchWithFeed("ibig-elearning", "IBIG eLEARNING", ELEARNING_PRODUCTS, { notify: true });
