@@ -41,6 +41,12 @@ export default async function EspaceLayout({
     },
   });
 
+  const cpAgg = await (prisma as any).pointTransaction.aggregate({
+    where: { userId: user.id },
+    _sum: { points: true },
+  });
+  const cpBalance: number = Math.max(0, cpAgg._sum?.points ?? 0);
+
   const NAV: NavItem[] = [
     // Vue d'ensemble
     { href: "/espace",            label: "Dashboard",        icon: "📊", group: "Vue d'ensemble" },
@@ -88,6 +94,7 @@ export default async function EspaceLayout({
     { href: "/espace/coach",      label: "Coach IA",             icon: "✨", group: "Formation" },
     { href: "/espace/chat",       label: "Messages",             icon: "💬", group: "Formation" },
     { href: "/espace/badges",     label: "Mes Badges",           icon: "🏅", group: "Formation" },
+    { href: "/espace/cp",          label: "Mes CP (Credits Points)", icon: "⚡", group: "Formation", highlight: "brand" },
     { href: "/espace/points",     label: "Points & Récompenses", icon: "🎁", group: "Formation" },
     { href: "/espace/evenements", label: "Événements IBIG",      icon: "📅", group: "Formation" },
 
@@ -128,7 +135,7 @@ export default async function EspaceLayout({
   const emailNotVerified = user.role === "PARTNER" && !(user as any).emailVerified;
 
   return (
-    <DashboardShell nav={NAV} user={user} variant="partner">
+    <DashboardShell nav={NAV} user={user} variant="partner" cpBalance={cpBalance}>
       {emailNotVerified && (
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3">
           <div className="flex items-center gap-3">

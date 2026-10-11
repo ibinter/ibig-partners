@@ -291,11 +291,13 @@ export function DashboardShell({
   user,
   children,
   variant = "partner",
+  cpBalance,
 }: {
   nav: NavItem[];
   user: { firstName: string; lastName: string; code: string; status: string; role: string };
   children: React.ReactNode;
   variant?: "partner" | "admin";
+  cpBalance?: number;
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(() => {
@@ -552,6 +554,17 @@ export function DashboardShell({
             }`}>
               {user.code}
             </div>
+            {/* CP Balance badge — partenaire uniquement */}
+            {variant === "partner" && cpBalance != null && (
+              <Link
+                href="/espace/cp"
+                title="Mes Credits Points — cliquer pour voir l'historique"
+                className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-violet-50 border border-violet-200 px-3 py-1 text-xs font-bold text-violet-700 hover:bg-violet-100 transition-colors"
+              >
+                <span className="text-base leading-none">⚡</span>
+                <span>{cpBalance.toLocaleString("fr-FR")} CP</span>
+              </Link>
+            )}
             {/* Status badge — desktop */}
             {variant === "partner" && (
               <span className="hidden sm:inline-flex rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
