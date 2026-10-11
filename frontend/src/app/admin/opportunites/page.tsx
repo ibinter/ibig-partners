@@ -15,6 +15,7 @@ import {
 import OpportunitesClient from "./opportunites-client";
 import { ExportButton } from "@/components/export-button";
 import { computeOpportunityMatches, inviteMatchedPartner, declineMatch } from "./matching-actions";
+import { AdminCreateOpportunityForm } from "./create-form";
 
 export const dynamic = "force-dynamic";
 
@@ -138,25 +139,6 @@ export default async function OpportunitesPage() {
     })),
   }));
 
-  const CATEGORIES = [
-    "FORMATION","DIGITAL","INFORMATIQUE","IMMOBILIER","BTP","CONSEIL","FINANCEMENT",
-    "COMMERCIAL","PARTENARIAT","MISE_EN_RELATION","EMPLOI_RH","EVENEMENTIEL",
-    "MARKETING","SERVICES","COMMERCE","LOGISTIQUE","SANTE","AGRI","ENERGIE",
-    "INTERNATIONAL","AUTRE",
-  ];
-  const CATEGORY_LABELS: Record<string, string> = {
-    FORMATION:"🎓 Formation", DIGITAL:"💻 Digital & Web", INFORMATIQUE:"⚙️ Logiciels & IT",
-    IMMOBILIER:"🏠 Immobilier", BTP:"🏗️ BTP & Construction", CONSEIL:"📋 Conseil",
-    FINANCEMENT:"💰 Financement", COMMERCIAL:"🤝 Commercial", PARTENARIAT:"🌐 Partenariat",
-    MISE_EN_RELATION:"🔗 Mise en relation", EMPLOI_RH:"👥 Emploi & RH",
-    EVENEMENTIEL:"🎪 Événementiel", MARKETING:"📢 Marketing", SERVICES:"🛠️ Services B2B",
-    COMMERCE:"🛒 Commerce", LOGISTIQUE:"🚚 Logistique", SANTE:"🏥 Santé",
-    AGRI:"🌱 Agriculture", ENERGIE:"⚡ Énergie", INTERNATIONAL:"🌍 International",
-    AUTRE:"💡 Autre",
-  };
-
-  const { SubmitButton: SB } = await import("@/components/submit-button");
-
   return (
     <div className="space-y-6">
       <PageHeader
@@ -165,64 +147,7 @@ export default async function OpportunitesPage() {
         action={<ExportButton type="opportunites" label="Exporter CSV" />}
       />
 
-      {/* ── Créer une opportunité (admin) ── */}
-      <details className="rounded-2xl border border-blue-200 bg-blue-50 overflow-hidden group">
-        <summary className="cursor-pointer px-5 py-3 font-semibold text-blue-800 text-sm flex items-center gap-2 select-none list-none">
-          <span className="text-lg">➕</span> Créer une opportunité / annonce / affaire
-          <span className="ml-auto text-blue-400 text-xs group-open:rotate-180 transition-transform">▼</span>
-        </summary>
-        <form action={adminCreateOpportunity} className="px-5 pb-5 pt-2 grid grid-cols-1 gap-4 sm:grid-cols-2 border-t border-blue-100 bg-white">
-          <div className="sm:col-span-2">
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Titre *</label>
-            <input name="title" required placeholder="Ex : Recherche partenaire commercial immobilier Abidjan" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Catégorie *</label>
-            <select name="category" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500">
-              {CATEGORIES.map((c) => <option key={c} value={c}>{CATEGORY_LABELS[c]}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Visibilité</label>
-            <select name="visibility" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500">
-              <option value="PUBLIC">🌐 Public (visible par tous les partenaires)</option>
-              <option value="PRIVATE">🔒 Privé (visible seulement par invitation)</option>
-            </select>
-          </div>
-          <div className="sm:col-span-2">
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Description *</label>
-            <textarea name="description" required rows={4} placeholder="Décrivez l'opportunité, le besoin client, le contexte, les attentes…" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm outline-none resize-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100" />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Valeur estimée (FCFA)</label>
-            <input name="estimatedValue" type="number" min="0" placeholder="0" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500" />
-          </div>
-          <div className="flex gap-2">
-            <div className="flex-1">
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Commission partenaire</label>
-              <input name="partnerCommission" type="number" min="0" placeholder="0" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500" />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Type</label>
-              <select name="partnerCommissionType" className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm outline-none focus:border-blue-500">
-                <option value="FIXED">FCFA</option>
-                <option value="PERCENT">%</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Date limite</label>
-            <input name="deadline" type="date" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500" />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Note interne (admin)</label>
-            <input name="adminNote" placeholder="Note visible uniquement en admin" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500" />
-          </div>
-          <div className="sm:col-span-2 flex justify-end">
-            <SB variant="primary" pendingLabel="Création…">✅ Publier l&apos;opportunité</SB>
-          </div>
-        </form>
-      </details>
+      <AdminCreateOpportunityForm action={adminCreateOpportunity} />
 
       <OpportunitesClient
         rows={rows}
