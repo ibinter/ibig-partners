@@ -317,6 +317,214 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ═══════════ MISSIONS PARTENAIRES ═══════════ */}
+      <section id="missions" className="scroll-mt-20 bg-white py-16 sm:py-24 lg:py-32">
+        <div className="mx-auto max-w-6xl px-4">
+          <ScrollReveal animation="fade-up">
+            <div className="text-center mb-14">
+              <SectionEyebrow className="bg-brand-50 text-brand-600">🎯 1 095+ missions disponibles</SectionEyebrow>
+              <h2 className="mt-5 text-3xl font-extrabold text-ink sm:text-4xl lg:text-5xl">
+                Qu&apos;est-ce qu&apos;une <span className="text-brand-600">Mission Partenaire</span> ?
+              </h2>
+              <p className="mx-auto mt-5 max-w-2xl text-muted text-base leading-relaxed">
+                Une mission, c&apos;est une <strong className="text-ink">tâche commerciale concrète</strong> assignée par IBIG SARL à ses partenaires.
+                Chaque mission accomplie génère une commission immédiate. Pas de quotas. Pas d&apos;obligation.
+                Vous choisissez librement vos missions selon vos affinités et votre réseau.
+              </p>
+            </div>
+          </ScrollReveal>
+
+          {/* Explication visuelle : ce qu'est une mission */}
+          <div className="mb-16 grid gap-6 sm:grid-cols-3">
+            {([
+              {
+                num: "01",
+                icon: "📋",
+                title: "Une mission = une tâche",
+                desc: "Chaque mission décrit précisément ce qu'on vous demande : trouver un client pour un logiciel, placer une formation, identifier un bien immobilier, recruter un partenaire pour votre réseau N2...",
+                color: "bg-brand-50 text-brand-600",
+              },
+              {
+                num: "02",
+                icon: "💰",
+                title: "Mission réussie = commission",
+                desc: "Dès qu'un client confirme un achat via votre lien ou votre action, la commission est créditée sur votre compte IBIG PARTNERS sous 7 jours. Pas de délai caché.",
+                color: "bg-emerald-50 text-emerald-600",
+              },
+              {
+                num: "03",
+                icon: "🔓",
+                title: "Libre et sans pression",
+                desc: "Aucun minimum. Aucune pénalité si vous ne vendez pas. Vous accomplissez les missions à votre rythme, depuis votre téléphone, sans investissement ni stock.",
+                color: "bg-amber-50 text-amber-600",
+              },
+            ] as const).map((item) => (
+              <ScrollReveal key={item.num} animation="fade-up" delay={100}>
+                <div className="relative rounded-2xl border border-slate-100 bg-white p-7 shadow-sm hover:shadow-md transition-shadow">
+                  <span className="absolute top-5 right-5 text-5xl font-black text-slate-100">{item.num}</span>
+                  <span className={`inline-flex h-12 w-12 items-center justify-center rounded-2xl text-2xl ${item.color}`}>{item.icon}</span>
+                  <h3 className="mt-4 text-lg font-extrabold text-ink">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted">{item.desc}</p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+
+          {/* Types de missions avec exemples concrets */}
+          <ScrollReveal animation="fade-up">
+            <h3 className="mb-8 text-center text-xl font-extrabold text-ink sm:text-2xl">
+              Les <span className="text-brand-600">7 types de missions</span> disponibles
+            </h3>
+          </ScrollReveal>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {([
+              {
+                icon: "💻",
+                type: "Vente de logiciel",
+                example: "Faire souscrire une PME au logiciel de comptabilité Scolaby — Commission : 20% N1",
+                badge: "IBIG SOFT",
+                badgeColor: "bg-brand-50 text-brand-700",
+                commission: "20% à 50%",
+              },
+              {
+                icon: "🎓",
+                type: "Vente de formation",
+                example: "Inscrire un professionnel à une formation Excel ou Marketing Digital certifiante",
+                badge: "IBIG EDUFORM",
+                badgeColor: "bg-violet-50 text-violet-700",
+                commission: "15% à 25%",
+              },
+              {
+                icon: "🏠",
+                type: "Transaction immobilière",
+                example: "Référer un acheteur ou locataire sérieux pour un bien immobilier listé",
+                badge: "IBIG IMMO TRUST",
+                badgeColor: "bg-emerald-50 text-emerald-700",
+                commission: "10% sur commission agence",
+              },
+              {
+                icon: "🛍️",
+                type: "Vente produit / e-commerce",
+                example: "Vendre du matériel de bureau, mobilier ou fournitures via IBIG MARKET",
+                badge: "IBIG MARKET",
+                badgeColor: "bg-amber-50 text-amber-700",
+                commission: "8% à 12%",
+              },
+              {
+                icon: "📱",
+                type: "Service digital",
+                example: "Décrocher un contrat de création de site web ou de campagne publicitaire",
+                badge: "IBIG DIGITAL",
+                badgeColor: "bg-indigo-50 text-indigo-700",
+                commission: "10% à 15%",
+              },
+              {
+                icon: "👤",
+                type: "Recrutement réseau",
+                example: "Parrainer un nouveau partenaire actif et toucher des commissions sur ses ventes N2 et N3",
+                badge: "Tous secteurs",
+                badgeColor: "bg-rose-50 text-rose-700",
+                commission: "5% à 10% sur N2/N3",
+              },
+              {
+                icon: "💼",
+                type: "Placement emploi / RH",
+                example: "Mettre en relation un employeur avec un candidat qualifié via IBIG Emploi & Talents",
+                badge: "IBIG EMPLOI",
+                badgeColor: "bg-teal-50 text-teal-700",
+                commission: "Variable selon contrat",
+              },
+              {
+                icon: "🔧",
+                type: "Multiservices",
+                example: "Générer une demande de prestation (plomberie, électricité, gardiennage, imprimerie…)",
+                badge: "IBIG MULTISERVICES",
+                badgeColor: "bg-orange-50 text-orange-700",
+                commission: "8% à 15%",
+              },
+            ] as const).map((m, i) => (
+              <ScrollReveal key={m.type} animation="fade-up" delay={i * 60}>
+                <div className="flex h-full flex-col gap-3 rounded-2xl border border-slate-100 bg-white p-5 shadow-sm hover:border-brand-200 hover:shadow-md transition-all">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-50 text-xl">{m.icon}</span>
+                    <div>
+                      <p className="font-extrabold text-ink text-sm leading-tight">{m.type}</p>
+                      <span className={`mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold ${m.badgeColor}`}>{m.badge}</span>
+                    </div>
+                  </div>
+                  <p className="flex-1 text-xs leading-relaxed text-muted">{m.example}</p>
+                  <div className="flex items-center gap-1.5 rounded-xl bg-emerald-50 px-3 py-2">
+                    <span className="text-emerald-500 text-sm font-black">💰</span>
+                    <span className="text-xs font-bold text-emerald-700">{m.commission}</span>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+
+          {/* Comment accéder aux missions */}
+          <ScrollReveal animation="fade-up" delay={100}>
+            <div className="mt-14 rounded-3xl border border-brand-100 bg-gradient-to-r from-brand-50 to-blue-50 p-8 sm:p-10">
+              <div className="grid gap-8 sm:grid-cols-2 items-center">
+                <div>
+                  <h3 className="text-2xl font-extrabold text-ink sm:text-3xl">
+                    Comment accéder aux missions ?
+                  </h3>
+                  <p className="mt-3 text-muted leading-relaxed">
+                    Après inscription gratuite, votre tableau de bord affiche toutes les missions disponibles classées par branche, commission et difficulté. Filtrez, choisissez, agissez.
+                  </p>
+                  <ul className="mt-5 space-y-3">
+                    {[
+                      "Inscrivez-vous gratuitement en 2 minutes",
+                      "Accédez à votre tableau de bord partenaire",
+                      "Choisissez vos missions parmi 1 095+ disponibles",
+                      "Partagez votre lien ou agissez directement",
+                      "Encaissez votre commission sous 7 jours",
+                    ].map((step) => (
+                      <li key={step} className="flex items-start gap-3 text-sm text-ink">
+                        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white text-xs font-black">✓</span>
+                        {step}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-full rounded-2xl bg-white border border-slate-100 shadow-lg p-6 text-center">
+                    <p className="text-4xl font-black text-brand-600">1 095+</p>
+                    <p className="mt-1 text-sm font-bold text-ink">missions actives</p>
+                    <p className="mt-0.5 text-xs text-muted">dans 10 branches IBIG SARL</p>
+                    <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
+                      <div className="rounded-xl bg-slate-50 p-2">
+                        <p className="font-black text-ink">14</p>
+                        <p className="text-muted">logiciels SaaS</p>
+                      </div>
+                      <div className="rounded-xl bg-slate-50 p-2">
+                        <p className="font-black text-ink">800+</p>
+                        <p className="text-muted">formations</p>
+                      </div>
+                      <div className="rounded-xl bg-slate-50 p-2">
+                        <p className="font-black text-ink">50%</p>
+                        <p className="text-muted">commission max</p>
+                      </div>
+                      <div className="rounded-xl bg-slate-50 p-2">
+                        <p className="font-black text-ink">7 jours</p>
+                        <p className="text-muted">délai paiement</p>
+                      </div>
+                    </div>
+                  </div>
+                  <a
+                    href="/rejoindre"
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-brand-600 to-brand-700 px-7 py-4 font-bold text-white shadow-lg shadow-brand-500/25 transition-all hover:-translate-y-1 hover:shadow-xl"
+                  >
+                    Voir mes missions — Gratuit →
+                  </a>
+                </div>
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
       {/* ═══════════ CAS D'USAGE — que faire sur IBIG PARTNERS ═══════════ */}
       <PlatformUsecases />
 
