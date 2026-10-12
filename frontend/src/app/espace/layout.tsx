@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { headers } from "next/headers";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { DashboardShell, type NavItem } from "@/components/dashboard-shell";
@@ -24,15 +22,6 @@ export default async function EspaceLayout({
     ? await (prisma as any).contract.findUnique({ where: { userId: user.id }, select: { confirmed: true } })
     : null;
   const mustSignContract = user.approved && user.role === "PARTNER" && !contract?.confirmed;
-
-  // Rediriger vers /espace/contrat si non signé (sauf si déjà sur cette page)
-  if (mustSignContract) {
-    const hdrs = await headers();
-    const pathname = hdrs.get("x-invoke-path") ?? hdrs.get("next-url") ?? "";
-    if (!pathname.includes("/espace/contrat")) {
-      redirect("/espace/contrat");
-    }
-  }
 
   const unread = await prisma.notification.count({
     where: {
