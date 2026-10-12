@@ -160,11 +160,20 @@ export default async function CataloguePage({
     // Filtre par sous-catégorie EDUFORM directement
     branchWhere = { active: true, id: subcatFilter };
   } else if (branchFilter) {
-    branchWhere = {
-      active: true,
-      id: branchFilter,
-      // Si c'est ibig-eduform, on exclut les sous-branches (les produits sont dans les sous-branches)
-    };
+    // Si c'est ibig-eduform, les produits sont dans les sous-branches eduform-*
+    // → on inclut ibig-eduform ET toutes ses sous-branches
+    const selectedBranch = allBranchesForSidebar.find((b: any) => b.id === branchFilter);
+    if (selectedBranch?.slug === "ibig-eduform") {
+      branchWhere = {
+        active: true,
+        OR: [
+          { id: branchFilter },
+          { slug: { startsWith: "eduform-", not: "ibig-eduform" } },
+        ],
+      };
+    } else {
+      branchWhere = { active: true, id: branchFilter };
+    }
   } else {
     // Vue d'ensemble : exclure les sous-branches EDUFORM
     branchWhere = {
@@ -301,8 +310,112 @@ export default async function CataloguePage({
         </div>
       </div>
 
-      {/* ── LAYOUT PRINCIPAL : contenu + sidebar ── */}
+      {/* ── LAYOUT PRINCIPAL : sidebar gauche + contenu ── */}
       <div className="mx-auto max-w-6xl w-full px-4 py-8 flex gap-6 items-start flex-1">
+
+        {/* ── SIDEBAR GAUCHE ── */}
+        <aside className="hidden lg:block w-64 shrink-0 sticky top-20">
+          <div className="space-y-4">
+
+            {/* Branches */}
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+              <div className="bg-gradient-to-r from-[#041B4D] to-[#0d2d72] px-4 py-3">
+                <p className="text-xs font-bold text-white uppercase tracking-wider">🏢 Branches IBIG</p>
+              </div>
+              <div className="p-2 space-y-0.5">
+                <Link
+                  href={buildUrl({ type: typeFilter, q: search, branch: null, subcat: null })}
+                  className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition ${
+                    !branchFilter && !subcatFilter
+                      ? "bg-[#041B4D] text-white font-bold"
+                      : "text-slate-600 hover:bg-slate-50 font-medium"
+                  }`}
+                >
+                  <span>✦ Toutes les branches</span>
+                  <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${!branchFilter && !subcatFilter ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"}`}>
+                    {totalAllProducts}
+                  </span>
+                </Link>
+                {allBranchesForSidebar.filter((b: any) => b._count.products > 0).map((branch: any) => {
+                  const style = getBranchStyle(branch.id);
+                  const isActive = branchFilter === branch.id || (branch.slug === "ibig-eduform" && subcatFilter !== null);
+                  return (
+                    <Link
+                      key={branch.id}
+                      href={buildUrl({ type: null, q: search, branch: branch.id, subcat: null })}
+                      className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition ${
+                        isActive
+                          ? "font-bold text-white"
+                          : "text-slate-600 hover:bg-slate-50 font-medium"
+                      }`}
+                      style={isActive ? { background: style.accent } : {}}
+                    >
+                      <span>{style.emoji} {branch.name}</span>
+                      <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${isActive ? "bg-white/25 text-white" : "bg-slate-100 text-slate-500"}`}>
+                        {branch._count.products}
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Sous-catégories EDUFORM */}
+            {isEduformSelected && eduformSubcats.filter((b: any) => b._count.products > 0).length > 0 && (
+              <div className="bg-white rounded-2xl border border-blue-100 shadow-sm overflow-hidden">
+                <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-4 py-3">
+                  <p className="text-xs font-bold text-white uppercase tracking-wider">🎓 Domaines EDUFORM</p>
+                </div>
+                <div className="p-2 space-y-0.5 max-h-96 overflow-y-auto">
+                  <Link
+                    href={buildUrl({ type: null, q: search, branch: eduformBranch?.id ?? null, subcat: null })}
+                    className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition ${
+                      !subcatFilter
+                        ? "bg-blue-600 text-white font-bold"
+                        : "text-slate-600 hover:bg-blue-50 font-medium"
+                    }`}
+                  >
+                    <span>📚 Tous les domaines</span>
+                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${!subcatFilter ? "bg-white/25 text-white" : "bg-slate-100 text-slate-500"}`}>
+                      {eduformSubcats.reduce((s: number, b: any) => s + b._count.products, 0)}
+                    </span>
+                  </Link>
+                  {eduformSubcats.filter((b: any) => b._count.products > 0).map((sub: any) => {
+                    const info = EDUFORM_SUBCAT_LABELS[sub.slug] ?? { label: sub.name, emoji: "📘" };
+                    const isActive = subcatFilter === sub.id;
+                    return (
+                      <Link
+                        key={sub.id}
+                        href={buildUrl({ type: null, q: search, branch: null, subcat: sub.id })}
+                        className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition ${
+                          isActive
+                            ? "bg-blue-600 text-white font-bold"
+                            : "text-slate-600 hover:bg-blue-50 font-medium"
+                        }`}
+                      >
+                        <span>{info.emoji} {info.label}</span>
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${isActive ? "bg-white/25 text-white" : "bg-slate-100 text-slate-500"}`}>
+                          {sub._count.products}
+                        </span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* CTA rejoindre */}
+            {!user && (
+              <div className="bg-gradient-to-br from-[#FF6A00] to-orange-600 rounded-2xl p-4 text-center space-y-2">
+                <p className="text-sm font-extrabold text-white">Devenez partenaire</p>
+                <p className="text-[11px] text-white/80">Inscription gratuite · Commissions immédiates</p>
+                <Link href="/rejoindre" className="block mt-2 rounded-xl bg-white text-orange-600 py-2 text-xs font-extrabold hover:bg-orange-50 transition">
+                  🚀 Rejoindre →
+                </Link>
+              </div>
+            )}
+          </div>
+        </aside>
 
         {/* ── CONTENU PRINCIPAL ── */}
         <main className="flex-1 min-w-0">
@@ -497,110 +610,6 @@ export default async function CataloguePage({
             </div>
           )}
         </main>
-
-        {/* ── SIDEBAR DROITE ── */}
-        <aside className="hidden lg:block w-64 shrink-0 sticky top-20">
-          <div className="space-y-4">
-
-            {/* Branches */}
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-              <div className="bg-gradient-to-r from-[#041B4D] to-[#0d2d72] px-4 py-3">
-                <p className="text-xs font-bold text-white uppercase tracking-wider">🏢 Branches IBIG</p>
-              </div>
-              <div className="p-2 space-y-0.5">
-                <Link
-                  href={buildUrl({ type: typeFilter, q: search, branch: null, subcat: null })}
-                  className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition ${
-                    !branchFilter && !subcatFilter
-                      ? "bg-[#041B4D] text-white font-bold"
-                      : "text-slate-600 hover:bg-slate-50 font-medium"
-                  }`}
-                >
-                  <span>✦ Toutes les branches</span>
-                  <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${!branchFilter && !subcatFilter ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"}`}>
-                    {totalAllProducts}
-                  </span>
-                </Link>
-                {allBranchesForSidebar.filter((b: any) => b._count.products > 0).map((branch: any) => {
-                  const style = getBranchStyle(branch.id);
-                  const isActive = branchFilter === branch.id || (branch.slug === "ibig-eduform" && subcatFilter !== null);
-                  return (
-                    <Link
-                      key={branch.id}
-                      href={buildUrl({ type: typeFilter, q: search, branch: branch.id, subcat: null })}
-                      className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition ${
-                        isActive
-                          ? "font-bold text-white"
-                          : "text-slate-600 hover:bg-slate-50 font-medium"
-                      }`}
-                      style={isActive ? { background: style.accent } : {}}
-                    >
-                      <span>{style.emoji} {branch.name}</span>
-                      <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${isActive ? "bg-white/25 text-white" : "bg-slate-100 text-slate-500"}`}>
-                        {branch._count.products}
-                      </span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Sous-catégories EDUFORM (si ibig-eduform sélectionné) */}
-            {isEduformSelected && eduformSubcats.filter((b: any) => b._count.products > 0).length > 0 && (
-              <div className="bg-white rounded-2xl border border-blue-100 shadow-sm overflow-hidden">
-                <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-4 py-3">
-                  <p className="text-xs font-bold text-white uppercase tracking-wider">🎓 Domaines EDUFORM</p>
-                </div>
-                <div className="p-2 space-y-0.5 max-h-96 overflow-y-auto">
-                  <Link
-                    href={buildUrl({ type: typeFilter, q: search, branch: eduformBranch?.id ?? null, subcat: null })}
-                    className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition ${
-                      !subcatFilter
-                        ? "bg-blue-600 text-white font-bold"
-                        : "text-slate-600 hover:bg-blue-50 font-medium"
-                    }`}
-                  >
-                    <span>📚 Tous les domaines</span>
-                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${!subcatFilter ? "bg-white/25 text-white" : "bg-slate-100 text-slate-500"}`}>
-                      {eduformSubcats.reduce((s: number, b: any) => s + b._count.products, 0)}
-                    </span>
-                  </Link>
-                  {eduformSubcats.filter((b: any) => b._count.products > 0).map((sub: any) => {
-                    const info = EDUFORM_SUBCAT_LABELS[sub.slug] ?? { label: sub.name, emoji: "📘" };
-                    const isActive = subcatFilter === sub.id;
-                    return (
-                      <Link
-                        key={sub.id}
-                        href={buildUrl({ type: typeFilter, q: search, branch: null, subcat: sub.id })}
-                        className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition ${
-                          isActive
-                            ? "bg-blue-600 text-white font-bold"
-                            : "text-slate-600 hover:bg-blue-50 font-medium"
-                        }`}
-                      >
-                        <span>{info.emoji} {info.label}</span>
-                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${isActive ? "bg-white/25 text-white" : "bg-slate-100 text-slate-500"}`}>
-                          {sub._count.products}
-                        </span>
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* CTA rejoindre */}
-            {!user && (
-              <div className="bg-gradient-to-br from-[#FF6A00] to-orange-600 rounded-2xl p-4 text-center space-y-2">
-                <p className="text-sm font-extrabold text-white">Devenez partenaire</p>
-                <p className="text-[11px] text-white/80">Inscription gratuite · Commissions immédiates</p>
-                <Link href="/rejoindre" className="block mt-2 rounded-xl bg-white text-orange-600 py-2 text-xs font-extrabold hover:bg-orange-50 transition">
-                  🚀 Rejoindre →
-                </Link>
-              </div>
-            )}
-          </div>
-        </aside>
       </div>
 
       <SiteFooter />
