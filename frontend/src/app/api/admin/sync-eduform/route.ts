@@ -128,11 +128,13 @@ export async function POST(request: Request) {
         const branchId = branchIds[domaine] ?? mainBranch.id;
         const price = f.tarif_en_ligne ?? f.tarif_presentiel ?? 200000;
         const siteUrl = f.url || `https://ibig-eduform.com/formation/${f.slug}`;
-        return `(${esc(randomUUID())},${esc(branchId)},${esc(f.titre)},${esc(slug)},${esc(f.pitch || "")},${price},${"'COURSE'"},10,${esc(siteUrl)},true)`;
+        // category = libellé lisible du domaine (pour les filtres sidebar)
+        const catLabel = domaine ? (CATEGORY_BRANCHES[domaine]?.label ?? domaine) : "Autre";
+        return `(${esc(randomUUID())},${esc(branchId)},${esc(f.titre)},${esc(slug)},${esc(f.pitch || "")},${price},${"'COURSE'"},10,${esc(siteUrl)},true,${esc(catLabel)})`;
       });
 
       await prisma.$executeRawUnsafe(
-        `INSERT INTO "Product" (id,"branchId",name,slug,description,price,"pricingType",rate,"siteUrl",active) VALUES ${rows.join(",")} ON CONFLICT (slug) DO UPDATE SET name=EXCLUDED.name,price=EXCLUDED.price,"branchId"=EXCLUDED."branchId",active=true,"siteUrl"=EXCLUDED."siteUrl"`
+        `INSERT INTO "Product" (id,"branchId",name,slug,description,price,"pricingType",rate,"siteUrl",active,category) VALUES ${rows.join(",")} ON CONFLICT (slug) DO UPDATE SET name=EXCLUDED.name,price=EXCLUDED.price,"branchId"=EXCLUDED."branchId",active=true,"siteUrl"=EXCLUDED."siteUrl",category=EXCLUDED.category`
       );
       synced += chunk.length;
     }
