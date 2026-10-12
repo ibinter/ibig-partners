@@ -17,7 +17,8 @@ export type ActivityAction =
   | "OPPORTUNITY_CREATED"
   | "CONNECT_REQUEST"
   | "PAYOUT_REQUESTED"
-  | "ACCOUNT_SUSPENDED";
+  | "ACCOUNT_SUSPENDED"
+  | "CP_BOOST_ACTIVATED";
 
 interface LogActivityOptions {
   userId?: string;
