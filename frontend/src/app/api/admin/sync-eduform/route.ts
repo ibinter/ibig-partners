@@ -140,6 +140,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       ok:      true,
       synced,
+      done:    synced,
       total:   formations.length,
       message: `${synced}/${formations.length} formations synchronisées depuis ibig-eduform.com`,
     });
