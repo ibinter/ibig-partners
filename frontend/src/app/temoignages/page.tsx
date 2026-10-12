@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {

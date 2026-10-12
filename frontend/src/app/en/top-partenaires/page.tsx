@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 import { prisma } from "@/lib/prisma";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 // Below this threshold, a "leaderboard" or "traction" is not yet
 // credible — we show an honest launch page instead.

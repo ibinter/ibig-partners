@@ -3,7 +3,7 @@ import { HallOfFame } from "@/components/hall-of-fame";
 import { ParrainDuMois } from "@/components/parrain-du-mois";
 import { prisma } from "@/lib/prisma";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 // Sous ce seuil, un "classement" ou une "traction" n'est pas encore
 // crédible — on affiche une page de lancement honnête à la place.

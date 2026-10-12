@@ -99,34 +99,34 @@ export default async function CataloguePage({
   const search       = sp.q?.trim() ?? null;
   const branchFilter = sp.branch ?? null;
   const catFilter    = sp.cat    ?? null;  // filtre par champ category des produits
-  const user = await getCurrentUser();
-
-  // ── 1. Toutes les branches (pour la sidebar) ──
-  const allBranchesForSidebar = await (prisma as any).branch.findMany({
-    where: {
-      active: true,
-      NOT: {
-        AND: [
-          { slug: { startsWith: "eduform-" } },
-          { slug: { not: "ibig-eduform" } },
-        ],
+  const [user, allBranchesForSidebar, allEduformBranches] = await Promise.all([
+    getCurrentUser(),
+    // ── 1. Toutes les branches (pour la sidebar) ──
+    (prisma as any).branch.findMany({
+      where: {
+        active: true,
+        NOT: {
+          AND: [
+            { slug: { startsWith: "eduform-" } },
+            { slug: { not: "ibig-eduform" } },
+          ],
+        },
       },
-    },
-    select: {
-      id: true, name: true, slug: true,
-      _count: { select: { products: { where: { active: true } } } },
-    },
-    orderBy: { order: "asc" },
-  });
-
-  // ── 2. Branches EDUFORM (ID de ibig-eduform + toutes les sous-branches) ──
-  const allEduformBranches = await (prisma as any).branch.findMany({
-    where: {
-      active: true,
-      OR: [{ slug: "ibig-eduform" }, { slug: { startsWith: "eduform-" } }],
-    },
-    select: { id: true, slug: true, name: true },
-  });
+      select: {
+        id: true, name: true, slug: true,
+        _count: { select: { products: { where: { active: true } } } },
+      },
+      orderBy: { order: "asc" },
+    }),
+    // ── 2. Branches EDUFORM (ID de ibig-eduform + toutes les sous-branches) ──
+    (prisma as any).branch.findMany({
+      where: {
+        active: true,
+        OR: [{ slug: "ibig-eduform" }, { slug: { startsWith: "eduform-" } }],
+      },
+      select: { id: true, slug: true, name: true },
+    }),
+  ]);
   const eduformBranch = allEduformBranches.find((b: any) => b.slug === "ibig-eduform");
   const eduformBranchIds: string[] = allEduformBranches.map((b: any) => b.id);
 

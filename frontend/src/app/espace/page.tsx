@@ -120,25 +120,25 @@ export default async function DashboardPage({
     (lvl) => summary.network.filter((m) => m.level === lvl).length,
   );
 
-  // Onboarding
-  const linksCount = await prisma.affiliateLink.count({ where: { userId: user.id } });
-  const prospectsCount = await prisma.prospect.count({ where: { userId: user.id } });
-  const onboardingDone = {
-    profile: Boolean(user.city && user.payoutDetail),
-    activate: linksCount > 0,
-    link: linksCount > 0,
-    share: false,
-    prospect: prospectsCount > 0,
-  };
-
   // Défi semaine
   const weekStart = new Date();
   const day = weekStart.getDay() === 0 ? 7 : weekStart.getDay();
   weekStart.setDate(weekStart.getDate() - day + 1);
   weekStart.setHours(0, 0, 0, 0);
-  const weekSales = await prisma.sale.count({
-    where: { sellerId: user.id, status: "CONFIRMED", createdAt: { gte: weekStart } },
-  });
+
+  const [prospectsCount, weekSales] = await Promise.all([
+    prisma.prospect.count({ where: { userId: user.id } }),
+    prisma.sale.count({ where: { sellerId: user.id, status: "CONFIRMED", createdAt: { gte: weekStart } } }),
+  ]);
+
+  // Onboarding — réutilise myLinksCount déjà chargé ci-dessus
+  const onboardingDone = {
+    profile: Boolean(user.city && user.payoutDetail),
+    activate: myLinksCount > 0,
+    link: myLinksCount > 0,
+    share: false,
+    prospect: prospectsCount > 0,
+  };
 
   // Phase 8 — CP balance + niveau partenaire
   const cpData = await (async () => {

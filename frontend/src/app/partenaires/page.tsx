@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 const CATEGORY_LABELS: Record<string, string> = {
   BANK: "Banque & Finance", NGO: "ONG / Organisation", GOVERNMENT: "Institution publique",

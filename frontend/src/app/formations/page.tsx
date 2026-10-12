@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 import { FormationCards } from "@/components/formation-cards";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 export const revalidate = 900; // 15 min
 
 export const metadata: Metadata = {
