@@ -92,6 +92,64 @@ function ConfirmSaleButton({ applicationId, partnerName, missionTitle }: { appli
 }
 import { DescriptionBlock } from "@/components/DescriptionBlock";
 
+function AppMessagePanel({
+  applicationId, partnerName, messages, sendAppMessageAction,
+}: {
+  applicationId: string;
+  partnerName: string;
+  messages: AppMessage[];
+  sendAppMessageAction: (fd: FormData) => Promise<void>;
+}) {
+  const [open, setOpen] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  return (
+    <div className="mt-3">
+      <button
+        onClick={() => setOpen(v => !v)}
+        className={`rounded-xl px-3 py-1.5 text-xs font-bold border transition ${open ? "bg-blue-700 text-white border-blue-700" : "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"}`}
+      >
+        💬 {open ? "Fermer messages" : `Messages (${messages.length})`}
+      </button>
+      {open && (
+        <div className="mt-2 rounded-2xl border border-blue-200 bg-blue-50 p-4 space-y-3">
+          <p className="text-[10px] font-bold text-blue-700 uppercase tracking-wide">
+            Messages envoyés à {partnerName}
+          </p>
+          {messages.length > 0 ? (
+            <div className="space-y-2 max-h-48 overflow-y-auto">
+              {messages.map(msg => (
+                <div key={msg.id} className="rounded-lg border border-blue-100 bg-white px-3 py-2">
+                  <p className="text-xs text-slate-700 whitespace-pre-wrap">{msg.content}</p>
+                  <p className="text-[10px] text-slate-400 mt-1">{fmtDate(msg.createdAt)}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-slate-400 italic">Aucun message envoyé.</p>
+          )}
+          <form action={async (fd) => { await sendAppMessageAction(fd); if (textareaRef.current) textareaRef.current.value = ""; }} className="space-y-2">
+            <input type="hidden" name="applicationId" value={applicationId} />
+            <textarea
+              ref={textareaRef}
+              name="content"
+              required
+              rows={3}
+              placeholder={`Message ou suggestion pour ${partnerName}…`}
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs outline-none resize-none focus:border-blue-400"
+            />
+            <button
+              type="submit"
+              className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 transition"
+            >
+              ✉️ Envoyer
+            </button>
+          </form>
+        </div>
+      )}
+    </div>
+  );
+}
+
 const CATEGORY_LABELS: Record<string, string> = {
   FORMATION: "🎓 Formation", DIGITAL: "💻 Digital", INFORMATIQUE: "⚙️ Logiciels",
   IMMOBILIER: "🏠 Immobilier", BTP: "🏗️ BTP", CONSEIL: "📋 Conseil",
@@ -156,12 +214,14 @@ const REWARD_BADGE: Record<string, string> = {
   MIXED: "bg-blue-100 text-blue-700",
 };
 
+type AppMessage = { id: string; content: string; createdAt: string };
 type Application = {
   id: string; status: string; note: string; result: string;
   proofUrl: string; proofNote: string; submittedAt: string | null;
   validatedAt: string | null; cpEarned: number; commissionEarned: number;
   createdAt: string;
   partnerName: string; partnerCode: string; partnerPhone: string; partnerEmail: string;
+  messages: AppMessage[];
 };
 
 type MediaItem = { id: string; url: string; mediaType: string; name: string };
@@ -206,7 +266,7 @@ function fmtDate(iso: string) {
 
 export default function MissionsAdminClient({
   rows, stats, createAction, updateAction, updateStatusAction, updateAppAction, validateAppAction,
-  validateSubmissionAction, rejectSubmissionAction, connectInterestAction, sendMessageAction,
+  validateSubmissionAction, rejectSubmissionAction, connectInterestAction, sendMessageAction, sendAppMessageAction,
 }: {
   rows: MissionRow[];
   stats: { total: number; open: number; applications: number; pending: number; submitted: number; pendingSubmissions: number; interests: number };
@@ -219,6 +279,7 @@ export default function MissionsAdminClient({
   rejectSubmissionAction: (fd: FormData) => Promise<void>;
   connectInterestAction: (fd: FormData) => Promise<void>;
   sendMessageAction: (fd: FormData) => Promise<void>;
+  sendAppMessageAction: (fd: FormData) => Promise<void>;
 }) {
   const [tab, setTab] = useState<"missions" | "applications" | "soumissions">("missions");
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -416,6 +477,12 @@ export default function MissionsAdminClient({
                       )}
 
                       <p className="text-[10px] text-slate-400 mt-1">Candidaturé le {fmtDate(a.createdAt)}</p>
+                      <AppMessagePanel
+                        applicationId={a.id}
+                        partnerName={a.partnerName}
+                        messages={a.messages}
+                        sendAppMessageAction={sendAppMessageAction}
+                      />
                     </div>
 
                     {/* Actions */}
@@ -1137,6 +1204,12 @@ export default function MissionsAdminClient({
                                 )}
 
                                 <p className="text-[10px] text-slate-400 mt-1">{fmtDate(a.createdAt)}</p>
+                                <AppMessagePanel
+                                  applicationId={a.id}
+                                  partnerName={a.partnerName}
+                                  messages={a.messages}
+                                  sendAppMessageAction={sendAppMessageAction}
+                                />
                               </div>
 
                               {/* Actions */}

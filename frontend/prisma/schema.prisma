@@ -702,6 +702,15 @@ model MissionMessage {
   @@index([missionId])
 }
 
+model ApplicationMessage {
+  id            String             @id @default(cuid())
+  applicationId String
+  application   MissionApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  content       String
+  createdAt     DateTime           @default(now())
+  @@index([applicationId])
+}
+
 model MissionApplication {
   id        String    @id @default(cuid())
   missionId String
@@ -728,6 +737,7 @@ model MissionApplication {
 
   pointTransactions PointTransaction[]
   duplicates        MissionDuplicate[]
+  messages          ApplicationMessage[]
 
   @@unique([missionId, userId])
   @@index([userId])

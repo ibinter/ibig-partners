@@ -1430,6 +1430,33 @@ export async function connectMissionInterest(formData: FormData) {
   revalidatePath("/admin/missions");
 }
 
+export async function sendApplicationMessage(formData: FormData) {
+  await requireAdmin();
+  const applicationId = String(formData.get("applicationId"));
+  const content = String(formData.get("content") || "").trim();
+  if (!applicationId || !content) return;
+  // Récupérer infos application pour la notification
+  const app = await (prisma as any).missionApplication.findUnique({
+    where: { id: applicationId },
+    select: { userId: true, mission: { select: { title: true } } },
+  });
+  await (prisma as any).applicationMessage.create({
+    data: { applicationId, content },
+  });
+  // Notifier le partenaire
+  if (app?.userId) {
+    await prisma.notification.create({
+      data: {
+        userId: app.userId,
+        title: `💬 Message IBIG — Mission : ${app.mission?.title ?? ""}`,
+        body: content,
+        url: "/espace/missions",
+      },
+    });
+  }
+  revalidatePath("/admin/missions");
+}
+
 export async function sendMissionMessage(formData: FormData) {
   await requireAdmin();
   const missionId = String(formData.get("missionId"));

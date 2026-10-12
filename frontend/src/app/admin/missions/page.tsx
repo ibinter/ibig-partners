@@ -1,7 +1,7 @@
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/ui";
-import { createMission, updateMission, updateMissionStatus, updateApplicationStatus, validateMissionApplication, validateMissionSubmission, rejectMissionSubmission, connectMissionInterest, sendMissionMessage } from "../actions";
+import { createMission, updateMission, updateMissionStatus, updateApplicationStatus, validateMissionApplication, validateMissionSubmission, rejectMissionSubmission, connectMissionInterest, sendMissionMessage, sendApplicationMessage } from "../actions";
 import MissionsAdminClient from "./missions-admin-client";
 
 export const revalidate = 30;
@@ -13,7 +13,10 @@ export default async function AdminMissionsPage() {
     orderBy: { createdAt: "desc" },
     include: {
       applications: {
-        include: { user: { select: { firstName: true, lastName: true, code: true, phone: true, email: true } } },
+        include: {
+          user: { select: { firstName: true, lastName: true, code: true, phone: true, email: true } },
+          messages: { orderBy: { createdAt: "asc" } },
+        },
         orderBy: { createdAt: "asc" },
       },
       media: true,
@@ -95,6 +98,11 @@ export default async function AdminMissionsPage() {
       partnerCode: a.user.code,
       partnerPhone: a.user.phone ?? "",
       partnerEmail: a.user.email,
+      messages: (a.messages ?? []).map((msg: any) => ({
+        id: msg.id,
+        content: msg.content,
+        createdAt: msg.createdAt instanceof Date ? msg.createdAt.toISOString() : String(msg.createdAt),
+      })),
     })),
   }));
 
@@ -126,6 +134,7 @@ export default async function AdminMissionsPage() {
         rejectSubmissionAction={rejectMissionSubmission}
         connectInterestAction={connectMissionInterest}
         sendMessageAction={sendMissionMessage}
+        sendAppMessageAction={sendApplicationMessage}
       />
     </div>
   );
