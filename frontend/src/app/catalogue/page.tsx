@@ -124,20 +124,27 @@ export default async function CataloguePage({
   const isEduformSelected = branchFilter === eduformBranch?.id || catFilter !== null;
 
   // ── 3. Sous-catégories EDUFORM via le champ `category` des produits ──
-  // Fonctionne que les produits soient dans ibig-eduform ou dans les sous-branches
+  // groupBy ne supporte pas le filtre relationnel → on récupère d'abord les branchIds
   let eduformCategories: { category: string; count: number }[] = [];
   if (isEduformSelected) {
+    const eduformBranchRows = await (prisma as any).branch.findMany({
+      where: {
+        active: true,
+        OR: [
+          { slug: "ibig-eduform" },
+          { slug: { startsWith: "eduform-" } },
+        ],
+      },
+      select: { id: true },
+    });
+    const eduformBranchIds = eduformBranchRows.map((b: any) => b.id);
+
     const catRows = await (prisma as any).product.groupBy({
       by: ["category"],
       where: {
         active: true,
         category: { not: null },
-        branch: {
-          OR: [
-            { slug: "ibig-eduform" },
-            { slug: { startsWith: "eduform-" } },
-          ],
-        },
+        branchId: { in: eduformBranchIds },
       },
       _count: { id: true },
       orderBy: { category: "asc" },
