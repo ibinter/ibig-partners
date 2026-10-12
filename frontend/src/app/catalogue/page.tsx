@@ -119,26 +119,26 @@ export default async function CataloguePage({
     orderBy: { order: "asc" },
   });
 
-  // ── 2. Identifier si IBIG EDUFORM est sélectionné ──
-  const eduformBranch = allBranchesForSidebar.find((b: any) => b.slug === "ibig-eduform");
-  const isEduformSelected = branchFilter === eduformBranch?.id || catFilter !== null;
+  // ── 2. Branches EDUFORM (ID de ibig-eduform + toutes les sous-branches) ──
+  const allEduformBranches = await (prisma as any).branch.findMany({
+    where: {
+      active: true,
+      OR: [{ slug: "ibig-eduform" }, { slug: { startsWith: "eduform-" } }],
+    },
+    select: { id: true, slug: true, name: true },
+  });
+  const eduformBranch = allEduformBranches.find((b: any) => b.slug === "ibig-eduform");
+  const eduformBranchIds: string[] = allEduformBranches.map((b: any) => b.id);
 
-  // ── 3. Sous-catégories EDUFORM via le champ `category` des produits ──
-  // groupBy ne supporte pas le filtre relationnel → on récupère d'abord les branchIds
+  // Un filtre EDUFORM est actif si branchFilter correspond à ibig-eduform ou à une sous-branche,
+  // ou si catFilter est défini
+  const isEduformSelected =
+    catFilter !== null ||
+    (branchFilter !== null && eduformBranchIds.includes(branchFilter));
+
+  // ── 3. Catégories EDUFORM via groupBy sur le champ category ──
   let eduformCategories: { category: string; count: number }[] = [];
-  if (isEduformSelected) {
-    const eduformBranchRows = await (prisma as any).branch.findMany({
-      where: {
-        active: true,
-        OR: [
-          { slug: "ibig-eduform" },
-          { slug: { startsWith: "eduform-" } },
-        ],
-      },
-      select: { id: true },
-    });
-    const eduformBranchIds = eduformBranchRows.map((b: any) => b.id);
-
+  if (isEduformSelected && eduformBranchIds.length > 0) {
     const catRows = await (prisma as any).product.groupBy({
       by: ["category"],
       where: {
@@ -146,12 +146,12 @@ export default async function CataloguePage({
         category: { not: null },
         branchId: { in: eduformBranchIds },
       },
-      _count: { id: true },
+      _count: true,
       orderBy: { category: "asc" },
     });
     eduformCategories = catRows
       .filter((r: any) => r.category)
-      .map((r: any) => ({ category: r.category as string, count: r._count.id as number }));
+      .map((r: any) => ({ category: r.category as string, count: r._count as number }));
   }
 
   // ── 4. Produits à afficher ──
