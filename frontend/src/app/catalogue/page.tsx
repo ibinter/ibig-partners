@@ -92,13 +92,13 @@ const EDUFORM_SUBCAT_LABELS: Record<string, { label: string; emoji: string }> = 
 export default async function CataloguePage({
   searchParams,
 }: {
-  searchParams: Promise<{ type?: string; q?: string; branch?: string; subcat?: string }>;
+  searchParams: Promise<{ type?: string; q?: string; branch?: string; cat?: string }>;
 }) {
   const sp = await searchParams;
-  const typeFilter   = sp.type    ?? null;
+  const typeFilter   = sp.type   ?? null;
   const search       = sp.q?.trim() ?? null;
-  const branchFilter = sp.branch  ?? null;
-  const subcatFilter = sp.subcat  ?? null;  // sous-catégorie EDUFORM
+  const branchFilter = sp.branch ?? null;
+  const catFilter    = sp.cat    ?? null;  // filtre par champ category des produits
   const user = await getCurrentUser();
 
   // ── 1. Toutes les branches (pour la sidebar) ──
@@ -119,30 +119,39 @@ export default async function CataloguePage({
     orderBy: { order: "asc" },
   });
 
-  // ── 2. Sous-catégories EDUFORM (pour la sidebar quand ibig-eduform sélectionné) ──
+  // ── 2. Identifier si IBIG EDUFORM est sélectionné ──
   const eduformBranch = allBranchesForSidebar.find((b: any) => b.slug === "ibig-eduform");
-  const isEduformSelected = branchFilter === eduformBranch?.id || subcatFilter !== null;
+  const isEduformSelected = branchFilter === eduformBranch?.id || catFilter !== null;
 
-  const eduformSubcats = isEduformSelected ? await (prisma as any).branch.findMany({
-    where: {
-      active: true,
-      slug: { startsWith: "eduform-", not: "ibig-eduform" },
-    },
-    select: {
-      id: true, name: true, slug: true,
-      _count: { select: { products: { where: { active: true } } } },
-    },
-    orderBy: { name: "asc" },
-  }) : [];
+  // ── 3. Sous-catégories EDUFORM via le champ `category` des produits ──
+  // Fonctionne que les produits soient dans ibig-eduform ou dans les sous-branches
+  let eduformCategories: { category: string; count: number }[] = [];
+  if (isEduformSelected) {
+    const catRows = await (prisma as any).product.groupBy({
+      by: ["category"],
+      where: {
+        active: true,
+        category: { not: null },
+        branch: {
+          OR: [
+            { slug: "ibig-eduform" },
+            { slug: { startsWith: "eduform-" } },
+          ],
+        },
+      },
+      _count: { id: true },
+      orderBy: { category: "asc" },
+    });
+    eduformCategories = catRows
+      .filter((r: any) => r.category)
+      .map((r: any) => ({ category: r.category as string, count: r._count.id as number }));
+  }
 
-  // ── 3. Produits à afficher ──
-  // Si subcat sélectionné → on filtre par cette sous-branche
-  // Si branche sélectionnée → on filtre par cette branche (+ sous-branches EDUFORM incluses)
-  // Sinon → toutes les branches principales
-
+  // ── 4. Produits à afficher ──
   let productWhere: any = {
     active: true,
     ...(typeFilter ? { pricingType: typeFilter } : {}),
+    ...(catFilter ? { category: catFilter } : {}),
     ...(search ? {
       OR: [
         { name:        { contains: search, mode: "insensitive" } },
@@ -152,18 +161,21 @@ export default async function CataloguePage({
     } : {}),
   };
 
-  let branchWhere: any = {
-    active: true,
-  };
+  let branchWhere: any = { active: true };
 
-  if (subcatFilter) {
-    // Filtre par sous-catégorie EDUFORM directement
-    branchWhere = { active: true, id: subcatFilter };
+  if (catFilter) {
+    // Filtre catégorie → inclure ibig-eduform + toutes ses sous-branches
+    branchWhere = {
+      active: true,
+      OR: [
+        { slug: "ibig-eduform" },
+        { slug: { startsWith: "eduform-" } },
+      ],
+    };
   } else if (branchFilter) {
-    // Si c'est ibig-eduform, les produits sont dans les sous-branches eduform-*
-    // → on inclut ibig-eduform ET toutes ses sous-branches
     const selectedBranch = allBranchesForSidebar.find((b: any) => b.id === branchFilter);
     if (selectedBranch?.slug === "ibig-eduform") {
+      // Inclure ibig-eduform ET toutes ses sous-branches
       branchWhere = {
         active: true,
         OR: [
@@ -217,16 +229,11 @@ export default async function CataloguePage({
   const totalProducts = displayBranches.reduce((s: number, b: any) => s + b.products.length, 0);
   const totalAllProducts = allBranchesForSidebar.reduce((s: number, b: any) => s + b._count.products, 0);
 
-  // Nom du filtre actif pour le titre
+  // Nom du filtre actif pour le fil d'Ariane
   const activeBranchName = branchFilter
     ? allBranchesForSidebar.find((b: any) => b.id === branchFilter)?.name
-    : null;
-  const activeSubcatName = subcatFilter
-    ? (eduformSubcats.find((b: any) => b.id === subcatFilter)
-        ? (EDUFORM_SUBCAT_LABELS[(eduformSubcats.find((b: any) => b.id === subcatFilter) as any).slug]?.label
-           ?? (eduformSubcats.find((b: any) => b.id === subcatFilter) as any).name)
-        : null)
-    : null;
+    : (catFilter ? "IBIG EDUFORM" : null);
+  const activeCatName = catFilter ?? null;
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col">
@@ -267,7 +274,7 @@ export default async function CataloguePage({
             {FILTER_TYPES.map((opt) => (
               <Link
                 key={opt.value}
-                href={buildUrl({ type: opt.value || null, q: search, branch: branchFilter, subcat: subcatFilter })}
+                href={buildUrl({ type: opt.value || null, q: search, branch: branchFilter, cat: catFilter })}
                 className={`inline-flex items-center gap-1 rounded-full px-3.5 py-1.5 text-xs font-semibold whitespace-nowrap transition-all shrink-0 ${
                   (typeFilter ?? "") === opt.value
                     ? "bg-[#041B4D] text-white shadow-sm"
@@ -284,7 +291,7 @@ export default async function CataloguePage({
             <form method="GET" action="/catalogue" className="flex items-center gap-1 shrink-0">
               {typeFilter   && <input type="hidden" name="type"   value={typeFilter} />}
               {branchFilter && <input type="hidden" name="branch" value={branchFilter} />}
-              {subcatFilter && <input type="hidden" name="subcat" value={subcatFilter} />}
+              {catFilter    && <input type="hidden" name="cat"    value={catFilter} />}
               <div className="relative">
                 <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -297,7 +304,7 @@ export default async function CataloguePage({
               </div>
             </form>
 
-            {(typeFilter || search || branchFilter || subcatFilter) && (
+            {(typeFilter || search || branchFilter || catFilter) && (
               <Link href="/catalogue" className="shrink-0 inline-flex items-center gap-1 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-100 px-3 py-1.5 text-xs font-semibold transition">
                 ✕ Réinitialiser
               </Link>
@@ -360,42 +367,41 @@ export default async function CataloguePage({
               </div>
             </div>
 
-            {/* Sous-catégories EDUFORM */}
-            {isEduformSelected && eduformSubcats.filter((b: any) => b._count.products > 0).length > 0 && (
+            {/* Sous-catégories EDUFORM (basées sur le champ category des produits) */}
+            {isEduformSelected && eduformCategories.length > 0 && (
               <div className="bg-white rounded-2xl border border-blue-100 shadow-sm overflow-hidden">
                 <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-4 py-3">
                   <p className="text-xs font-bold text-white uppercase tracking-wider">🎓 Domaines EDUFORM</p>
                 </div>
                 <div className="p-2 space-y-0.5 max-h-96 overflow-y-auto">
                   <Link
-                    href={buildUrl({ type: null, q: search, branch: eduformBranch?.id ?? null, subcat: null })}
+                    href={buildUrl({ type: null, q: search, branch: eduformBranch?.id ?? null, cat: null })}
                     className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition ${
-                      !subcatFilter
+                      !catFilter
                         ? "bg-blue-600 text-white font-bold"
                         : "text-slate-600 hover:bg-blue-50 font-medium"
                     }`}
                   >
                     <span>📚 Tous les domaines</span>
-                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${!subcatFilter ? "bg-white/25 text-white" : "bg-slate-100 text-slate-500"}`}>
-                      {eduformSubcats.reduce((s: number, b: any) => s + b._count.products, 0)}
+                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${!catFilter ? "bg-white/25 text-white" : "bg-slate-100 text-slate-500"}`}>
+                      {eduformCategories.reduce((s, c) => s + c.count, 0)}
                     </span>
                   </Link>
-                  {eduformSubcats.filter((b: any) => b._count.products > 0).map((sub: any) => {
-                    const info = EDUFORM_SUBCAT_LABELS[sub.slug] ?? { label: sub.name, emoji: "📘" };
-                    const isActive = subcatFilter === sub.id;
+                  {eduformCategories.map(({ category, count }) => {
+                    const isActive = catFilter === category;
                     return (
                       <Link
-                        key={sub.id}
-                        href={buildUrl({ type: null, q: search, branch: null, subcat: sub.id })}
+                        key={category}
+                        href={buildUrl({ type: null, q: search, branch: null, cat: category })}
                         className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition ${
                           isActive
                             ? "bg-blue-600 text-white font-bold"
                             : "text-slate-600 hover:bg-blue-50 font-medium"
                         }`}
                       >
-                        <span>{info.emoji} {info.label}</span>
+                        <span>📘 {category}</span>
                         <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${isActive ? "bg-white/25 text-white" : "bg-slate-100 text-slate-500"}`}>
-                          {sub._count.products}
+                          {count}
                         </span>
                       </Link>
                     );
@@ -420,7 +426,7 @@ export default async function CataloguePage({
         {/* ── CONTENU PRINCIPAL ── */}
         <main className="flex-1 min-w-0">
           {/* Fil d'Ariane */}
-          {(activeBranchName || activeSubcatName) && (
+          {(activeBranchName || activeCatName) && (
             <div className="flex items-center gap-2 mb-5 text-sm text-slate-500">
               <Link href="/catalogue" className="hover:text-[#041B4D] transition">Catalogue</Link>
               {activeBranchName && (
@@ -429,10 +435,10 @@ export default async function CataloguePage({
                   <span className="font-semibold text-slate-700">{activeBranchName}</span>
                 </>
               )}
-              {activeSubcatName && (
+              {activeCatName && (
                 <>
                   <span className="text-slate-300">›</span>
-                  <span className="font-semibold text-slate-700">{activeSubcatName}</span>
+                  <span className="font-semibold text-slate-700">{activeCatName}</span>
                 </>
               )}
             </div>
@@ -617,12 +623,12 @@ export default async function CataloguePage({
   );
 }
 
-function buildUrl(params: { type: string | null; q: string | null; branch: string | null; subcat: string | null }) {
+function buildUrl(params: { type: string | null; q: string | null; branch: string | null; cat: string | null }) {
   const p = new URLSearchParams();
   if (params.type)   p.set("type",   params.type);
   if (params.q)      p.set("q",      params.q);
   if (params.branch) p.set("branch", params.branch);
-  if (params.subcat) p.set("subcat", params.subcat);
+  if (params.cat)    p.set("cat",    params.cat);
   const qs = p.toString();
   return `/catalogue${qs ? `?${qs}` : ""}`;
 }
