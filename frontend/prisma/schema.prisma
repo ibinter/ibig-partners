@@ -690,6 +690,16 @@ model Mission {
   duplicates   MissionDuplicate[]
   media        MissionMedia[]
   interests    MissionInterest[]
+  messages     MissionMessage[]
+}
+
+model MissionMessage {
+  id        String   @id @default(cuid())
+  missionId String
+  mission   Mission  @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  content   String
+  createdAt DateTime @default(now())
+  @@index([missionId])
 }
 
 model MissionApplication {

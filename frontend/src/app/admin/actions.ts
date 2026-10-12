@@ -1430,6 +1430,17 @@ export async function connectMissionInterest(formData: FormData) {
   revalidatePath("/admin/missions");
 }
 
+export async function sendMissionMessage(formData: FormData) {
+  await requireAdmin();
+  const missionId = String(formData.get("missionId"));
+  const content = String(formData.get("content") || "").trim();
+  if (!missionId || !content) return;
+  await (prisma as any).missionMessage.create({
+    data: { missionId, content },
+  });
+  revalidatePath("/admin/missions");
+}
+
 // ─── IBIG CONNECT ─────────────────────────────────────────────────────────────
 export async function updateConnectStatus(formData: FormData) {
   await requireAdmin();

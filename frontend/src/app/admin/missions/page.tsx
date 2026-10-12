@@ -1,7 +1,7 @@
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/ui";
-import { createMission, updateMission, updateMissionStatus, updateApplicationStatus, validateMissionApplication, validateMissionSubmission, rejectMissionSubmission, connectMissionInterest } from "../actions";
+import { createMission, updateMission, updateMissionStatus, updateApplicationStatus, validateMissionApplication, validateMissionSubmission, rejectMissionSubmission, connectMissionInterest, sendMissionMessage } from "../actions";
 import MissionsAdminClient from "./missions-admin-client";
 
 export const revalidate = 30;
@@ -21,6 +21,7 @@ export default async function AdminMissionsPage() {
         include: { user: { select: { firstName: true, lastName: true, code: true, phone: true, email: true } } },
         orderBy: { createdAt: "asc" },
       },
+      messages: { orderBy: { createdAt: "asc" } },
       submittedBy: { select: { firstName: true, lastName: true, code: true, email: true, phone: true } },
     },
   });
@@ -73,6 +74,11 @@ export default async function AdminMissionsPage() {
       partnerPhone: i.user.phone ?? "",
       partnerEmail: i.user.email,
     })),
+    messages: (m.messages ?? []).map((msg: any) => ({
+      id: msg.id,
+      content: msg.content,
+      createdAt: msg.createdAt instanceof Date ? msg.createdAt.toISOString() : String(msg.createdAt),
+    })),
     applications: m.applications.map((a: any) => ({
       id: a.id,
       status: a.status,
@@ -119,6 +125,7 @@ export default async function AdminMissionsPage() {
         validateSubmissionAction={validateMissionSubmission}
         rejectSubmissionAction={rejectMissionSubmission}
         connectInterestAction={connectMissionInterest}
+        sendMessageAction={sendMissionMessage}
       />
     </div>
   );

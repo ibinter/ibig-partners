@@ -165,6 +165,7 @@ type Application = {
 };
 
 type MediaItem = { id: string; url: string; mediaType: string; name: string };
+type MissionMessage = { id: string; content: string; createdAt: string };
 type Interest = {
   id: string; status: string; note: string; createdAt: string;
   partnerName: string; partnerCode: string; partnerPhone: string; partnerEmail: string;
@@ -185,6 +186,7 @@ type MissionRow = {
   media: MediaItem[];
   interests: Interest[];
   applications: Application[];
+  messages: MissionMessage[];
 };
 
 function rewardLabel(row: MissionRow) {
@@ -204,7 +206,7 @@ function fmtDate(iso: string) {
 
 export default function MissionsAdminClient({
   rows, stats, createAction, updateAction, updateStatusAction, updateAppAction, validateAppAction,
-  validateSubmissionAction, rejectSubmissionAction, connectInterestAction,
+  validateSubmissionAction, rejectSubmissionAction, connectInterestAction, sendMessageAction,
 }: {
   rows: MissionRow[];
   stats: { total: number; open: number; applications: number; pending: number; submitted: number; pendingSubmissions: number; interests: number };
@@ -216,6 +218,7 @@ export default function MissionsAdminClient({
   validateSubmissionAction: (fd: FormData) => Promise<void>;
   rejectSubmissionAction: (fd: FormData) => Promise<void>;
   connectInterestAction: (fd: FormData) => Promise<void>;
+  sendMessageAction: (fd: FormData) => Promise<void>;
 }) {
   const [tab, setTab] = useState<"missions" | "applications" | "soumissions">("missions");
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -1055,6 +1058,44 @@ export default function MissionsAdminClient({
                       </button>
                     </form>
                   )}
+
+                  {/* Messages admin */}
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3">
+                      💬 Messages &amp; Suggestions ({m.messages.length})
+                    </p>
+                    {/* Historique des messages */}
+                    {m.messages.length > 0 && (
+                      <div className="space-y-2 mb-3 max-h-64 overflow-y-auto">
+                        {m.messages.map(msg => (
+                          <div key={msg.id} className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3">
+                            <p className="text-xs text-slate-700 whitespace-pre-wrap">{msg.content}</p>
+                            <p className="text-[10px] text-slate-400 mt-1">{fmtDate(msg.createdAt)}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {/* Formulaire envoi message */}
+                    <form
+                      action={async (fd) => { await sendMessageAction(fd); }}
+                      className="rounded-xl border border-blue-200 bg-blue-50/60 p-4 space-y-2"
+                    >
+                      <input type="hidden" name="missionId" value={m.id} />
+                      <textarea
+                        name="content"
+                        required
+                        rows={3}
+                        placeholder="Rédigez votre message, suggestion ou instruction pour cette mission…"
+                        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none resize-none focus:border-blue-400"
+                      />
+                      <button
+                        type="submit"
+                        className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 transition"
+                      >
+                        ✉️ Envoyer le message
+                      </button>
+                    </form>
+                  </div>
 
                   {/* Candidatures */}
                   <div>
