@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 
 // Bouton sécurisé pour libérer le cash uniquement après vente réelle confirmée
 function ConfirmSaleButton({ applicationId, partnerName, missionTitle }: { applicationId: string; partnerName: string; missionTitle: string }) {
