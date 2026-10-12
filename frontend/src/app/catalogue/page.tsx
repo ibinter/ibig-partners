@@ -146,12 +146,12 @@ export default async function CataloguePage({
         category: { not: null },
         branchId: { in: eduformBranchIds },
       },
-      _count: true,
+      _count: { _all: true },
       orderBy: { category: "asc" },
     });
     eduformCategories = catRows
       .filter((r: any) => r.category)
-      .map((r: any) => ({ category: r.category as string, count: r._count as number }));
+      .map((r: any) => ({ category: r.category as string, count: (r._count?._all ?? r._count ?? 0) as number }));
   }
 
   // ── 4. Produits à afficher ──

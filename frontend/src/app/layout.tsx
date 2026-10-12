@@ -4,7 +4,6 @@ import Script from "next/script";
 import "./globals.css";
 import { PWARegister, PWAInstallBanner } from "@/components/pwa-register";
 import { TawkVisibility } from "@/components/tawk-visibility";
-import { TawkChat } from "@/components/tawk-chat";
 import { PageTracker } from "@/components/page-tracker";
 
 const jakartaSans = Plus_Jakarta_Sans({
@@ -154,7 +153,6 @@ export default function RootLayout({
         <PWAInstallBanner />
 
         {/* Tawk.to live chat — chargé uniquement sur les pages publiques */}
-        <TawkChat />
 
         {/* IBIG SARL — Tracking cross-site : envoie les visites PARTNERS vers l'admin Analytics d'intermark-business.com */}
         <Script id="ibig-sarl-tracking" strategy="afterInteractive">
