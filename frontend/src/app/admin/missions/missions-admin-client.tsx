@@ -92,6 +92,34 @@ function ConfirmSaleButton({ applicationId, partnerName, missionTitle }: { appli
 }
 import { DescriptionBlock } from "@/components/DescriptionBlock";
 
+const MSG_TEMPLATES: { label: string; icon: string; text: string }[] = [
+  {
+    icon: "📋",
+    label: "Expliquer la mission",
+    text: "Bonjour,\n\nMerci pour votre candidature. Voici quelques précisions sur cette mission pour vous aider à mieux la comprendre :\n\n[Expliquez ici les détails, objectifs et attentes de la mission]\n\nN'hésitez pas à nous contacter si vous avez des questions.\n\nCordialement, l'équipe IBIG",
+  },
+  {
+    icon: "❌",
+    label: "Motif de refus",
+    text: "Bonjour,\n\nNous avons étudié votre candidature et nous ne pouvons pas la retenir pour la raison suivante :\n\n[Indiquez ici le motif du refus]\n\nNous vous encourageons à postuler à d'autres missions correspondant mieux à votre profil.\n\nCordialement, l'équipe IBIG",
+  },
+  {
+    icon: "💡",
+    label: "Suggestion / Amélioration",
+    text: "Bonjour,\n\nAfin d'améliorer vos chances de réussite sur cette mission, voici nos suggestions :\n\n[Indiquez ici vos conseils et recommandations]\n\nNous restons disponibles pour vous accompagner.\n\nCordialement, l'équipe IBIG",
+  },
+  {
+    icon: "📌",
+    label: "Prochaines étapes",
+    text: "Bonjour,\n\nVotre candidature a été retenue ! Voici les prochaines étapes à suivre :\n\n1. [Étape 1]\n2. [Étape 2]\n3. [Étape 3]\n\nMerci de confirmer la réception de ce message.\n\nCordialement, l'équipe IBIG",
+  },
+  {
+    icon: "⚠️",
+    label: "Preuve insuffisante",
+    text: "Bonjour,\n\nNous avons examiné la preuve soumise pour cette mission, mais elle est insuffisante pour les raisons suivantes :\n\n[Expliquez pourquoi la preuve est refusée]\n\nMerci de soumettre une nouvelle preuve conforme aux instructions. En cas de doute, relisez les instructions de la mission.\n\nCordialement, l'équipe IBIG",
+  },
+];
+
 function AppMessagePanel({
   applicationId, partnerName, messages, sendAppMessageAction,
 }: {
@@ -101,22 +129,56 @@ function AppMessagePanel({
   sendAppMessageAction: (fd: FormData) => Promise<void>;
 }) {
   const [open, setOpen] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [text, setText] = useState("");
+  const [sending, setSending] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!text.trim()) return;
+    setSending(true);
+    const fd = new FormData();
+    fd.append("applicationId", applicationId);
+    fd.append("content", text.trim());
+    await sendAppMessageAction(fd);
+    setText("");
+    setSending(false);
+  }
+
   return (
     <div className="mt-3">
       <button
         onClick={() => setOpen(v => !v)}
         className={`rounded-xl px-3 py-1.5 text-xs font-bold border transition ${open ? "bg-blue-700 text-white border-blue-700" : "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"}`}
       >
-        💬 {open ? "Fermer messages" : `Messages (${messages.length})`}
+        💬 {open ? "Fermer" : `Envoyer un message${messages.length > 0 ? ` (${messages.length})` : ""}`}
       </button>
       {open && (
         <div className="mt-2 rounded-2xl border border-blue-200 bg-blue-50 p-4 space-y-3">
-          <p className="text-[10px] font-bold text-blue-700 uppercase tracking-wide">
-            Messages envoyés à {partnerName}
+          <p className="text-[10px] font-bold text-blue-800 uppercase tracking-wide">
+            ✉️ Message à {partnerName}
           </p>
-          {messages.length > 0 ? (
-            <div className="space-y-2 max-h-48 overflow-y-auto">
+
+          {/* Modèles rapides */}
+          <div>
+            <p className="text-[10px] text-slate-500 mb-1.5 font-semibold">Modèles rapides :</p>
+            <div className="flex flex-wrap gap-1.5">
+              {MSG_TEMPLATES.map(tpl => (
+                <button
+                  key={tpl.label}
+                  type="button"
+                  onClick={() => setText(tpl.text)}
+                  className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-bold text-slate-700 hover:border-blue-300 hover:bg-blue-50 transition"
+                >
+                  {tpl.icon} {tpl.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Historique */}
+          {messages.length > 0 && (
+            <div className="space-y-2 max-h-40 overflow-y-auto">
+              <p className="text-[10px] text-slate-400 font-semibold">Historique :</p>
               {messages.map(msg => (
                 <div key={msg.id} className="rounded-lg border border-blue-100 bg-white px-3 py-2">
                   <p className="text-xs text-slate-700 whitespace-pre-wrap">{msg.content}</p>
@@ -124,25 +186,28 @@ function AppMessagePanel({
                 </div>
               ))}
             </div>
-          ) : (
-            <p className="text-xs text-slate-400 italic">Aucun message envoyé.</p>
           )}
-          <form action={async (fd) => { await sendAppMessageAction(fd); if (textareaRef.current) textareaRef.current.value = ""; }} className="space-y-2">
-            <input type="hidden" name="applicationId" value={applicationId} />
+
+          {/* Formulaire */}
+          <form onSubmit={handleSubmit} className="space-y-2">
             <textarea
-              ref={textareaRef}
-              name="content"
+              value={text}
+              onChange={e => setText(e.target.value)}
               required
-              rows={3}
-              placeholder={`Message ou suggestion pour ${partnerName}…`}
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs outline-none resize-none focus:border-blue-400"
+              rows={5}
+              placeholder={`Rédigez votre message pour ${partnerName} (explication, refus, suggestion, prochaine étape…)`}
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs outline-none resize-y focus:border-blue-400"
             />
-            <button
-              type="submit"
-              className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 transition"
-            >
-              ✉️ Envoyer
-            </button>
+            <div className="flex gap-2 items-center">
+              <button
+                type="submit"
+                disabled={sending || !text.trim()}
+                className="rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-bold px-4 py-2 transition"
+              >
+                {sending ? "Envoi…" : "✉️ Envoyer au partenaire"}
+              </button>
+              <span className="text-[10px] text-slate-400">Le partenaire recevra une notification dans son espace</span>
+            </div>
           </form>
         </div>
       )}
