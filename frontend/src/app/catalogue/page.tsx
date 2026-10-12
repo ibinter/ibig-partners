@@ -331,25 +331,25 @@ export default async function CataloguePage({
               </div>
               <div className="p-2 space-y-0.5">
                 <Link
-                  href={buildUrl({ type: typeFilter, q: search, branch: null, subcat: null })}
+                  href={buildUrl({ type: typeFilter, q: search, branch: null, cat: null })}
                   className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition ${
-                    !branchFilter && !subcatFilter
+                    !branchFilter && !catFilter
                       ? "bg-[#041B4D] text-white font-bold"
                       : "text-slate-600 hover:bg-slate-50 font-medium"
                   }`}
                 >
                   <span>✦ Toutes les branches</span>
-                  <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${!branchFilter && !subcatFilter ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"}`}>
+                  <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${!branchFilter && !catFilter ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"}`}>
                     {totalAllProducts}
                   </span>
                 </Link>
                 {allBranchesForSidebar.filter((b: any) => b._count.products > 0).map((branch: any) => {
                   const style = getBranchStyle(branch.id);
-                  const isActive = branchFilter === branch.id || (branch.slug === "ibig-eduform" && subcatFilter !== null);
+                  const isActive = branchFilter === branch.id || (branch.slug === "ibig-eduform" && catFilter !== null);
                   return (
                     <Link
                       key={branch.id}
-                      href={buildUrl({ type: null, q: search, branch: branch.id, subcat: null })}
+                      href={buildUrl({ type: null, q: search, branch: branch.id, cat: null })}
                       className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs transition ${
                         isActive
                           ? "font-bold text-white"
