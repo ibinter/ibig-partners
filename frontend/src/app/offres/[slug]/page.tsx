@@ -442,24 +442,23 @@ export default async function OffrePage({
                         const r5 = (x: number) => Math.round(x / 5000) * 5000;
                         const pres = r5(product.price * 16000 / 11250);
                         const fmt = (n: number) => n.toLocaleString("fr-FR") + " F";
-                        return [
-                          { icon: "🖥️", label: "E-learning", ligne: fmt(r5(product.price * 0.50)), presentiel: "—", highlight: false },
-                          { icon: "👤", label: "Individuel", ligne: fmt(product.price), presentiel: fmt(pres), highlight: true },
-                          { icon: "👥", label: "Groupe 3–5", ligne: fmt(r5(product.price * 0.70)), presentiel: fmt(r5(pres * 0.70)), highlight: false },
-                          { icon: "👥", label: "Groupe 6–10", ligne: fmt(r5(product.price * 0.55)), presentiel: fmt(r5(pres * 0.55)), highlight: false },
-                          { icon: "🏢", label: "Groupe 10+", ligne: fmt(r5(product.price * 0.45)), presentiel: fmt(r5(pres * 0.45)), highlight: false },
-                        ];
-                      })().map((row) => (
-                        <tr key={row.label} className={`hover:bg-slate-50/80 transition ${row.highlight ? "font-semibold" : ""}`} style={row.highlight ? { background: theme.light } : {}}>
-                          <td className="px-3 sm:px-6 py-3 text-slate-700"><span className="mr-1">{row.icon}</span>{row.label}</td>
-                          <td className="px-2 sm:px-4 py-3 text-right font-bold text-slate-900 tabular-nums">{row.ligne}</td>
-                          <td className="px-3 sm:px-6 py-3 text-right font-bold text-slate-900 tabular-nums">{row.presentiel}</td>
-                        </tr>
-                      ))}
-                      <tr className="border-t-2 border-slate-100" style={{ background: theme.light }}>
-                        <td className="px-3 sm:px-6 py-3 text-slate-700 font-medium"><span className="mr-1">🌍</span>Intra / Intl.</td>
-                        <td className="px-2 py-3 text-right text-slate-500 italic font-medium" colSpan={2}>Sur devis</td>
-                      </tr>
+                        return (
+                          <>
+                            {/* Individuel — prix affiché */}
+                            <tr className="font-semibold hover:bg-slate-50/80 transition" style={{ background: theme.light }}>
+                              <td className="px-3 sm:px-6 py-3 text-slate-700"><span className="mr-1">👤</span>Individuel</td>
+                              <td className="px-2 sm:px-4 py-3 text-right font-bold text-slate-900 tabular-nums">{fmt(product.price)}</td>
+                              <td className="px-3 sm:px-6 py-3 text-right font-bold text-slate-900 tabular-nums">{fmt(pres)}</td>
+                            </tr>
+                            {/* Groupe & Intra — sur devis (aligné sur ibig-eduform.com) */}
+                            <tr className="hover:bg-slate-50/80 transition">
+                              <td className="px-3 sm:px-6 py-3 text-slate-500 font-medium" colSpan={3}>
+                                <span className="mr-1">👥</span>Groupe &amp; intra-entreprise — <strong>Sur devis</strong>
+                              </td>
+                            </tr>
+                          </>
+                        );
+                      })()}
                     </tbody>
                   </table>
                 </div>
