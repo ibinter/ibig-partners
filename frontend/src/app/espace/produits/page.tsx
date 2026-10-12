@@ -30,7 +30,10 @@ export default async function ProduitsPage() {
     : [];
 
   const branches = await prisma.branch.findMany({
-    where: { active: true },
+    where: {
+      active: true,
+      NOT: { AND: [{ slug: { startsWith: "eduform-" } }, { slug: { not: "ibig-eduform" } }] },
+    },
     orderBy: { order: "asc" },
     include: { products: { where: { active: true }, orderBy: { name: "asc" } } },
   });

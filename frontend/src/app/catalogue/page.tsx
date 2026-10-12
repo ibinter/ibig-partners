@@ -81,6 +81,14 @@ export default async function CataloguePage({
   const branches = await (prisma as any).branch.findMany({
     where: {
       active: true,
+      // Exclure les sous-branches EDUFORM (eduform-finance, eduform-rh, etc.)
+      // Seule la branche principale ibig-eduform apparaît dans le catalogue public
+      NOT: {
+        AND: [
+          { slug: { startsWith: "eduform-" } },
+          { slug: { not: "ibig-eduform" } },
+        ],
+      },
       ...(branchFilter ? { id: branchFilter } : {}),
     },
     include: {

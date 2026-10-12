@@ -67,7 +67,10 @@ export default async function CatalogueEnPage({
   const user = await getCurrentUser();
 
   const branches = await (prisma as any).branch.findMany({
-    where: { active: true },
+    where: {
+      active: true,
+      NOT: { AND: [{ slug: { startsWith: "eduform-" } }, { slug: { not: "ibig-eduform" } }] },
+    },
     include: {
       products: {
         where: {
