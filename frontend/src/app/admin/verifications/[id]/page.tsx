@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 type VerifReq = Awaited<ReturnType<typeof import("@/lib/prisma").prisma.verificationRequest.findUnique>>;
 
-function computeKycScore(req: NonNullable<VerifReq>) {
+function computeKycScore(req: NonNullable<VerifReq>, kybDocsCount = 0) {
   const items: { label: string; pts: number; earned: boolean }[] = [];
   const add = (label: string, pts: number, earned: boolean) => items.push({ label, pts, earned });
 
@@ -36,7 +36,7 @@ function computeKycScore(req: NonNullable<VerifReq>) {
     add("Pays + ville siège", 10, !!(req.companyCountry && req.companyCity));
     add("Adresse siège", 5, !!req.companyAddress);
     add("Coordonnées de paiement", 20, !!req.payoutMethod);
-    add("Docs justificatifs", 15, !!(req.idDocUrl));
+    add("Docs justificatifs", 15, !!(req.idDocUrl) || kybDocsCount > 0);
   }
 
   const total = items.reduce((s, i) => s + i.pts, 0);
@@ -45,8 +45,8 @@ function computeKycScore(req: NonNullable<VerifReq>) {
   return { score, items };
 }
 
-function KycScoreGauge({ req }: { req: NonNullable<VerifReq> }) {
-  const { score, items } = computeKycScore(req);
+function KycScoreGauge({ req, kybDocsCount = 0 }: { req: NonNullable<VerifReq>; kybDocsCount?: number }) {
+  const { score, items } = computeKycScore(req, kybDocsCount);
   const color = score >= 80 ? "emerald" : score >= 50 ? "amber" : "rose";
   const colorMap = {
     emerald: { bar: "bg-emerald-500", text: "text-emerald-700", bg: "bg-emerald-50 border-emerald-100" },
@@ -228,6 +228,17 @@ export default async function VerificationDetailPage({
   const u = req.user;
   const isIndividual = req.type === "INDIVIDUAL";
 
+  const kybDocs = !isIndividual
+    ? await (async () => {
+        try {
+          return await (prisma as any).kybDocument.findMany({
+            where: { userId: u.id },
+            orderBy: { createdAt: "desc" },
+          });
+        } catch { return []; }
+      })()
+    : [];
+
   const STATUS_TONE: Record<string, "amber" | "green" | "red"> = {
     PENDING: "amber", APPROVED: "green", REJECTED: "red",
   };
@@ -247,7 +258,7 @@ export default async function VerificationDetailPage({
       />
 
       {/* Score de confiance KYC */}
-      <KycScoreGauge req={req} />
+      <KycScoreGauge req={req} kybDocsCount={kybDocs.length} />
 
       {/* Statut + actions */}
       <Card className="p-5">
@@ -374,28 +385,54 @@ export default async function VerificationDetailPage({
       )}
 
       {/* Pièces justificatives */}
-      {(req.idDocUrl || req.idDocBack || req.cvFileUrl) && (
-        <Section title="📎 Pièces justificatives">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 pt-1">
-            {req.idDocUrl && (
-              <DocCard label="Pièce d'identité — Recto" url={req.idDocUrl} />
-            )}
-            {req.idDocBack && (
-              <DocCard label="Pièce d'identité — Verso" url={req.idDocBack} />
-            )}
-            {req.cvFileUrl && (
-              <DocCard label="CV / Document" url={req.cvFileUrl} />
-            )}
-          </div>
-        </Section>
-      )}
-      {!(req.idDocUrl || req.idDocBack || req.cvFileUrl) && (
-        <Section title="📎 Pièces justificatives">
-          <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2">
-            ⚠️ Aucun document n&apos;a encore été soumis par ce partenaire.
-          </p>
-        </Section>
-      )}
+      {(() => {
+        const hasVerifDocs = req.idDocUrl || req.idDocBack || req.cvFileUrl;
+        const hasKybDocs = kybDocs.length > 0;
+        const STATUS_KYB: Record<string, string> = {
+          PENDING: "🕐 En attente", APPROVED: "✅ Approuvé", REJECTED: "❌ Rejeté",
+        };
+        if (!hasVerifDocs && !hasKybDocs) {
+          return (
+            <Section title="📎 Pièces justificatives">
+              <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2">
+                ⚠️ Aucun document n&apos;a encore été soumis par ce partenaire.
+              </p>
+            </Section>
+          );
+        }
+        return (
+          <Section title="📎 Pièces justificatives">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 pt-1">
+              {req.idDocUrl && <DocCard label="Pièce d'identité — Recto" url={req.idDocUrl} />}
+              {req.idDocBack && <DocCard label="Pièce d'identité — Verso" url={req.idDocBack} />}
+              {req.cvFileUrl && <DocCard label="CV / Document" url={req.cvFileUrl} />}
+              {kybDocs.map((doc: any) => (
+                <div key={doc.id} className="rounded-xl border border-slate-200 overflow-hidden bg-white">
+                  <div className="bg-slate-50 border-b border-slate-100 px-3 py-2 flex items-center justify-between gap-2">
+                    <p className="text-[11px] font-bold text-slate-600 uppercase tracking-wide truncate">{doc.docName}</p>
+                    <span className="text-[10px] font-semibold text-slate-500 shrink-0">{STATUS_KYB[doc.status] ?? doc.status}</span>
+                  </div>
+                  <div className="px-3 py-4 text-center space-y-2">
+                    <p className="text-2xl">📄</p>
+                    <p className="text-[11px] text-slate-500">{doc.docType}</p>
+                    <a
+                      href={`/api/cloudinary/signed-url?url=${encodeURIComponent(doc.fileUrl)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-700 transition-colors"
+                    >
+                      Ouvrir le document →
+                    </a>
+                    {doc.note && (
+                      <p className="text-[11px] text-slate-500 italic">{doc.note}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Section>
+        );
+      })()}
 
       {/* Paiement */}
       {req.payoutMethod && (
